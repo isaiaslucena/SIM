@@ -139,7 +139,6 @@
 						cfilechannel = cfilearr[2];
 
 						cfilechann = channelname(cfilechannel);
-						console.log(cfilechann);
 
 						cfilestate = cfilearr[3];
 						cfilesource = "\"" + cfilechann + " - " + cfilestate + "\"";
@@ -211,6 +210,7 @@
 											$.post('<?php echo base_url("pages/proxy")?>',
 												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
 												function(datac, textStatus, xhr) {
+													console.log(datac);
 													crpercent = datac.percent;
 													crpcircle = crpercent / 100;
 													progresscbar.animate(crpcircle);
@@ -255,11 +255,12 @@
 											$.post('<?php echo base_url("pages/proxy")?>',
 												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
 												function(datac, textStatus, xhr) {
+													console.log(datac);
 													crpercent = datac.percent;
 													crpcircle = crpercent / 100;
 													progresscbar.animate(crpcircle);
 
-													if (crpercent === 100) {
+													if (crpercent >= 100) {
 														clearInterval(rprogress);
 														$('#progresscrop').css('display', 'none');
 														$('#mdivvideo').css('display', 'block');
