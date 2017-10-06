@@ -16,7 +16,6 @@
 							files: filestojoin
 						},
 						function(data, textStatus, xhr) {
-							console.log(data);
 							fileid = data.id;
 							filestotaltime = data.totaltime;
 							jointimestart = new Date();
@@ -24,7 +23,6 @@
 									$.post('<?php echo base_url("pages/proxy")?>',
 										{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
 										function(dataj, textStatus, xhr) {
-											console.log(dataj);
 											joinpercent = dataj.percent;
 											joinpcircle = joinpercent / 100;
 											progressjbar.animate(joinpcircle);
@@ -181,7 +179,6 @@
 								wenddate: cfiletstampet
 							},
 							function(data, textStatus, xhr) {
-								console.log(data);
 								var textw = "";
 								var wordbefore = "";
 								$.each(data, function(index, val) {
