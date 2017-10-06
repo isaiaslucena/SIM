@@ -1,0 +1,29 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+if ( ! function_exists('get_phrase'))
+{
+	function get_phrase($phrase = '') {
+		$CI	=&	get_instance();
+		$CI->load->database();
+		$current_language = $CI->session->userdata('current_language');
+		if ( $current_language == '') {
+			$current_language = 'pt-br';
+			$CI->session->set_userdata('current_language' , $current_language);
+		}
+		$query = $CI->db->get_where('language' , array('phrase' => $phrase));
+		$row = $query->row();
+		//** insert blank phrases initially and populating the language db ***
+		$check_phrase = $CI->db->get_where('language' , array('phrase' => $phrase))->row()->phrase;
+		//print_r($check_phrase);
+		if ($check_phrase != $phrase)
+			$CI->db->insert('language' , array('phrase' => $phrase));
+			return $row->$current_language;
+		if (isset($row->$current_language) && $row->$current_language != "")
+			return $row->$current_language;
+		else
+			return ucwords(str_replace('_',' ',$phrase));
+	}
+}
+
+?>
