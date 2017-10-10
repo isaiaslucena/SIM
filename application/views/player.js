@@ -464,11 +464,9 @@
 						$('#checkjoincrop').bootstrapToggle('off');
 						$('input').prop("checked", false);
 					} else if (!cgcbjoincrop) {
-						// console.log('button off')
 						joincropvideos = false;
 						cropfilestojoin = [];
 					} else if (cgcbjoincrop) {
-						// console.log('button on')
 						swal({
 							title: 'Atenção!',
 							text: 'A partir de agora os cortes serão armazenados.',
