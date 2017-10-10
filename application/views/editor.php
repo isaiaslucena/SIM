@@ -3,77 +3,139 @@
 					videoel[0].pause();
 					// $('.joinmodal').modal('show');
 
-					$('.joinmodal').modal({
-						show: true,
-						backdrop: 'static',
-						keyboard: false
-					})
+					if (joincropvideos) {
+						$('.jcropmodal').modal('show');
 
-					$.post('<?php echo base_url("pages/proxy")?>',
-						{
-							address: '<?php echo str_replace("sim.","video.",base_url("video/joinvideos"))?>',
-							vsource: jvsource,
-							files: filestojoin
-						},
-						function(data, textStatus, xhr) {
-							fileid = data.id;
-							filestotaltime = data.totaltime;
-							jointimestart = new Date();
-							var rjprogress = setInterval(function() {
-									$.post('<?php echo base_url("pages/proxy")?>',
-										{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
-										function(dataj, textStatus, xhr) {
-											joinpercent = dataj.percent;
-											joinpcircle = joinpercent / 100;
-											progressjbar.animate(joinpcircle);
+						$.post('<?php echo base_url("pages/proxy")?>',
+							{
+								address: '<?php echo str_replace("sim.","video.",base_url("video/joincropvideos"))?>',
+								vsource: vsource,
+								files: cropfilestojoin
+							},
+							function(data, textStatus, xhr) {
+								console.log(data);
+								fileid = data.id;
+								filestotaltime = data.totaltime;
+								joinctimestart = new Date();
+								var rcjprogress = setInterval(function() {
+										$.post('<?php echo base_url("pages/proxy")?>',
+											{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
+											function(dataj, textStatus, xhr) {
+												// console.log(dataj);
+												joinpercent = dataj.percent;
+												joinpcircle = joinpercent / 100;
+												progressjcbar.animate(joinpcircle);
 
-											if (joinpercent >= 100) {
-												clearInterval(rjprogress);
+												if (joinpercent >= 99) {
+													clearInterval(rcjprogress);
 
-												videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
-												// videovurlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/verifyjoinvideo/' + data.joinfilename;
-												// $.post('/pages/proxy', {address: videovurlmjoin}, function(data, textStatus, xhr) {
-												// 	if (data == "OK") {
-												// 		videoel.attr({src: videourlmjoin});
-												// 		// videoel[0].play();
-												// 	}
-												// });
+													$('#progressjcrop').css('display', 'none');
+													$('#mcjdivvideo').css('display', 'block');
 
-												videotitle.text(data.joinfilename)
-												videoel.attr({
-													poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
-													src: videourlmjoin
-												});
+													$('.vbutton').css('display', 'none');
+													$('.vbutton').removeClass('paused');
 
-												$('input').prop("checked", false);
-												$('.list-group').children().removeClass('active');
-												$.each(vbtnjoin, function(index, val) {
-													document.getElementById(val).className += ' active';
-												});
+													videourlmcjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
+													$('#mcjvvideo').attr({
+														poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+														src: videourlmcjoin
+													});
 
-												filestojoin = [];
-												vbtnjoin = [];
-												joinvideos = true;
-
-												jointimeend = new Date();
-												croptimedifference = ((jointimeend.getTime() - jointimestart.getTime()) / 1200).toFixed(3);
-												$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
-
-												$('.joinmodal').modal('hide');
-												progressjbar.animate(0);
+													$('#mbtnjcdown').attr('href', videourlmcjoin);
+													$('#checkjoincrop').bootstrapToggle('off');
+													joinctimeend = new Date();
+													joinctimedifference = ((joinctimeend.getTime() - joinctimestart.getTime()) / 1200).toFixed(3);
+													$('#joincropvideoload').text("Tempo da junção: "+ joinctimedifference + "s");
+												}
 											}
-										}
-									);
-							}, 1000);
-						}
-					);
+										);
+								}, 100);
+							}
+						);
+					} else {
+						$('.joinmodal').modal({
+							show: true,
+							backdrop: 'static',
+							keyboard: false
+						})
+
+						$.post('<?php echo base_url("pages/proxy")?>',
+							{
+								address: '<?php echo str_replace("sim.","video.",base_url("video/joinvideos"))?>',
+								vsource: jvsource,
+								files: filestojoin
+							},
+							function(data, textStatus, xhr) {
+								console.log(data);
+								fileid = data.id;
+								filestotaltime = data.totaltime;
+								jointimestart = new Date();
+								var rjprogress = setInterval(function() {
+										$.post('<?php echo base_url("pages/proxy")?>',
+											{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
+											function(dataj, textStatus, xhr) {
+												joinpercent = dataj.percent;
+												joinpcircle = joinpercent / 100;
+												progressjbar.animate(joinpcircle);
+
+												if (joinpercent >= 99) {
+													clearInterval(rjprogress);
+
+													// $('#progressjoin').css('display', 'none');
+													// $('#mcjdivvideo').css('display', 'block');
+
+													$('.vbutton').css('display', 'none');
+													$('.vbutton').removeClass('paused');
+
+													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
+													// videovurlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/verifyjoinvideo/' + data.joinfilename;
+													// $.post('/pages/proxy', {address: videovurlmjoin}, function(data, textStatus, xhr) {
+													// 	if (data == "OK") {
+													// 		videoel.attr({src: videourlmjoin});
+													// 		// videoel[0].play();
+													// 	}
+													// });
+
+													videotitle.text(data.joinfilename);
+													videotitle.css('font-size', '18px');
+													videoel.attr({
+														poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+														src: videourlmjoin
+													});
+
+													$('input').prop("checked", false);
+													$('.list-group').children().removeClass('active');
+													$.each(vbtnjoin, function(index, val) {
+														document.getElementById(val).className += ' active';
+													});
+
+													filestojoin = [];
+													vbtnjoin = [];
+													joinvideos = true;
+
+													jointimeend = new Date();
+													croptimedifference = ((jointimeend.getTime() - jointimestart.getTime()) / 1200).toFixed(3);
+													$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
+
+													$('.joinmodal').modal('hide');
+													progressjbar.animate(0);
+
+													$('#btnjoin').addClass('disabled');
+													$('#btnjoin').attr('disabled', true);
+												}
+											}
+										);
+								}, 1000);
+							}
+						);
+					}
 				});
 
-				$('#btncstart').click(function(event) {;
+				$('#btncstart').click(function(event) {
 					time = $(this).text();
 					if (time != '') {
 						$(this).text(null);
-						$(this).append('<i class="fa fa-hourglass-start"></i>');
+						$(this).append('<i class="fa fa-hourglass-end"></i>');
 					}
 					$(this).removeClass('btn-default');
 					$(this).addClass('btn-primary');
@@ -90,7 +152,12 @@
 					cropends = videoel[0].currentTime;
 					if (ccrops) {
 						if (cropends < cropstarts) {
-							alert('O tempo final deve ser maior que o inicial!');
+							swal({
+								title: "Atenção!",
+								text: "O tempo final deve ser maior que o inicial!",
+								icon: "error"
+							});
+							// alert('O tempo final deve ser maior que o inicial!');
 							$(this).text(null);
 							$(this).append('<i class="fa fa-hourglass-end"></i>');
 							$(this).removeClass('btn-primary');
@@ -99,7 +166,7 @@
 							time = $(this).text();
 							if (time != '') {
 								$(this).text(null);
-								$(this).append('<i class="fa fa-hourglass-end"></i>');
+								$(this).append('<i class="fa fa-hourglass-start"></i>');
 							}
 							$('#btncrop').removeClass('disabled');
 							$('#btncrop').removeAttr('disabled');
@@ -153,21 +220,21 @@
 						cfiletstampst = cfilestimestamp.setSeconds(cfilestimestamp.getSeconds() + Number(cropstartts));
 						cfiletstampet = cfilesstimestamp.setSeconds(cfilesstimestamp.getSeconds() + Number(cropendts));
 						
-						console.log('source: '+cfilesource);
-						console.log('story startdate: '+cfiletimestampt);
-						console.log('story enddate: '+cfiletstamp);
-						console.log('word wordstart: '+cfiletstampst);
-						console.log('word wordend: '+cfiletstampet);
+						// console.log('source: '+cfilesource);
+						// console.log('story startdate: '+cfiletimestampt);
+						// console.log('story enddate: '+cfiletstamp);
+						// console.log('word wordstart: '+cfiletstampst);
+						// console.log('word wordend: '+cfiletstampet);
 
 						hstorydates = new Date(cfiletimestampt)
 						hstorydatee = new Date(cfiletstamp)
 						hwordtimes = new Date(cfiletstampst)
 						hwordtimee = new Date(cfiletstampet)
 
-						console.log('story startdate: '+hstorydates);
-						console.log('story enddate: '+hstorydatee);
-						console.log('word wordstart: '+hwordtimes);
-						console.log('word wordend: '+hwordtimee);
+						// console.log('story startdate: '+hstorydates);
+						// console.log('story enddate: '+hstorydatee);
+						// console.log('word wordstart: '+hwordtimes);
+						// console.log('word wordend: '+hwordtimee);
 
 						$('#transct').val(null);
 						$.post('/pages/get_tvwords',
@@ -185,7 +252,6 @@
 									$.each(val.response.docs, function(indexd, vald) {
 										starttimew = vald.starttime_l;
 										endtimew = vald.endtime_l;
-										// wordbefore = vdocs.response.docs[indexd - 1].word_s;
 										if (vald.word_s != wordbefore) {
 											textw += vald.word_s;
 											textw += " ";
@@ -201,30 +267,39 @@
 							$.post('<?php echo base_url("pages/proxy")?>',
 								{address: '<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>' + cfile + '/' + cropstart + '/' + cropdurs},
 								function(data, textStatus, xhr) {
+									console.log(data);
 									fileid = data.id;
+									filecname = data.cropfilename;
 									croptimestart = new Date();
 									var rprogress = setInterval(function() {
 											$.post('<?php echo base_url("pages/proxy")?>',
 												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
 												function(datac, textStatus, xhr) {
-													console.log(datac);
+													// console.log(datac);
 													crpercent = datac.percent;
 													crpcircle = crpercent / 100;
 													progresscbar.animate(crpcircle);
 
-													if (crpercent >= 100) {
+													if (crpercent >= 99) {
 														clearInterval(rprogress);
 														$('#progresscrop').css('display', 'none');
 														$('#mdivvideo').css('display', 'block');
 
-														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + data.cropfilename;
-														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + data.cropfilename;
+														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + filecname;
+														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + filecname;
 														$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
 															if (data == "OK") {
 																videomel.attr({src: videourlmcrop});
 																// videomel[0].play();
 															}
 														});
+
+														cbjoincrop = $('#checkjoincrop').prop('checked');
+														if (cbjoincrop) {
+															cropjoinfiles(filecname);
+															joincropvideos = true;
+															console.log(cropfilestojoin);
+														}
 
 														filenamearr = data.cropfilename.split("_");
 														datearr = filenamearr[1].split("-");
@@ -244,34 +319,43 @@
 							);
 						} else {
 							$.post('<?php echo base_url("pages/proxy")?>',
-								{address: '<?php echo str_replace('sim.','video.',base_url('video/cropvideo/'))?>' + vsource + '_' + cfile + '/' + cropstart + '/' + cropdurs},
+								{address: '<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>' + vsource + '_' + cfile + '/' + cropstart + '/' + cropdurs},
 								function(data, textStatus, xhr) {
+									console.log(data);
 									fileid = data.id;
+									filecname = data.cropfilename;
 									croptimestart = new Date();
 									var rprogress = setInterval(function() {
 											$.post('<?php echo base_url("pages/proxy")?>',
 												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
 												function(datac, textStatus, xhr) {
-													console.log(datac);
+													// console.log(datac);
 													crpercent = datac.percent;
 													crpcircle = crpercent / 100;
 													progresscbar.animate(crpcircle);
 
-													if (crpercent >= 100) {
+													if (crpercent >= 99) {
 														clearInterval(rprogress);
 														$('#progresscrop').css('display', 'none');
 														$('#mdivvideo').css('display', 'block');
 
-														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + data.cropfilename;
-														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + data.cropfilename;
+														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + filecname;
+														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + filecname;
 														$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
 															if (data == "OK") {
-																videomel.attr({	src: videourlmcrop});
+																videomel.attr({src: videourlmcrop});
 																// videomel[0].play();
 															}
 														});
 
-														filenamearr = data.cropfilename.split("_");
+														cbjoincrop = $('#checkjoincrop').prop('checked');
+														if (cbjoincrop) {
+															cropjoinfiles(filecname);
+															joincropvideos = true;
+															console.log(cropfilestojoin);
+														}
+
+														filenamearr = filecname.split("_");
 														datearr = filenamearr[1].split("-");
 														cropfmonth = datearr[1];
 														cropfday = datearr[2];
@@ -292,15 +376,12 @@
 				});
 
 				$('.cropmodal').on('hide.bs.modal', function(event) {
+					progresscbar.animate(0);
 					videomel[0].pause();
 					videomel.removeAttr('src');
 					$('#mdivvideo').css('display', 'none');
 					$('#progresscrop').css('display', 'block');
-					progresscbar.animate(0);
-					cropstarts = null;
-					cropends = null;
-					ccrops = false;
-					ccrope = false;
+					$('#cropvideoload').text(null);
 					$('#btncrop').addClass('disabled');
 					$('#btncrop').attr('disabled');
 					$('#btncend').text(null);
@@ -311,9 +392,27 @@
 					$('#btncstart').append('<i class="fa fa-hourglass-end"></i>');
 					$('#btncstart').removeClass('btn-primary');
 					$('#btncstart').addClass('btn-default');
+					cropstarts = null;
+					cropends = null;
+					ccrops = false;
+					ccrope = false;
 				});
 
-				function joinfiles(cbid,jfilevsource,jfilename,jvbtn) {
+				$('.jcropmodal').on('hide.bs.modal', function(event) {
+					progressjcbar.animate(0);
+					videojcmel[0].pause();
+					videojcmel.removeAttr('src');
+					$('#mcjdivvideo').css('display', 'none');
+					$('#progressjcrop').css('display', 'block');
+					$('#joincropvideoload').text(null);
+					$('#toggle-trigger').bootstrapToggle('off')
+					$('#btnjoin').addClass('disabled');
+					$('#btnjoin').attr('disabled', true);
+					cropfilestojoin = [];
+					joincropvideos = false;
+				});
+
+				function joinfiles(cbid, jfilevsource, jfilename, jvbtn) {
 					jvsource = jfilevsource;
 					chbox = $('#'+cbid);
 					verify = chbox.is(":checked");
@@ -335,6 +434,15 @@
 							$('#btnjoin').attr('disabled', true);
 							joinvideos = false;
 						}
+					}
+				}
+
+				function cropjoinfiles(cjfilename) {
+					cropfilestojoin.push(cjfilename);
+					if (cropfilestojoin.length >= 2) {
+						$('#btnjoin').removeClass('disabled');
+						$('#btnjoin').removeAttr('disabled');
+						joincropvideos = true;
 					}
 				}
 			});

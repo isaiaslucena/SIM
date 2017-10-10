@@ -7,7 +7,6 @@
 		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-select/js/bootstrap-select.min.js');?>"></script>
-		<script src="<?php echo base_url('assets/bootstrap-slider/bootstrap-slider.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js');?>"></script>
@@ -17,7 +16,6 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-select/css/bootstrap-select.min.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-slider/css/bootstrap-slider.min.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
@@ -35,6 +33,34 @@
 
 			textarea { resize: none; }
 			
+			video {
+				z-index: 1;
+			}
+
+			.vbutton {
+				z-index: 2;
+				position: absolute;
+				top: 45%;
+				left: 45%;
+
+				box-sizing: border-box;
+				width: 0;
+				height: 74px;
+				border-color: transparent transparent transparent #FEFEFE;
+				transition: 100ms all ease;
+				cursor: pointer;
+				border-style: solid;
+				border-width: 37px 0 37px 60px;
+			}
+			.vbutton.paused {
+				border-style: double;
+				border-width: 0px 0 0px 60px;
+			}
+
+			.vbutton:hover {
+				border-color: transparent transparent transparent #7F7F7F;
+			}
+
 			.progressBar {
 				position: relative;
 				width: 100%;
@@ -135,6 +161,14 @@
 				margin: auto;
 				top: 60px;
 			}
+			#progressjcrop {
+				width: 250px;
+				height: 250px;
+				position: relative;
+				vertical-align: center;
+				margin: auto;
+				top: 80px;	
+			}
 		</style>
 	</head>
 	<body>
@@ -147,9 +181,12 @@
 		<div class="container-fluid">
 			<div class="row center-block text-center" style="padding-bottom: 8px">
 				<div class="col-lg-8">
-					<h2 id="vtittle">Nenhuma seleção</h2>
-					<video id="vvideo" src="<?php echo base_url('assets/imgs/colorbarstatic.mp4')?>" width="840" height="480" preload="metadata" autoplay loop></video>
-					<img id="thvideo" src="" style="display: none; width: 840px; height: 480px; padding-top: 4px; padding-bottom: 4px">
+					<h2 id="vtitle">Nenhuma seleção</h2>
+					<div id="divvideo">
+						<div id="vvideobtn" class='vbutton' style="display: none"></div>
+						<video id="vvideo" src="<?php echo base_url('assets/imgs/colorbarstatic.mp4')?>" width="840" height="480" preload="metadata" autoplay loop></video>
+						<img id="thvideo" src="" style="display: none; width: 840px; height: 480px; padding-top: 4px; padding-bottom: 4px">
+					</div>
 				</div>
 
 				<div class="col-lg-4">
@@ -215,7 +252,13 @@
 						<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i></a>
 						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
 						<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></a>
+						<input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="Juntar" data-off="Juntar" disabled>
 					</div>
+
+					<!-- <div class="btn-group" role="group" aria-label="Juntar cortes"> -->
+						<!-- <a id="btnjcrop" type="button" class="btn btn-default" title="Juntar cortes" disabled><i class="fa fa-plus-circle"></i></a> -->
+						<!-- <input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-close'></i>" disabled> -->
+					<!-- </div> -->
 
 					<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
 
@@ -231,7 +274,7 @@
 						<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
 					</div>
 
-					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Autoplay" data-off="<i class='fa fa-times'></i> Autoplay" disabled>
+					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
 				</div>
 			</div>
 		</div>
@@ -267,7 +310,7 @@
 								<div class="form-group">
 									<textarea id="transct" type="text" class="form-control text-justify" rows="10" placeholder="Transcrição"></textarea>
 								</div>
-								<span id="cropvideoload" class="text-muted">Tempo do corte: </span>
+								<span id="cropvideoload" class="text-muted"></span>
 							</div>
 						</div>
 					</div>
@@ -318,6 +361,31 @@
 			</div>
 		</div>
 
+		<div class="modal fade jcropmodal" tabindex="-1" role="dialog" aria-labelledby="jcropmodal">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-body center-block text-center" style="min-height: 500px">
+						<div class="row">
+							<div class="col-lg-12">
+								<div id="progressjcrop"></div>
+								<div id="mcjdivvideo" class="embed-responsive embed-responsive-16by9" style="display: none;">
+									<video id="mcjvvideo" class="embed-responsive-item" width="840" height="480" controls autoplay></video>
+								</div>
+								<span id="joincropvideoload" class="text-muted pull-right"></span>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a id="mbtnjcdown" class="btn btn-sm btn-default" href="#" download="tempjcname">
+							<i class="fa fa-download"></i>
+							<?php echo get_phrase('download');?> 
+						</a>
+						<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script type="text/javascript">
 			$(document).ready(function() {
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends, 
@@ -325,6 +393,7 @@
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet;
 				var filestojoin = [];
+				var cropfilestojoin = [];
 				var vbtnjoin = [];
 				var nimage = [];
 				var tvch = $('#selchannels');
@@ -332,9 +401,10 @@
 				var videoel = $('#vvideo');
 				var videomel = $('#mvvideo');
 				var videoelth = $('#thvideo');
+				var videojcmel = $('#mcjvvideo');
 				var vvideosrc = videoel[0].currentSrc;
 				var vvideosrcsearch = "colorbarstatic";
-				var videotitle = $('#vtittle');
+				var videotitle = $('#vtitle');
 				var nextvideo = $('#vnext');
 				var progressbar = $('.progressBar');
 				var timebar = $('.timeBar')
@@ -344,6 +414,7 @@
 				var ccrops = false;
 				var ccrope = false;
 				var joinvideos = false;
+				var joincropvideos = false;
 
 				var d = new Date();
 				var day = d.getDate();
@@ -526,6 +597,7 @@
 							});
 
 							videotitle.text(lastvideo);
+							videotitle.css('font-size', '30px');
 							nextvideo.html(null);
 							$.each(data, function(index, val) {
 								file = val.replace(".mp4","");
@@ -635,6 +707,10 @@
 						function(data, textStatus, xhr) {
 							lastvideo = data[data.length-2].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
+
+							$('.vbutton').css('display', 'none');
+							$('.vbutton').removeClass('paused');
+
 							videoel.removeAttr('loop');
 							videoel.attr({
 								poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
@@ -668,8 +744,10 @@
 
 							$('#btntran').removeClass('disabled');
 							$('#btntran').removeAttr('disabled');
+							$('#checkjoincrop').bootstrapToggle('enable');
 
 							videotitle.text(lastvideo);
+							videotitle.css('font-size', '30px');
 							nextvideo.html(null);
 							$.each(data, function(index, val) {
 								file = val.replace(".mp4","");
@@ -771,29 +849,20 @@
 						},
 						function(data, textStatus, xhr) {
 							console.log(data);
-							var textpw = "";
+							if (data.response.docs.length > 0) {
+								var textpw = "";
 
-							// $.each(data, function(index, val) {
-								// $.each(val.response.docs, function(index, vald) {
-								// 	starttimew = vald.starttime_l;
-								// 	endtimew = vald.endtime_l;
-								// 	textpw += vald.norm_s;
-								// 	textpw += " ";
-								// });
-							// });
+								$.each(data.response.docs, function(index, vald) {
+									if (Array.isArray(vald.text_t)) {
+										textpw += vald.text_t[0];
+									}
+								});
 
-							$.each(data.response.docs, function(index, vald) {
-								// console.log(vald);
-								if (Array.isArray(vald.text_t)) {
-									textpw += vald.text_t[0];
-									textpw += " ";
-								}
-							});
-
-							// $('#transctpm').text(textpw);
-							$('#stransctm').val(data.response.docs[0].source_s);
-							$('#ptransctm').val(data.response.docs[0].name_s);
-							$('#transctm').val(textpw);
+								// $('#transctpm').text(textpw);
+								$('#stransctm').val(data.response.docs[0].source_s);
+								$('#ptransctm').val(data.response.docs[0].name_s);
+								$('#transctm').val(textpw);
+							}
 						}
 					);
 
@@ -824,7 +893,6 @@
 						}
 					}
 				});
-				// progresscbar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
 				progresscbar.text.style.fontFamily = 'Helvetica';
 				progresscbar.text.style.fontSize = '4rem';
 
@@ -852,6 +920,32 @@
 						}
 					}
 				});
-				// progressjbar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
 				progressjbar.text.style.fontFamily = 'Helvetica';
 				progressjbar.text.style.fontSize = '4rem';
+
+				var progressjcbar = new ProgressBar.Circle('#progressjcrop', {
+					color: '#aaa',
+					// This has to be the same size as the maximum width to
+					// prevent clipping
+					strokeWidth: 4,
+					trailWidth: 1,
+					easing: 'easeInOut',
+					duration: 200,
+					text: { autoStyleContainer: false },
+					from: { color: '#aaa', width: 2 },
+					to: { color: '#333', width: 4 },
+					// Set default step function for all animate calls
+					step: function(state, circle) {
+						circle.path.setAttribute('stroke', state.color);
+						circle.path.setAttribute('stroke-width', state.width);
+
+						var value = Math.round(circle.value() * 100);
+						if (value === 0) {
+							circle.setText('0%');
+						} else {
+							circle.setText(value+'%');
+						}
+					}
+				});
+				progressjcbar.text.style.fontFamily = 'Helvetica';
+				progressjcbar.text.style.fontSize = '4rem';

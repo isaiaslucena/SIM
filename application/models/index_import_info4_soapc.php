@@ -28,6 +28,7 @@ $host='172.17.0.3';
 // soap
 $addr01 = '189.3.21.194';
 $addr02 = '186.216.193.146';
+$addr03 = '187.16.240.186';
 
 ini_set('soap.wsdl_cache_enabled', 0);
 ini_set('soap.wsdl_cache_ttl', 900);
@@ -136,11 +137,38 @@ try {
 catch(Exception $e) {
 	$now = date('Y-m-d H:i:s');
 	echo $now."  No success!"."\r\n";
-	$now = date('Y-m-d H:i:s');
-	echo $now."  Conecting now to address ".$addr02."..."."\r\n";
-	$wsdl = 'http://'.$addr02.':8030/MMS/WS/StoryManager?wsdl';
-	$soap = new SoapClient($wsdl, $options);
-	$data = $soap->get($params);
+	
+	try {
+       		$now = date('Y-m-d H:i:s');
+        	echo $now."  Connecting to address ".$addr02."..."."\r\n";
+		$wsdl = 'http://'.$addr02.':8030/MMS/WS/StoryManager?wsdl';
+        	$soap = new SoapClient($wsdl, $options);
+        	$data = $soap->get($params);
+	}
+	catch(Exception $ex) {
+	        $now = date('Y-m-d H:i:s');
+        	echo $now."  No success!"."\r\n";
+
+		try {
+	                $now = date('Y-m-d H:i:s');
+        	        echo $now."  Connecting to address ".$addr03."..."."\r\n";
+                	$wsdl = 'http://'.$addr03.':8030/MMS/WS/StoryManager?wsdl';
+                	$soap = new SoapClient($wsdl, $options);
+	                $data = $soap->get($params);
+		}
+		catch(Exception $exc) {
+	               $now = date('Y-m-d H:i:s');
+			echo $now."  No success!"."\r\n";
+			die($exc->getMessage()."\r\n");
+		}
+
+
+	}	
+	//$now = date('Y-m-d H:i:s');
+	//echo $now."  Conecting now to address ".$addr02."..."."\r\n";
+	//$wsdl = 'http://'.$addr02.':8030/MMS/WS/StoryManager?wsdl';
+	//$soap = new SoapClient($wsdl, $options);
+	//$data = $soap->get($params);
 	// die($e->getMessage()."\r\n");
 }
  
