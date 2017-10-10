@@ -170,8 +170,6 @@
 							}
 							$('#btncrop').removeClass('disabled');
 							$('#btncrop').removeAttr('disabled');
-							// $('#btntran').removeClass('disabled');
-							// $('#btntran').removeAttr('disabled');
 							$(this).removeClass('btn-default');
 							$(this).addClass('btn-primary');
 							$(this).append(' '+$('#currtime').text());
