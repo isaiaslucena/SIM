@@ -1,46 +1,52 @@
 				//PLAYER
 				videoel.click(function(event) {
 					videoelid = event.target.id;
-					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
 						playpausevideo(videoelid);
 					}
 				});
 
-				videomel.click(function() {
-					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
-						if (videoel[0].paused) {
-							$("#iplay").addClass('hidden');
-							$("#ipause").removeClass('hidden');
-							videoel[0].play();
-						} else {
-							$("#ipause").addClass('hidden');
-							$("#iplay").removeClass('hidden');
-							videoel[0].pause();
-						}
+				videomel.click(function(event) {
+					videoelid = event.target.id;
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
+						playpausevideo(videoelid);
 					}
 				});
 
-				videojcmel.click(function() {
-					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
-						if (videoel[0].paused) {
-							$("#iplay").addClass('hidden');
-							$("#ipause").removeClass('hidden');
-							videoel[0].play();
-						} else {
-							$("#ipause").addClass('hidden');
-							$("#iplay").removeClass('hidden');
-							videoel[0].pause();
-						}
+				videojcmel.click(function(event) {
+					videoelid = event.target.id;
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
+						playpausevideo(videoelid);
 					}
 				});
 
 				videoel.dblclick(function(event) {
 					videoelid = event.target.id;
-					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
+					videofulls = document.webkitFullscreenEnabled;
+					// videofullsel = document.webkitFullscreenElement;
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
+						vfullscreen(videoelid);
+					}
+				});
+
+				videomel.dblclick(function(event) {
+					videoelid = event.target.id;
+					videofulls = document.webkitFullscreenEnabled;
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
+						vfullscreen(videoelid);
+					}
+				});
+
+				videojcmel.dblclick(function(event) {
+					videoelid = event.target.id;
+					videofulls = document.webkitFullscreenEnabled;
+					vvideosrc = event.target.src;
+					if (vvideosrc.length != 0) {
 						vfullscreen(videoelid);
 					}
 				});
@@ -409,11 +415,9 @@
 
 				function vfullscreen(videoelt) {
 					vvideoelmt = $('#'+videoelt);
-					if (vvideoelmt[0].requestFullscreen) {
-						vvideoelmt[0].requestFullscreen();
-					} else if (vvideoelmt[0].mozRequestFullScreen) {
-						vvideoelmt[0].mozRequestFullScreen();
-					} else if (vvideoelmt[0].webkitRequestFullscreen) {
+					if (document.webkitFullscreenElement) {
+						document.webkitExitFullscreen()
+					} else {
 						vvideoelmt[0].webkitRequestFullscreen();
 					}
 				}

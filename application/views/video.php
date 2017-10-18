@@ -41,6 +41,14 @@
 				box-shadow: 0px 0px 20px #888888;
 			}
 
+			.pthvideo {
+				display: none;
+				width: 840px;
+				height: 480px;
+				padding-top: 4px;
+				padding-bottom: 4px;
+			}
+
 			.vbutton {
 				z-index: 2;
 				position: absolute;
@@ -188,8 +196,8 @@
 					<h2 id="vtitle">Nenhuma seleção</h2>
 					<div id="divvideo">
 						<div id="vvideobtn" class='vbutton' style="display: none"></div>
-						<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay loop></video>
-						<img id="thvideo" src="" style="display: none; width: 840px; height: 480px; padding-top: 4px; padding-bottom: 4px">
+						<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
+						<img id="thvideo" class="pthvideo">
 					</div>
 				</div>
 
@@ -206,10 +214,7 @@
 
 						<div class="col-lg-7">
 							<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" title="Selecione uma data" disabled></select>
-							<a id="btnnight" type="button" class="btn btn-sm btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a>
 						</div>
-
-
 					</div>
 					<div class="row">
 						<h4>Vídeos</h4>
@@ -282,6 +287,8 @@
 					</div>
 
 					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+
+					<!-- <a id="btnnight" type="button" class="btn btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a> -->
 				</div>
 			</div>
 		</div>
@@ -534,6 +541,7 @@
 						$('body').css('background-color', '#F6F6F6');
 						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#000000');
 						$('.list-group-item').css('background-color','#FFFFFF');
+						$('.list-group-item .active').css('background-color','##337ab7');
 						$('span').css('color', '#000000');
 						$('label').css('color', '#000000');
 						nightmode = false;
@@ -541,6 +549,7 @@
 						$('body').css('background-color', '#222222');
 						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#EEEEEE');
 						$('.list-group-item').css('background-color','#272727');
+						$('.list-group-item .active').css('background-color','##337ab7');
 						$('span').css('color', '#EEEEEE');
 						$('label').css('color', '#EEEEEE');
 						nightmode = true;
