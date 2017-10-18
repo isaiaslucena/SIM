@@ -206,7 +206,10 @@
 
 						<div class="col-lg-7">
 							<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" title="Selecione uma data" disabled></select>
+							<a id="btnnight" type="button" class="btn btn-sm btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a>
 						</div>
+
+
 					</div>
 					<div class="row">
 						<h4>Vídeos</h4>
@@ -420,6 +423,7 @@
 				var ccrope = false;
 				var joinvideos = false;
 				var joincropvideos = false;
+				var nightmode = false;
 
 				var d = new Date();
 				var day = d.getDate();
@@ -524,6 +528,24 @@
 
 				videoel.bind('contextmenu', function() { return false; });
 				videomel.bind('contextmenu', function() { return false; });
+
+				$('#btnnight').click(function(event) {
+					if (nightmode) {
+						$('body').css('background-color', '#F6F6F6');
+						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#000000');
+						$('.list-group-item').css('background-color','#FFFFFF');
+						$('span').css('color', '#000000');
+						$('label').css('color', '#000000');
+						nightmode = false;
+					} else {
+						$('body').css('background-color', '#222222');
+						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#EEEEEE');
+						$('.list-group-item').css('background-color','#272727');
+						$('span').css('color', '#EEEEEE');
+						$('label').css('color', '#EEEEEE');
+						nightmode = true;
+					}
+				});
 
 				$('.input-group.date').datepicker({
 					todayBtn: "linked",
