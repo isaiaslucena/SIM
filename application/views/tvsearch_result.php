@@ -3,7 +3,7 @@
 
 		$query = base64_encode($searchresult->responseHeader->params->json);
 		$jquery = json_decode($searchresult->responseHeader->params->json)->query;
-		$searchkwquery = strpos($jquery, '_text_:');
+		$searchkwquery = strpos($jquery, 'text_t:');
 		if (is_int($searchkwquery)) {
 			$querykw = substr($jquery, 8, -1);
 			$keyword = $querykw;
@@ -405,6 +405,8 @@
 	<div>
 
 	<script type="text/javascript">
+
+
 		$('#audiotext').bind('contextmenu',function() { return false; });
 
 		function load_file(position,idclient,idkeyword,timestamp,idradio,divid,iloadid) {

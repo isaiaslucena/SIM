@@ -23,6 +23,16 @@
 				{ type: 'date-euro', targets: 3 }
 			],
 			"order": [[ 3, "asc" ]],
+		<?php } else if ($datatablename == 'table_users') { ?>
+			"columns": [
+				{ "searchable": false },
+				null,
+				{ "searchable": false },
+				{ "searchable": false },
+				null,
+				{ "searchable": false }
+			],
+			"order": [[ 1, "asc" ]],
 		<?php } ?>
 		"language" : {
 			"sEmptyTable": "Nenhum registro encontrado",

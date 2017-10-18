@@ -16,6 +16,16 @@ Boolean.  Default: false
 Whether or not to close the datepicker immediately when a date is selected.
 
 
+assumeNearbyYear
+----------------
+
+Boolean or Integer.  Default: false
+
+If true, manually-entered dates with two-digit years, such as "5/1/15", will be parsed as "2015", not "15". If the year is less than 10 years in advance, the picker will use the current century, otherwise, it will use the previous one. For example "5/1/15" would parse to May 1st, 2015, but "5/1/97" would be May 1st, 1997.
+
+To configure the number of years in advance that the picker will still use the current century, use an Integer instead of the Boolean true. E.g. "assumeNearbyYear: 20"
+
+
 beforeShowDay
 -------------
 
@@ -31,6 +41,7 @@ A function that takes a date as a parameter and returns one of the following val
    * ``enabled``: same as the Boolean value above
    * ``classes``: same as the String value above
    * ``tooltip``: a tooltip to apply to this date, via the ``title`` HTML attribute
+   * ``content``: the content to display in the day cell, rather than the default (day of month as text)
 
 
 beforeShowMonth
@@ -167,15 +178,18 @@ Days of the week that should be highlighted. Values are 0 (Sunday) to 6 (Saturda
 defaultViewDate
 ---------------
 
-Object with keys ``year``, ``month``, and ``day``. Default: today
+Date, String or Object with keys ``year``, ``month``, and ``day``. Default: today
 
-Date to view when initially opening the calendar. The internal value of the date remains today as default, but when the datepicker is first opened the calendar will open to ``defaultViewDate`` rather than today. If this option is not used, "today" remains the default view date. If the given object is missing any of the required keys, their defaults are:
+Date to view when initially opening the calendar. The internal value of the date remains today as default, but when the datepicker is first opened the calendar will open to ``defaultViewDate`` rather than today. If this option is not used, "today" remains the default view date.
 
- * ``year``: the current year
- * ``month``: 0
- * ``day``: 1
+This option can be:
+ * A date, which should be in local timezone.
+ * A string which must be parsable with ``format``.
+ * An object with keys ``year``, ``month`` and ``day`` (can't be set from a data attribute). If the given object is missing any of the required keys, their defaults are:
 
-Note that the month parameter starts at 0 for January.
+   * ``year``: the current year
+   * ``month``: 0 (Note that it starts with 0 for January)
+   * ``day``: 1
 
 disableTouchKeyboard
 --------------------
@@ -209,7 +223,7 @@ Date should be in local timezone. String must be parsable with ``format``.
 
 .. code-block:: html
 
-    <input type="text" data-provide="datepicker" data-date-end-date="0d">
+    <input type="text" class="form-control" data-date-end-date="0d">
 
 Will disable all dates after today.
 
@@ -220,16 +234,6 @@ forceParse
 Boolean.  Default: true
 
 Whether or not to force parsing of the input value when the picker is closed.  That is, when an invalid date is left in the input field by the user, the picker will forcibly parse that value, and set the input's value to the new, valid date, conforming to the given `format`.
-
-
-assumeNearbyYear
-----------------
-
-Boolean or Integer.  Default: false
-
-If true, manually-entered dates with two-digit years, such as "5/1/15", will be parsed as "2015", not "15". If the year is less than 10 years in advance, the picker will use the current century, otherwise, it will use the previous one. For example "5/1/15" would parse to May 1st, 2015, but "5/1/97" would be May 1st, 1997.
-
-To configure the number of years in advance that the picker will still use the current century, use an Integer instead of the Boolean true. E.g. "assumeNearbyYear: 20"
 
 
 format
@@ -272,8 +276,7 @@ Custom formatting options
                 d.setDate(d.getDate() + 7);
                 return new Date(d);
             }
-        },
-        autoclose: true
+        }
     });
 
 
@@ -294,7 +297,7 @@ A list of inputs to be used in a range picker, which will be attached to the sel
 
 .. code-block:: html
 
-    <div class="form-group form-group-filled" id="event_period">
+    <div id="event_period">
         <input type="text" class="actual_range">
         <input type="text" class="actual_range">
     </div>
@@ -439,6 +442,14 @@ You can use this property to use custom icons libs. for example:
     }
 
 
+showWeekDays
+------------
+
+Boolean.  Default: true
+
+If false, the datepicker will not append the names of the weekdays to its view. Default behavior is appending the weekdays.
+
+
 title
 -----
 
@@ -515,6 +526,7 @@ This is a quick overview of all the options and their default values
 Option                       Default value
 =====================        =============
 autoclose                    false
+assumeNearbyYear             false
 beforeShowDay
 beforeShowMonth
 beforeShowYear
@@ -531,7 +543,6 @@ disableTouchKeyboard         false
 enableOnReadonly             true
 endDate                      Infinity
 forceParse                   true
-assumeNearbyYear             false
 format                       'mm/dd/yyyy'
 immediateUpdates             false
 inputs

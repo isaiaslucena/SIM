@@ -7,29 +7,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Transcrição de Áudio</title>
-		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
+		<title>Transcrição do Áudio</title>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/material-design/material-icons.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/readalong/style_temp.css');?>"/>
+		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
+		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
 		<style type="text/css">
-			audio::-internal-media-controls-download-button {
-				display:none;
-			}
-
-			audio::-webkit-media-controls-enclosure {
-				overflow:hidden;
-			}
-
-			audio::-webkit-media-controls-panel {
-				width: calc(100% + 30px); /* Adjust as needed */
-			}
+			audio::-internal-media-controls-download-button { display:none; }
+			audio::-webkit-media-controls-enclosure { overflow:hidden; }
+			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
 		</style>
 	</head>
 
 	<body>
 	<article>
 		<div id="sticky-anchor"></div>
+
 		<div id="sticky">
 			<center>
 				<h2>
@@ -46,7 +41,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					?>
 				</h2>
 			</center>
-			<p class="loading"><em><img src="<?php echo base_url('assets/imgs/loader.gif');?>" alt="Initializing audio"><?php echo get_phrase('loading_audio_file')?>…</em></p>
+			<p class="loading">
+				<em>
+					<img src="<?php echo base_url('assets/imgs/loader.gif');?>" alt="Initializing audio"><?php echo get_phrase('loading_audio_file')?>…
+				</em>
+			</p>
 
 			<p class="passage-audio" hidden>
 				<audio id="passage-audio" class="passage" controls>
@@ -162,25 +161,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										echo '<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
 										foreach ($transcseg->TranscriptWordList->Word as $transcword) {
 											if (empty($transcword->Word['norm'])) {
-												$word 			= $transcword;
+												$word = $transcword;
 											}
 											else {
-												$word 			= $transcword['norm'];
+												$word = $transcword['norm'];
 											}
 											if ($countxmlpath > 1) {
-												$wordstartms		= $lastwordendms+$transcword['start'];
-												$wordstarts		= $wordstartms/100;
-												$wordendms		= $lastwordendms+$transcword['end'];
-												$wordends			= $wordendms/100;
+												$wordstartms = $lastwordendms+$transcword['start'];
+												$wordstarts = $wordstartms/100;
+												$wordendms = $lastwordendms+$transcword['end'];
+												$wordends = $wordendms/100;
 												$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-												$wordpunct		= $transcword['punct'];
+												$wordpunct = $transcword['punct'];
 											} else {
-												$wordstartms		= $transcword['start'];
-												$wordstarts		= $wordstartms/100;
-												$wordendms		= $transcword['end'];
-												$wordends			= $wordendms/100;
+												$wordstartms = $transcword['start'];
+												$wordstarts = $wordstartms/100;
+												$wordendms = $transcword['end'];
+												$wordends = $wordendms/100;
 												$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-												$wordpunct		= $transcword['punct'];
+												$wordpunct = $transcword['punct'];
 											}
 
 											$wid++;
@@ -219,20 +218,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						foreach ($xmldata->StorySegment as $storyseg) {
 							foreach ($storyseg->TranscriptSegment as $transcseg) {
 								$frstwordstart	= $transcseg->TranscriptWordList->Word[0]['start']-1;
-								$guid 			= (string)$transcseg->TranscriptGUID;
-								$type 			= $transcseg->AudioType;
-								$typestr 		= $type[0];
-								$typestartms 	= $type['start'];
-								$typestarts 	= $typestartms/100;
-								$typeendms 	= $type['end'];
-								$typeends 		= $typeendms/100;
+								$guid = (string)$transcseg->TranscriptGUID;
+								$type = $transcseg->AudioType;
+								$typestr = $type[0];
+								$typestartms = $type['start'];
+								$typestarts = $typestartms/100;
+								$typeendms = $type['end'];
+								$typeends = $typeendms/100;
 
-								$typeends2	= $frstwordstart/100;
-								$typeduration 	= number_format($typeends-$typestarts,3,"."," ");
+								$typeends2 = $frstwordstart/100;
+								$typeduration = number_format($typeends-$typestarts,3,"."," ");
 								$typeduration2 = number_format($typeends2-$typestarts,3,"."," ");
 
-								$speaker		= $transcseg->Speaker;
-								$speakerg		= $speaker['name'];
+								$speaker = $transcseg->Speaker;
+								$speakerg = $speaker['name'];
 
 								if (!isset($transcseg->TranscriptWordList->Word)){
 									echo '<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
@@ -244,14 +243,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											$word = $transcword;
 										}
 										else {
-											$word 		= $transcword['norm'];
+											$word = $transcword['norm'];
 										}
-										$wordstartms	= $transcword['start'];
-										$wordstarts	= $wordstartms/100;
-										$wordendms	= $transcword['end'];
-										$wordends		= $wordendms/100;
+										$wordstartms = $transcword['start'];
+										$wordstarts = $wordstartms/100;
+										$wordendms = $transcword['end'];
+										$wordends = $wordendms/100;
 										$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-										$wordpunct	= $transcword['punct'];
+										$wordpunct = $transcword['punct'];
 										$wid++;
 
 										$keyfound = 0;
@@ -279,17 +278,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		</div>
 
 		<script type="text/javascript">
-			$('audio').bind('contextmenu',function() { return false; });
-
-			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
-
-			$('.kw').css({
-				color: 'white',
-				'background-color': 'red',
-				'font-size': '110%',
-				'font-weight': 'bold'
-			})
-
 			var elementsToTrack = $('span', $('#passage-text'));
 			var texts = [];
 			var starttimev;
@@ -300,9 +288,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			var result = $('#result');
 			var fulltext;
 
+			$('audio').bind('contextmenu', function() { return false; });
+
+			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
+
+			$('.kw').css({
+				'color': 'white',
+				'background-color': 'red',
+				'font-size': '110%',
+				'font-weight': 'bold'
+			})
+
 			elementsToTrack.each(function() {
 				texts.push($(this).text());
 			});
+
+			console.log(texts);
 
 			$('span', $('#passage-text')).mousedown(function() {
 				$('#lstarttime').css({
@@ -329,7 +330,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				$('#indexstart').val(dataindex);
 				$('#lstarttime').prepend('&#10004;')
 				$('#lstarttime').css({
-					color: 'green',
+					'color': 'green',
 					'font-weight': 'bold'
 				});
 			});
@@ -385,7 +386,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#indexstart').val('');
 					$('#indexend').val('');
 					result.text('');
-					alert("O tempo inicial não pode ser maior que o final!");
+					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 					return;
 				}
 				for (var i = +indexstartv; i <= +indexendv; i++){
@@ -455,8 +456,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			<a rel="author" href="http://www.dataclip.com.br/" target="_blank">DataClip</a><br>
 			Business Inteligence
 		</footer>
-		</article>
-		<script src="<?php echo base_url('assets/readalong/read-along.js');?>"></script>
-		<script src="<?php echo base_url('assets/readalong/main.js');?>"></script>
+	</article>
+	<script src="<?php echo base_url('assets/readalong/read-along.js');?>"></script>
+	<script src="<?php echo base_url('assets/readalong/main.js');?>"></script>
 	</body>
 </html>

@@ -7,20 +7,6 @@
 		<link rel="icon" href="<?php echo base_url('assets/imgs/favicon.ico');?>" type="image/x-icon">
 		<title>Sistema Integrado de Monitoramento</title>
 
-		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
-		<style type="text/css">
-			audio::-internal-media-controls-download-button {
-				display:none;
-			}
-
-			audio::-webkit-media-controls-enclosure {
-				overflow:hidden;
-			}
-
-			audio::-webkit-media-controls-panel {
-				width: calc(100% + 30px); /* Adjust as needed */
-			}
-		</style>
 		<link rel="stylesheet" href="<?php echo base_url('assets/datatable/dataTables.bootstrap.min.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/datatable/buttons.bootstrap.min.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
@@ -34,7 +20,9 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-tagsinput/dist/bootstrap-tagsinput.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/typeahead-0111/typeahead-tags.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/morrisjs/morris.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
 
+		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/metisMenu/metisMenu.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/raphael/raphael.min.js');?>"></script>
@@ -51,4 +39,11 @@
 		<script src="<?php echo base_url('assets/typeahead-0111/typeahead.bundle.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/morrisjs/morris.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/raphael/raphael.min.js');?>"></script>
+		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
+
+		<style type="text/css">
+			audio::-internal-media-controls-download-button { display:none; }
+			audio::-webkit-media-controls-enclosure { overflow:hidden; }
+			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
+		</style>
 	</head>

@@ -104,7 +104,10 @@
 						vduration = videoel[0].duration;
 						durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
 						durations = ('0' + Math.floor(vduration - durationm * 60)).slice(-2);
-						vdurtime.text(durationm+':'+durations);
+						durationmss = (vduration * 100 / 100).toFixed(3);
+						durationms = durationmss.split(".");
+						vdurtime.text(durationm+':'+durations+'.'+durationms[1]);
+
 						maxthumb = Math.floor(videoel[0].duration);
 						nimage = [];
 						if (!joinvideos) {
@@ -120,13 +123,15 @@
 
 				videoel.on('timeupdate', function() {
 					if (vvideosrc.match(vvideosrcsearch) == null) {
-						var currentPos = videoel[0].currentTime;
-						var maxduration = videoel[0].duration;
-						var percentage = 100 * currentPos / maxduration;
-						var currentPosm = ('0' + Math.floor(currentPos / 60)).slice(-2);
-						var currentPoss = ('0' + Math.floor(currentPos - currentPosm * 60)).slice(-2);
+						currentPos = videoel[0].currentTime;
+						maxduration = videoel[0].duration;
+						percentage = 100 * currentPos / maxduration;
+						currentPosm = ('0' + Math.floor(currentPos / 60)).slice(-2);
+						currentPoss = ('0' + Math.floor(currentPos - currentPosm * 60)).slice(-2);
+						currentPossmss = (currentPos * 100 / 100).toFixed(3);
+						currentPossms = currentPossmss.split(".");
 						$('.timeBar').css('width', percentage+'%');
-						vcurrtime.text(currentPosm+':'+currentPoss);
+						vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
 						//$('.tooltiptext').text(currentPosm+':'+currentPoss);
 						videoelBuffer();
 						if (currentPos == maxduration) {
@@ -168,9 +173,8 @@
 					$("#ipause").addClass('hidden');
 					$("#iplay").removeClass('hidden');
 					updatebar(e.pageX);
-
 				});
-				$('.progressBar').mouseup(function(e) {
+				$(document).mouseup(function(e) {
 					if (timeDrag) {
 						vfile = videotitle.text()
 						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
@@ -240,9 +244,17 @@
 					thumbnum = ('00' + videotimesec).slice(-3)
 					videoel[0].currentTime = videotime.toFixed(3);
 
+					videotime = ((maxduration * percentage) / 100).toFixed(3);
+					currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
+					currentPoss = ('0' + Math.floor(videotime - currentPosm * 60)).slice(-2);
+					currentPossmss = (videotime * 100 / 100).toFixed(3);
+					currentPossms = currentPossmss.split(".");
+					vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+
 					$('.timeBar').css('width', percentage+'%');
 					// videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
 					uptadevThumb(sfilename, vdfilename, thumbnum);
+					videoelBuffer();
 				};
 
 				function uptadevThumb(utsfilename, utvdfilename, utthumbnum) {
@@ -267,11 +279,14 @@
 					videotimesec = Math.floor(videotime);					
 					currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
 					currentPoss = ('0' + Math.floor(videotime - currentPosm * 60)).slice(-2);
+					currentPossmss = (videotime * 100 / 100).toFixed(3);
+					currentPossms = currentPossmss.split(".");
 					thumbnum = ('0' + videotimesec).slice(-3)
 
 					// $('#vthumb').attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
 					//videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
-					$('.tooltiptime').text(currentPosm+':'+currentPoss);
+					vtooltiptime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+					videoelBuffer();
 				};
 
 				progressbar.hover(function(event) {
@@ -286,7 +301,7 @@
 					var maxduration = videoel[0].duration;
 					// thumbleft = event.pageX - 106;
 					// thumbtop = barPositionoff.top - 155;
-					ttimeleft = event.pageX - 20;
+					ttimeleft = event.pageX - 35;
 					ttimetop = barPositionoff.top - barHeight + 10;
 					$('.tooltiptime').css({
 						'top': ttimetop+"px",
@@ -302,7 +317,6 @@
 				});
 
 				$(document).keydown(function(event) {
-					// console.log(event);
 					if(event.ctrlKey && event.which == 37) {
 						// console.log("Control+left pressed!");
 						// videoel[0].currentTime-=1;

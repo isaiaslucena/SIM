@@ -40,12 +40,12 @@
 							<table class="table table-hover" id="<?php echo $datatablename;?>">
 								<thead>
 									<tr>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px;"><?php echo get_phrase('id');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 80px;"><?php echo get_phrase('username');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 30px;"><?php echo get_phrase('logged_in');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 80px;"><?php echo get_phrase('session');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 50px;"><?php echo get_phrase('email');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 80px;"><?php echo get_phrase('options');?></th>
+										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('id');?></th>
+										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('username');?></th>
+										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('logged_in');?></th>
+										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('session');?></th>
+										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('email');?></th>
+										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('options');?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -74,7 +74,7 @@
 												</td>
 												<td class="text-center">
 												<?php
-												if (is_null($session_user[0]['timestamp'])) {
+												if (!isset($session_user[0])) {
 													echo '-';
 												} else {
 													echo date('d/m/Y H:i:s',$session_user[0]['timestamp']);
@@ -83,15 +83,15 @@
 												</td>
 												<td class="text-center"><?php echo $user['email']; ?></td>
 												<td class="text-center">
-													<button id="client_edit_button" type="button" class="btn btn-default btn-sm" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>" data-toggle="modal" data-target=".edit_modal">
+													<button id="client_edit_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>" data-toggle="modal" data-target=".edit_modal">
 														<i class="fa fa-edit"></i>
 														<?php echo get_phrase('edit');?>
 													</button>
-													<button id="client_passwd_button" type="button" class="btn btn-default btn-sm" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-toggle="modal" data-target=".passwd_modal">
+													<button id="client_passwd_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-toggle="modal" data-target=".passwd_modal">
 														<i class="fa fa-lock"></i>
 														<?php echo get_phrase('password');?>
 													</button>
-													<button type="button"  class="btn btn-danger btn-sm" data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".delete_modal">
+													<button type="button"  class="btn btn-danger btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".delete_modal">
 														<i class="fa fa-times"></i>
 														<?php echo get_phrase('delete');?>
 													</button>

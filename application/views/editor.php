@@ -142,22 +142,18 @@
 					$(this).append(' '+$('#currtime').text());
 					cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
 					cropstartms = cropstarts.split(".")
-					cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
+					// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
+					cropstart = '00-'+$('#currtime').text().replace(":", "-");
 					cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
 					ccrops = true;
-					console.log('crop endtime: '+cropstarts);
+					// console.log('crop starttime: '+cropstarts);
 				});
 
 				$('#btncend').click(function(event) {
 					cropends = videoel[0].currentTime;
 					if (ccrops) {
 						if (cropends < cropstarts) {
-							swal({
-								title: "Atenção!",
-								text: "O tempo final deve ser maior que o inicial!",
-								icon: "error"
-							});
-							// alert('O tempo final deve ser maior que o inicial!');
+							swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 							$(this).text(null);
 							$(this).append('<i class="fa fa-hourglass-end"></i>');
 							$(this).removeClass('btn-primary');
@@ -176,12 +172,13 @@
 							cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
 							cropendms = cropends.split(".");
 							cropendt = '00-'+$('#currtime').text()+'.'+cropendms[1];
+							// cropendt = '00-'+$('#currtime').text();
 							cropdurs = (cropends - cropstarts).toFixed(3);
 							cropdurmm = ('0' + Math.floor(cropdurs / 60)).slice(-2);
 							cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 							cropdur = '00-'+cropdurmm+'-'+cropdurss;
 							ccrope = true;
-							console.log('crop endtime: '+cropends);
+							// console.log('crop endtime: '+cropends);
 						}
 					}
 				})
@@ -202,14 +199,18 @@
 						cfilechannel = cfilearr[2];
 
 						cfilechann = channelname(cfilechannel);
-
-						cfilestate = cfilearr[3];
+						if (cfilechann == "TV Cultura") {
+							cfilestate = "SP";
+						} else {
+							cfilestate = cfilearr[3];
+						}
 						cfilesource = "\"" + cfilechann + " - " + cfilestate + "\"";
 						cfiledatetime = cfiledate + " " + cfiletime;
 						cfilestimestamp = new Date(String(cfiledatetime));
 						cfilesstimestamp = new Date(String(cfiledatetime));
 						cfileetimestamp = new Date(String(cfiledatetime));
 						cfiletimestampt = cfilestimestamp.getTime();
+						// cfiletimestampt = cfileetimestamp.setMinutes(cfileetimestamp.getMinutes() - 10);
 						cfiletstamp = cfileetimestamp.setMinutes(cfileetimestamp.getMinutes() + 10);
 						// cropstartts = cropstarts - 20;
 						// cropendts = cropends - 20;

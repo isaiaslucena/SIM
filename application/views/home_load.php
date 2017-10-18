@@ -66,9 +66,13 @@
 														$client_keywords++;
 													}
 												} ?>
-												<input type="text" class="keyword_foundc" name="keyword_foundc" id="<?php echo $client['id_client'];?>-keyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
-												<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($allkeywordquant);?>" style="display: none;">
-												<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
+											<input type="text" class="keyword_foundc" name="keyword_foundc" id="<?php echo $client['id_client'];?>-keyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
+											<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($allkeywordquant);?>" style="display: none;">
+											<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
+											<script type="text/javascript">
+												$('#ikeywordquant').val("<?php echo array_sum($keywordquant) ;?>");
+												$('#iallkeywordquant').val("<?php echo array_sum($allkeywordquant) ;?>");
+											</script>
 										</p>
 									</div>
 								</div>
@@ -80,6 +84,5 @@
 							$time = $time[1] + $time[0];
 							$finish = $time;
 							$total_time = round(($finish - $start), 4);
-							// echo 'Page generated in '.$total_time.' seconds.';
 							echo '<small><span class="pull-right text-muted loadmoret">Consulta gerada em '.$total_time.'s</span></small>'
 						?>

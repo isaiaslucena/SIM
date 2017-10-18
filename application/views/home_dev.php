@@ -56,8 +56,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<i class="fa fa-key fa-fw"></i>
 					<?php echo get_phrase('kewords_found').' '.get_phrase('since').' '.date('d/m/Y',$startdate).' - 00:00';?>
 					<span class="pull-right" id="allkeywordsquant"></span>
+					<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
 					<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
 					<span class="pull-right" id="keywordsquant"></span>
+					<span class="pull-right"><?php echo  get_phrase('with_discard').':'?>&nbsp;</span>
 				</div>
 					<div id="timelinebody" class="panel-body">
 						<ul class="timeline" id="client-ul">
@@ -94,8 +96,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$ids_text = $this->pages_model->discarded_texts($data_discard);
 													$keyword_found = $this->pages_model->texts_keyword_byid_solr($ids_text,$keyword['keyword'],$startdate,$enddate);
 													$allkeyword_found = $this->pages_model->text_keyword_solr($startdate,$enddate,$keyword['keyword']);
-													$keyword_foundc = count($keyword_found->response->docs);
-													$allkeyword_foundc = count($allkeyword_found->response->docs);
+													if (isset($keyword_found->response->docs)) {
+														$keyword_foundc = count($keyword_found->response->docs);
+													} else {
+														$keyword_foundc = 0;
+													}
+													if ($allkeyword_found->response->docs) {
+														$allkeyword_foundc = count($allkeyword_found->response->docs);
+													} else {
+														$allkeyword_foundc = 0;
+													}
+													
 													$ids_file_xml = null;
 													$ic = null;
 													for ($i=0; $i < $keyword_foundc ; $i++) {
@@ -140,8 +151,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							}
 							?>
 						</ul>
+						<input type="text" id="ikeywordquant" style="display: none;">
+						<input type="text" id="iallkeywordquant" style="display: none;">
 						<input type="text" name="loadcf" id="loadcf" value="2" style="display: none;">
-						<span class="text-muted center-block text-center" id="loadmore" style="display: none;">
+						<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
 							<i class="fa fa-refresh fa-spin"></i>
 							 Carregando...
 						</span>
@@ -164,7 +177,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		var clientspm = '<?php echo $clientsmp?>';
 		var selected_date = '<?php echo $selected_date?>';
 		var clientsmp = '<?php echo $clientsmp?>';
-
 		var d = new Date();
 		var day = d.getDate();
 		var month = (d.getMonth() + 1);
@@ -182,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#li-'+idr).remove();
 				}
 			});
-		};
+		}
 
 		function hidegentime() {
 			itens = $('.loadmoret');
@@ -226,24 +238,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		dataconfi = $('#loadcf').val();
 		if (dataconfi > 1) {
 			$(window).scroll(function() {
-				if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+				dataconfi = $('#loadcf').val();
+				winscrollToph = ($(window).scrollTop() + $(window).height());
+				winheight = $(document).height();
+				winheightm = (winheight - 70);
+				winheightn = (winheight - 65);
+				if (winscrollToph == winheight) {
 					dataconfi = $('#loadcf').val();
-					if (dataconfi > 1) {
+					if (dataconfi != 89) {
 						console.log('loading next page...');
-						$('#loadmore').show('fast');
+						$('#btnloadmore').fadeOut('fast');
+						$('#loadmore').fadeTo('fast',100);
 						plimit = (plimit + 5);
 						$.ajax({
 							url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
 							success: function(data) {
 								dataq = data.length;
 								$('#loadcf').val(dataq);
-								$('#loadmore').hide('fast');
+								$('#loadmore').fadeTo('fast',0);
 								$('#client-ul').append(data);
 								hidenokeyword();
 								hidegentime();
+								upkeyw = parseInt($('#keywordsquant').text());
+								upallkeyw = parseInt($('#allkeywordsquant').text());
+								dowkeyw = parseInt($('#ikeywordquant').val());
+								downallkeyw = parseInt($('#iallkeywordquant').val());
+								upnkeyw = (upkeyw + dowkeyw);
+								upnallkeyw = (upallkeyw + downallkeyw);
+								$('#keywordsquant').text(upnkeyw);
+								$('#allkeywordsquant').text(upnallkeyw);
 							},
 							error: function() {
-								alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+								// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+								swal("Atenção!", "Tente novamente atualizando a página! (F5)", "error");
 							}
 						});
 					}
@@ -252,36 +279,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		}
 
 		$('#btnloadmore').click(function(event) {
-			$('#loadmore').show('fast');
+			$('#loadmore').fadeTo('fast',100);
 			plimit = (plimit + 5);
 			$.ajax({
 				url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
 				success: function(data) {
 					dataq = data.length;
 					$('#loadcf').val(dataq);
-					$('#loadmore').hide('fast');
+					$('#loadmore').fadeTo('fast',0);
 					$('#client-ul').append(data);
 					hidenokeyword();
 					hidegentime();
-					$('#loadmore').hide('fast');
+					upkeyw = parseInt($('#keywordsquant').text());
+					upallkeyw = parseInt($('#allkeywordsquant').text());
+					dowkeyw = parseInt($('#ikeywordquant').val());
+					downallkeyw = parseInt($('#iallkeywordquant').val());
+					upnkeyw = (upkeyw + dowkeyw);
+					upnallkeyw = (upallkeyw + downallkeyw);
+					$('#keywordsquant').text(upnkeyw);
+					$('#allkeywordsquant').text(upnallkeyw);
+					$('#btnloadmore').fadeOut('fast');
 				},
 				error: function() {
-					alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+					// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+					swal("Atenção!", "Tente novamente atualizando a página! (F5)", "error");
 				}
 			});
 		});
 
 		$(document).ready(function() {
-			$('#allkeywordsquant').text("<?php echo  get_phrase('all').': '.array_sum($allkeywordquant) ;?>");
-			$('#keywordsquant').text("<?php echo  get_phrase('with_discard').': '.array_sum($keywordquant) ;?>");
+			$('#keywordsquant').text("<?php echo array_sum($keywordquant) ;?>");
+			$('#allkeywordsquant').text("<?php echo array_sum($allkeywordquant) ;?>");
+			console.log(clientsmp);
 			hidenokeyword();
 
 			timelinebody = $('#timelinebody');
 			// console.log(timelinebody.height());
 			if (timelinebody.height() < 420) {
-				$('#btnloadmore').show('fast');
+				$('#btnloadmore').fadeIn('fast');
 			} else {
-				$('#btnloadmore').hide('fast');
+				$('#btnloadmore').fadeOut('fast');
 			}
 		});
 	</script>

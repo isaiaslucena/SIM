@@ -26,17 +26,9 @@
 				-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 			transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 		}
-		audio::-internal-media-controls-download-button {
-			display:none;
-		}
-
-		audio::-webkit-media-controls-enclosure {
-			overflow:hidden;
-		}
-
-		audio::-webkit-media-controls-panel {
-			width: calc(100% + 30px); /* Adjust as needed */
-		}
+		audio::-internal-media-controls-download-button { display:none; }
+		audio::-webkit-media-controls-enclosure { overflow:hidden; }
+		audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
 	</style>
 </head>
 <body>

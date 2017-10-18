@@ -14,18 +14,18 @@
 
 			border-radius: 100%;
 			display: inline-block;
-			-webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-			animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+			-webkit-animation: sk-bouncedelay 1.2s infinite ease-in-out both;
+			animation: sk-bouncedelay 1.2s infinite ease-in-out both;
 		}
 
 		.spinner .bounce1 {
-			-webkit-animation-delay: -0.32s;
-			animation-delay: -0.32s;
+			-webkit-animation-delay: -0.25s;
+			animation-delay: -0.25s;
 		}
 
 		.spinner .bounce2 {
-			-webkit-animation-delay: -0.16s;
-			animation-delay: -0.16s;
+			-webkit-animation-delay: -0.10s;
+			animation-delay: -0.10s;
 		}
 
 		@-webkit-keyframes sk-bouncedelay {
@@ -62,7 +62,7 @@
 		<div class="bounce3"></div>
 	</div>
 
-	<div id="fullpage"></div>
+	<div id="fullpage" style="display: none"></div>
 
 	<?php
 		if (!isset($ff_ids_files_xml)) {
@@ -84,8 +84,9 @@
 		var plimit = 0;
 		var poffset = 5;
 		var selected_date = 'today';
+		var sallkeywordquant, skeywordquant;
 
-		$('#loading_spinner').show();
+		// $('#loading_spinner').fadeIn('fast');
 
 		if (page == pagejoin) {
 			$.ajax({
@@ -105,11 +106,13 @@
 					page: page
 				},
 				success: function(data) {
-					$('#fullpage').html(data)
-					$('#loading_spinner').hide()
+					$('#fullpage').html(data);
+					$('#loading_spinner').css('display', 'none');
+					$('#fullpage').css('display', 'block');
 				},
 				error: function() {
-					alert("Error!")
+					// alert("Error!")
+					swal("Erro! Tente novamente atualizando a página!","error");
 				}
 			})
 		} else {
@@ -117,10 +120,12 @@
 				url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
 				success: function(data) {
 					$('#fullpage').html(data);
-					$('#loading_spinner').hide();
+					$('#loading_spinner').css('display', 'none');
+					$('#fullpage').css('display', 'block');
 				},
 				error: function() {
-					alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+					// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
+					swal("Erro! Tente novamente atualizando a página!","error");
 				}
 			})
 		}

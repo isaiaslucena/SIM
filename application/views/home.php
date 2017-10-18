@@ -53,7 +53,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default ">
-				<div class="panel-heading"><i class="fa fa-key fa-fw"></i><?php echo get_phrase('kewords_found').' '.get_phrase('since').' '.date('d/m/Y',$startdate).' - 00:00';?><span class="pull-right" id="allkeywordsquant"></span><span class="pull-right">&nbsp;&brvbar;&nbsp;</span><span class="pull-right" id="keywordsquant"></span></div>
+				<div class="panel-heading">
+					<i class="fa fa-key fa-fw"></i>
+					<?php echo get_phrase('kewords_found').' '.get_phrase('since').' '.date('d/m/Y',$startdate).' - 00:00';?>
+					<span class="pull-right" id="allkeywordsquant"></span>
+					<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
+					<span class="pull-right" id="keywordsquant"></span>
+				</div>
 					<div class="panel-body">
 						<ul class="timeline" id="client-ul">
 							<?php
@@ -165,8 +171,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			}
 		};
 
-		$('#allkeywordsquant').text("<?php echo  get_phrase('all').': '.array_sum($allkeywordquant) ;?>");
-		$('#keywordsquant').text("<?php echo  get_phrase('with_discard').': '.array_sum($keywordquant) ;?>");
+		// $('#allkeywordsquant').text("<?php echo array_sum($allkeywordquant) ;?>");
+		// $('#keywordsquant').text("<?php echo array_sum($keywordquant) ;?>");
 		$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
 
 		if ($('#back-to-top').length) {

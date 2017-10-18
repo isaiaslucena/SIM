@@ -43,8 +43,6 @@
 
 		<?php
 			if (isset($search)) {
-				var_dump($search);
-
 				if ($vtype == 'radio') {
 					if (preg_match("/\(/", $search) == 1) {
 						$radios01 = explode('(', $search);
@@ -65,7 +63,18 @@
 						$keyword = mb_substr($keyword03[1],0,-2);
 					}
 				} else if ($vtype == 'tv') {
-					echo "tv";
+					// var_dump($search);
+					// preg_match("/\"text_t:\\\"(.*?)\\\"\",/", $search, $fkeyword);
+					// var_dump($fkeyword);
+					$searcharr = explode(":", $search);
+					$keywordarr = explode('"', $searcharr[2]);
+					$keyword =  str_replace("\\", "", $keywordarr[1]);
+					$datearr = explode(' TO ', $searcharr[4]);
+					$startdatets = str_replace("[", "", $datearr[0]) / 1000;
+					$enddatets = str_replace("]\"}", "", $datearr[1]) / 1000;
+					$startdate = date("d/m/Y", $startdatets);
+					$enddate = date("d/m/Y", $enddatets);
+					// var_dump($datearr);
 				}
 			}
 		?>
@@ -91,13 +100,13 @@
 										<label>Tipo de Veículo</label>
 										<div class="radio">
 											<label>
-												<input type="radio" name="optionsRadios" id="optradio" value="radio" required>
+												<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') { echo "checked";} ?> required>
 												Rádio
 											</label>
 										</div>
 										<div class="radio">
 											<label>
-												<input id="searchrstart" type="radio" name="optionsRadios" id="opttv" value="tv" required>
+												<input id="searchrstart" type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
 												Televisão
 											</label>
 										</div>

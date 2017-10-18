@@ -24,17 +24,21 @@
 		<style type="text/css">
 			video::-internal-media-controls-download-button { display:none; }
 
-			video::-webkit-media-controls-enclosure {	overflow:hidden; }
+			video::-webkit-media-controls-enclosure { overflow:hidden; }
 
 			video::-webkit-media-controls-panel { width: calc(100% + 30px); }
+
+			body { background-color: #F6F6F6 }
 
 			.modal-lg-crop { width: 1200px; }
 			.modal-md-join { height: 800px; }
 
 			textarea { resize: none; }
 			
-			video {
-				z-index: 1;
+			video { z-index: 1; }
+
+			#vvideo {
+				box-shadow: 0px 0px 20px #888888;
 			}
 
 			.vbutton {
@@ -122,7 +126,7 @@
 			.tooltiptime {
 				position: absolute;
 				/* padding: 10px 10px 10px 10px; */
-				width: 40px;
+				width: 70px;
 				height: 20px;
 				display: none;
 				/* font-size: 12px; */
@@ -184,7 +188,7 @@
 					<h2 id="vtitle">Nenhuma seleção</h2>
 					<div id="divvideo">
 						<div id="vvideobtn" class='vbutton' style="display: none"></div>
-						<video id="vvideo" src="<?php echo base_url('assets/imgs/colorbarstatic.mp4')?>" width="840" height="480" preload="metadata" autoplay loop></video>
+						<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay loop></video>
 						<img id="thvideo" src="" style="display: none; width: 840px; height: 480px; padding-top: 4px; padding-bottom: 4px">
 					</div>
 				</div>
@@ -216,7 +220,7 @@
 			
 			<div class="row center-block text-center" style="padding-bottom: 8px">
 				<div class="col-lg-1">
-					<span id="currtime">--:--</span>
+					<span id="currtime">--:--.---</span>
 				</div>
 
 				<div class="col-lg-10">
@@ -228,7 +232,7 @@
 				</div>
 
 				<div class="col-lg-1">
-					<span id="durtime">--:--</span>
+					<span id="durtime">--:--.---</span>
 				</div>
 			</div>
 
@@ -389,7 +393,7 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends, 
-				selectedformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
+				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet;
 				var filestojoin = [];
@@ -410,6 +414,7 @@
 				var timebar = $('.timeBar')
 				var vcurrtime = $('#currtime');
 				var vdurtime = $('#durtime');
+				var vtooltiptime = $('.tooltiptime');
 				var timerslider = $('#timeslider');
 				var ccrops = false;
 				var ccrope = false;
@@ -430,6 +435,9 @@
 
 				function channelname(name) {
 					switch (name) {
+						case "CULTURA-HD":
+							chlname = "TV Cultura";
+							break;
 						case "ESPN-BRASIL":
 							chlname = "ESPN Brasil";
 							break;
@@ -520,6 +528,7 @@
 				$('.input-group.date').datepicker({
 					todayBtn: "linked",
 					language: "pt-BR",
+					format: "dd/mm/yyyy",
 					keyboardNavigation: false,
 					todayHighlight: true,
 					autoclose: true
@@ -527,17 +536,22 @@
 
 				$('.input-group.date').on("changeDate", function() {
 					selecteddate = $('.input-group.date').datepicker('getDate');
+					// selecteddate = $('.input-group.date').datepicker('getUTCDate');
 					sday = selecteddate.getDate();
 					sday = ('0' + sday).slice(-2);
 					smonth = (selecteddate.getMonth() + 1);
 					smonth = ('0' + smonth).slice(-2);
 					syear = selecteddate.getFullYear();
 					selectedformdate = syear+'-'+smonth+'-'+sday;
-					$('#selchannels').selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
-					$('#selchannels').prop('disabled', false)
-					$('#selchannels').html(null);
-					$('#selchannels').selectpicker('refresh');
-					selectchannel(selectedformdate);
+
+					seldatei = $('#seldate').val();
+					seldateiarr = seldatei.split("/");
+					selday = seldateiarr[0];
+					selmonth = seldateiarr[1];
+					selyear = seldateiarr[2];
+					selformdate = selyear+'-'+selmonth+'-'+selday;
+
+					selectchannel(selformdate);
 				});
 
 				$( "#selchannels" ).change(function(event) {
@@ -548,7 +562,7 @@
 					channel = selvalarr2[0];
 					state = selvalarr2[1];
 
-					getlistchannel(vsource, selectedformdate, channel, state);
+					getlistchannel(vsource, selformdate, channel, state);
 					
 					setTimeout(scrollnextvideo, 1000);
 
@@ -561,8 +575,9 @@
 									lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
 									lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
 									lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
-									lastvplaylistidn = (Number(lastvplaylistid.replace('vbtn', '')) + 1);
+									lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
 									lastvarraytm = data[data.length-1].replace(".mp4","");
+
 									if (lastvplaylist != lastvarraytm) {
 										// html = '<a href="#" id="vbtn'+lastvplaylistidn+'" class="list-group-item" data-vsrc="'+vsource+'">'+lastvarraytm+'</a>';
 										html =	'<li id="vbtn'+lastvplaylistidn+'" class="list-group-item">'+
@@ -579,8 +594,8 @@
 						}
 
 						setInterval(function() {
-							refreshlist(vsource, selectedformdate, channel, state);
-						}, 30000);
+							refreshlist(vsource, selformdate, channel, state);
+						}, 60000);
 					});
 				});
 
@@ -628,6 +643,9 @@
 				}
 
 				function selectchannel(date) {
+					tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
+					tvch.prop('disabled', false)
+					tvch.html(null);
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
 						function(data, textStatus, xhr) {
@@ -806,7 +824,6 @@
 					cropfpr = $('#miprogram').val();
 					cropfcl = $('#miclient').val();
 					downfilename = cropfday+'.'+cropfmonth+'-'+cropfch+'-'+cropfst+'-'+cropfpr+'-'+cropfcl+'.mp4';
-					console.log(downfilename);
 					$('#mbtnvdown').attr('download', downfilename);
 				});
 
@@ -818,14 +835,18 @@
 					cfilechannel = cfilearr[2];
 
 					jfilechann = channelname(cfilechannel);
-
-					cfilestate = cfilearr[3];
+					if (jfilechann == "TV Cultura") {
+						cfilestate = "SP";
+					} else {
+						cfilestate = cfilearr[3];
+					}
 					cfilesource = "\"" + jfilechann + " - " + cfilestate + "\"";
 					cfiledatetime = cfiledate + " " + cfiletime;
 					cfilestimestamp = new Date(String(cfiledatetime));
 					cfilesstimestamp = new Date(String(cfiledatetime));
 					cfileetimestamp = new Date(String(cfiledatetime));
 					cfiletimestampt = cfilestimestamp.getTime();
+					// cfiletimestampt = cfileetimestamp.setMinutes(cfileetimestamp.getMinutes() - 5);
 					cfiletstamp = cfileetimestamp.setMinutes(cfileetimestamp.getMinutes() + 10);
 					cropstartts = cropstarts;
 					cropendts = cropends;

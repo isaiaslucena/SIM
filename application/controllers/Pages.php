@@ -107,7 +107,7 @@ class Pages extends CI_Controller {
 			if (!is_null($limit)) {
 				$data['clients'] = $this->pages_model->clients($limit, $offset, 'radio');
 			} else {
-				$data['clients'] = $this->pages_model->clients(null,null,'radio');
+				$data['clients'] = $this->pages_model->clients(null, null, 'radio');
 			}
 			
 			$data['keywords'] = $this->pages_model->keywords();
