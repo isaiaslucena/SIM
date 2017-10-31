@@ -5,7 +5,7 @@
 				<div class="col-lg-4 col-lg-offset-4">
 						<?php
 							if (isset($message)) { ?>
-							<div class="text-center alert alert-danger fade in" id="success-alert" style="display: none;">
+							<div class="text-center alert alert-danger fade in" id="success-alert" style="display: none; position: absolute; width: 100%">
 								<?php echo $message ?>!
 							</div>
 						<?php } ?>
@@ -56,21 +56,21 @@
 				url = "<?php echo base_url('login/mobile_index')?>";
 				$(location).attr("href", url);
 			} else {
-				// console.log('Desktop Agent!');
+				console.log('Desktop Agent!');
 			}
 
 			// civersion="<?php // echo CI_VERSION; ?>"
 			// console.debug("Code Igniter v" + civersion);
 
-			// $(document).ready(function() {
+			$(document).ready(function() {
 				//$(".alert-danger").alert();
-				window.setTimeout(function(){
+				// window.setTimeout(function(){
 					$(".alert-danger").fadeIn();
-				}, 200);
+				// }, 200);
 				window.setTimeout(function(){
 					$(".alert-danger").alert('close');
 				}, 2500);
-			// });
+			});
 		</script>
 	</body>
 </html>

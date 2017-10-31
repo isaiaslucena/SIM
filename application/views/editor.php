@@ -59,6 +59,7 @@
 							keyboard: false
 						})
 
+						filesjoined = [];
 						$.post('<?php echo base_url("pages/proxy")?>',
 							{
 								address: '<?php echo str_replace("sim.","video.",base_url("video/joinvideos"))?>',
@@ -67,6 +68,7 @@
 							},
 							function(data, textStatus, xhr) {
 								console.log(data);
+								filesjoined = data.files;
 								fileid = data.id;
 								filestotaltime = data.totaltime;
 								jointimestart = new Date();
@@ -81,8 +83,7 @@
 												if (joinpercent >= 99) {
 													clearInterval(rjprogress);
 
-													// $('#progressjoin').css('display', 'none');
-													// $('#mcjdivvideo').css('display', 'block');
+													console.log(filesjoined);
 
 													$('.vbutton').css('display', 'none');
 													$('.vbutton').removeClass('paused');

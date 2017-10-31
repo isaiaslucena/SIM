@@ -33,6 +33,13 @@
 				{ "searchable": false }
 			],
 			"order": [[ 1, "asc" ]],
+		<?php } else if ($datatablename == 'table_rec_radios') { ?>
+			"columns": [
+				null,
+				{ "searchable": false },
+				{ "searchable": false }
+			],
+			"order": [[ 1, "asc" ]],
 		<?php } ?>
 		"language" : {
 			"sEmptyTable": "Nenhum registro encontrado",
@@ -57,6 +64,5 @@
 				"sSortDescending": ": Ordenar colunas de forma descendente"
 			}
 		}
-
 	});
 </script>

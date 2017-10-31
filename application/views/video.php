@@ -42,7 +42,6 @@
 			}
 
 			.pthvideo {
-				display: none;
 				width: 840px;
 				height: 480px;
 				padding-top: 4px;
@@ -52,9 +51,8 @@
 			.vbutton {
 				z-index: 2;
 				position: absolute;
-				top: 45%;
-				left: 45%;
-
+				top: 48%;
+				left: 48%;
 				box-sizing: border-box;
 				width: 0;
 				height: 74px;
@@ -192,12 +190,12 @@
 		
 		<div class="container-fluid">
 			<div class="row center-block text-center" style="padding-bottom: 8px">
-				<div class="col-lg-8">
+				<div class="col-lg-8 center-block text-center">
 					<h2 id="vtitle">Nenhuma seleção</h2>
 					<div id="divvideo">
 						<div id="vvideobtn" class='vbutton' style="display: none"></div>
 						<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
-						<img id="thvideo" class="pthvideo">
+						<img id="thvideo" class="pthvideo" style="display: none;">
 					</div>
 				</div>
 
@@ -407,6 +405,8 @@
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet;
 				var filestojoin = [];
+				var filesjoined = [];
+				var fileseq = 0;
 				var cropfilestojoin = [];
 				var vbtnjoin = [];
 				var nimage = [];
@@ -684,19 +684,7 @@
 								if (elo == "dvr00") {	
 									indexo.forEach(function(ela, indexa) {
 										switch (ela) {
-											case "FOX-SPORTS2_RJ" :
-												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-												tvch.append(html);
-												break;
-											case "FUTURA_RJ":
-												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-												tvch.append(html);
-												break;
 											case "NBR_RJ":
-												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-												tvch.append(html);
-												break;
-											case "RURAL_RJ":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;

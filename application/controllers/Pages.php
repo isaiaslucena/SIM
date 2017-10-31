@@ -1403,6 +1403,44 @@ class Pages extends CI_Controller {
 		// }
 	// }
 
+	public function rec_radio($success_msg = '') {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'groups',
+				'last_page' => base_url('pages/groups')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data_navbar['selected_page'] = 'rec_radio';
+			$this->load->view('head');
+			$this->load->view('navbar',$data_navbar);
+			$data['groups'] = $this->pages_model->groups();
+			$data['datatablename'] = 'table_rec_radio';
+
+			$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radios/getradios'));
+			// var_dump($data['rec_radios']);
+		
+			if ($success_msg == 'create') {
+				$data['success_msg'] = get_phrase('radio_created_successfuly');
+			}
+			else if ($success_msg == 'delete') {
+				$data['success_msg'] = get_phrase('radio_deleted_successfuly');
+			}
+			else if ($success_msg == 'update') {
+				$data['success_msg'] = get_phrase('radio_updated_successfuly');
+			}
+			else if (!empty($success_msg)){
+				redirect('pages/rec_radio','refresh');
+			}
+			
+			$this->load->view('rec_radio',$data);
+			$this->load->view('language_datatable',$data);
+			$this->load->view('footer',$data_navbar);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
 	public function proxy($file = null) {
 		if ($this->input->method(TRUE) == 'POST') {
 			// $postdata = ($_POST = json_decode(file_get_contents("php://input"),true));

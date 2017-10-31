@@ -134,6 +134,17 @@
 					<a href="#"><i class="fa fa-fw  fa-gears"></i> <?php echo get_phrase('configurations');?><span class="fa arrow"></span></a>
 					<ul class="nav nav-second-level collapse">
 						<li>
+							<a href="#"></i> <?php echo get_phrase('recordings');?><span class="fa arrow"></span></a>
+								<ul class="nav nav-third-level collapse">
+									<li>
+										<a href="<?php echo base_url('pages/rec_radio'); ?>" <?php if ($selected_page == "rec_radio") {echo 'class="active"';} ?>><?php echo get_phrase('radio');?></a>
+									</li>
+									<li>
+										<a href="<?php echo base_url('pages/rec_tv'); ?>" <?php if ($selected_page == "rec_tv") {echo 'class="active"';} ?>><?php echo get_phrase('television');?></a>
+									</li>
+								</ul>
+						</li>
+						<li>
 							<a href="<?php echo base_url('pages/system'); ?>" <?php if ($selected_page == "system") {echo 'class="active"';} ?>><?php echo get_phrase('system');?></a>
 						</li>
 						<li>
@@ -182,7 +193,7 @@
 
 	function getradios() {
 		setTimeout(getradios, 60000);
-		$.post('/pages/proxy', {address: 'http://radio.intranet.dataclip/index.php/radios/getradios'}, function(data, textStatus, xhr) {
+		$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radios/getstopradios'))?>'}, function(data, textStatus, xhr) {
 			radiocount = 0;
 			$('#msglist').html(null);
 			$.each(data, function(index, val) {

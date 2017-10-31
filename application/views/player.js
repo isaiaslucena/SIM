@@ -105,8 +105,7 @@
 				videoel.on('loadedmetadata', function() {
 					vvideosrc = videoel[0].currentSrc;
 					if (vvideosrc.match(vvideosrcsearch) == null) {
-						vdfilename = videotitle.text();
-						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+
 						vduration = videoel[0].duration;
 						durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
 						durations = ('0' + Math.floor(vduration - durationm * 60)).slice(-2);
@@ -114,9 +113,22 @@
 						durationms = durationmss.split(".");
 						vdurtime.text(durationm+':'+durations+'.'+durationms[1]);
 
-						maxthumb = Math.floor(videoel[0].duration);
 						nimage = [];
-						if (!joinvideos) {
+						if (joinvideos) {
+							$.each(filesjoined, function(index, file) {
+								maxthumb = file.time;
+								vdfilename = file.file;
+								for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
+									nthumbn = ("00" + thumbn).slice(-3);
+									nimage[thumbn] = new Image();
+									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
+									nimage[thumbn].src = imgsrc;
+								}
+							});
+						} else {
+							vdfilename = videotitle.text();
+							sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+							maxthumb = Math.floor(videoel[0].duration);
 							for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 								nthumbn = ("00" + thumbn).slice(-3);
 								nimage[thumbn] = new Image();
@@ -169,13 +181,21 @@
 				var timeDrag = false;
 				$('.progressBar').mousedown(function(e) {
 					timeDrag = true;
-					vfile = videotitle.text()
-					vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
+
+					if (joinvideos) {
+						filenarr = filesjoined[0].file.split("_");
+						vsourcefile = filenarr[0];
+					} else {
+						vfile = videotitle.text()
+						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
+					}
+
 					videoel[0].pause();
 					if (vsourcefile != 'dvr00') {
 						videoel.css('display', 'none');
 						videoelth.css('display', 'block');
 					}
+
 					$("#ipause").addClass('hidden');
 					$("#iplay").removeClass('hidden');
 					updatebar(e.pageX);
@@ -206,9 +226,9 @@
 				});
 
 				function updatebar(x) {
-					var maxduration = videoel[0].duration;
-					var position = x - progressbar.offset().left;
-					var percentage = (100 * position) / progressbar.width();
+					maxduration = videoel[0].duration;
+					position = x - progressbar.offset().left;
+					percentage = (100 * position) / progressbar.width();
 
 					if (percentage > 100) {
 						percentage = 100;
@@ -217,16 +237,37 @@
 						percentage = 0;
 					}
 
-					vdfilename = videotitle.text();
-					sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-					videotime = maxduration * percentage / 100;
+					videotime = (maxduration * percentage) / 100;
 					videotimesec = Math.floor(videotime);
-					thumbnum = ('00' + videotimesec).slice(-3)
 					videoel[0].currentTime = videotime.toFixed(3);
-
+					thumbnum = ('00' + videotimesec).slice(-3);
 					$('.timeBar').css('width', percentage+'%');
-					// videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
-					uptadevThumb(sfilename, vdfilename, thumbnum);
+
+					if (joinvideos) {
+						filenarr = filesjoined[0].file.split("_");
+						thnsfilename = filenarr[0];
+						if (thnsfilename != 'dvr00') {
+							var ttime = 0;
+							var thumbnnf;
+							var thnvdfilename;
+
+							$.each(filesjoined, function(index, filer) {
+								ttime = ttime + filer.time;
+								if (videotimesec <= ttime) {
+									timedif = ttime - videotimesec;
+									thumbnnf = ('00' + (filer.time - timedif)).slice(-3);
+									thnvdfilename = filer.file.replace(thnsfilename+"_","");
+									uptadevThumb(thnsfilename, thnvdfilename, thumbnnf);
+									return false;
+								}
+							});
+						}
+					} else {
+						vdfilename = videotitle.text();
+						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+
+						uptadevThumb(sfilename, vdfilename, thumbnum);
+					}
 				};
 
 				function updatebarkeyb(sec) {
@@ -242,8 +283,8 @@
 						percentage = 0;
 					}
 
-					vdfilename = videotitle.text();
-					sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+					// vdfilename = videotitle.text();
+					// sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
 					// videotime = (maxduration * percentage) / 100;
 					videotime = sec;
 					videotimesec = Math.floor(videotime);
@@ -258,9 +299,33 @@
 					vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
 
 					$('.timeBar').css('width', percentage+'%');
-					// videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
-					uptadevThumb(sfilename, vdfilename, thumbnum);
 					videoelBuffer();
+					// videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
+					// uptadevThumb(sfilename, vdfilename, thumbnum);
+
+					if (joinvideos) {
+						filenarr = filesjoined[0].file.split("_");
+						thnsfilename = filenarr[0];
+
+						var ttime = 0;
+						var thumbnnf;
+						var thnvdfilename;
+
+						$.each(filesjoined, function(index, filer) {
+							ttime = ttime + filer.time;
+							if (videotimesec <= ttime) {
+								timedif = ttime - videotimesec;
+								thumbnnf = ('00' + (filer.time - timedif)).slice(-3);
+								thnvdfilename = filer.file.replace(thnsfilename+"_","");
+								uptadevThumb(thnsfilename, thnvdfilename, thumbnnf);
+								return false;
+							}
+						});
+					} else {
+						vdfilename = videotitle.text();
+						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+						uptadevThumb(sfilename, vdfilename, thumbnum);
+					}
 				};
 
 				function uptadevThumb(utsfilename, utvdfilename, utthumbnum) {
