@@ -132,8 +132,8 @@
 			.tooltiptime {
 				position: absolute;
 				/* padding: 10px 10px 10px 10px; */
-				width: 70px;
-				height: 20px;
+				width: 100px;
+				height: 22px;
 				display: none;
 				/* font-size: 12px; */
 				color: #FFFFFF;
@@ -226,7 +226,7 @@
 			
 			<div class="row center-block text-center" style="padding-bottom: 8px">
 				<div class="col-lg-1">
-					<span id="currtime">--:--.---</span>
+					<span id="currtime">--:--</span>
 				</div>
 
 				<div class="col-lg-10">
@@ -238,7 +238,7 @@
 				</div>
 
 				<div class="col-lg-1">
-					<span id="durtime">--:--.---</span>
+					<span id="durtime">--:--</span>
 				</div>
 			</div>
 
@@ -688,6 +688,10 @@
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;
+											case "RECORD_RJ":
+												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+												tvch.append(html);
+												break;
 											case "TV-CAMARA_RJ":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
@@ -697,6 +701,10 @@
 												tvch.append(html);
 												break;
 											case "TV-SENADO_RJ":
+												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+												tvch.append(html);
+												break;
+											case "TV-BRASIL_RJ":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;

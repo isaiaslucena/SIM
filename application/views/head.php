@@ -42,8 +42,13 @@
 		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
 
 		<style type="text/css">
-			audio::-internal-media-controls-download-button { display:none; }
-			audio::-webkit-media-controls-enclosure { overflow:hidden; }
-			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
+			audio::-internal-media-controls-download-button {display:none;}
+			audio::-webkit-media-controls-enclosure {overflow:hidden;}
+			audio::-webkit-media-controls-panel {width: calc(100% + 30px);}
+
+			tr.group,
+			tr.group:hover {
+				background-color: #ddd !important;
+			}
 		</style>
 	</head>

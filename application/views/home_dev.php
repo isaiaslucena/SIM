@@ -255,7 +255,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							success: function(data) {
 								dataq = data.length;
 								$('#loadcf').val(dataq);
-								$('#loadmore').fadeTo('fast',0);
+								$('#loadmore').fadeTo('fast', 0);
 								$('#client-ul').append(data);
 								hidenokeyword();
 								hidegentime();
@@ -279,7 +279,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		}
 
 		$('#btnloadmore').click(function(event) {
-			$('#loadmore').fadeTo('fast',100);
+			$('#loadmore').fadeTo('fast', 100);
 			plimit = (plimit + 5);
 			$.ajax({
 				url: page+'/'+selected_date+'/'+plimit+'/'+poffset,

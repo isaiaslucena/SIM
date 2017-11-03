@@ -82,7 +82,7 @@
 				</li>
 				<?php
 				$id_user = $this->session->userdata('id_user');
-				$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+				$id_group = $this->db->get_where('user', array('id_user' => $id_user))->row()->id_group;
 				if ($id_group == 1) { ?>
 				<li>
 					<a href="<?php echo base_url('pages/index_admin'); ?>" <?php if ($selected_page == "home") {echo 'class="active"';} ?>><i style="font-size: 15px" class="material-icons">radio</i> <?php echo get_phrase('radio');?></a>
@@ -165,7 +165,7 @@
 					}
 					else {
 						$seldate = $selected_date;
-						} ?>
+					} ?>
 					<div id="datepicker_static" data-date="<?php echo $seldate;?>"></div>
 					<input  style="opacity: 0" type="text" id="selected_date" name="selected_date">
 				</li>

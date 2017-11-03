@@ -144,10 +144,12 @@
 					cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
 					cropstartms = cropstarts.split(".")
 					// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
-					cropstart = '00-'+$('#currtime').text().replace(":", "-");
-					cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
+					// cropstart = '00-'+$('#currtime').text().replace(":", "-");
+					cropstart = $('#currtime').text().replace(":", "-");
+					// cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
+					cropstartt = $('#currtime').text();
 					ccrops = true;
-					// console.log('crop starttime: '+cropstarts);
+					console.log('crop starttime: '+cropstartt);
 				});
 
 				$('#btncend').click(function(event) {
@@ -179,7 +181,7 @@
 							cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 							cropdur = '00-'+cropdurmm+'-'+cropdurss;
 							ccrope = true;
-							// console.log('crop endtime: '+cropends);
+							console.log('crop duration: '+cropdurs);
 						}
 					}
 				})

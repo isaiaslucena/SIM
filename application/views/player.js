@@ -107,11 +107,15 @@
 					if (vvideosrc.match(vvideosrcsearch) == null) {
 
 						vduration = videoel[0].duration;
-						durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
-						durations = ('0' + Math.floor(vduration - durationm * 60)).slice(-2);
-						durationmss = (vduration * 100 / 100).toFixed(3);
-						durationms = durationmss.split(".");
-						vdurtime.text(durationm+':'+durations+'.'+durationms[1]);
+						// durationh = ('0' + Math.floor(vduration / 3600)).slice(-2);
+						// // durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
+						// durationm = ('0' + Math.floor((vduration - ( durationh / 60))).slice(-2);
+						// durations = ('0' + Math.floor((vduration - durationm * 60))).slice(-2);
+						// durationmss = (vduration * 100 / 100).toFixed(3);
+						// durationms = durationmss.split(".");
+						// vdurtime.text(durationh+':'+durationm+':'+durations+'.'+durationms[1]);
+
+						vdurtime.text(sectostring(vduration));
 
 						nimage = [];
 						if (joinvideos) {
@@ -144,12 +148,19 @@
 						currentPos = videoel[0].currentTime;
 						maxduration = videoel[0].duration;
 						percentage = 100 * currentPos / maxduration;
-						currentPosm = ('0' + Math.floor(currentPos / 60)).slice(-2);
+
+						currentPosh = ('0' + Math.floor(currentPos / 60 / 60)).slice(-2);
+						// currentPosm = ('0' + Math.floor(currentPos / 60)).slice(-2);
+						currentPosm = ('0' + Math.floor(currentPos - currentPosh * 60)).slice(-2);
 						currentPoss = ('0' + Math.floor(currentPos - currentPosm * 60)).slice(-2);
 						currentPossmss = (currentPos * 100 / 100).toFixed(3);
 						currentPossms = currentPossmss.split(".");
+
 						$('.timeBar').css('width', percentage+'%');
-						vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+
+						vcurrtime.text(sectostring(currentPos));
+						// vcurrtime.text(currentPosh+':'+currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+						
 						//$('.tooltiptext').text(currentPosm+':'+currentPoss);
 						videoelBuffer();
 						if (currentPos == maxduration) {
@@ -204,7 +215,7 @@
 					if (timeDrag) {
 						vfile = videotitle.text()
 						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
-						videoel[0].pause();
+						//videoel[0].pause();
 						if (vsourcefile != 'dvr00') {
 							videoelth.css('display', 'none');
 							videoel.css('display', 'block');
@@ -265,7 +276,6 @@
 					} else {
 						vdfilename = videotitle.text();
 						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-
 						uptadevThumb(sfilename, vdfilename, thumbnum);
 					}
 				};
@@ -291,12 +301,17 @@
 					thumbnum = ('00' + videotimesec).slice(-3)
 					videoel[0].currentTime = videotime.toFixed(3);
 
-					videotime = ((maxduration * percentage) / 100).toFixed(3);
-					currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
-					currentPoss = ('0' + Math.floor(videotime - currentPosm * 60)).slice(-2);
-					currentPossmss = (videotime * 100 / 100).toFixed(3);
-					currentPossms = currentPossmss.split(".");
-					vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// videotime = ((maxduration * percentage) / 100).toFixed(3);
+					// currentPosh = ('0' + Math.floor(videotime / 60 / 60)).slice(-2);
+					// // currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
+					// currentPosm = ('0' + Math.floor(videotime - currentPosh * 60)).slice(-2);
+					// currentPoss = ('0' + Math.floor(videotime - currentPosm * 60)).slice(-2);
+					// currentPossmss = (videotime * 100 / 100).toFixed(3);
+					// currentPossms = currentPossmss.split(".");
+
+					vcurrtime.text(sectostring(videotime));
+					// vcurrtime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
 
 					$('.timeBar').css('width', percentage+'%');
 					videoelBuffer();
@@ -348,15 +363,18 @@
 
 					videotime = ((maxduration * percentage) / 100).toFixed(3);
 					videotimesec = Math.floor(videotime);					
-					currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
-					currentPoss = ('0' + Math.floor(videotime - currentPosm * 60)).slice(-2);
-					currentPossmss = (videotime * 100 / 100).toFixed(3);
-					currentPossms = currentPossmss.split(".");
+					// currentPosh = ('0' + Math.floor(maxduration / 60 / 60)).slice(-2);
+					// // currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
+					// currentPosm = ('0' + Math.floor(maxduration - currentPosh * 60)).slice(-2);
+					// currentPoss = ('0' + Math.floor(maxduration - currentPosm * 60)).slice(-2);
+					// currentPossmss = (maxduration * 100 / 100).toFixed(3);
+					// currentPossms = currentPossmss.split(".");
 					thumbnum = ('0' + videotimesec).slice(-3)
 
 					// $('#vthumb').attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
 					//videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + thumbnum);
-					vtooltiptime.text(currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+					// vtooltiptime.text(currentPosh+':'+currentPosm+':'+currentPoss+'.'+currentPossms[1]);
+					vtooltiptime.text(sectostring(videotime));
 					videoelBuffer();
 				};
 
@@ -372,7 +390,7 @@
 					var maxduration = videoel[0].duration;
 					// thumbleft = event.pageX - 106;
 					// thumbtop = barPositionoff.top - 155;
-					ttimeleft = event.pageX - 35;
+					ttimeleft = event.pageX - 52;
 					ttimetop = barPositionoff.top - barHeight + 10;
 					$('.tooltiptime').css({
 						'top': ttimetop+"px",
@@ -442,6 +460,20 @@
 						$("#ipause").removeClass('hidden');
 					}
 				});
+
+				function sectostring(secs) {
+					var sec_num = parseInt(secs, 10);
+					var hours   = Math.floor(sec_num / 3600);
+					var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+					var seconds = sec_num - (hours * 3600) - (minutes * 60);
+					var mseconds = String(secs);
+					var milliseconds =  mseconds.slice(-3);
+
+					if (hours  < 10) {hours = "0" + hours;}
+					if (minutes < 10) {minutes = "0" + minutes;}
+					if (seconds < 10) {seconds = "0" + seconds;}
+					return hours+':'+minutes+':'+seconds+'.'+milliseconds;
+				}
 
 				function videoelBuffer() {
 					// var startBuffer = videoel[0].buffered.start(0);

@@ -3,32 +3,35 @@
 	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 		<div class="row page-header">
 			<div class="col-lg-12">
-				<div class="col-lg-4">
-					<h1><?php echo get_phrase('keywords');?></h1>
-				</div>
-				<div class="col-lg-5">
-				<?php
-					if (isset($success_msg)) { ?>
-					<div class="text-center alert alert-success alert-dismissable fade in" id="success-alert">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<?php echo $success_msg ?>!
+				<div class="row">
+					<div class="col-lg-4">
+						<h1><?php echo get_phrase('keywords');?></h1>
 					</div>
-					<script type="text/javascript">
-							$(".alert-success").alert();
-							window.setTimeout(function(){
-								$(".alert-success").alert('close');
-							}, 2000);
-					</script>
-				<?php } ?>
+					<div class="col-lg-5">
+						<?php
+							if (isset($success_msg)) { ?>
+							<div class="text-center alert alert-success alert-dismissable fade in" id="success-alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+								<?php echo $success_msg ?>!
+							</div>
+							<script type="text/javascript">
+									$(".alert-success").alert();
+									window.setTimeout(function(){
+										$(".alert-success").alert('close');
+									}, 2000);
+							</script>
+						<?php } ?>
+					</div>
+					<div class="col-lg-3">
+						<h1>
+							<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target=".add_modal">
+								<i class="fa fa-plus-circle"></i>
+								<?php echo get_phrase('add');?>
+							</button>
+						</h1>
+					</div>
 				</div>
-				<div class="col-lg-3">
-					<h1>
-						<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target=".add_modal">
-							<i class="fa fa-plus-circle"></i>
-							<?php echo get_phrase('add');?>
-						</button>
-					</h1>
-				</div>
+
 			</div>
 		</div>
 
@@ -104,7 +107,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo get_phrase('cancel');?></button>
-							<button type="submit" form="add_modal_form" class="btn btn-primary"><?php echo get_phrase('save');?></button>
+							<button id="btnaddmodal" type="submit" form="add_modal_form" class="btn btn-primary"><?php echo get_phrase('save');?></button>
 						</div>
 					</div>
 				</div>
@@ -177,21 +180,27 @@
 
 			<script type="text/javascript">
 				function checkUserName() {
-					//var username = document.getElementsByName("username").value;
-					var username = $('#keywordname_add_modal').val();
-					var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
-					if (pattern.test(username)) {
-						alert("Please only use standard alphanumerics");
+					var keyword = $('#keywordname_add_modal').val();
+					var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,\./{}\(\)|\\":<>\?]/);
+					if (pattern.test(keyword)) {
 						return false;
 					}
-					return true; //good user input
+					return true;
 				}
 
 				$('#add_modal').on('shown.bs.modal', function () {
 					$('#keywordname_add_modal').val(null);
 					$("select#keywordpriority_add_modal").prop('selectedIndex', 4);
 					$('#keywordname_add_modal').focus();
-					checkUserName()
+					$('#keywordname_add_modal').blur(function(event) {
+						if (checkUserName()) {
+							console.log('Username OK');
+						} else {
+							swal("Atenção!", "A palavra-chave contém caracteres não permitidos.", "error");
+							$('#keywordname_add_modal').val(null);
+							$('#keywordname_add_modal').focus();
+						}
+					});
 				});
 
 				$('#edit_modal').on('shown.bs.modal', function (event) {

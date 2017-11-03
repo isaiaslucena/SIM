@@ -1415,7 +1415,7 @@ class Pages extends CI_Controller {
 			$this->load->view('head');
 			$this->load->view('navbar',$data_navbar);
 			$data['groups'] = $this->pages_model->groups();
-			$data['datatablename'] = 'table_rec_radio';
+			$data['datatablename'] = 'table_rec_radios';
 
 			$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radios/getradios'));
 			// var_dump($data['rec_radios']);
