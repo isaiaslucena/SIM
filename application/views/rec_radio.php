@@ -229,19 +229,10 @@
 
 			$('#btnschanges').click(function(event) {
 				$('#btnschanges').fadeOut('slow');
-
-				// tlines = $('#table_rec_radios tr');
 				tlines = $('#<?php echo $datatablename;?>').dataTable().fnGetData();
-
 				console.log(tlines);
 			});
 
-			// var table = $('#table_rec_radios').DataTable();
-			// $('#table_rec_radios tbody').on( 'click', 'tr', function () {
-			// 	console.log( table.row( this ).data() );
-			// } );
-
-			// Order by the grouping
 			$('#<?php echo $datatablename;?>').on('click', 'tr.group', function() {
 				var currentOrder = dttable.order()[0];
 				if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
@@ -250,5 +241,4 @@
 					dttable.order([0, 'asc']).draw();
 				}
 			});
-
 		</script>

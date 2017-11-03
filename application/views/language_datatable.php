@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
 	var dttable = $('#<?php echo $datatablename;?>').DataTable({
 		<?php if ($datatablename == 'table_clients' ) { ?>
