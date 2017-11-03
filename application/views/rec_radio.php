@@ -223,8 +223,6 @@
 				$('#'+btnid).attr('data-name', newname);
 				$('#'+btnid).attr('data-url', newurl);
 
-				//$('#table_rec_radios').dataTable().fnDraw();
-
 				$('#edit_modal').modal('hide');
 				$('#btnschanges').fadeIn('slow'	);
 			});
