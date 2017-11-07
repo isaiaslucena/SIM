@@ -4,9 +4,24 @@
 		<div class="row page-header">
 			<div class="col-lg-12">
 				<div class="row">
-					<div class="col-lg-8">
+					<div class="col-lg-4">
 						<h1><?php echo get_phrase('radios');?></h1>
 					</div>
+					<div class="col-lg-4">
+						<?php
+							if (isset($success_msg)) { ?>
+							<div class="text-center alert alert-success alert-dismissable fade in" id="success-alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+								<?php echo $success_msg ?>!
+							</div>
+							<script type="text/javascript">
+									$(".alert-success").alert();
+									window.setTimeout(function(){
+										$(".alert-success").alert('close');
+									}, 2000);
+							</script>
+						<?php } ?>
+					</div>					
 					<div class="col-lg-2">
 						<h1>
 							<button id="btnschanges" type="button" class="btn btn-success pull-right" style="display: none">
@@ -116,7 +131,7 @@
 					</div>
 					<div class="modal-footer">
 						<button id="addbtncancel" type="button" class="btn btn-default" data-dismiss="modal"><?php echo get_phrase('cancel');?></button>
-						<button id="addbtnsave" type="button" class="btn btn-primary disabled" disabled><?php echo get_phrase('save');?></button>
+						<button disabled id="addbtnsave" type="button" class="btn btn-primary disabled"><?php echo get_phrase('save');?></button>
 					</div>
 				</div>
 			</div>
@@ -167,11 +182,9 @@
 					<p class="text-center"><?php echo get_phrase('are_you_sure_you_want_delete').'?';?></p>
 					<br>
 					<div class="modal-footer">
-						<form id="delete_modal_form" action="<?php echo site_url('pages/delete_radio');?>" method="post">
-							<input type="hidden" id="keywordid_delete_modal" name="keywordid_delete_modal"></input>
-							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><?php echo get_phrase('no');?></button>
-							<button type="submit" class="btn btn-primary btn-sm"><?php echo get_phrase('yes');?></button>
-						</form>
+						<input id="trid_delete_modal" name="trid_delete_modal" style="display: none;"></input>
+						<button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><?php echo get_phrase('no');?></button>
+						<button id="delbtnyes" type="button" class="btn btn-primary btn-sm"><?php echo get_phrase('yes');?></button>
 					</div>
 				</div>
 			</div>
@@ -179,6 +192,7 @@
 
 		<script type="text/javascript">
 			var dttable, table;
+
 			function checkradioname(radioname) {
 				var pattern = new RegExp(/[A-Z\-]{4,}[\_A-Z]{2}./g);
 				if (pattern.test(radioname)) {
@@ -188,7 +202,7 @@
 				}
 			}
 
-			$('#add_modal').on('shown.bs.modal', function () {
+			$('#add_modal').on('shown.bs.modal', function() {
 				$('#name_add_modal').val(null);
 				$('#url_add_modal').val(null);
 				$('#name_add_modal').focus();
@@ -230,11 +244,11 @@
 				$( rowNode ).find('td').eq(1).addClass('rrutable');
 				$( rowNode ).find('td').eq(2).addClass('text-center');
 
-				$('#btnschanges').fadeIn('slow');
 				$('#add_modal').modal('hide');
+				$('#btnschanges').fadeIn('slow');
 			});
 
-			$('#edit_modal').on('shown.bs.modal', function (event) {
+			$('#edit_modal').on('shown.bs.modal', function(event) {
 				button = $(event.relatedTarget);
 				radiobtnid = button[0].id;
 				radionameid = button.attr('data-idname');
@@ -263,7 +277,7 @@
 				$('#'+btnid).attr('data-url', newurl);
 				
 				$('#edit_modal').modal('hide');
-				$('#btnschanges').fadeIn('slow'	);
+				$('#btnschanges').fadeIn('slow');
 			});
 
 			$('#btnschanges').click(function(event) {
@@ -304,6 +318,7 @@
 				.done(function(ddata) {
 					console.log("success");
 					// console.log(ddata);
+					window.location = '<?php echo base_url("pages/rec_radio/update"); ?>';
 				})
 				.fail(function(fdata) {
 					console.log("error");
@@ -312,6 +327,21 @@
 					console.log("complete");
 					// console.log(adata);
 				});
+			});
+
+			$('#delete_modal').on('shown.bs.modal', function(event) {
+				dbutton = $(event.relatedTarget);
+				bdtrid = dbutton.attr('data-trid');
+				$('#trid_delete_modal').val(bdtrid);
+			});
+
+			$('#delbtnyes').click(function(event) {
+				dtrid = $('#trid_delete_modal').val();
+				drow = dttable.row( $('#'+dtrid) );
+				drow.remove().draw();
+
+				$('#delete_modal').modal('hide');
+				$('#btnschanges').fadeIn('slow');
 			});
 
 			$('#<?php echo $datatablename;?>').on('click', 'tr.group', function() {
