@@ -11,7 +11,6 @@
 						<h1>
 							<button id="btnschanges" type="button" class="btn btn-success pull-right" style="display: none">
 								<i class="fa fa-check"></i>
-								<?php //echo get_phrase('save');?>
 								Salvar alterações
 							</button>	
 						</h1>
@@ -46,8 +45,10 @@
 									<?php 
 									$trid = 0;
 									$trgid = 0;
+									$rrestados = array();
 									foreach ($rec_radios->ESTADO as $estado) {
 										$estadoname = key($estado);
+										array_push($rrestados, $estadoname);
 										foreach ($estado as $radios) {
 											foreach ($radios as $radio) {
 												$radioname = $radio->radio;
@@ -55,8 +56,8 @@
 												$trid++;?>
 												<tr id="<?php echo 'tr'.$trid; ?>">
 													<td><?php echo $estadoname; ?></td>
-													<td id="<?php echo 'trname'.$trid; ?>" class="text-center" style="font-size: 12px"><?php echo $radioname;?></td>
-													<td id="<?php echo 'trurl'.$trid; ?>" style="font-size: 10px"><?php echo $urlstream;?></td>
+													<td id="<?php echo 'trname'.$trid; ?>" class="text-center rrntable"><?php echo $radioname;?></td>
+													<td id="<?php echo 'trurl'.$trid; ?>" class="rrutable"><?php echo $urlstream;?></td>
 													<td class="text-center">
 														<button id="<?php echo 'trbtn'.$trid; ?>" class="btn btn-default btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-idname="<?php echo 'trname'.$trid; ?>" data-name="<?php echo $radioname;?>" data-idurl="<?php echo 'trurl'.$trid; ?>" data-url="<?php echo $urlstream;?>" data-toggle="modal" data-target=".edit_modal">
 															<i class="fa fa-edit"></i>
@@ -87,7 +88,18 @@
 						<h4 class="modal-title" id="add_modal"><?php echo get_phrase('add');?></h4>
 					</div>
 					<div class="modal-body">
-						<div class="col-lg-12">
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-2 control-label"><?php echo get_phrase('state');?></label>
+								<div class="col-lg-8">
+									<select required id="state_add_modal" name="state_add_modal" class="form-control">
+										<!-- <option value="1">1</option> -->
+										<?php foreach ($rrestados as $rrestado) { ?>
+												<option value="<?php echo $rrestado; ?>"><?php echo $rrestado; ?></option>
+											<?php } ?>
+									</select>
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="col-lg-2 control-label"><?php echo get_phrase('name');?></label>
 								<div class="col-lg-8">
@@ -166,6 +178,7 @@
 		</div>
 
 		<script type="text/javascript">
+			var dttable, table;
 			function checkradioname(radioname) {
 				var pattern = new RegExp(/[A-Z\-]{4,}[\_A-Z]{2}./g);
 				if (pattern.test(radioname)) {
@@ -177,12 +190,16 @@
 
 			$('#add_modal').on('shown.bs.modal', function () {
 				$('#name_add_modal').val(null);
+				$('#url_add_modal').val(null);
 				$('#name_add_modal').focus();
 				$('#name_add_modal').blur(function(event) {
 					rdname = $('#name_add_modal').val();
+					rdurl = $('#url_add_modal').val();
 					 if (checkradioname(rdname)) {
 						$('#addbtnsave').removeClass('disabled')
 						$('#addbtnsave').attr('disabled', false);
+					} else if (rdname == "") {
+						console.log('no name');
 					} else {
 						swal("Atenção!", "O nome da rádio deve seguir o padrão: NOME_UF.", "error");
 						$('#name_add_modal').val(null);
@@ -192,16 +209,38 @@
 			});
 
 			$('#addbtnsave').click(function(event) {
+				rstate = $('#state_add_modal').val();
+				rname = $('#name_add_modal').val();
+				rurl = $('#url_add_modal').val();
+				btns = 	'<button disabled class="btn btn-default btn-xs disabled" data-toggle="modal" data-target=".edit_modal">'+
+							'<i class="fa fa-edit"></i> '+
+							'<?php echo get_phrase('edit');?>'+
+						'</button> '+
+						'<button disabled class="btn btn-danger btn-xs disabled" data-toggle="modal" data-target=".delete_modal">'+
+							'<i class="fa fa-times"></i> '+
+							'<?php echo get_phrase('delete');?>'+
+						'</button>'
+
+				// dttable.row.add([rstate, rname, rurl, btns]).draw().nodes().to$().addClass('rrntable text-center');
+				// dttable.row.add([rstate, rname, rurl, btns]).invalidate().draw();
+
+				var rowNode = dttable.row.add([rstate,rname,rurl,btns]).draw().node();
+
+				$( rowNode ).find('td').eq(0).addClass('rrntable text-center');
+				$( rowNode ).find('td').eq(1).addClass('rrutable');
+				$( rowNode ).find('td').eq(2).addClass('text-center');
+
 				$('#btnschanges').fadeIn('slow');
+				$('#add_modal').modal('hide');
 			});
 
 			$('#edit_modal').on('shown.bs.modal', function (event) {
 				button = $(event.relatedTarget);
 				radiobtnid = button[0].id;
-				radionameid = button.data('idname');
-				radioname = button.data('name');
-				radiourlid = button.data('idurl');
-				radiourl = button.data('url');
+				radionameid = button.attr('data-idname');
+				radioname = button.attr('data-name');
+				radiourlid = button.attr('data-idurl');
+				radiourl = button.attr('data-url');
 				modal = $(this);
 				modal.find('.modal-body [name="idbtn_edit_modal"]').val(radiobtnid);
 				modal.find('.modal-body [name="idname_edit_modal"]').val(radionameid);
@@ -222,15 +261,57 @@
 				$('#'+urlid).text(newurl);
 				$('#'+btnid).attr('data-name', newname);
 				$('#'+btnid).attr('data-url', newurl);
-
+				
 				$('#edit_modal').modal('hide');
 				$('#btnschanges').fadeIn('slow'	);
 			});
 
 			$('#btnschanges').click(function(event) {
+				curstate = null;
 				$('#btnschanges').fadeOut('slow');
-				tlines = $('#<?php echo $datatablename;?>').dataTable().fnGetData();
-				console.log(tlines);
+				// $('#<?php echo $datatablename;?>').dataTable().fnDraw();
+				// tlines = $('#<?php echo $datatablename;?>').dataTable().fnGetData();
+				table.fnDraw();
+				tlines = table.fnGetData();
+				tlines.sort();
+				radios = {'ESTADO':[]};
+				indx = -1;
+				$.each(tlines, function(index, lineval) {
+					state = lineval[0];
+					radio = lineval[1];
+					url = lineval[2];
+					curradio = {'radio': radio, 'stream': url};
+					if (curstate != state) {
+						indx += 1;
+						newstate = {};
+						newstate[state] = [];
+						newstate[state].push(curradio);
+						radios['ESTADO'].push(newstate);
+					} else {
+						radios['ESTADO'][indx][state].push(curradio);
+					}
+					curstate = state;
+				});
+
+				console.log(radios);
+
+				$.ajax({
+					url: '<?php echo str_replace("sim.","radio.",base_url())?>index.php/radio/updateradios/',
+					type: 'POST',
+					dataType: 'json',
+					data: JSON.stringify(radios),
+				})
+				.done(function(ddata) {
+					console.log("success");
+					// console.log(ddata);
+				})
+				.fail(function(fdata) {
+					console.log("error");
+				})
+				.always(function(adata) {
+					console.log("complete");
+					// console.log(adata);
+				});
 			});
 
 			$('#<?php echo $datatablename;?>').on('click', 'tr.group', function() {

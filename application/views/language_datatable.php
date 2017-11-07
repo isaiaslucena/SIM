@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	var dttable = $('#<?php echo $datatablename;?>').DataTable({
+	dttable = $('#<?php echo $datatablename;?>').DataTable({
 		<?php if ($datatablename == 'table_clients' ) { ?>
 			"columns": [
 				{"searchable": false},
@@ -81,4 +81,6 @@
 			}
 		}
 	});
+
+	table = $('#<?php echo $datatablename;?>').dataTable();
 </script>

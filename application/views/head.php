@@ -50,5 +50,12 @@
 			tr.group:hover {
 				background-color: #ddd !important;
 			}
+
+			.rrntable {
+				font-size: 12px
+			}
+			.rrutable {
+				font-size: 10px
+			}
 		</style>
 	</head>

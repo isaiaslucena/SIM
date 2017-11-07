@@ -1417,7 +1417,7 @@ class Pages extends CI_Controller {
 			$data['groups'] = $this->pages_model->groups();
 			$data['datatablename'] = 'table_rec_radios';
 
-			$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radios/getradios'));
+			$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radio/getradios'));
 			// var_dump($data['rec_radios']);
 		
 			if ($success_msg == 'create') {

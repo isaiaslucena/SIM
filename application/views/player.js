@@ -119,25 +119,32 @@
 
 						nimage = [];
 						if (joinvideos) {
-							$.each(filesjoined, function(index, file) {
-								maxthumb = file.time;
-								vdfilename = file.file;
-								for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-									nthumbn = ("00" + thumbn).slice(-3);
-									nimage[thumbn] = new Image();
-									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
-									nimage[thumbn].src = imgsrc;
-								}
-							});
+							vdfilename = videotitle.text();
+							srcarr = vdfilename.split("_");
+							srcfilename = srcarr[0];
+							if (srcfilename != 'dvr00') {
+								$.each(filesjoined, function(index, file) {
+									maxthumb = file.time;
+									vdfilename = file.file;
+									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
+										nthumbn = ("00" + thumbn).slice(-3);
+										nimage[thumbn] = new Image();
+										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
+										nimage[thumbn].src = imgsrc;
+									}
+								});								
+							}
 						} else {
 							vdfilename = videotitle.text();
 							sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-							maxthumb = Math.floor(videoel[0].duration);
-							for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-								nthumbn = ("00" + thumbn).slice(-3);
-								nimage[thumbn] = new Image();
-								imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
-								nimage[thumbn].src = imgsrc;
+							if (sfilename != 'dvr00') {
+								maxthumb = Math.floor(videoel[0].duration);
+								for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
+									nthumbn = ("00" + thumbn).slice(-3);
+									nimage[thumbn] = new Image();
+									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
+									nimage[thumbn].src = imgsrc;
+								}
 							}
 						}
 					}
@@ -276,7 +283,9 @@
 					} else {
 						vdfilename = videotitle.text();
 						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-						uptadevThumb(sfilename, vdfilename, thumbnum);
+						if (sfilename != 'dvr00') {
+							uptadevThumb(sfilename, vdfilename, thumbnum);
+						}
 					}
 				};
 

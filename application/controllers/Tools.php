@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Tools extends CI_Controller {
-
 	public function deletepage_dbcache($controller,$view)	{
 		$this->db->cache_delete($controller,$view);
 		echo "Cache db of page ".$controller."/".$view." sucesssfuly deleted!"."\r\n";
@@ -128,5 +127,4 @@ class Tools extends CI_Controller {
 		$this->load->view('home',$data);
 		$this->load->view('footer',$data_navbar);
 	}
-
 }

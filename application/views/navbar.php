@@ -13,7 +13,7 @@
 			<span class="icon-bar"></span>
 		</button>
 		<a class="navbar-brand" href="<?php echo base_url();?>">
-			Sistema Integrado de Monitoramento v1.5
+			Sistema Integrado de Monitoramento v1.8
 		</a>
 	</div><!-- /.navbar-header -->
 
@@ -193,7 +193,7 @@
 
 	function getradios() {
 		setTimeout(getradios, 60000);
-		$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radios/getstopradios'))?>'}, function(data, textStatus, xhr) {
+		$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radio/getstopradios'))?>'}, function(data, textStatus, xhr) {
 			radiocount = 0;
 			$('#msglist').html(null);
 			$.each(data, function(index, val) {
