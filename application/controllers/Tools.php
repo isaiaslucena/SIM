@@ -3,12 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Tools extends CI_Controller {
 	public function deletepage_dbcache($controller,$view)	{
-		$this->db->cache_delete($controller,$view);
+		$this->db->cache_delete($controller, $view);
 		echo "Cache db of page ".$controller."/".$view." sucesssfuly deleted!"."\r\n";
 	}
 
-	public function deleteall_dbcache()	{
+	public function deleteall_dbcache() {
 		$this->db->cache_delete_all();
+		echo "Database cache sucesssfuly deleted!"."\r\n";
 	}
 
 	public function update_dbcache() {

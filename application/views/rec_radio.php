@@ -44,53 +44,49 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-bordered table-striped table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Estado</th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Rádio</th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">URL stream</th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Opções</th>
-									</tr>
-								</thead>
-								<tbody id="tablebody">
-									<?php 
-									$trid = 0;
-									$trgid = 0;
-									$rrestados = array();
-									foreach ($rec_radios->ESTADO as $estado) {
-										$estadoname = key($estado);
-										array_push($rrestados, $estadoname);
-										foreach ($estado as $radios) {
-											foreach ($radios as $radio) {
-												$radioname = $radio->radio;
-												$urlstream = $radio->stream; 
-												$trid++;?>
-												<tr id="<?php echo 'tr'.$trid; ?>">
-													<td><?php echo $estadoname; ?></td>
-													<td id="<?php echo 'trname'.$trid; ?>" class="text-center rrntable"><?php echo $radioname;?></td>
-													<td id="<?php echo 'trurl'.$trid; ?>" class="rrutable"><?php echo $urlstream;?></td>
-													<td class="text-center">
-														<button id="<?php echo 'trbtn'.$trid; ?>" class="btn btn-default btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-idname="<?php echo 'trname'.$trid; ?>" data-name="<?php echo $radioname;?>" data-idurl="<?php echo 'trurl'.$trid; ?>" data-url="<?php echo $urlstream;?>" data-toggle="modal" data-target=".edit_modal">
-															<i class="fa fa-edit"></i>
-															<?php echo get_phrase('edit');?>
-														</button>
-														<button class="btn btn-danger btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-toggle="modal" data-target=".delete_modal">
-															<i class="fa fa-times"></i>
-															<?php echo get_phrase('delete');?>
-														</button>
-													</td>
-												</tr>	
-											<?php }
-										}
-									} ?>
-								</tbody>
-							</table>
-						</div>
-					</div>
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped table-hover" id="<?php echo $datatablename;?>">
+						<thead>
+							<tr>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Estado</th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Rádio</th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">URL stream</th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px">Opções</th>
+							</tr>
+						</thead>
+						<tbody id="tablebody">
+							<?php 
+							$trid = 0;
+							$trgid = 0;
+							$rrestados = array();
+							foreach ($rec_radios->ESTADO as $estado) {
+								$estadoname = key($estado);
+								array_push($rrestados, $estadoname);
+								foreach ($estado as $radios) {
+									foreach ($radios as $radio) {
+										$radioname = $radio->radio;
+										$urlstream = $radio->stream; 
+										$trid++;?>
+										<tr id="<?php echo 'tr'.$trid; ?>">
+											<td><?php echo $estadoname; ?></td>
+											<td id="<?php echo 'trname'.$trid; ?>" class="text-center rrntable"><?php echo $radioname;?></td>
+											<td id="<?php echo 'trurl'.$trid; ?>" class="rrutable"><?php echo $urlstream;?></td>
+											<td class="text-center">
+												<button id="<?php echo 'trbtn'.$trid; ?>" class="btn btn-default btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-idname="<?php echo 'trname'.$trid; ?>" data-name="<?php echo $radioname;?>" data-idurl="<?php echo 'trurl'.$trid; ?>" data-url="<?php echo $urlstream;?>" data-toggle="modal" data-target=".edit_modal">
+													<i class="fa fa-edit"></i>
+													<?php echo get_phrase('edit');?>
+												</button>
+												<button class="btn btn-danger btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-toggle="modal" data-target=".delete_modal">
+													<i class="fa fa-times"></i>
+													<?php echo get_phrase('delete');?>
+												</button>
+											</td>
+										</tr>	
+									<?php }
+								}
+							} ?>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -194,7 +190,7 @@
 			var dttable, table;
 
 			function checkradioname(radioname) {
-				var pattern = new RegExp(/[A-Z\-]{4,}[\_A-Z]{2}./g);
+				var pattern = new RegExp(/[0-9A-Z\-]{4,}[\_A-Z]{2}./g);
 				if (pattern.test(radioname)) {
 					return true;
 				} else {

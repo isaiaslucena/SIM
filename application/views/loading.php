@@ -1,68 +1,14 @@
-<body>
-	<style type="text/css">
-		.spinner {
-			margin: 100px auto 0;
-			width: 70px;
-			text-align: center;
-			transition: 1s;
-		}
-
-		.spinner > div {
-			width: 18px;
-			height: 18px;
-			background-color: #333;
-
-			border-radius: 100%;
-			display: inline-block;
-			-webkit-animation: sk-bouncedelay 1.2s infinite ease-in-out both;
-			animation: sk-bouncedelay 1.2s infinite ease-in-out both;
-		}
-
-		.spinner .bounce1 {
-			-webkit-animation-delay: -0.25s;
-			animation-delay: -0.25s;
-		}
-
-		.spinner .bounce2 {
-			-webkit-animation-delay: -0.10s;
-			animation-delay: -0.10s;
-		}
-
-		@-webkit-keyframes sk-bouncedelay {
-			0%, 80%, 100% { -webkit-transform: scale(0) }
-			40% { -webkit-transform: scale(1.0) }
-		}
-
-		@keyframes sk-bouncedelay {
-			0%, 80%, 100% {
-				-webkit-transform: scale(0);
-				transform: scale(0);
-			} 40% {
-				-webkit-transform: scale(1.0);
-				transform: scale(1.0);
-			}
-		}
-		.progress {
-			display: block;
-			text-align: center;
-			width: 0;
-			height: 5px;
-			background: black;
-			transition: width .3s;
-		}
-		.progress.hide {
-			opacity: 0;
-			transition: opacity 1.3s;
-		}
-	</style>
-
-	<div class="spinner" id="loading_spinner">
-		<div class="bounce1"></div>
-		<div class="bounce2"></div>
-		<div class="bounce3"></div>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+	
+	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
+	<div id="page-wrapper">
+		<div class="spinner" id="loading_spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+		
 	</div>
-
-	<div id="fullpage" style="display: none"></div>
 
 	<?php
 		if (!isset($ff_ids_files_xml)) {
@@ -77,57 +23,117 @@
 			$radio = 'none';
 			$state = 'none';
 		}
-	?>
-	<script type="text/javascript">
-		var page = '<?php echo base_url($page)?>';
-		var pagejoin = '<?php echo base_url('pages/join')?>';
-		var plimit = 0;
-		var poffset = 5;
-		var selected_date = 'today';
-		var sallkeywordquant, skeywordquant;
 
-		// $('#loading_spinner').fadeIn('fast');
+		if ($changepass == 1) { ?>
+			<div id="changepass_modal" class="modal fade edit_modal" tabindex="-1" role="dialog" aria-labelledby="changepass_modal" aria-hidden="true" style="display: none;">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2 class="modal-title text-center" id="edit_modal">Atenção!</h2>
+						</div>
+						<div class="modal-body text-center">
+							<form id="passwd_modal_form" class="form-horizontal" action="<?php echo base_url('pages/changepasswd')?>" method="POST">
+								<h4>É necessário alterar sua senha para poder continuar.</h4>
+								<br>
+								<input type="text" id="user_id_modal" name="user_id_modal" autocomplete="off" value="<?php echo $changepass_id ?>" style="display: none">
+								<div class="form-group">
+									<label class="col-lg-4 control-label"><?php echo get_phrase('new_password');?></label>
+									<div class="col-lg-5">
+										<input required type="password" class="form-control" id="user_passwd_modal" name="user_passwd_modal" autocomplete="off">
+									</div>
+								</div>
 
-		if (page == pagejoin) {
-			$.ajax({
-				url: page,
-				type: 'POST',
-				data: {
-					ff_id_radio: <?php echo $ff_id_radio ?>,
-					ff_id_client: <?php echo $ff_id_client ?>,
-					id_keyword: <?php echo $ff_id_keyword ?>,
-					ff_ids_files_xml: '<?php echo $ff_ids_files_xml ?>',
-					ff_ids_files_mp3: '<?php echo $ff_ids_files_mp3 ?>',
-					timestamp: <?php echo $ff_timestamp ?>,
-					client_selected: '<?php echo $client_selected ?>',
-					keyword_selected: '<?php echo $keyword_selected ?>',
-					radio: '<?php echo $radio ?>',
-					state: '<?php echo $state ?>',
-					page: page
-				},
-				success: function(data) {
-					$('#fullpage').html(data);
-					$('#loading_spinner').css('display', 'none');
-					$('#fullpage').css('display', 'block');
-				},
-				error: function() {
-					// alert("Error!")
-					swal("Erro! Tente novamente atualizando a página!","error");
+								<div class="form-group">
+									<label class="col-lg-4 control-label">Confirmação</label>
+									<div class="col-lg-5">
+										<input required type="password" class="form-control" id="user_passwd2_modal" name="user_passwd2_modal" autocomplete="off">
+									</div>
+								</div>
+								<p class="help-block" style="display: none;"><small><em class="text-danger">As senhas digitadas não conferem!</em></small></p>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button disabled id="btnsave" type="submit" form="passwd_modal_form" class="btn btn-primary disabled">Alterar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<script type="text/javascript">
+				$('#user_passwd2_modal').blur(function(event) {
+					pass1 = $('#user_passwd_modal').val();
+					pass2 = $('#user_passwd2_modal').val();
+					if (pass1 == pass2) {
+						$('.form-group').removeClass('has-error');
+						$('.form-group').addClass('has-success');
+						$('.help-block').fadeOut('fast');
+						$('#btnsave').attr('disabled', false);
+						$('#btnsave').removeClass('disabled');
+					} else {
+						$('.form-group').removeClass('has-success');
+						$('.form-group').addClass('has-error');
+						$('.help-block').fadeIn('fast');
+						$('#btnsave').attr('disabled', true);
+						$('#btnsave').addClass('disabled');
+					}
+				});
+
+				$('#changepass_modal').modal({
+					show: true,
+					backdrop: 'static',
+					keyboard: false
+				});
+			</script>
+		<?php } else { ?>
+			<script type="text/javascript">
+				var page = '<?php echo base_url($page)?>';
+				var pagejoin = '<?php echo base_url('pages/join')?>';
+				var plimit = 0;
+				var poffset = 5;
+				var selected_date = '<?php echo $selected_date?>';
+				var sallkeywordquant, skeywordquant;
+				var changepassword = <?php echo $changepass?>;
+
+				if (page == pagejoin) {
+					$.ajax({
+						url: page,
+						type: 'POST',
+						data: {
+							ff_id_radio: <?php echo $ff_id_radio ?>,
+							ff_id_client: <?php echo $ff_id_client ?>,
+							id_keyword: <?php echo $ff_id_keyword ?>,
+							ff_ids_files_xml: '<?php echo $ff_ids_files_xml ?>',
+							ff_ids_files_mp3: '<?php echo $ff_ids_files_mp3 ?>',
+							timestamp: <?php echo $ff_timestamp ?>,
+							client_selected: '<?php echo $client_selected ?>',
+							keyword_selected: '<?php echo $keyword_selected ?>',
+							radio: '<?php echo $radio ?>',
+							state: '<?php echo $state ?>',
+							page: page
+						},
+						success: function(data) {
+							$('#fullpage').html(data);
+							$('#loading_spinner').css('display', 'none');
+							$('#fullpage').css('display', 'block');
+						},
+						error: function() {
+							// alert("Error!")
+							swal("Erro! Tente novamente atualizando a página!","error");
+						}
+					})
+				} else {
+					$.ajax({
+						url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
+						success: function(data) {
+							$('#loading_spinner').css('display', 'none');
+							$('#page-wrapper').append(data);
+							// $('#page-wrapper').css('display', 'block');
+						},
+						error: function() {
+							swal("Erro!","Tente novamente atualizando a página!","error");
+						}
+					})
 				}
-			})
-		} else {
-			$.ajax({
-				url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
-				success: function(data) {
-					$('#fullpage').html(data);
-					$('#loading_spinner').css('display', 'none');
-					$('#fullpage').css('display', 'block');
-				},
-				error: function() {
-					// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
-					swal("Erro! Tente novamente atualizando a página!","error");
-				}
-			})
-		}
-	</script>
+			</script>
+		<?php } ?>
 </body>

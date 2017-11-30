@@ -37,42 +37,38 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
+				<div class="table-responsive">
+					<table class="table table-hover" id="<?php echo $datatablename;?>">
+						<thead>
+							<tr>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('id');?></th>
+								<th class="sorting_desc" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('keyword');?></th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 50px;"><?php echo get_phrase('priority');?></th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 80px;"><?php echo get_phrase('options');?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+								foreach ($keywords as $keyword) { ?>
 									<tr>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('id');?></th>
-										<th class="sorting_desc" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('keyword');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 50px;"><?php echo get_phrase('priority');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 80px;"><?php echo get_phrase('options');?></th>
+										<td class="text-center"><?php echo $keyword['id_keyword']; ?></td>
+										<td><?php echo $keyword['keyword']; ?></td>
+										<td class="text-center"><?php echo $keyword['priority']; ?></td>
+										<td class="text-center">
+											<button id="client_edit_button" class="btn btn-default btn-xs" data-keywordid="<?php echo $keyword['id_keyword']; ?>" data-keywordname="<?php echo $keyword['keyword']; ?>" data-keywordpriority="<?php echo $keyword['priority']; ?>" data-toggle="modal" data-target=".edit_modal">
+												<i class="fa fa-edit"></i>
+												<?php echo get_phrase('edit');?>
+											</button>
+											<button type="button"  class="btn btn-danger btn-xs" data-keywordid="<?php echo $keyword['id_keyword']; ?>" data-toggle="modal" data-target=".delete_modal">
+												<i class="fa fa-times"></i>
+												<?php echo get_phrase('delete');?>
+											</button>
+										</td>
 									</tr>
-								</thead>
-								<tbody>
-									<?php
-										foreach ($keywords as $keyword) { ?>
-											<tr>
-												<td class="text-center"><?php echo $keyword['id_keyword']; ?></td>
-												<td><?php echo $keyword['keyword']; ?></td>
-												<td class="text-center"><?php echo $keyword['priority']; ?></td>
-												<td class="text-center">
-													<button id="client_edit_button" class="btn btn-default btn-xs" data-keywordid="<?php echo $keyword['id_keyword']; ?>" data-keywordname="<?php echo $keyword['keyword']; ?>" data-keywordpriority="<?php echo $keyword['priority']; ?>" data-toggle="modal" data-target=".edit_modal">
-														<i class="fa fa-edit"></i>
-														<?php echo get_phrase('edit');?>
-													</button>
-													<button type="button"  class="btn btn-danger btn-xs" data-keywordid="<?php echo $keyword['id_keyword']; ?>" data-toggle="modal" data-target=".delete_modal">
-														<i class="fa fa-times"></i>
-														<?php echo get_phrase('delete');?>
-													</button>
-												</td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
-						</div><!-- /.table-responsive -->
-					</div><!-- /.panel-body -->
-				</div><!-- /.panel -->
+								<?php } ?>
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<div id="add_modal" class="modal fade add_modal" tabindex="-1" role="dialog" aria-labelledby="add_modal" aria-hidden="true" style="display: none;">

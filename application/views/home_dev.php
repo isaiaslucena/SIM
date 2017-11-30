@@ -5,27 +5,6 @@ $time = $time[1] + $time[0];
 $start = $time;
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<style type="text/css">
-	#back-to-top {
-		position: fixed;
-		bottom: 20px;
-		right: 20px;
-		z-index: 9999;
-		cursor: pointer;
-		transition: opacity 0.2s ease-out;
-		opacity: 0;
-	}
-	#back-to-top.show {
-		opacity: 1;
-	}
-	#content {
-		height: 2000px;
-	}
-</style>
-
-<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
-
-<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 	<div class="row page-header">
 		<div class="col-lg-12">
 			<div class="col-lg-4">
@@ -35,16 +14,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			</div>
 			<div class="col-lg-3" >
 				<small><span class="pull-right text-muted pageload"></span></small>
-				<h1>
-				<div class="input-group">
-					<input id="searchclient" class="form-control pull-right" placeholder="<?php echo get_phrase('search')?>"/>
-					<span class="input-group-btn">
-						<button class="btn btn-default" disabled type="button">
-							<i class="fa fa-search"></i>
-						</button>
-					</span>
-				</div>
-				</h1>
 			</div>
 		</div>
 	</div>
@@ -77,12 +46,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<li class="timeline-inverted" id="<?php echo 'li-'.$client['id_client'];?>">
 								<?php }
 								if ($client['priority'] == 1) { ?>
+									<div class="timeline-badge danger"><i class="fa fa-exclamation"></i></div>
 								 	<div class="timeline-panel-high">
 								<?php }
 								else { ?>
-									<div class="timeline-panel">
+									<div class="timeline-badge"><i class="fa fa-tag"></i></div>
+									<div class="timeline-panel">	
 								<?php } ?>
-									<div class="timeline-heading"><h4 class="timeline-title"><?php echo $client['name'];?></h4></div>
+									<div class="timeline-heading">
+										<h4 class="timeline-title"><?php echo $client['name'];?></h4>
+									</div>
 									<div class="timeline-body">
 										<p class="text-center">
 											<?php
@@ -128,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 																	<span class="badge"><?php echo $keyword_foundc;?> </span>
 																</button>
 															<?php } else { ?>
-																<button type="submit" class="btn btn-lightblue btn-sm"><?php echo $keyword['keyword'];?>
+																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?>
 																	<span class="badge"><?php echo $keyword_foundc;?> </span>
 																</button>
 															<?php } ?>
@@ -155,14 +128,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<input type="text" id="iallkeywordquant" style="display: none;">
 						<input type="text" name="loadcf" id="loadcf" value="2" style="display: none;">
 						<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
-							<i class="fa fa-refresh fa-spin"></i>
-							 Carregando...
+							<i class="fa fa-refresh fa-spin"></i> Carregando...
 						</span>
-						<button id="btnloadmore" type="button" class="btn btn-primary btn-sm center-block" style="display: none;">Carregar mais</button>
+						<button id="btnloadmore" type="button" class="btn btn-primary btn-sm center-block" style="display: none;">
+							<span id="btnloadmfi">Carregar mais</span>
+							<span id="btnloadmse" style="display: none;"><i class="fa fa-refresh fa-spin"></i> Carregando...</span>
+						</button>
 					</div>
 			</div>
 		</div>
-	</div> <!-- div row clients timeline -->
+	</div>
 
 	<?php
 		$time = microtime();
@@ -174,9 +149,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	?>
 
 	<script type="text/javascript">
-		var clientspm = '<?php echo $clientsmp?>';
-		var selected_date = '<?php echo $selected_date?>';
 		var clientsmp = '<?php echo $clientsmp?>';
+		var selected_date = '<?php echo $selected_date?>';
+
 		var d = new Date();
 		var day = d.getDate();
 		var month = (d.getMonth() + 1);
@@ -269,7 +244,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								$('#allkeywordsquant').text(upnallkeyw);
 							},
 							error: function() {
-								// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
 								swal("Atenção!", "Tente novamente atualizando a página! (F5)", "error");
 							}
 						});
@@ -279,7 +253,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		}
 
 		$('#btnloadmore').click(function(event) {
-			$('#loadmore').fadeTo('fast', 100);
+			$(this).attr('disabled', true);
+			$(this).addClass('disabled');
+			$('#btnloadmfi').css('display', 'none');
+			$('#btnloadmse').css('display', 'block');
 			plimit = (plimit + 5);
 			$.ajax({
 				url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
@@ -301,7 +278,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#btnloadmore').fadeOut('fast');
 				},
 				error: function() {
-					// alert("Erro! Por favor, entre em contato com o administrador do sistema!");
 					swal("Atenção!", "Tente novamente atualizando a página! (F5)", "error");
 				}
 			});
@@ -314,7 +290,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			hidenokeyword();
 
 			timelinebody = $('#timelinebody');
-			// console.log(timelinebody.height());
 			if (timelinebody.height() < 420) {
 				$('#btnloadmore').fadeIn('fast');
 			} else {

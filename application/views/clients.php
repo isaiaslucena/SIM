@@ -35,22 +35,20 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px;"><?php echo get_phrase('id');?></th>
-										<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('client');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('priority');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('keywords');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('radio');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('television');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('options');?></th>
-									</tr>
-								</thead>
-								<tbody>
+					<div class="table-responsive">
+						<table class="table table-hover" id="<?php echo $datatablename;?>">
+							<thead>
+								<tr>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 20px;"><?php echo get_phrase('id');?></th>
+									<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('client');?></th>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('priority');?></th>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('keywords');?></th>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('radio');?></th>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('television');?></th>
+									<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 60px;"><?php echo get_phrase('options');?></th>
+								</tr>
+							</thead>
+							<tbody>
 								<?php
 									foreach ($clients as $client) { ?>
 									<tr>
@@ -108,11 +106,9 @@
 										</td>
 									</tr>
 								<?php } ?>
-								</tbody>
-							</table>
-						</div><!-- /.table-responsive -->
-					</div><!-- /.panel-body -->
-				</div><!-- /.panel -->
+							</tbody>
+						</table>
+					</div>
 			</div>
 
 			<div id="add_modal" class="modal fade add_modal" tabindex="-1" role="dialog" aria-labelledby="add_modal" aria-hidden="true" style="display: none;">
@@ -277,17 +273,6 @@
 			?>
 
 			<script type="text/javascript">
-				function checkUserName() {
-					//var username = document.getElementsByName("username").value;
-					var username = document.getElementsById("clientkeywords_add_modal").value;
-					var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
-					if (pattern.test(username)) {
-						alert("Please only use standard alphanumerics");
-						return false;
-					}
-					return true; //good user input
-				}
-
 				var keywords = [<?php echo $keywordslinevar; ?>];
 				var keywordsblood = new Bloodhound({
 					datumTokenizer: Bloodhound.tokenizers.obj.whitespace('keyword'),
@@ -311,7 +296,6 @@
 				});
 
 				$('#add_modal').on('shown.bs.modal', function () {
-					//console.log('Showing Modal Add Keyword!')
 					$('#add_modal').bind("keypress", function(e) {
 						if (e.keyCode == 13) {
 							e.preventDefault();
@@ -376,7 +360,6 @@
 				});
 
 				$('#edit_modal').on('shown.bs.modal', function (event) {
-					//console.log('Showing Modal Edit Keyword!')
 					var button = $(event.relatedTarget)
 					var clientid = button.data('clientid')
 					var clientname = button.data('clientname')
@@ -424,5 +407,16 @@
 						});
 					}
 				});
+
+				function checkUserName() {
+					//var username = document.getElementsByName("username").value;
+					var username = document.getElementsById("clientkeywords_add_modal").value;
+					var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
+					if (pattern.test(username)) {
+						alert("Please only use standard alphanumerics");
+						return false;
+					}
+					return true;
+				}
 			</script>
 		</div>

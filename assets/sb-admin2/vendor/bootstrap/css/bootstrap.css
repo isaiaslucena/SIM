@@ -3195,6 +3195,68 @@ fieldset[disabled] .btn-primary.focus {
   color: #337ab7;
   background-color: #fff;
 }
+
+/* ////////////////////////////////////////////////////////////////////////////////// */
+.btn-lightblue {
+  color: #fff;
+  background-color: #59B3FF;
+  border-color: #2e6da4;
+}
+.btn-lightblue:focus,
+.btn-lightblue.focus {
+  color: #fff;
+  background-color: #286090;
+  border-color: #122b40;
+}
+.btn-lightblue:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+.btn-lightblue:active,
+.btn-lightblue.active,
+.open > .dropdown-toggle.btn-lightblue {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+.btn-lightblue:active:hover,
+.btn-lightblue.active:hover,
+.open > .dropdown-toggle.btn-lightblue:hover,
+.btn-lightblue:active:focus,
+.btn-lightblue.active:focus,
+.open > .dropdown-toggle.btn-lightblue:focus,
+.btn-lightblue:active.focus,
+.btn-lightblue.active.focus,
+.open > .dropdown-toggle.btn-lightblue.focus {
+  color: #fff;
+  background-color: #204d74;
+  border-color: #122b40;
+}
+.btn-lightblue:active,
+.btn-lightblue.active,
+.open > .dropdown-toggle.btn-lightblue {
+  background-image: none;
+}
+.btn-lightblue.disabled:hover,
+.btn-lightblue[disabled]:hover,
+fieldset[disabled] .btn-lightblue:hover,
+.btn-lightblue.disabled:focus,
+.btn-lightblue[disabled]:focus,
+fieldset[disabled] .btn-lightblue:focus,
+.btn-lightblue.disabled.focus,
+.btn-lightblue[disabled].focus,
+fieldset[disabled] .btn-lightblue.focus {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-lightblue .badge {
+  color: #337ab7;
+  background-color: #fff;
+}
+/* ////////////////////////////////////////////////////////////////////////////////// */
+
+
 .btn-success {
   color: #fff;
   background-color: #5cb85c;
@@ -3371,11 +3433,6 @@ fieldset[disabled] .btn-warning.focus {
   background-color: #d9534f;
   border-color: #d43f3a;
 }
-.btn-lightblue {
-  color: #000000;
-  background-color: #DEE7F8;
-  border-color: #A4BDEC;
-}
 .btn-danger:focus,
 .btn-danger.focus {
   color: #fff;
@@ -3386,11 +3443,6 @@ fieldset[disabled] .btn-warning.focus {
   color: #fff;
   background-color: #c9302c;
   border-color: #ac2925;
-}
-.btn-lightblue:hover {
-  color: #000000;
-  background-color: #BAD2FF;
-  border-color: #A4BDEC;
 }
 .btn-danger:active,
 .btn-danger.active,

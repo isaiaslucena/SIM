@@ -77,9 +77,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<?php }
 								if ($client['priority'] == 1) { ?>
 								 	<div class="timeline-panel-high">
+								 		<div class="timeline-badge danger"><i class="fa fa-exclamation"></i></div>
 								<?php }
 								else { ?>
 									<div class="timeline-panel">
+										<div class="timeline-badge"><i class="fa fa-tag"></i></div>
 								<?php } ?>
 									<div class="timeline-heading"><h4 class="timeline-title"><?php echo $client['name'];?></h4></div>
 									<div class="timeline-body">

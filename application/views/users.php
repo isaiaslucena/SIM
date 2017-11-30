@@ -136,9 +136,13 @@
 									<label class="col-lg-4 control-label"><?php echo get_phrase('group');?></label>
 									<div class="col-lg-5">
 										<select required id="group_add_modal" name="group_add_modal" class="form-control">
-										<?php foreach ($groups as $group) { ?>
-											<option value="<?php echo $group['id_group'] ?>"><?php echo $group['name'] ?></option>
-										<?php }?>
+										<?php foreach ($groups as $group) { 
+											if ($group['id_group'] == 2) { ?>
+											 	<option selected="selected" value="<?php echo $group['id_group'] ?>"><?php echo $group['name'] ?></option>
+											 <?php } else { ?>
+												<option value="<?php echo $group['id_group'] ?>"><?php echo $group['name'] ?></option>
+											<?php } 
+										} ?>
 										</select>
 									</div>
 								</div>
@@ -265,7 +269,7 @@
 					$('#username_add_modal').val(null)
 					$('#passwd_add_modal').val(null)
 					$('#email_add_modal').val(null)
-					$("select#group_add_modal").prop('selectedIndex', 1)
+					// $("select#group_add_modal").prop('selectedIndex', 1)
 					$('#username_add_modal').focus()
 				});
 
@@ -294,7 +298,6 @@
 					$("#change_passwd_modal").prop('checked',true)
 					$('#passwd_passwd_modal').focus()
 				});
-
 
 				$('#delete_modal').on('shown.bs.modal', function (event) {
 					var button = $(event.relatedTarget)

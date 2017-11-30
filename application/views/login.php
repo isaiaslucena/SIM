@@ -52,15 +52,15 @@
 			};
 
 			if (mobilecheck()) {
-				// console.log('Mobile Agent!');
+				console.log('Mobile Agent!');
 				url = "<?php echo base_url('login/mobile_index')?>";
 				$(location).attr("href", url);
 			} else {
 				console.log('Desktop Agent!');
 			}
 
-			// civersion="<?php // echo CI_VERSION; ?>"
-			// console.debug("Code Igniter v" + civersion);
+			civersion="<?php echo CI_VERSION; ?>"
+			console.debug("Code Igniter v"+civersion);
 
 			$(document).ready(function() {
 				//$(".alert-danger").alert();

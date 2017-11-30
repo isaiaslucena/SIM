@@ -17,9 +17,11 @@
 									<li class="timeline-inverted" id="<?php echo 'li-'.$client['id_client'];?>">
 								<?php }
 								if ($client['priority'] == 1) { ?>
+									<div class="timeline-badge danger"><i class="fa fa-exclamation"></i></div>
 								 	<div class="timeline-panel-high">
 								<?php }
 								else { ?>
+									<div class="timeline-badge"><i class="fa fa-tag"></i></div>
 									<div class="timeline-panel">
 								<?php } ?>
 									<div class="timeline-heading"><h4 class="timeline-title"><?php echo $client['name'];?></h4></div>
@@ -59,7 +61,7 @@
 															<?php if ($keyword['keyword_priority'] == 1) { ?>
 																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $allkeyword_foundc;?></span></button>
 															<?php } else { ?>
-																<button type="submit" class="btn btn-lightblue btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $allkeyword_foundc;?></span></button>
+																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $allkeyword_foundc;?></span></button>
 															<?php } ?>
 														</form>
 														<?php

@@ -1,5 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+if (!isset($id_text)) {
+	$id_text = "";
+} ?>
 
 <!DOCTYPE html>
 <html>
@@ -95,16 +98,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<input style="opacity: 0" type="text" id="indexstart" name="indexstart"></input>
 					<input style="opacity: 0" type="text" id="indexend" name="indexend"></input>
 					<div id="crop2" hidden>
-						<input type="text" id="radio" name="radio" value="<?php echo $radio;?>"></input>
-						<input type="text" id="state" name="state" value="<?php echo $state;?>"></input>
-						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected;?>"></input>
-						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword;?>"></input>
-						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client;?>"></input>
-						<input type="text" id="id_file" name="id_file" value="<?php echo $id_file;?>"></input>
-						<input type="text" id="id_text" name="id_text" value="<?php echo $id_text;?>"></input>
-						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected;?>"></input>
-						<input type="text" id="timestamp" name="timestamp" value="<?php echo $timestamp;?>"></input>
-						<input type="text" id="mp3pathfilename" name="mp3pathfilename" value="<?php echo $mp3pathfilename;?>"></input>
+						<input type="text" id="radio" name="radio" value="<?php echo $radio; ?>"></input>
+						<input type="text" id="state" name="state" value="<?php echo $state; ?>"></input>
+						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>"></input>
+						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>"></input>
+						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>"></input>
+						<input type="text" id="id_file" name="id_file" value="<?php echo $id_file; ?>"></input>
+						<input type="text" id="id_text" name="id_text" value="<?php echo $id_text; ?>"></input>
+						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>"></input>
+						<input type="text" id="timestamp" name="timestamp" value="<?php echo $timestamp; ?>"></input>
+						<input type="text" id="mp3pathfilename" name="mp3pathfilename" value="<?php echo $mp3pathfilename; ?>"></input>
 						<textarea id="result" name="result" style="width: 700px; height: 100px"></textarea>
 					</div>
 					<br>

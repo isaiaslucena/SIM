@@ -1,36 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 <body>
-	<style type="text/css">
-		/* #back-to-top {
-			position: fixed;
-			bottom: 20px;
-			right: 20px;
-			z-index: 9999;
-			cursor: pointer;
-			transition: opacity 0.2s ease-out;
-			opacity: 0;
-		} */
-		#back-to-top {
-			position: fixed;
-			bottom: 20px;
-			right: 20px;
-			z-index: 9999;
-			cursor: pointer;
-			transition: display 0.2s ease-out;
-			display: none;
-		}
-		#back-to-top.show {
-			/* opacity: 1; */
-			display: block;
-		}
-		#content {
-			height: 2000px;
-		}
-		#scrollable-dropdown-menu .tt-menu {
-			max-height: 200px;
-			overflow-y: auto;
-		}
-	</style>
 
 	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
 

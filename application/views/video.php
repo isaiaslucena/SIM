@@ -674,8 +674,10 @@
 				}
 
 				function selectchannel(date) {
-					tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
-					tvch.prop('disabled', false)
+					// tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
+					// tvch.prop('disabled', false)
+					tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
+					tvch.selectpicker('refresh');
 					tvch.html(null);
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
@@ -745,6 +747,8 @@
 									});
 								}
 							});
+							tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
+							tvch.prop('disabled', false)
 							tvch.selectpicker('refresh');
 						}
 					);

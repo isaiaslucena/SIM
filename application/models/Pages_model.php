@@ -27,6 +27,10 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function client($id){
+		return $filedb = $this->db->get_where('client', array('id_client' => $id))->result_array();
+	}
+
 	//create client
 	public function create_client($dataclient) {
 		$data_insert_client = array(
@@ -116,6 +120,12 @@ class Pages_model extends CI_Model {
 		$this->db->order_by('priority','asc');
 		$this->db->order_by('keyword','asc');
 		return $this->db->get('keyword')->result_array();
+	}
+
+	public function terms() {
+		$this->db->order_by('priority','asc');
+		$this->db->order_by('term','asc');
+		return $this->db->get('term')->result_array();
 	}
 
 	//create keyword
@@ -549,7 +559,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function tv_text_keyword_solr($startdate,$enddate,$keyword){
+	public function tv_text_keyword_solr_info4($startdate,$enddate,$keyword){
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -563,6 +573,62 @@ class Pages_model extends CI_Model {
 		$data = array(
 			"query" => 'text_t:"'.$keyword.'"',
 			"filter" => "startdate_l:[".$startdatem." TO ".$enddatem."]"
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+	
+	public function tv_text_keyword_solr($startdate, $enddate, $keyword){
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_tv/query?rows=500&wt=json&sort=starttime_dt+asc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'content_t:"'.$keyword.'"',
+			"filter" => "starttime_dt:[".$startdate."Z TO ".$enddate."Z]"
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+	
+	public function radio_text_keyword_solr($startdate, $enddate, $keyword){
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+asc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'content_t:"'.$keyword.'"',
+			"filter" => "starttime_dt:[".$startdate."Z TO ".$enddate."Z]"
 		);
 		$data_string = json_encode($data);
 
@@ -783,9 +849,9 @@ class Pages_model extends CI_Model {
 		$countfarr = count($idsfilesarr);
 		foreach ($idsfilesarr as $idfile) {
 			$countf++;
-			$filedb = $this->db->get_where('file',array('id_file' => $idfile))->result_array();
+			$filedb = $this->db->get_where('file', array('id_file' => $idfile))->result_array();
 			$file = $filedb[0]['path'].'/'.$filedb[0]['filename'];
-			copy($file,$temppath.$filedb[0]['filename'].'.mp3');
+			copy($file, $temppath.$filedb[0]['filename'].'.mp3');
 			if ($countf == $countfarr) {
 				$filesline .= $temppath.$filedb[0]['filename'].'.mp3';
 				$radio = $this->db->get_where('radio',array('id_radio' => $filedb[0]['id_radio']))->row()->name;
@@ -794,8 +860,8 @@ class Pages_model extends CI_Model {
 				$filesline .= $temppath.$filedb[0]['filename'].'.mp3 ';
 			}
 		}
-		$joinfile = 'join_'.date('d-m-Y_His',$date).'_'.$radio.'.mp3';
-		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile);
+		$joinfile = 'join_'.date('d-m-Y_His', $date).'_'.$radio.'.mp3';
+		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
 		$finaltempurl = $temppathurl.$joinfile;
 		return $finaltempurl;
 	}
@@ -1740,6 +1806,7 @@ class Pages_model extends CI_Model {
 			'username' => $datauser['username'],
 			'password' => md5($datauser['password']),
 			'email' => $datauser['email'],
+			'change_password' => 1,
 			'id_group' => $datauser['groupid']
 		);
 		$this->db->insert('user', $data_insert_user);
@@ -1757,6 +1824,13 @@ class Pages_model extends CI_Model {
 		$this->db->set('password',md5($datauser['password']));
 		$this->db->set('change_password',$datauser['changepasswd']);
 		$this->db->where('id_user',$datauser['userid']);
+		$this->db->update('user');
+	}
+
+	public function changepasswd($datauser) {
+		$this->db->set('password', md5($datauser['password']));
+		$this->db->set('change_password', 0);
+		$this->db->where('id_user', $datauser['userid']);
 		$this->db->update('user');
 	}
 

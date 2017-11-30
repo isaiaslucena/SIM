@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script type="text/javascript">
 	dttable = $('#<?php echo $datatablename;?>').DataTable({
 		<?php if ($datatablename == 'table_clients' ) { ?>

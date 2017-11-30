@@ -14,10 +14,10 @@ $dbname='sim';
 
 $dbcon = new mysqli($servername, $username, $password, $dbname);
 if (!$dbcon) {
-	//die('Not possible to connect: '.mysql_error());
-	//mysql_close($dbcon);
+	die('Not possible to connect: '.mysql_error());
+	mysql_close($dbcon);
 }else {
-	//echo 'Conexão bem sucedida'."\n";
+	echo 'Conexão bem sucedida'."\n";
 }
 
 //Solr Connection
@@ -139,7 +139,7 @@ catch(Exception $e) {
 	echo $now."  No success!"."\r\n";
 	
 	try {
-       		$now = date('Y-m-d H:i:s');
+       	$now = date('Y-m-d H:i:s');
         	echo $now."  Connecting to address ".$addr02."..."."\r\n";
 		$wsdl = 'http://'.$addr02.':8030/MMS/WS/StoryManager?wsdl';
         	$soap = new SoapClient($wsdl, $options);
@@ -197,7 +197,7 @@ foreach ($data->return as $list) {
 				$estartdate = (int)$listitem->startDate;
 				$eenddate = (int)$listitem->endDate;
 
-				if (preg_match('/^Radio /', $veiculo) == 1){
+				if (preg_match('/^Radio /', $veiculo) == 1) {
 					$typev = 'radio';
 
 					$sourceexist = "SELECT id_radiosource, name FROM radiosource_info4 WHERE name = '".utf8_decode($veiculo)."'";
