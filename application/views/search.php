@@ -52,72 +52,71 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-							<form action="<?php echo base_url('pages/search_result')?>" method="POST" accept-charset="utf-8">
-								<div class="col-lg-6">
-									<div class="form-group">
-										<label><?php echo get_phrase('client');?></label>
-										<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
-										<input style="display: none" id="clientid" name="clientid" type="text" >
-									</div>
-									<div id="scrollable-dropdown-menu" class="form-group">
-										<label><?php echo get_phrase('keyword');?></label>
-										<i id="tooltipkw" style="display: none;" class="fa fa-question-circle fa-fw" data-toggle="tooltip" data-placement="top" title="" data-original-title="Ao deixar o campo em branco, pesquisará em todas as palavras-chave!"></i>
-										<input disabled id="keywordid" name="clientkeywordid" type="text"  class="form-control input-sm" autocomplete="off">
-									</div>
+						<form action="<?php echo base_url('pages/search_result')?>" method="POST" accept-charset="utf-8">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label><?php echo get_phrase('client');?></label>
+									<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+									<input style="display: none" id="clientid" name="clientid" type="text" >
+								</div>
+								<div id="scrollable-dropdown-menu" class="form-group">
+									<label><?php echo get_phrase('keyword');?></label>
+									<i id="tooltipkw" style="display: none;" class="fa fa-question-circle fa-fw" data-toggle="tooltip" data-placement="top" title="" data-original-title="Ao deixar o campo em branco, pesquisará em todas as palavras-chave!"></i>
+									<input disabled id="keywordid" name="clientkeywordid" type="text"  class="form-control input-sm" autocomplete="off">
+								</div>
 
-									<div id="radiosel" class="form-group">
-										<label>Tipo de Veículo</label>
-										<div class="radio">
-											<label>
-												<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') { echo "checked";} ?> required>
-												Rádio
-											</label>
-										</div>
-										<div class="radio">
-											<label>
-												<input id="searchrstart" type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
-												Televisão
-											</label>
-										</div>
+								<div id="radiosel" class="form-group">
+									<label>Tipo de Veículo</label>
+									<div class="radio">
+										<label>
+											<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') { echo "checked";} ?> required>
+											Rádio
+										</label>
 									</div>
-
-									<div id="radioidsel" class="form-group" style="display: none;">
-										<label><?php echo get_phrase('radio');?></label>
-										<input id="radioid" name="radioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
-									</div>
-
-									<div id="tvidsel" class="form-group" style="display: none;">
-										<label><?php echo get_phrase('television');?></label>
-										<input id="tvchannel" name="tvchannel" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+									<div class="radio">
+										<label>
+											<input id="searchrstart" type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
+											Televisão
+										</label>
 									</div>
 								</div>
-								<div class="col-lg-6">
-									<div class="form-group">
-										<label><?php echo get_phrase('date');?></label>
-										<div class="input-daterange input-group" id="datepicker">
-											<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" <?php if (isset($startdate)) { echo 'value="'.$startdate.'"'; } ?> autocomplete="off"/>
-											<span class="input-group-addon"><?php echo get_phrase('until');?></span>
-											<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" <?php if (isset($enddate)) { echo 'value="'.$enddate.'"'; } ?> autocomplete="off"/>
-										</div>
+
+								<div id="radioidsel" class="form-group" style="display: none;">
+									<label><?php echo get_phrase('radio');?></label>
+									<input id="radioid" name="radioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+								</div>
+
+								<div id="tvidsel" class="form-group" style="display: none;">
+									<label><?php echo get_phrase('television');?></label>
+									<input id="tvchannel" name="tvchannel" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label><?php echo get_phrase('date');?></label>
+									<div class="input-daterange input-group" id="datepicker">
+										<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" <?php if (isset($startdate)) { echo 'value="'.$startdate.'"'; } ?> autocomplete="off"/>
+										<span class="input-group-addon"><?php echo get_phrase('until');?></span>
+										<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" <?php if (isset($enddate)) { echo 'value="'.$enddate.'"'; } ?> autocomplete="off"/>
 									</div>
-									<div class="form-group">
-										<label><?php echo get_phrase('time');?></label>
-										<div class="input-daterange input-group">
-											<input required type="text" class="input-sm form-control clockpicker" id="starttime" name="starttime" placeholder="<?php echo get_phrase('start');?>" value="00:00" autocomplete="off"/>
-											<span class="input-group-addon"><?php echo get_phrase('until');?></span>
-											<input required type="text" class="input-sm form-control clockpicker" id="endtime" name="endtime" placeholder="<?php echo get_phrase('end');?>" value="23:59" autocomplete="off"/>
-										</div>
+								</div>
+								<div class="form-group">
+									<label><?php echo get_phrase('time');?></label>
+									<div class="input-daterange input-group">
+										<input required type="text" class="input-sm form-control clockpicker" id="starttime" name="starttime" placeholder="<?php echo get_phrase('start');?>" value="00:00" autocomplete="off"/>
+										<span class="input-group-addon"><?php echo get_phrase('until');?></span>
+										<input required type="text" class="input-sm form-control clockpicker" id="endtime" name="endtime" placeholder="<?php echo get_phrase('end');?>" value="23:59" autocomplete="off"/>
 									</div>
-									<label><?php echo get_phrase('text');?></label>
-									<div class="form-group input-group">
-										<input type="text" id="keyword" name="keyword" class="form-control input-sm"  <?php if (isset($keyword)) { echo 'value="'.$keyword.'"'; } ?> autocomplete="off">
-										<span class="input-group-btn">
-											<button class="btn btn-default btn-sm" type="submit" name="text"><i class="fa fa-search"></i></button>
-										</span>
-									</div>
-								</div>	
-							</form>
-						<!-- </div> -->
+								</div>
+								<label><?php echo get_phrase('text');?></label>
+								<div class="form-group input-group">
+									<input type="text" id="keyword" name="keyword" class="form-control input-sm"  <?php if (isset($keyword)) { echo 'value="'.$keyword.'"'; } ?> autocomplete="off">
+									<span class="input-group-btn">
+										<button class="btn btn-default btn-sm" type="submit" name="text"><i class="fa fa-search"></i></button>
+									</span>
+								</div>
+							</div>	
+						</form>
 					</div>
 				</div>
 			</div>
