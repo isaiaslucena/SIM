@@ -33,17 +33,19 @@
 					}
 				} else if ($vtype == 'tv') {
 					// var_dump($search);
-					// preg_match("/\"text_t:\\\"(.*?)\\\"\",/", $search, $fkeyword);
-					// var_dump($fkeyword);
-					$searcharr = explode(":", $search);
-					$keywordarr = explode('"', $searcharr[2]);
-					$keyword =  str_replace("\\", "", $keywordarr[1]);
-					$datearr = explode(' TO ', $searcharr[4]);
-					$startdatets = str_replace("[", "", $datearr[0]) / 1000;
-					$enddatets = str_replace("]\"}", "", $datearr[1]) / 1000;
-					$startdate = date("d/m/Y", $startdatets);
-					$enddate = date("d/m/Y", $enddatets);
-					// var_dump($datearr);
+					if (preg_match('/starttime_dt/', $search) == 0) {
+						// preg_match("/\"text_t:\\\"(.*?)\\\"\",/", $search, $fkeyword);
+						// var_dump($fkeyword);
+						$searcharr = explode(":", $search);
+						$keywordarr = explode('"', $searcharr[2]);
+						$keyword =  str_replace("\\", "", $keywordarr[1]);
+						$datearr = explode(' TO ', $searcharr[4]);
+						$startdatets = str_replace("[", "", $datearr[0]) / 1000;
+						$enddatets = str_replace("]\"}", "", $datearr[1]) / 1000;
+						$startdate = date("d/m/Y", $startdatets);
+						$enddate = date("d/m/Y", $enddatets);
+						// var_dump($datearr);
+					}
 				}
 			}
 		?>

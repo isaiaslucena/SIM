@@ -1186,7 +1186,7 @@ class Pages extends CI_Controller {
 			$this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'search';
-			$data['allclients'] = $this->pages_model->clients(null,null,'radio');
+			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
 			$data['alltvc'] = $this->pages_model->tvc();
 			if (empty($pageselected)) {

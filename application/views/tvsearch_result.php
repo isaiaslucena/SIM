@@ -149,62 +149,100 @@
 					<?php if (!empty($keyword)) { ?><div class="panel-heading"><i class="fa fa-key fa-fw"></i> <?php echo $keyword;?></div><?php } ?>
 					<?php if (!empty($keyword)) { ?><div class="panel-body"><?php } ?>
 						<?php if (empty($keyword)) {
-							$stories = $searchresult->response->docs;
-							$countf = 0;
-							foreach ($stories as $story) {
-								$shash = $story->hash_s;
-								$staskidcreator = $story->taskidcreator_l;
-								$sdate = $story->date_l;
-								$sinsertion = $story->insertiondate_l;
-								$sstartdate = $story->startdate_l;
-								$senddate = $story->enddate_l;
-								$ssource = $story->source_s;
-								$sname = $story->name_s;
-								if (isset($story->text_t[0])) {
-									$stext = $story->text_t[0];
-								}
+							if (isset($searchresult->response->docs[0]->hash_s)) {
+								$stories = $searchresult->response->docs;
+								$countf = 0;
+								foreach ($stories as $story) {
+									$shash = $story->hash_s;
+									$staskidcreator = $story->taskidcreator_l;
+									$sdate = $story->date_l;
+									$sinsertion = $story->insertiondate_l;
+									$sstartdate = $story->startdate_l;
+									$senddate = $story->enddate_l;
+									$ssource = $story->source_s;
+									$sname = $story->name_s;
+									if (isset($story->text_t[0])) {
+										$stext = $story->text_t[0];
+									} ?>
 
-								// echo "hash: ".$shash."<br>";
-								// echo "taskidcreator: ".$staskidcreator."<br>";
-								// echo "date: ".date('d/m/Y H:i:s',($sdate/1000))."<br>";
-								// echo "insertion date: ".date('d/m/Y H:i:s',($sinsertion/1000))."<br>";
-								// echo "start date: ".date('d/m/Y H:i:s',($sstartdate/1000))."<br>";
-								// echo "end date: ".date('d/m/Y H:i:s',($senddate/1000))."<br>";
-								// echo "source: ".$ssource."<br>";
-								// echo "name: ".$sname."<br>";
-								// echo "text: ".$stext."<br>";
-								// echo "<br>"; ?>
-
-								<div class="panel panel-default">
-									<div class="panel-heading text-center">
-										<i class="fa fa-television fw"></i> <?php echo $ssource.": ".$sname." | ".date('d/m/Y H:i:s',($sstartdate/1000))." - ".date('d/m/Y H:i:s',($senddate/1000));?>
+									<div class="panel panel-default">
+										<div class="panel-heading text-center">
+											<i class="fa fa-television fw"></i> <?php echo $ssource.": ".$sname." | ".date('d/m/Y H:i:s',($sstartdate/1000))." - ".date('d/m/Y H:i:s',($senddate/1000));?>
+										</div>
+										<!-- <p class="text-center"></p> -->
+										<div class="panel-body" style="height: 300px; overflow-y: hidden;">
+											<p class="text-justify">
+												<?php
+													if (isset($stext)) {
+														echo $stext;
+													} else {
+														echo "No text.";
+													}
+												?>
+											</p>
+										</div>
 									</div>
-									<!-- <p class="text-center"></p> -->
-									<div class="panel-body" style="height: 300px; overflow-y: hidden;">
-										<p class="text-justify">
-											<?php
-												if (isset($stext)) {
-													echo $stext;
-												} else {
-													echo "No text.";
-												}
-											?>
-										</p>
-									</div>
-								</div>
+								<?php } ?>
+								<script type="text/javascript">
+									$('.panel-body').click(function() {
+										$(this).css('overflowY', 'auto');
+									});
+									$('.panel-body').hover(function() {
+										/*do nothing*/
+									}, function() {
+										$('.panel-body').css('overflowY', 'hidden');
+									});
+								</script>
+							<?php } else {
+								$stories = $searchresult->response->docs;
+								$countf = 0;
+								foreach ($stories as $story) {
+									$sid = $story->id_i;
+									$sidsource = $story->id_source_i;
+									$smediaurl = $story->mediaurl_s;
+									$sstartdate = $story->starttime_dt;
+									$senddate = $story->endtime_dt;
+									$ssource = $story->source_s;
+									if (isset($story->content_t[0])) {
+										$stext = $story->content_t[0];
+									} ?>
 
-							<?php } ?>
-							<script type="text/javascript">
-								$('.panel-body').click(function() {
-									$(this).css('overflowY', 'auto');
-								});
-								$('.panel-body').hover(function() {
-									/*do nothing*/
-								}, function() {
-									$('.panel-body').css('overflowY', 'hidden');
-								});
-							</script>
-						<?php } else {
+									<div class="panel panel-default">
+										<div class="panel-heading text-center">
+											<i class="fa fa-television fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
+										</div>
+										<div class="panel-body">
+											<div class="row">
+												<div class="col-lg-5">
+													<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" controls></video>
+												</div>
+												<div class="col-lg-7 pbody" style="height: 300px; overflow-y: auto">
+													<p class="text-justify">
+														<?php if (isset($stext)) {
+																echo (string)$stext;
+															} else {
+																echo "Sem texto.";
+															} ?>
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+								<script type="text/javascript">
+									$('.pbody').click(function() {
+										$(this).css('overflowY', 'auto');
+									});
+									$('.pbody').hover(function() {
+										/*do nothing*/
+									}, function() {
+										$('.pbody').css('overflowY', 'hidden');
+									});
+								</script>
+
+
+							<?php }
+						} else {
 							$stories = $searchresult->response->docs;
 							$divcount = 0;
 							$icount=0;
@@ -405,9 +443,9 @@
 	<div>
 
 	<script type="text/javascript">
-
-
 		$('#audiotext').bind('contextmenu',function() { return false; });
+
+		$('.pbody').css('overflowY', 'hidden');
 
 		function load_file(position,idclient,idkeyword,timestamp,idradio,divid,iloadid) {
 			$('#' + iloadid).css('display', 'inline-block');

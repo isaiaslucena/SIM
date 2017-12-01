@@ -1099,19 +1099,36 @@ class Pages_model extends CI_Model {
 				// 	return $this->db->query($sqlquery)->result_array();
 				// }
 			} else if ($datasearch['vtype'] == 'tv') {
-				$startdatem = $startdate * 1000;
-				$enddatem = $enddate * 1000;
+				$knewinday = strtotime('29-11-2017 12:00');
+				
+				if ($startdate < $knewinday) {
+					$startdatem = $startdate * 1000;
+					$enddatem = $enddate * 1000;
+					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+					$datastr = 1;
+				} else {
+					$ds = new DateTime(date('Y-m-d H:i:s', $startdate));
+					$de = new DateTime(date('Y-m-d H:i:s', $enddate));
+					$startdatem = $ds->format('Y-m-d\TH:i:s\Z');
+					$enddatem = $de->format('Y-m-d\TH:i:s\Z');
+					$path = '/solr/knewin_tv/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
+					$datastr = 2;
+				}
 
 				//search with startdate and enddate
 				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and empty($keyword)) {
-					// $path = '/solr/mmstv_segments/query?wt=json&start='.$start.'&sort=startdate_l+asc';
-					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					// $path = '/solr/mmstv_words/query?wt=json&start='.$start.'&rows=80000&sort=starttime_i+asc';
+					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 					$url = $protocol."://".$host.":".$port.$path;
 
-					$data = array(
-						"query"  => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-					);
+					if ($datastr == 1) {
+						$data = array(
+							"query"  => "startdate_l:[".$startdatem." TO ".$enddatem."]"
+						);
+					} else {
+						$data = array(
+							"query"  => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
+						);
+					}
 					$data_string = json_encode($data);
 
 					$header = array(
@@ -1129,13 +1146,20 @@ class Pages_model extends CI_Model {
 				}
 				//search with keyword, startdate and endate
 				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and !empty($keyword)) {
-					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 					$url = $protocol."://".$host.":".$port.$path;
 
-					$data = array(
-						"query" => 'text_t:"'.$keyword.'"',
-						"filter" => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-					);
+					if ($datastr == 1) {
+						$data = array(
+							"query" => 'text_t:"'.$keyword.'"',
+							"filter" => "startdate_l:[".$startdatem." TO ".$enddatem."]"
+						);
+					} else {
+						$data = array(
+							"query" => 'content_t:"'.$keyword.'"',
+							"filter" => "starttime_l:[".$startdatem." TO ".$enddatem."]"
+						);
+					}
 					$data_string = json_encode($data);
 
 					$header = array(
@@ -1153,7 +1177,7 @@ class Pages_model extends CI_Model {
 				}
 				//search with tv channel, startdate and enddate
 				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and empty($keyword)) {
-					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 					$url = $protocol."://".$host.":".$port.$path;
 
 					// $tvchannels = str_replace(',', ' OR ', $datasearch['tvchannel']);
@@ -1171,10 +1195,17 @@ class Pages_model extends CI_Model {
 						}
 					}
 
-					$data = array(
-						"query" => "startdate_l:[".$startdatem." TO ".$enddatem."]",
-						"filter" => 'source_s:'.$channelsline
-					);
+					if ($datastr == 1) {
+						$data = array(
+							"query" => "startdate_l:[".$startdatem." TO ".$enddatem."]",
+							"filter" => 'source_s:'.$channelsline
+						);
+					} else {
+						$data = array(
+							"query" => "starttime_l:[".$startdatem." TO ".$enddatem."]",
+							"filter" => 'source_s:'.$channelsline
+						);
+					}
 					$data_string = json_encode($data);
 
 					$header = array(
@@ -1192,10 +1223,8 @@ class Pages_model extends CI_Model {
 				}
 				//search with tv channel, keyword, startdate and enddate
 				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and !empty($keyword)) {
-					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 					$url = $protocol."://".$host.":".$port.$path;
-
-					// $tvchannels = str_replace(',', ' OR ', $datasearch['tvchannel']);
 
 					$channelsline = null;
 					$channels = explode(",", $datasearch['tvchannel']);
@@ -1210,13 +1239,23 @@ class Pages_model extends CI_Model {
 						}
 					}
 
-					$data = array(
-						"query" => 'text_t:"'.$keyword.'"',
-						"filter" => array(
-							'startdate_l:['.$startdatem.' TO '.$enddatem.']',
-							'source_s:'.$channelsline
-						)	
-					);
+					if ($datastr == 1) {
+						$data = array(
+							"query" => 'text_t:"'.$keyword.'"',
+							"filter" => array(
+								'startdate_l:['.$startdatem.' TO '.$enddatem.']',
+								'source_s:'.$channelsline
+							)	
+						);
+					} else {
+						$data = array(
+							"query" => 'content_t:"'.$keyword.'"',
+							"filter" => array(
+								'starttime_dt:['.$startdatem.' TO '.$enddatem.']',
+								'source_s:'.$channelsline
+							)	
+						);
+					}
 					$data_string = json_encode($data);
 
 					$header = array(
@@ -1386,7 +1425,22 @@ class Pages_model extends CI_Model {
 				return json_decode(curl_exec($ch));
 			}
 			else if ($vtype == 'tv') {
-				$path='/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+				if (preg_match('/starttime_dt/', $datasearch) == 0) {
+					// $startdatem = $startdate * 1000;
+					// $enddatem = $enddate * 1000;
+					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
+					$datastr = 1;
+				} else {
+					// $ds = new DateTime(date('Y-m-d H:i:s', $startdate));
+					// $de = new DateTime(date('Y-m-d H:i:s', $enddate));
+					// $startdatem = $ds->format('Y-m-d\TH:i:s\Z');
+					// $enddatem = $de->format('Y-m-d\TH:i:s\Z');
+					$path = '/solr/knewin_tv/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
+					$datastr = 2;
+				}
+				
+				
+				// $path='/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 				$url=$protocol."://".$host.":".$port.$path;
 				$data_string = $datasearch;
 				$header = array(

@@ -97,9 +97,9 @@
 									if (!empty($keyword_selected)) {
 										$fulltext = (string)$stext;
 										$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword_selected</strong>", $fulltext); ?>
-									<p class="text-justify"><?php echo $fulltext;?></p>
+										<p class="text-justify"><?php echo $fulltext;?></p>
 									<?php } else { ?>
-									<p class="text-justify"><?php echo (string)$stext;?></p>
+										<p class="text-justify"><?php echo (string)$stext;?></p>
 									<?php } ?>
 								</div>
 							</div>
