@@ -7,10 +7,15 @@
 			<div class="bounce2"></div>
 			<div class="bounce3"></div>
 		</div>
-		
 	</div>
 
 	<?php
+		if (preg_match('/calendar_index/', $page) == 1) {
+			$spage = base_url($page."/".$vtype);
+		} else {
+			$spage = base_url($page);
+		}
+
 		if (!isset($ff_ids_files_xml)) {
 			$ff_id_radio = 'none';
 			$ff_id_client = 'none';
@@ -86,13 +91,15 @@
 			</script>
 		<?php } else { ?>
 			<script type="text/javascript">
-				var page = '<?php echo base_url($page)?>';
-				var pagejoin = '<?php echo base_url('pages/join')?>';
+				var bpage = '<?php echo $page; ?>';
+				var pagejoin = '<?php echo base_url("pages/join"); ?>';
+				var sallkeywordquant, skeywordquant;
+				var changepassword = <?php echo $changepass; ?>;
 				var plimit = 0;
 				var poffset = 5;
-				var selected_date = '<?php echo $selected_date?>';
-				var sallkeywordquant, skeywordquant;
-				var changepassword = <?php echo $changepass?>;
+				var selected_date = '<?php echo $selected_date; ?>';
+				var page = '<?php echo $spage; ?>';
+
 
 				if (page == pagejoin) {
 					$.ajax({

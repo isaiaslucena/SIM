@@ -93,8 +93,7 @@
 									<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" controls></video>
 								</div>
 								<div class="col-lg-7" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
-									<?php
-									if (!empty($keyword_selected)) {
+									<?php if (!empty($keyword_selected)) {
 										$fulltext = (string)$stext;
 										$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword_selected</strong>", $fulltext); ?>
 										<p class="text-justify"><?php echo $fulltext;?></p>

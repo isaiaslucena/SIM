@@ -1157,7 +1157,7 @@ class Pages_model extends CI_Model {
 					} else {
 						$data = array(
 							"query" => 'content_t:"'.$keyword.'"',
-							"filter" => "starttime_l:[".$startdatem." TO ".$enddatem."]"
+							"filter" => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
 						);
 					}
 					$data_string = json_encode($data);
@@ -1202,7 +1202,7 @@ class Pages_model extends CI_Model {
 						);
 					} else {
 						$data = array(
-							"query" => "starttime_l:[".$startdatem." TO ".$enddatem."]",
+							"query" => "starttime_dt:[".$startdatem." TO ".$enddatem."]",
 							"filter" => 'source_s:'.$channelsline
 						);
 					}
@@ -1271,7 +1271,7 @@ class Pages_model extends CI_Model {
 
 					return json_decode(curl_exec($ch));
 				}
-			}else if ($datasearch['vtype'] == 'radioinfo4') {
+			} else if ($datasearch['vtype'] == 'radioinfo4') {
 				$startdatem = $startdate * 1000;
 				$enddatem = $enddate * 1000;
 

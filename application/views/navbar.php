@@ -108,6 +108,9 @@
 					<?php }
 					if ($id_group == 1 or $id_group == 4) { ?>
 						<li>
+							<a href="<?php echo base_url('pages/index_web'); ?>" <?php if ($selected_page == "home_web") {echo 'class="active"';} ?>><i class="fa fa-globe fa-fw"></i> <?php echo get_phrase('online');?></a>
+						</li>
+						<li>
 							<a href="<?php echo base_url('pages/index_print'); ?>" <?php if ($selected_page == "home_print") {echo 'class="active"';} ?>><i class="fa fa-file-text-o fa-fw"></i> <?php echo get_phrase('print');?></a>
 						</li>
 						<li>
@@ -180,7 +183,7 @@
 						<?php if (empty($selected_date)) {
 							$seldate = date('d/m/Y');
 						} else {
-							$seldate = $selected_date;
+							$seldate = date('d/m/Y', strtotime($selected_date));
 						} ?>
 						<div id="datepicker_static" class="center-block datepicker-inline" data-date="<?php echo $seldate;?>"></div>
 						<input  style="opacity: 0" type="text" id="selected_date" name="selected_date">
@@ -202,8 +205,14 @@
 			$('#datepicker_static').on("changeDate", function() {
 				$('#selected_date').val($('#datepicker_static').datepicker('getFormattedDate'));
 				var sdate = $('#selected_date').val();
-				var selecteddate = sdate.replace(/\//g,"-");
-				window.location="<?php echo base_url('pages/calendar/');?>" + selecteddate;
+				var selecteddate = sdate.replace(/\//g,'-');
+				var vtype = '<?php 
+							if (isset($vtype)) {
+								echo $vtype;
+							} else { 
+								echo ($id_group == 1 ? "radio" : "print");
+							} ?>';
+				window.location ='<?php echo base_url("pages/calendar/"); ?>' + vtype + '/' + selecteddate;
 			});
 
 			if (idgroup == 1 || idgroup == 5 ) {

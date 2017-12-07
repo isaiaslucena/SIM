@@ -4,8 +4,12 @@
 		$query = base64_encode($searchresult->responseHeader->params->json);
 		$jquery = json_decode($searchresult->responseHeader->params->json)->query;
 		$searchkwquery = strpos($jquery, 'text_t:');
+		$searchikwquery = strpos($jquery, 'content_t:');
 		if (is_int($searchkwquery)) {
 			$querykw = substr($jquery, 8, -1);
+			$keyword = $querykw;
+		} else if (is_int($searchikwquery)) {
+			$querykw = substr($jquery, 11, -1);
 			$keyword = $querykw;
 		} else if (!isset($keyword)) {
 			$keyword = '';
@@ -55,89 +59,89 @@
 			</div>
 			<div class="col-lg-6">
 				<?php if ($totalfound > 10) { ?>
-				<ul class="pagination pull-right">
-					<?php
-						if ($firstpage == 0) { ?>
-						<li class="disabled">
-							<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
-						<?php } else {
-						$totalpagesstart = $firstpage / 10;
-						$startff = $firstpage;
-						$startf = $startff - 10; ?>
-						<li>
-							<a href="<?php echo base_url('pages/search_result/tv/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
-						<?php } ?>
-						</li>
-					<?php
-					if ($pageselected == $totalpages) { ?>
-						<li>
-							<a href="<?php echo base_url('pages/search_result/tv/1/'.$query.'/0')?>">1</a>
-						</li>
-						<li class="disabled">
-							<a>...<span class="sr-only"></span></a>
-						</li>
-						<?php $pageselectedend = $pageselected - 1;
-						$pageselectstart = $pageselected - 3;
-						$startf = $firstpage;
-						for ($page=$pageselectstart; $page <= $pageselectedend ; $page++) {
-							$startff = $page.'0';
-							$startf = $startff - 10;
-							 if ($pageselected == $page) { ?>
-							<li class="active">
-								<a><?php echo $page; ?></a>
-							<?php } else { ?>
+					<ul class="pagination pull-right">
+						<?php
+							if ($firstpage == 0) { ?>
+							<li class="disabled">
+								<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
+							<?php } else {
+							$totalpagesstart = $firstpage / 10;
+							$startff = $firstpage;
+							$startf = $startff - 10; ?>
 							<li>
-								<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<a href="<?php echo base_url('pages/search_result/tv/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
 							<?php } ?>
 							</li>
-						<?php }
-					} else {
-						$startf = $firstpage;
-						for ($page=$pageselected; $page <= $pageselectedend ; $page++) {
-							if ($page == $totalpages) { ?>
-								<li class="active">
-								<?php break 1;
-							} else {
-							$startff = $page.'0';
-							$startf = $startff - 10;
-							 if ($pageselected == $page) { ?>
-							<li class="active">
-							<a><?php echo $page; ?></a>
-							<?php } else { ?>
-							<li>
-							<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
-							<?php }
-							} ?>
-							</li>
-						<?php }
-					} ?>
-					<?php
+						<?php
 						if ($pageselected == $totalpages) { ?>
-						<li class="active">
-						<a><?php echo $totalpages?><span class="sr-only"></span></a>
-						<?php } else {
-						$totalpagesend = ($totalpages * 10) - 10; ?>
+							<li>
+								<a href="<?php echo base_url('pages/search_result/tv/1/'.$query.'/0')?>">1</a>
+							</li>
+							<li class="disabled">
+								<a>...<span class="sr-only"></span></a>
+							</li>
+							<?php $pageselectedend = $pageselected - 1;
+							$pageselectstart = $pageselected - 3;
+							$startf = $firstpage;
+							for ($page=$pageselectstart; $page <= $pageselectedend ; $page++) {
+								$startff = $page.'0';
+								$startf = $startff - 10;
+								 if ($pageselected == $page) { ?>
+								<li class="active">
+									<a><?php echo $page; ?></a>
+								<?php } else { ?>
+								<li>
+									<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<?php } ?>
+								</li>
+							<?php }
+						} else {
+							$startf = $firstpage;
+							for ($page=$pageselected; $page <= $pageselectedend ; $page++) {
+								if ($page == $totalpages) { ?>
+									<li class="active">
+									<?php break 1;
+								} else {
+								$startff = $page.'0';
+								$startf = $startff - 10;
+								 if ($pageselected == $page) { ?>
+								<li class="active">
+								<a><?php echo $page; ?></a>
+								<?php } else { ?>
+								<li>
+								<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<?php }
+								} ?>
+								</li>
+							<?php }
+						} ?>
+						<?php
+							if ($pageselected == $totalpages) { ?>
+							<li class="active">
+							<a><?php echo $totalpages?><span class="sr-only"></span></a>
+							<?php } else {
+							$totalpagesend = ($totalpages * 10) - 10; ?>
+							<li class="disabled">
+								<a>...<span class="sr-only"></span></a>
+							</li>
+							<li>
+							<a href="<?php echo base_url('pages/search_result/tv/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
+							<?php } ?>
+							</li>
+						<?php
+						if ($pageselected == $totalpages) { ?>
 						<li class="disabled">
-							<a>...<span class="sr-only"></span></a>
-						</li>
+						<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+						<?php } else {
+						$page = $pageselected + 1;
+						$startff = $firstpage;
+						$startf = $startff + 10; ?>
 						<li>
-						<a href="<?php echo base_url('pages/search_result/tv/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
-						<?php } ?>
+						<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+						<?php }
+						?>
 						</li>
-					<?php
-					if ($pageselected == $totalpages) { ?>
-					<li class="disabled">
-					<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
-					<?php } else {
-					$page = $pageselected + 1;
-					$startff = $firstpage;
-					$startf = $startff + 10; ?>
-					<li>
-					<a href="<?php echo base_url('pages/search_result/tv/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
-					<?php }
-					?>
-					</li>
-				</ul>
+					</ul>
 				<?php }  ?>
 			</div>
 		</div>
@@ -239,84 +243,158 @@
 										$('.pbody').css('overflowY', 'hidden');
 									});
 								</script>
-
-
 							<?php }
 						} else {
-							$stories = $searchresult->response->docs;
-							$divcount = 0;
-							$icount=0;
-							foreach ($stories as $story) {
-								$divcount++;
-								$icount++;
-								
-								$shash = $story->hash_s;
-								$staskidcreator = $story->taskidcreator_l;
-								$sstartdate = $story->startdate_l;
-								$senddate = $story->enddate_l;
-								$stext = $story->text_t[0];
-								$ssource = $story->source_s;
-								$sname = $story->name_s;
-								$sststartdate = date("d/m/Y H:i:s",($sstartdate/1000));
-								$sstenddate = date("d/m/Y H:i:s",($senddate/1000));
-								?>
-								<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
-									<div class="panel-heading text-center">
-										<?php if (!empty($keyword)) { ?>
-										<!-- <label class="pull-left" style="font-weight: normal"> -->
-											<!-- <input type="checkbox" id="<?php //echo 'cb'.$divcount;?>"> <?php //echo get_phrase('join');?> -->
-										<!-- </label> -->
-										<label>
-											<i class="fa fa-search fa-fw"></i>
-											<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
-											&nbsp;&nbsp;&nbsp;&nbsp;
-											<i class="fa fa-television fa-fw"></i> 
-											<?php echo $ssource.": ".$sname." | ".$sststartdate." - ".$sstenddate;?>
-										</label>
-										<?php } else {?>
-										<i class="fa fa-television fw"></i> <?php echo $ssource.": ".$sname." | ".$sststartdate." - ".$sstenddate;?>
-										<?php } ?>
+							if (isset($searchresult->response->docs[0]->hash_s)) {
+								$stories = $searchresult->response->docs;
+								$divcount = 0;
+								$icount=0;
+								foreach ($stories as $story) {
+									$divcount++;
+									$icount++;
+									
+									$shash = $story->hash_s;
+									$staskidcreator = $story->taskidcreator_l;
+									$sstartdate = $story->startdate_l;
+									$senddate = $story->enddate_l;
+									$stext = $story->text_t[0];
+									$ssource = $story->source_s;
+									$sname = $story->name_s;
+									$sststartdate = date("d/m/Y H:i:s",($sstartdate/1000));
+									$sstenddate = date("d/m/Y H:i:s",($senddate/1000));
+									?>
+									<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
+										<div class="panel-heading text-center">
+											<?php if (!empty($keyword)) { ?>
+											<!-- <label class="pull-left" style="font-weight: normal"> -->
+												<!-- <input type="checkbox" id="<?php //echo 'cb'.$divcount;?>"> <?php //echo get_phrase('join');?> -->
+											<!-- </label> -->
+											<label>
+												<i class="fa fa-search fa-fw"></i>
+												<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
+												&nbsp;&nbsp;&nbsp;&nbsp;
+												<i class="fa fa-television fa-fw"></i> 
+												<?php echo $ssource.": ".$sname." | ".$sststartdate." - ".$sstenddate;?>
+											</label>
+											<?php } else {?>
+											<i class="fa fa-television fw"></i> <?php echo $ssource.": ".$sname." | ".$sststartdate." - ".$sstenddate;?>
+											<?php } ?>
+										</div>
+										<p class="text-center">
+											<!--<audio id="audiotext" style="width: 100%;" src="<?php //echo base_url("assets/dir/video");?>" controls></audio>-->
+										</p>
+										<div class="panel-body" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
+											<?php
+											if (!empty($keyword)) {
+												$fulltext = (string)$stext;
+												$fulltext = preg_replace("/\w*?".preg_quote($keyword)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword</strong>", $fulltext); ?>
+											<p class="text-justify"><?php echo $fulltext;?></p>
+											<?php } else { ?>
+											<p class="text-justify"><?php echo (string)$stext;?></p>
+											<?php } ?>
+										</div>
 									</div>
-									<p class="text-center">
-										<!--<audio id="audiotext" style="width: 100%;" src="<?php //echo base_url("assets/dir/video");?>" controls></audio>-->
-									</p>
-									<div class="panel-body" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
-										<?php
-										if (!empty($keyword)) {
-											$fulltext = (string)$stext;
-											$fulltext = preg_replace("/\w*?".preg_quote($keyword)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword</strong>", $fulltext); ?>
-										<p class="text-justify"><?php echo $fulltext;?></p>
-										<?php } else { ?>
-										<p class="text-justify"><?php echo (string)$stext;?></p>
-										<?php } ?>
-									</div>
-								</div>
 
-								<script type="text/javascript">
-									jQuery.fn.scrollTo = function(elem) {
-										$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-										return this;
-									}
+									<script type="text/javascript">
+										jQuery.fn.scrollTo = function(elem) {
+											$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+											return this;
+										}
 
-									if($('.<?php echo 'str'.$divcount;?>').length != 0) {
-										$('#<?php echo 'pbody'.$divcount;?>').scrollTo('.<?php echo 'str'.$divcount;?>');
-									}
-									$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
-									$('#<?php echo 'pbody'.$divcount;?>').click(function() {
-										$(this).css('overflowY', 'auto');
-									})
-									$('#<?php echo 'pbody'.$divcount;?>').hover(function() {
-										/*do nothing*/
-									}, function() {
+										if($('.<?php echo 'str'.$divcount;?>').length != 0) {
+											$('#<?php echo 'pbody'.$divcount;?>').scrollTo('.<?php echo 'str'.$divcount;?>');
+										}
 										$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
-									});
+										$('#<?php echo 'pbody'.$divcount;?>').click(function() {
+											$(this).css('overflowY', 'auto');
+										})
+										$('#<?php echo 'pbody'.$divcount;?>').hover(function() {
+											/*do nothing*/
+										}, function() {
+											$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
+										});
 
-									<?php if (!empty($keyword)) { ?>
-									var qtkwf = $('<?php echo '.str'.$divcount?>').length;
-									$('<?php echo '#qtkwfid'.$divcount;?>').text(qtkwf);
-									<?php } ?>
-								</script>
-							<?php } 
+										<?php if (!empty($keyword)) { ?>
+										var qtkwf = $('<?php echo '.str'.$divcount?>').length;
+										$('<?php echo '#qtkwfid'.$divcount;?>').text(qtkwf);
+										<?php } ?>
+									</script>
+								<?php }
+							} else {
+								$stories = $searchresult->response->docs;
+								$divcount = 0;
+								$icount=0;
+								foreach ($stories as $story) {
+									$divcount++;
+									$icount++;
+									
+									$sid = $story->id_i;
+									$sidsource = $story->id_source_i;
+									$smediaurl = $story->mediaurl_s;
+									$sstartdate = $story->starttime_dt;
+									$senddate = $story->endtime_dt;
+									$ssource = $story->source_s;
+									if (isset($story->content_t[0])) {
+										$stext = $story->content_t[0];
+									} ?>
+									<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
+										<div class="panel-heading text-center">
+											<?php if (!empty($keyword)) { ?>
+												<label>
+													<i class="fa fa-search fa-fw"></i>
+													<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
+													&nbsp;&nbsp;&nbsp;&nbsp;
+													<i class="fa fa-television fa-fw"></i> 
+													<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+												</label>
+											<?php } else { ?>
+												<i class="fa fa-television fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
+											<?php } ?>
+										</div>
+										<div class="panel-body">
+											<div class="row">
+												<div class="col-lg-5">
+													<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" controls></video>
+												</div>
+												<div class="col-lg-7" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
+													<?php if (!empty($keyword)) {
+														$fulltext = (string)$stext;
+														$fulltext = preg_replace("/".preg_quote($keyword)."/i", "<strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword</strong>", $fulltext); ?>
+														<p class="text-justify"><?php echo $fulltext; ?></p>
+													<?php } else { ?>
+														<p class="text-justify"><?php echo (string)$stext; ?></p>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<script type="text/javascript">
+										jQuery.fn.scrollTo = function(elem) {
+											$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+											return this;
+										}
+
+										if($('.<?php echo 'str'.$divcount;?>').length != 0) {
+											$('#<?php echo 'pbody'.$divcount;?>').scrollTo('.<?php echo 'str'.$divcount;?>');
+										}
+										$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
+										$('#<?php echo 'pbody'.$divcount;?>').click(function() {
+											$(this).css('overflowY', 'auto');
+										})
+										$('#<?php echo 'pbody'.$divcount;?>').hover(function() {
+											/*do nothing*/
+										}, function() {
+											$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
+										});
+
+										<?php if (!empty($keyword)) { ?>
+										var qtkwf = $('<?php echo '.str'.$divcount?>').length;
+										$('<?php echo '#qtkwfid'.$divcount;?>').text(qtkwf);
+										<?php } ?>
+									</script>
+								<?php }
+							}
 						} ?>
 					 <?php if (!empty($keyword)) { ?></div><?php } ?>
 				 <?php if (!empty($keyword)) { ?></div><?php } ?>
