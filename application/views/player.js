@@ -122,7 +122,7 @@
 							vdfilename = videotitle.text();
 							srcarr = vdfilename.split("_");
 							srcfilename = srcarr[0];
-							if (srcfilename != 'dvr00') {
+							if (srcfilename != 'dvr01') {
 								$.each(filesjoined, function(index, file) {
 									maxthumb = file.time;
 									vdfilename = file.file;
@@ -137,7 +137,7 @@
 						} else {
 							vdfilename = videotitle.text();
 							sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-							if (sfilename != 'dvr00') {
+							if (sfilename != 'dvr01') {
 								maxthumb = Math.floor(videoel[0].duration);
 								for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 									nthumbn = ("00" + thumbn).slice(-3);
@@ -209,7 +209,7 @@
 					}
 
 					videoel[0].pause();
-					if (vsourcefile != 'dvr00') {
+					if (vsourcefile != 'dvr01') {
 						videoel.css('display', 'none');
 						videoelth.css('display', 'block');
 					}
@@ -223,7 +223,7 @@
 						vfile = videotitle.text()
 						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
 						//videoel[0].pause();
-						if (vsourcefile != 'dvr00') {
+						if (vsourcefile != 'dvr01') {
 							videoelth.css('display', 'none');
 							videoel.css('display', 'block');
 						}
@@ -264,7 +264,7 @@
 					if (joinvideos) {
 						filenarr = filesjoined[0].file.split("_");
 						thnsfilename = filenarr[0];
-						if (thnsfilename != 'dvr00') {
+						if (thnsfilename != 'dvr01') {
 							var ttime = 0;
 							var thumbnnf;
 							var thnvdfilename;
@@ -283,7 +283,7 @@
 					} else {
 						vdfilename = videotitle.text();
 						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-						if (sfilename != 'dvr00') {
+						if (sfilename != 'dvr01') {
 							uptadevThumb(sfilename, vdfilename, thumbnum);
 						}
 					}

@@ -133,39 +133,66 @@
 				});
 
 				$('#btncstart').click(function(event) {
-					time = $(this).text();
-					if (time != '') {
-						$(this).text(null);
-						$(this).append('<i class="fa fa-hourglass-end"></i>');
-					}
-					$(this).removeClass('btn-default');
-					$(this).addClass('btn-primary');
-					$(this).append(' '+$('#currtime').text());
-					cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
-					cropstartms = cropstarts.split(".")
-					// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
-					// cropstart = '00-'+$('#currtime').text().replace(":", "-");
-					cropstart = $('#currtime').text().replace(":", "-");
-					// cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
-					cropstartt = $('#currtime').text();
-					ccrops = true;
-					console.log('crop starttime: '+cropstartt);
+					cropstartss = videoel[0].currentTime;
+					// time = $(this).text();
+					// if (time != '') {
+					// 	$(this).text(null);
+					// 	$(this).append('<i class="fa fa-hourglass-start"></i>');
+
+					// 	$(this).removeClass('btn-default');
+					// 	$(this).addClass('btn-primary');
+					// 	$(this).append(' '+$('#currtime').text());
+					// 	cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
+					// 	// cropstartss = videoel[0].currentTime;
+					// 	cropstartms = cropstarts.split(".")
+					// 	cropstart = $('#currtime').text().replace(":", "-");
+					// 	cropstartt = $('#currtime').text();
+					// 	ccrops = true;
+					// } else {
+						if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
+								swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
+								$(this).text(null);
+								$(this).append('<i class="fa fa-hourglass-end"></i>');
+								$(this).removeClass('btn-primary');
+								$(this).addClass('btn-default');
+								ccrope = false;
+						} else {
+							$(this).text(null);
+							$(this).append('<i class="fa fa-hourglass-start"></i>');
+							$(this).removeClass('btn-default');
+							$(this).addClass('btn-primary');
+							$(this).append(' '+$('#currtime').text());
+							cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
+							// cropstartss = videoel[0].currentTime;
+							cropstartms = cropstarts.split(".")
+							// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
+							// cropstart = '00-'+$('#currtime').text().replace(":", "-");
+							cropstart = $('#currtime').text().replace(":", "-");
+							// cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
+							cropstartt = $('#currtime').text();
+							ccrops = true;
+							// console.log('crop starttime: '+cropstartt);
+							// console.log('crop starttime: '+cropstarts);	
+						}
+					// }
 				});
 
 				$('#btncend').click(function(event) {
-					cropends = videoel[0].currentTime;
+					cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
+					cropendss = videoel[0].currentTime;
 					if (ccrops) {
-						if (cropends < cropstarts) {
+						if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 							swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 							$(this).text(null);
 							$(this).append('<i class="fa fa-hourglass-end"></i>');
 							$(this).removeClass('btn-primary');
 							$(this).addClass('btn-default');
+							ccrope = false;
 						} else {
 							time = $(this).text();
 							if (time != '') {
 								$(this).text(null);
-								$(this).append('<i class="fa fa-hourglass-start"></i>');
+								$(this).append('<i class="fa fa-hourglass-end"></i>');
 							}
 							$('#btncrop').removeClass('disabled');
 							$('#btncrop').removeAttr('disabled');
@@ -181,13 +208,19 @@
 							cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 							cropdur = '00-'+cropdurmm+'-'+cropdurss;
 							ccrope = true;
+							console.log('crop starttime: '+cropstarts);
+							console.log('crop end: '+cropends);
 							console.log('crop duration: '+cropdurs);
 						}
+					} else {
+						swal("Atenção!", "Você deve marcar primeiro o tempo inicial.", "error");
 					}
 				})
 
 				$('#btncrop').click(function(event) {
 					if (ccrops && ccrope) {
+						ccrops = false;
+						ccrope = false;
 						videoel[0].pause();
 						$("#ipause").addClass('hidden');
 						$("#iplay").removeClass('hidden');

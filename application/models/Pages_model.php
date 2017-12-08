@@ -174,7 +174,7 @@ class Pages_model extends CI_Model {
 	}
 
 	public function api_radioc() {
-		$sqlquery = "SELECT name FROM radiosource_info4 WHERE name IN ('Radio CBN - RJ','Radio Band News - RJ')";
+		$sqlquery = "SELECT name FROM radiosource_info4 WHERE name IN ('Radio CBN - RJ', 'Radio Band News - RJ')";
 		return $this->db->query($sqlquery)->result_array();
 	}
 

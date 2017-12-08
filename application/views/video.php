@@ -431,6 +431,8 @@
 				var joinvideos = false;
 				var joincropvideos = false;
 				var nightmode = false;
+				var cropstartss = null;
+				var cropendss = null;
 
 				var d = new Date();
 				var day = d.getDate();
@@ -678,12 +680,13 @@
 					// tvch.prop('disabled', false)
 					tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 					tvch.selectpicker('refresh');
-					tvch.html(null);
+					// tvch.html(null);
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
 						function(data, textStatus, xhr) {
+							tvch.html(null);
 							$.each(data, function(elo, indexo) {
-								if (elo == "dvr00") {	
+								if (elo == "dvr01") {	
 									indexo.forEach(function(ela, indexa) {
 										switch (ela) {
 											case "NBR_RJ":
