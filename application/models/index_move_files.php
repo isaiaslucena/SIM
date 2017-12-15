@@ -1,6 +1,8 @@
 <?php
 	header('Content-Type: text/html; charset=utf-8');
 
+	echo "Script start"."\n";
+
 	//DB Connection
 	$servername='mysql';
 	$username='sim';
@@ -14,16 +16,16 @@
 
 	$dbcon = new mysqli($servername, $username, $password, $dbname);
 	if (!$dbcon) {
+		mysql_close($dbcon);
 		die('Not possible to connect: '.mysql_error());
-		//mysql_close($dbcon);
 	}else {
-		//echo 'Conexão bem sucedida'."\n";
+		echo 'Connected to database '.$dbname."\n";
 	}
 
 	#date_default_timezone_set("America/Sao_Paulo");
-	$sourcedir='/mnt/files/';
-	$destdir='/app/application/repository/01_files/';
-	$filespdir=1000;
+	$sourcedir = '/mnt/files/';
+	$destdir = '/app/application/repository/01_files/';
+	$filespdir = 1000;
 
 	//get mp3 files in source directory
 	$mp3filesindir=array_map('basename',glob($sourcedir.'*.{mp3,MP3}',GLOB_BRACE));
@@ -86,8 +88,7 @@
 		//if the mp3 file not exist, insert it
 		if ($resulthash->num_rows == 0) {
 			//echo 'File not exist!';
-		}
-		else{
+		} else {
 			//echo "The filename ".$file." already exist in database!"."\n";
 			//echo "\n";
 			array_push($filestomoveexists,$file);
@@ -169,7 +170,7 @@
 
 				echo "\n";
 				echo "The directory ".$destsubdirl02."/ has the last file"."\n";
-				echo "The numbers of files in dir: ".$filesninsubdir02."\n";
+				echo "The number of files in dir: ".$filesninsubdir02."\n";
 				echo "The last filename: ".$filesinsubdir02[$filernumber]."\n";
 				echo "The last filename in decimal: ".$filenamedec."\n";
 				echo "Total files to move: ".$newfilestomoveq."\n";
@@ -197,7 +198,10 @@
 				//if the moved all the files, exit
 				$newfilestomoveq=count($newfilestomoveseq);
 				if (count($newfilestomoveseq) == 0 ) {
-					exit("Moved all ".$newfilestomoveq." files!"."\n");
+					curl_close($ch);
+					mysqli_close($dbcon);
+					echo "Moved all files!"."\n";
+					exit("Script end"."\n"."\n"."\n");
 				}
 			}
 
@@ -228,7 +232,10 @@
 				//if the moved all the files, exit
 				$newfilestomoveq=count($newfilestomoveseq);
 				if (count($newfilestomoveseq) == 0 ) {
-					exit("Moved all ".$newfilestomoveq." files!"."\n");
+					curl_close($ch);
+					mysqli_close($dbcon);
+					echo "Moved all files!"."\n";
+					exit("Script end"."\n"."\n"."\n");
 				}
 			}
 		}
@@ -471,7 +478,4 @@
 		//$insertxmlcontent = "INSERT INTO xml (id_file,xml_content) VALUE (".$rowxmlfile['id_file'].",'".utf8_decode($xmlfilecontent)."')"."\n";
 		//$dbcon->query($insertxmlcontent);
 	}
-
-	curl_close($ch);
-	mysqli_close($dbcon);
 ?>

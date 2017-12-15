@@ -145,6 +145,7 @@
 							<div class="form-group">
 								<label class="col-lg-2 control-label"><?php echo get_phrase('name');?></label>
 								<div class="col-lg-8">
+									<input type="text" class="form-control" id="trid_edit_modal" name="trid_edit_modal" autocomplete="off" style="display: none">
 									<input type="text" class="form-control" id="idbtn_edit_modal" name="idbtn_edit_modal" autocomplete="off" style="display: none">
 									<input type="text" class="form-control" id="idname_edit_modal" name="idname_edit_modal" autocomplete="off" style="display: none">
 									<input required type="text" class="form-control" id="name_edit_modal" name="name_edit_modal" autocomplete="off">
@@ -246,12 +247,15 @@
 
 			$('#edit_modal').on('shown.bs.modal', function(event) {
 				button = $(event.relatedTarget);
+				trid = $(button).attr('data-trid');
 				radiobtnid = button[0].id;
 				radionameid = button.attr('data-idname');
 				radioname = button.attr('data-name');
 				radiourlid = button.attr('data-idurl');
 				radiourl = button.attr('data-url');
+				
 				modal = $(this);
+				modal.find('.modal-body [name="trid_edit_modal"]').val(trid);
 				modal.find('.modal-body [name="idbtn_edit_modal"]').val(radiobtnid);
 				modal.find('.modal-body [name="idname_edit_modal"]').val(radionameid);
 				modal.find('.modal-body [name="name_edit_modal"]').val(radioname);
@@ -261,16 +265,29 @@
 			});
 
 			$('#editbtnsave').click(function(event) {
+				// var DTable = $('#table_rec_radios').dataTable();
+				// var DTable = $('#table_rec_radios').DataTable();
+				// DTable.fnDestroy();
+				
+				trid = $('#trid_edit_modal').val();
 				btnid = $('#idbtn_edit_modal').val();
 				nameid = $('#idname_edit_modal').val();
 				newname = $('#name_edit_modal').val();
 				urlid = $('#idurl_edit_modal').val();
 				newurl = $('#url_edit_modal').val();
 				
-				$('#'+nameid).text(newname);
-				$('#'+urlid).text(newurl);
-				$('#'+btnid).attr('data-name', newname);
-				$('#'+btnid).attr('data-url', newurl);
+				// $('#'+nameid).text(newname);
+				// $('#'+urlid).text(newurl);
+				// $('#'+btnid).attr('data-name', newname);
+				// $('#'+btnid).attr('data-url', newurl);
+
+				dttable.cell('#'+nameid).data(newname).draw();
+				dttable.cell('#'+urlid).data(newurl).draw();
+
+				// var DTable = $('#table_rec_radios').dataTable();
+				// DTable.fnDraw();
+				// tlines = DTable.fnGetData();			
+				// console.log(tlines);
 				
 				$('#edit_modal').modal('hide');
 				$('#btnschanges').fadeIn('slow');
@@ -281,8 +298,14 @@
 				$('#btnschanges').fadeOut('slow');
 				// $('#<?php echo $datatablename;?>').dataTable().fnDraw();
 				// tlines = $('#<?php echo $datatablename;?>').dataTable().fnGetData();
+
+				// var DTable = $('#table_rec_radios').dataTable();
+				// DTable.fnDraw();
+				// tlines = DTable.fnGetData();
+
 				table.fnDraw();
 				tlines = table.fnGetData();
+
 				tlines.sort();
 				radios = {'ESTADO':[]};
 				indx = -1;

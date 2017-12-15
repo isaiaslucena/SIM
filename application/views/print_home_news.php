@@ -444,6 +444,7 @@
 
 				$.ajax(settings)
 				.done(function (response) {
+					console.log(response);
 					jresponse = JSON.parse(response);
 					console.log(jresponse);
 					$('#textresult').val(jresponse.result);

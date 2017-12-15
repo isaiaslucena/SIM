@@ -219,8 +219,6 @@
 
 				$('#btncrop').click(function(event) {
 					if (ccrops && ccrope) {
-						ccrops = false;
-						ccrope = false;
 						videoel[0].pause();
 						$("#ipause").addClass('hidden');
 						$("#iplay").removeClass('hidden');
@@ -399,7 +397,7 @@
 														$('#mbtnvdown').attr({href: videourlmcrop});
 														croptimeend = new Date();
 														croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
-														$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
+														$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
 													}
 												}
 											);
@@ -427,6 +425,8 @@
 					$('#btncstart').append('<i class="fa fa-hourglass-end"></i>');
 					$('#btncstart').removeClass('btn-primary');
 					$('#btncstart').addClass('btn-default');
+					cropstartss = null;
+					cropendss = null;
 					cropstarts = null;
 					cropends = null;
 					ccrops = false;
