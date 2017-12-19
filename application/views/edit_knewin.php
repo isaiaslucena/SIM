@@ -1,8 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); 
-if (!isset($id_text)) {
-	$id_text = "";
-} ?>
+
+// var_dump($knewindoc);
+
+$timezone = new DateTimeZone('UTC');
+$sd = new Datetime($knewindoc->response->docs[0]->starttime_dt);
+$ed = new Datetime($knewindoc->response->docs[0]->endtime_dt);
+$newtimezone = new DateTimeZone('America/Sao_Paulo');
+$sd->setTimezone($newtimezone);
+$ed->setTimezone($newtimezone);
+$sstartdate = $sd->format('d/m/Y H:i:s');
+$senddate = $ed->format('d/m/Y H:i:s');
+
+$ssource = $knewindoc->response->docs[0]->source_s;
+
+$mediaurl = $knewindoc->response->docs[0]->mediaurl_s;
+
+$content = $knewindoc->response->docs[0]->content_t[0];
+?>
 
 <!DOCTYPE html>
 <html>
@@ -22,12 +37,13 @@ if (!isset($id_text)) {
 			audio::-webkit-media-controls-enclosure { overflow:hidden; }
 			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
 			
-			.kw{
+			.kword{
 				color: white;
 				background-color: red;
 				font-size: 110%;
-				font-weight: bold;
+				/*font-weight: bold*;/
 			}
+
 		</style>
 	</head>
 
@@ -42,24 +58,26 @@ if (!isset($id_text)) {
 						if (!empty($client_selected)) {
 							echo get_phrase('client').": ".$client_selected." - ";
 						}
+						
 						if (!empty($keyword_selected)) {
 							echo get_phrase('keyword').": ".$keyword_selected."<br>";
 						} else {
 							$keyword_selected = null;
 						}
-						echo $state." - ".$radio." - ".date("d/m/Y - H:i:s",$timestamp);
+						
+						echo $ssource." | ".$sstartdate." - ".$senddate;
 					?>
 				</h2>
 			</center>
-			<p class="loading">
+			<p class="loading" hidden>
 				<em>
 					<img src="<?php echo base_url('assets/imgs/loader.gif');?>" alt="Initializing audio"><?php echo get_phrase('loading_audio_file')?>…
 				</em>
 			</p>
 
-			<p class="passage-audio" hidden>
+			<p class="passage-audio">
 				<audio id="passage-audio" class="passage" controls>
-					<?php echo '<source src="'.$mp3pathfilename.'" type="audio/mp3">'."\n"; ?>
+					<source src="<?php echo $mediaurl; ?>" type="audio/mp3">
 					<em class="error"><strong><?php echo get_phrase('error')?>:</strong> <?php echo get_phrase('your_browser_do_not_support_html5_audio')?>.</em>
 				</audio>
 			</p>
@@ -105,8 +123,7 @@ if (!isset($id_text)) {
 					<input style="opacity: 0" type="text" id="indexstart" name="indexstart"></input>
 					<input style="opacity: 0" type="text" id="indexend" name="indexend"></input>
 					<div id="crop2" hidden>
-						<input type="text" id="radio" name="radio" value="<?php echo $radio; ?>"></input>
-						<input type="text" id="state" name="state" value="<?php echo $state; ?>"></input>
+						<input type="text" id="ssource" name="radio" value="<?php echo $radio; ?>"></input>
 						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>"></input>
 						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>"></input>
 						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>"></input>
@@ -114,7 +131,7 @@ if (!isset($id_text)) {
 						<input type="text" id="id_text" name="id_text" value="<?php echo $id_text; ?>"></input>
 						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>"></input>
 						<input type="text" id="timestamp" name="timestamp" value="<?php echo $timestamp; ?>"></input>
-						<input type="text" id="mp3pathfilename" name="mp3pathfilename" value="<?php echo $mp3pathfilename; ?>"></input>
+						<input type="text" id="mediaurl" name="mediaurl" value="<?php echo $mediaurl; ?>"></input>
 						<textarea id="result" name="result" style="width: 700px; height: 100px"></textarea>
 					</div>
 					<br>
@@ -127,170 +144,7 @@ if (!isset($id_text)) {
 		</div>
 
 		<div id="passage-text" class="passage">
-			<p>
-				<?php
-					if (is_array($xmlpathfilename)) {
-						$countxmlpath = 0;
-						foreach ($xmlpathfilename as $xmlpath) {
-							$countxmlpath++;
-							// $xmlpathfilenamephp = mb_substr($xmlpathfilename, 39);
-							$xmldata = simplexml_load_file($xmlpath);
-							$keyword_selected_array = explode(' ',$keyword_selected);
-							$ckeyword_selected_array = count($keyword_selected_array);
-							$wid = 0;
-							$nn=0;
-							foreach ($xmldata->StorySegment as $storyseg) {
-								foreach ($storyseg->TranscriptSegment as $transcseg) {
-									$frstwordstart	= $transcseg->TranscriptWordList->Word[0]['start']-1;
-									$guid 			= (string)$transcseg->TranscriptGUID;
-									$type 			= $transcseg->AudioType;
-									$typestr 		= $type[0];
-									if ($countxmlpath > 1) {
-										$typestartms 	= $lastwordendms+$type['start'];
-										$typestarts 	= $typestartms/100;
-										$typeendms 	= $lastwordendms+$type['end'];
-										$typeends 		= $typeendms/100;
-										$typeends2	= $frstwordstart/100;
-									} else {
-										$typestartms 	= $type['start'];
-										$typestarts 	= $typestartms/100;
-										$typeendms 	= $type['end'];
-										$typeends 		= $typeendms/100;
-										$typeends2	= $frstwordstart/100;
-									}
-									$typeduration 	= number_format($typeends-$typestarts,3,"."," ");
-									$typeduration2 = number_format($typeends2-$typestarts,3,"."," ");
-
-									$speaker		= $transcseg->Speaker;
-									$speakerg		= $speaker['name'];
-
-									if (!isset($transcseg->TranscriptWordList->Word)){
-										echo '<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-									}
-									else if (isset($transcseg->TranscriptWordList->Word)) {
-										echo '<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-										foreach ($transcseg->TranscriptWordList->Word as $transcword) {
-											if (empty($transcword->Word['norm'])) {
-												$word = $transcword;
-											}
-											else {
-												$word = $transcword['norm'];
-											}
-											if ($countxmlpath > 1) {
-												$wordstartms = $lastwordendms+$transcword['start'];
-												$wordstarts = $wordstartms/100;
-												$wordendms = $lastwordendms+$transcword['end'];
-												$wordends = $wordendms/100;
-												$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-												$wordpunct = $transcword['punct'];
-											} else {
-												$wordstartms = $transcword['start'];
-												$wordstarts = $wordstartms/100;
-												$wordendms = $transcword['end'];
-												$wordends = $wordendms/100;
-												$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-												$wordpunct = $transcword['punct'];
-											}
-
-											$wid++;
-
-											$keyfound = 0;
-											for ($n=$nn ; $n < $ckeyword_selected_array; $n++ ) {
-												if (strcasecmp($keyword_selected_array[$nn],$word) == 0) {
-													echo '<span class="kw" data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-													$keyfound = 1;
-													$nn++;
-													break;
-												} else {
-													$nn=0;
-													break;
-												}
-											}
-											
-											if ($keyfound == 0) {
-												echo '<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-											}
-											
-											// echo '<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-										}
-									}
-								}
-							}
-							$lastwordendms = $wordendms;
-						}
-					} else {
-						// $xmlpathfilenamephp = mb_substr($xmlpathfilename, 39);
-						// $xmldata = simplexml_load_file($xmlpathfilenamephp);
-						$xmldata = simplexml_load_file($xmlpathfilename);
-						$keyword_selected_array = explode(' ',$keyword_selected);
-						$ckeyword_selected_array = count($keyword_selected_array);
-						$cksa = $ckeyword_selected_array-1;
-						$text_array = array();
-						$wid = null;
-						$nn=0;
-						foreach ($xmldata->StorySegment as $storyseg) {
-							foreach ($storyseg->TranscriptSegment as $transcseg) {
-								$frstwordstart	= $transcseg->TranscriptWordList->Word[0]['start']-1;
-								$guid = (string)$transcseg->TranscriptGUID;
-								$type = $transcseg->AudioType;
-								$typestr = $type[0];
-								$typestartms = $type['start'];
-								$typestarts = $typestartms/100;
-								$typeendms = $type['end'];
-								$typeends = $typeendms/100;
-
-								$typeends2 = $frstwordstart/100;
-								$typeduration = number_format($typeends-$typestarts,3,"."," ");
-								$typeduration2 = number_format($typeends2-$typestarts,3,"."," ");
-
-								$speaker = $transcseg->Speaker;
-								$speakerg = $speaker['name'];
-
-								if (!isset($transcseg->TranscriptWordList->Word)){
-									echo '<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-								}
-								else if (isset($transcseg->TranscriptWordList->Word)) {
-									echo '<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-									foreach ($transcseg->TranscriptWordList->Word as $transcword) {
-										if (empty($transcword->Word['norm'])) {
-											$word = $transcword;
-										}
-										else {
-											$word = $transcword['norm'];
-										}
-										$wordstartms = $transcword['start'];
-										$wordstarts = $wordstartms/100;
-										$wordendms = $transcword['end'];
-										$wordends = $wordendms/100;
-										$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-										$wordpunct = $transcword['punct'];
-										$wid++;
-
-										$keyfound = 0;
-										for ($n=$nn ; $n < $ckeyword_selected_array; $n++ ) {
-											if (strcasecmp($keyword_selected_array[$nn],$word) == 0) {
-												echo '<span class="kw" data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-												$keyfound = 1;
-												$nn++;
-												break;
-											} else {
-												$nn=0;
-												break;
-											}
-										}
-										
-										if ($keyfound == 0) {
-											echo '<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-										}
-										
-										// echo '<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-									}
-								}
-							}
-						}
-					}
-				?>
-			</p>
+			<p> <?php echo $content; ?></p>
 		</div>
 
 		<script type="text/javascript">
@@ -308,20 +162,18 @@ if (!isset($id_text)) {
 
 			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
 
-			// $('.kw').css({
-			// 	'color': 'white',
-			// 	'background-color': 'red',
-			// 	'font-size': '110%',
-			// 	'font-weight': 'bold'
-			// })
+			$('.kw').css({
+				'color': 'white',
+				'background-color': 'red',
+				'font-size': '110%',
+				'font-weight': 'bold'
+			})
 
 			elementsToTrack.each(function() {
 				texts.push($(this).text());
 			});
 
-			// console.log(texts);
-
-			$('span', $('#passage-text')).mousedown(function() {
+			$('#passage-text > p').mousedown(function() {
 				$('#lstarttime').css({
 					color: 'black',
 					'font-weight': 'normal'
@@ -351,7 +203,7 @@ if (!isset($id_text)) {
 				});
 			});
 
-			$('span', $('#passage-text')).mouseup(function() {
+			$('#passage-text > p').mouseup(function() {
 				var datatime = $(this).attr('data-begin');
 				var dataduration = $(this).attr('data-dur');
 				var dataindex = $(this).attr('data-index');
@@ -383,6 +235,7 @@ if (!isset($id_text)) {
 					result.text('');
 					return;
 				}
+				
 				if (+starttimev > +endtimev) {
 					$('#lstarttime').text('<?php echo get_phrase('start');?>');
 					$('#lendtime').text('<?php echo get_phrase('end');?>');
@@ -405,6 +258,7 @@ if (!isset($id_text)) {
 					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 					return;
 				}
+				
 				for (var i = +indexstartv; i <= +indexendv; i++){
 					if (texts[i] == '|Clean|') {
 						spantext = null;
@@ -421,11 +275,14 @@ if (!isset($id_text)) {
 						result.append(spantext + ' ');
 					}
 				}
+				
 				$('#lendtime').prepend('&#10004;')
+				
 				$('#lendtime').css({
 					color: 'green',
 					'font-weight': 'bold'
 				});
+				
 				if ($('#result').text() == null || $('#result').text() == '') {
 					$('#lstarttime').text('<?php echo get_phrase('start');?>');
 					$('#lendtime').text('<?php echo get_phrase('end');?>');
@@ -467,29 +324,27 @@ if (!isset($id_text)) {
 				sticky_relocate();
 			});
 			
-			// $(document).ready(function() {
-				// keyword = '<?php echo $keyword_selected; ?>';
-				
-				// twords = $('#passage-text > p').children('span');
-				// twords = document.querySelectorAll('#passage-text > p > span');
-				// console.log(twords);
-				// twords.forEach(function(val, index) {
-					console.log(val);
-					// spant = document.selectNode(val);
-					// console.log(spant);
-					// rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-					// val.replace(rgx, '<strong class="kw">'+keyword+'</strong>');
-					// if (val.innerText == keyword) {
-						// val.addClass('kw');	
+			$(document).ready(function() {
+				// $('.likeyword').hover(function(event) {
+					// console.log(event);
+					// keyword = event.target.text;
+					keyword = '<?php echo $keyword_selected; ?>';
+					// idkeyword = event.target.dataset.idkeyword;
+					// idpbodyt = event.target.dataset.pbodyt;
+					
+					pbodytext = $('#passage-text > p').text();
+					rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+					pbodynewtext = pbodytext.replace(rgx, '<strong class="kword">'+keyword+'</strong>');
+					$('#passage-text > p').html(null);
+					$('#passage-text > p').html(pbodynewtext);
+					
+					// if ($('#'+idpbodyt+ '> p > .str').length != 0) {
+						// $('#'+idpbodyt).scrollTo('.str');
 					// }
+				// }, function() {
+					// $('.pbodyt').css('overflowY', 'hidden');
 				// });
-				
-				// pbodytext = $('#passage-text > p').text();
-				// rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-				// pbodynewtext = pbodytext.replace(rgx, '<strong class="kw">'+keyword+'</strong>');
-				// $('#passage-text > p').html(null);
-				// $('#passage-text > p').html(pbodynewtext);
-			// });
+			});
 		</script>
 
 		<footer class="credits">
@@ -497,7 +352,7 @@ if (!isset($id_text)) {
 			Business Inteligence
 		</footer>
 	</article>
-	<script src="<?php echo base_url('assets/readalong/read-along.js');?>"></script>
-	<script src="<?php echo base_url('assets/readalong/main.js');?>"></script>
+	<!-- <script src="<?php //echo base_url('assets/readalong/read-along.js');?>"></script> -->
+	<!-- <script src="<?php //echo base_url('assets/readalong/main.js');?>"></script> -->
 	</body>
 </html>

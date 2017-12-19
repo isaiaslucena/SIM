@@ -646,6 +646,33 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
+	public function radio_text_byid_solr($docid){
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_radio/query?wt=json';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'id_i:'.$docid
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
 	public function text_keywords_solr($startdate,$enddate){
 		//Solr Connection
 		$protocol='http';

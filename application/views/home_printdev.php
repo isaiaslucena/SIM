@@ -21,6 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<div class="row">
 		<div class="col-lg-12">
 				<?php
+				//var_dump($print_newspapers);
 				$npapercount = 0;
 				$invert = 0; ?>
 				<ul class="timeline" id="newspaper-ul">
@@ -41,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<div class="timeline-body">
 										<?php
 										foreach ($newspaper->Empresas as $empresa) {
-											$eidemp = $empresa->IdEmpresa; 
+											$eidemp = $empresa->IdEmpresa;
 											$eemp = $empresa->Empresa; ?>
 											<form style="all: unset;" action="<?php echo base_url('pages/home_print_clientnews') ?>" method="post" accept-charset="utf-8">
 												<input type="hidden" name="jsonres" value="false">

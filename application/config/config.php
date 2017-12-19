@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // $config['base_url'] = '';
 #$config['base_url'] .= preg_replace('@/+$@', '', dirname($_SERVER['SCRIPT_NAME'])).'/';
 
-$allowed_domains = array('sim.intranet.dataclip','172.17.0.6','sim.dataclip.com.br:8001','sim.dataclip.dyndns.org:8000');
+$allowed_domains = array('sim.intranet.dataclip', 'sim.dataclip.com.br:8001', '172.17.0.6');
 $default_domain  = 'sim.intranet.dataclip';
 
 if (in_array($_SERVER['HTTP_HOST'], $allowed_domains, TRUE)) {
@@ -230,7 +230,7 @@ $config['directory_trigger'] = 'd';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------

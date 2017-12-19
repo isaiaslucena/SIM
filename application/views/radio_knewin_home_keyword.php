@@ -69,23 +69,56 @@
 					$sid = $found->id_i;
 					$sidsource = $found->id_source_i;
 					$smediaurl = $found->mediaurl_s;
-					$sstartdate = $found->starttime_dt;
-					$senddate = $found->endtime_dt;
+					
+					// $sstartdate = $found->starttime_dt;
+					// $senddate = $found->endtime_dt;
+					
+					// $startdateepoch = strtotime(str_replace("Z", "", str_replace("T", " ", $found->starttime_dt)));
+					// $enddateepoch = strtotime(str_replace("Z", "", str_replace("T", " ", $found->endtime_dt)));
+					// var_dump($startdateepoch);
+					// var_dump($enddateepoch);
+					
+					$timezone = new DateTimeZone('UTC');
+					// $sd = new Datetime('@'.$startdateepoch,  $timezone);
+					// $ed = new Datetime('@'.$enddateepoch, $timezone);
+					$sd = new Datetime($found->starttime_dt, $timezone);
+					$ed = new Datetime($found->endtime_dt, $timezone);
+					
+					$newtimezone = new DateTimeZone('America/Sao_Paulo');
+					$sd->setTimezone($newtimezone);
+					$ed->setTimezone($newtimezone);
+					$sstartdate = $sd->format('d/m/Y H:i:s');
+					$senddate = $ed->format('d/m/Y H:i:s');
+					
+					// $sstartdate = date('d/m/Y H:i:s', $startdateepoch);
+					// $senddate = date('d/m/Y H:i:s', $enddateepoch);
+					
 					$stext = $found->content_t[0];
 					$ssource = $found->source_s; ?>
 					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 						<div class="panel-heading text-center">
 							<?php if (!empty($keyword_selected)) { ?>
-							<label>
-								<i class="fa fa-search fa-fw"></i>
-								<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
-								&nbsp;&nbsp;&nbsp;&nbsp;
-								<i class="fa fa-television fa-fw"></i> 
-								<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
-							</label>
+								<label>
+									<i class="fa fa-search fa-fw"></i>
+									<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<i class="fa fa-television fa-fw"></i> 
+									<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+								</label>
 							<?php } else {?>
-							<i class="fa fa-television fa-fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
+								<i class="fa fa-television fa-fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
 							<?php } ?>
+							<form id="form_edit" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+								<input type="hidden" name="sid" value="<?php echo $sid;?>">
+								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
+								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
+								<input type="hidden" name="sstartdate" value="<?php echo $sstartdate;?>">
+								<input type="hidden" name="senddate" value="<?php echo $senddate;?>">
+								<input type="hidden" name="id_keyword" value="<?php echo $id_keyword;?>">
+								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
+								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
+								<button type="submit" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
+							</form>
 						</div>
 						<div class="panel-body">
 							<div class="row">

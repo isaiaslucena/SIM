@@ -565,7 +565,7 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
-			$data['keyword_texts'] = $this->pages_model->radio_text_keyword_solr($data['startdate'],$data['enddate'],$data['keyword_selected']);
+			$data['keyword_texts'] = $this->pages_model->radio_text_keyword_solr($data['startdate'], $data['enddate'], $data['keyword_selected']);
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
 			
@@ -802,6 +802,48 @@ class Pages extends CI_Controller {
 			$data['total_time'] = round(($finish - $start), 4);
 
 			$this->load->view('edit_temp',$data);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function edit_knewin() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'edit_knewin',
+				'last_page' => base_url('pages/edit_knewin')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data_navbar['selected_page'] = 'edit_knewin';
+			$data['sid'] = $this->input->post('sid');
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['id_file'] = $this->input->post('id_file');
+			$data['id_text'] = $this->input->post('id_text');
+			$data['client_selected'] = $this->input->post('client_selected');
+			$data['knewindoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+			if (empty($this->input->post('client_selected'))) {
+				$data['keyword_selected'] = $this->input->post('keyword');
+			} else {
+				$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			}
+			$data['state'] = $this->input->post('state');
+			$data['radio'] = $this->input->post('radio');
+			$data['timestamp'] = $this->input->post('timestamp');
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('edit_knewin',$data);
 		} else {
 			redirect('login','refresh');
 		}

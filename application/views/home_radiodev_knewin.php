@@ -66,7 +66,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$ic = null;
 													if ($allkeyword_foundc != 0) { ?>
 														<form style="all: unset;" action="<?php echo base_url('pages/radio_knewin_home_keyword');?>" method="post">
-															<input type="hidden" name="ids_file_xml" value="<?php echo $ids_file_xml;?>">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 															<input type="hidden" name="startdate" value="<?php echo $startdate;?>">
