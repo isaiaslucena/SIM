@@ -22,7 +22,8 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/typeahead-0111/typeahead-tags.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
 
-		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
+		<!-- <script src="<?php //echo //base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script> -->
+		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/metisMenu/metisMenu.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/raphael/raphael.min.js');?>"></script>

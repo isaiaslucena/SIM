@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<title>Vídeo</title>
-		<script src="<?php echo base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script>
+		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-select/js/bootstrap-select.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.js');?>"></script>

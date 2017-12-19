@@ -16,7 +16,7 @@
 
 	$dbcon = new mysqli($servername, $username, $password, $dbname);
 	if (!$dbcon) {
-		mysql_close($dbcon);
+		mysqli_close($dbcon);
 		die('Not possible to connect: '.mysql_error());
 	}else {
 		echo 'Connected to database '.$dbname."\n";
@@ -241,6 +241,9 @@
 		}
 	}
 
+	curl_close($ch);
+	mysqli_close($dbcon);
+	
 	function movefiles($srcdir,$dstdir,$srcfilenm,$dstfilenm) {
 		global $dbcon;
 		global $protocol;

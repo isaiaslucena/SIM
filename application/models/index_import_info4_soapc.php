@@ -15,7 +15,7 @@ $dbname='sim';
 $dbcon = new mysqli($servername, $username, $password, $dbname);
 if (!$dbcon) {
 	die('Not possible to connect: '.mysql_error());
-	mysql_close($dbcon);
+	mysqli_close($dbcon);
 }else {
 	echo 'Conexão bem sucedida'."\n";
 }

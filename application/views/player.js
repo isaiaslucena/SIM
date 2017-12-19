@@ -562,12 +562,17 @@
 							$('#'+cfileid).prop('checked', false);
 							$('#checkjoincrop').bootstrapToggle('off');
 						} else {
-							cvbtnid = event.originalEvent.path[2].id;
+							// console.log(event);
+							// cvbtnid = event.originalEvent.path[2].id;
+							// cvbtnid = event.target.nextElementSibling.parentElement.parentNode.id;
+							cvbtnid = $(this).parent().attr('id');
+							// console.log(cvbtnid);
+
 							cfilenamei = event.target.dataset.vfile;
 							cfilevsourcei = event.target.dataset.vsrc;
 							// vfilenamei = cfilevsourcei+'_'+cfilenamei;
 							vfilenamei = cfilenamei+'.mp4';
-							joinfiles(cfileid,cfilevsourcei,vfilenamei,cvbtnid);
+							joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
 						}
 					}
 				});
