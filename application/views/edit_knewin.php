@@ -114,7 +114,7 @@ $content = $knewindoc->response->docs[0]->content_t[0];
 			</div>
 
 			<div id="crop">
-				<form action="<?php echo site_url('pages/crop_temp')?>" method="post" accept-charset="utf-8">
+				<form action="<?php echo site_url('pages/crop_knewin')?>" method="post" accept-charset="utf-8">
 					<label for="starttime" id="lstarttime"><?php echo get_phrase('start');?></label>
 					<input style="opacity: 0" type="text" value="<?php echo get_phrase('click_to_select');?>" id="starttime" name="starttime"></input>
 					<label for="endtime" id="lendtime"><?php echo get_phrase('end');?></label>

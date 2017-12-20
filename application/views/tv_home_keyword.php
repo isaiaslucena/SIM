@@ -69,8 +69,19 @@
 					$sid = $found->id_i;
 					$sidsource = $found->id_source_i;
 					$smediaurl = $found->mediaurl_s;
-					$sstartdate = $found->starttime_dt;
-					$senddate = $found->endtime_dt;
+					// $sstartdate = $found->starttime_dt;
+					// $senddate = $found->endtime_dt;
+					
+					$timezone = new DateTimeZone('UTC');
+					$sd = new Datetime($found->starttime_dt, $timezone);
+					$ed = new Datetime($found->endtime_dt, $timezone);
+					
+					$newtimezone = new DateTimeZone('America/Sao_Paulo');
+					$sd->setTimezone($newtimezone);
+					$ed->setTimezone($newtimezone);
+					$sstartdate = $sd->format('d/m/Y H:i:s');
+					$senddate = $ed->format('d/m/Y H:i:s');
+					
 					$stext = $found->content_t[0];
 					$ssource = $found->source_s; ?>
 					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">

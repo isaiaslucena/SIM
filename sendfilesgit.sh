@@ -2,7 +2,7 @@
 
 now=`date +%d/%m/%Y_%H:%M:%S`
 
-#cd hms/
+cd /home/isaiasneto/ducati/applications/SIM
 git add --verbose .
 git commit -m "commited at $now"
 git push -u gogs master
