@@ -1015,6 +1015,51 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function crop_knewin() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'crop_temp',
+				'last_page' => base_url('pages/crop_knewin')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data['starttime'] = $this->input->post('starttime');
+			$data['endtime'] = $this->input->post('endtime');
+			$data['ssource'] = $this->input->post('ssource');
+			$data['client_selected'] = $this->input->post('client_selected');
+			$data['keyword_selected'] = $this->input->post('keyword_selected');
+			$data['text_crop'] = $this->input->post('textseld');
+			$data['urlmp3'] = $this->input->post('mediaurl');
+			$data['startdate'] = $this->input->post('startdate');
+			$data['enddate'] = $this->input->post('enddate');
+			
+			$data_crop_info['id_knewin'] = $this->input->post('id_knewin');
+			$data_crop_info['id_user'] = $this->session->userdata('id_user');
+			$data_crop_info['id_client'] = $this->input->post('id_client');
+			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
+			$data_crop_info['id_text'] = $this->input->post('id_text');
+			$data_crop_info['text_cropped'] = $this->input->post('textseld');
+			
+			$data['finalfile'] = $this->pages_model->crop_knewin($data['starttime'], $data['endtime'], $data['urlmp3']);
+			// $this->pages_model->crop_info($data_crop_info);
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('crop_knewin',$data);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
 	public function keyword_file() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(

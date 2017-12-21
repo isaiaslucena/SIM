@@ -27,7 +27,7 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
-	public function client($id){
+	public function client($id) {
 		return $filedb = $this->db->get_where('client', array('id_client' => $id))->result_array();
 	}
 
@@ -850,6 +850,28 @@ class Pages_model extends CI_Model {
 		} else {
 			$finaltempurl = $temppathurl."crop_".$filename.".mp3";
 		}
+		return $finaltempurl;
+	}
+
+	public function crop_knewin($starttime, $endtime, $urlmp3) {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+		$duration = $endtime - $starttime;
+
+		$dfilename = "download_".strtotime("now").".mp3";
+		$cropfilename = "download_".strtotime("now")."_crop.mp3";
+		file_put_contents($temppath.$dfilename, fopen($urlmp3, 'r'));
+
+		// $filepath = "/app/application/repository/".mb_substr($mp3pathfilename, 47);
+		// $filename = mb_substr($mp3pathfilename, 62);
+		// copy($filepath, $temppath."/".$filename.".mp3");
+		// $filename = mb_substr($mp3pathfilename, 62).".mp3";
+
+		exec($soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration);
+		// echo $soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration;
+
+		$finaltempurl = $temppathurl.$cropfilename;
 		return $finaltempurl;
 	}
 

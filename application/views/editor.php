@@ -134,52 +134,36 @@
 
 				$('#btncstart').click(function(event) {
 					cropstartss = videoel[0].currentTime;
-					// time = $(this).text();
-					// if (time != '') {
-					// 	$(this).text(null);
-					// 	$(this).append('<i class="fa fa-hourglass-start"></i>');
-
-					// 	$(this).removeClass('btn-default');
-					// 	$(this).addClass('btn-primary');
-					// 	$(this).append(' '+$('#currtime').text());
-					// 	cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
-					// 	// cropstartss = videoel[0].currentTime;
-					// 	cropstartms = cropstarts.split(".")
-					// 	cropstart = $('#currtime').text().replace(":", "-");
-					// 	cropstartt = $('#currtime').text();
-					// 	ccrops = true;
-					// } else {
-						if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
-								swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
-								$(this).text(null);
-								$(this).append('<i class="fa fa-hourglass-end"></i>');
-								$(this).removeClass('btn-primary');
-								$(this).addClass('btn-default');
-								ccrope = false;
-						} else {
-							$(this).text(null);
-							$(this).append('<i class="fa fa-hourglass-start"></i>');
-							$(this).removeClass('btn-default');
-							$(this).addClass('btn-primary');
-							$(this).append(' '+$('#currtime').text());
-							cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
-							// cropstartss = videoel[0].currentTime;
-							cropstartms = cropstarts.split(".")
-							// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
-							// cropstart = '00-'+$('#currtime').text().replace(":", "-");
-							cropstart = $('#currtime').text().replace(":", "-");
-							// cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
-							cropstartt = $('#currtime').text();
-							ccrops = true;
-							// console.log('crop starttime: '+cropstartt);
-							// console.log('crop starttime: '+cropstarts);	
-						}
-					// }
+					if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
+						swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
+						$(this).text(null);
+						$(this).append('<i class="fa fa-hourglass-end"></i>');
+						$(this).removeClass('btn-primary');
+						$(this).addClass('btn-default');
+						ccrope = false;
+					} else {
+						$(this).text(null);
+						$(this).append('<i class="fa fa-hourglass-start"></i>');
+						$(this).removeClass('btn-default');
+						$(this).addClass('btn-primary');
+						$(this).append(' '+$('#currtime').text());
+						cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
+						// cropstartss = videoel[0].currentTime;
+						cropstartms = cropstarts.split(".")
+						// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
+						// cropstart = '00-'+$('#currtime').text().replace(":", "-");
+						cropstart = $('#currtime').text().replace(":", "-");
+						// cropstartt = '00-'+$('#currtime').text()+'.'+cropstartms[1];
+						cropstartt = $('#currtime').text();
+						ccrops = true;
+						// console.log('crop starttime: '+cropstartt);
+						// console.log('crop starttime: '+cropstarts);	
+					}
 				});
 
 				$('#btncend').click(function(event) {
-					cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
 					cropendss = videoel[0].currentTime;
+					cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
 					if (ccrops) {
 						if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 							swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");

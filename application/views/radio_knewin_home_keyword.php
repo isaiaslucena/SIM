@@ -169,6 +169,8 @@
 			</div>
 
 			<script type="text/javascript">
+				$('audio').bind('contextmenu', function() { return false; });
+				
 				if ($('#back-to-top').length) {
 					var scrollTrigger = 1000, // px
 					backToTop = function() {
