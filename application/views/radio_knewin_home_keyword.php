@@ -90,19 +90,17 @@
 					$ssource = $found->source_s; ?>
 					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 						<div class="panel-heading text-center">
-							<label class="pull-left" style="font-weight: normal"><input type="checkbox" id="<?php echo 'cb'.$divcount;?>"> <?php echo get_phrase('join');?></label>
+							<label class="pull-left" style="font-weight: normal">
+								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>"> <?php echo get_phrase('join');?>
+							</label>
 							
-							<?php if (!empty($keyword_selected)) { ?>
-								<label>
-									<i class="fa fa-search fa-fw"></i>
-									<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
-									&nbsp;&nbsp;&nbsp;&nbsp;
-									<i class="fa fa-television fa-fw"></i> 
-									<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
-								</label>
-							<?php } else {?>
-								<i class="fa fa-television fa-fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
-							<?php } ?>
+							<label class="labeltitle">
+								<i class="fa fa-search fa-fw"></i>
+								<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<i class="fa fa-television fa-fw"></i> 
+								<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+							</label>
 
 							<div class="btn-toolbar pull-right">
 								<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
@@ -132,22 +130,22 @@
 							</div>
 						</div>
 						<div class="panel-body">
-							<div class="row">
+							<div class="row audioel">
 								<div class="col-lg-12">
 									<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls></audio>
 								</div>
 							</div>
 
-							<div class="row">
+							<div class="row textel">
 								<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
 									<?php
 									if (!empty($keyword_selected)) {
 										$fulltext = (string)$stext;
 										//$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword_selected</strong>", $fulltext);
 										$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
-										<p id="<?php echo 'ptext'.$divcount; ?>" class="ptext text-justify"><?php echo (string)$fulltext;?></p>
+										<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext"><?php echo (string)$fulltext;?></p>
 									<?php } else { ?>
-										<p id="<?php echo 'ptext'.$divcount; ?>" class="ptext text-justify"><?php echo (string)$stext;?></p>
+										<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext"><?php echo (string)$stext;?></p>
 									<?php } ?>
 								</div>
 							</div>
@@ -197,7 +195,7 @@
 					loadp.children('i').css('display', 'inline-block');
 
 					iddiv = $(this).attr('data-iddiv');
-					// newdivid = Number(iddiv.replace('div', '')) + 1;
+					iddivn = Number(iddiv.replace('div', ''));
 					idsource = $(this).attr('data-idsource');
 					startdate = $(this).attr('data-enddate');
 					
@@ -238,28 +236,53 @@
 						var esecond = ed.getSeconds();
 						var esecond = ('0' + esecond).slice(-2);
 						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
-						
+
 						newdivid += 1;
+						// newdivid = iddivn + 1;
+						newdividn = iddiv + '-' + newdivid;
+						// newdividn = 'div' + newdivid;
 						loadp.children('i').css('display', 'none');
 
-						divclone = $('#'+iddiv).clone();
+						divclone = $('#'+iddiv).clone(true);
 						console.log(divclone);
 						
 						// divclone[0].classList.remove = 'panel-default';
 						// divclone[0].classList[1] = 'panel-info';
 						divclone.removeClass('panel-default');
 						divclone.addClass('panel-info');
-						divclone[0].id = iddiv + '-' + newdivid;
-						divclone[0].children[1].children[1].children[0].id = iddiv.replace('div', 'pbody') + '-' + newdivid;
-						// divclone[0].children[0].children[1].innerText = dsource + ' | ' + dfstartdate + ' - ' + dfenddate;
-						divclone.children('.panel-heading').children('label').text('some text');
-						// divclone[0].children[0].children[1].innerHTML =  '<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate;
+						
+						divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+						divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+						divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+						divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+						divclone.attr('id', newdividn);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+						divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
 						divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
+						// divclone.children('panel-body').children('.row').children('.col-lg-12').children('audio').attr('src', dmediaurl);
 						divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+						// divclone.children('panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
 						console.log(divclone)
 
 						$('#'+iddiv).before(divclone);
 					});
+				});
+				
+				$('.cbjoinfiles').click(function(event) {
+					checked = event.target.checked
+					if (checked) {
+						console.log('Checked');
+					} else {
+						console.log('Unchecked');
+					}
 				});
 				
 				$(document).ready(function() {
@@ -292,8 +315,6 @@
 						// console.log(qtkwf);
 						$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
 					});
-					
-
 				});
 			</script>
 		</div>
