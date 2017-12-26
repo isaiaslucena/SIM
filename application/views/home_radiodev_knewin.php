@@ -23,7 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
-						<?php echo get_phrase('kewords_found').' '.get_phrase('since').' '.$startdate; ?>
+						<?php 
+						$timezone = new DateTimeZone('UTC');
+						$sd = new Datetime($startdate, $timezone);
+						$newtimezone = new DateTimeZone('America/Sao_Paulo');
+						$sd->setTimezone($newtimezone);
+						$sstartdate = $sd->format('d/m/Y H:i:s');
+						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
 					</div>

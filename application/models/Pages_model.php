@@ -209,7 +209,7 @@ class Pages_model extends CI_Model {
 	}
 
 	//load the next or previous files
-	public function load_file($position,$timestamp,$id_radio) {
+	public function load_file($position, $timestamp, $id_radio) {
 		if ($position == 'previous') {
 			$sqlquery =	'SELECT f.id_file, f.path,f.filename,f.type,t.id_text,t.id_file_mp3, t.text_content,f.id_radio,r.name as radio ,r.state,f.timestamp
 							FROM file f
@@ -595,7 +595,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_tv/query?rows=500&wt=json&sort=starttime_dt+asc';
+		$path='/solr/knewin_tv/query?rows=500&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$data = array(
@@ -623,7 +623,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+asc';
+		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$data = array(
@@ -646,7 +646,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function radio_text_byid_solr($docid){
+	public function radio_text_byid_solr($docid) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -671,6 +671,42 @@ class Pages_model extends CI_Model {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
 		return json_decode(curl_exec($ch));
+	}
+
+	public function get_radio_bysd_solr($idsource, $startdate, $position) {
+		//Solr Connection
+		$protocol = 'http';
+		$port = '8983';
+		$host = '172.17.0.3';
+		if ($position == 'previous') {
+			$path='/solr/knewin_radio/query?wt=json&rows=1&sort=starttime_dt+desc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'endtime_dt:[* TO "'.$startdate.'"]'
+			);
+		} else if ($position == 'next') {
+			$path = '/solr/knewin_radio/query?wt=json&rows=1&sort=starttime_dt+asc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'starttime_dt:["'.$startdate.'" TO *]'
+			);
+		}
+		
+		$url = $protocol."://".$host.":".$port.$path;
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		// return json_decode(curl_exec($ch));
+		return curl_exec($ch);
 	}
 
 	public function text_keywords_solr($startdate,$enddate){

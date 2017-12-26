@@ -140,37 +140,6 @@
 							$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
 						});
 
-						$('#audiotext').bind('contextmenu',function() { return false; });
-
-						function load_file(position,idclient,idkeyword,timestamp,idradio,divid,iloadid) {
-							$('#' + iloadid).css('display', 'inline-block');
-							$.ajax({
-								url: '<?php echo base_url('pages/load_file')?>',
-								type: 'POST',
-								data: {
-									position: position,
-									idclient: idclient,
-									idkeyword: idkeyword,
-									timestamp: timestamp,
-									idradio: idradio,
-									divid: divid
-								},
-								complete: function (response) {
-									if (position == 'next') {
-										$('#' + divid).before(response.responseText);
-									}
-									if (position == 'previous') {
-										$('#' + divid).after(response.responseText);
-									}
-									$('#' + iloadid).css('display', 'none');
-								},
-								error: function (response) {
-									alert(response.responseText)
-								},
-							})
-							return false;
-						}
-
 						var qtkwf = $('<?php echo '.str'.$divcount?>').length;
 						$('<?php echo '#qtkwfid'.$divcount;?>').text(qtkwf);
 					</script>
@@ -194,24 +163,10 @@
 			<div>
 
 			<script type="text/javascript">
-				function discard_text(divid, idtext, idclient, idkeyword, iduser) {
-					$.ajax({
-						url: '<?php echo base_url('pages/discard_keyword')?>',
-						type: 'POST',
-						data: {
-							idtext: idtext,
-							idclient: idclient,
-							idkeyword: idkeyword,
-							iduser: iduser
-						},
-						success: function(result) {
-							// console.log('Discarded id_text = ' + idtext);
-							// alert('<?php echo get_phrase('discarded')?>')
-						}
-					})
-					document.getElementById(divid).classList.toggle('closed');
-				}
-
+				var firstidxml, firstidmp3, firstidtext;
+				
+				$('#audiotext').bind('contextmenu',function() { return false; });
+				
 				if ($('#back-to-top').length) {
 					var scrollTrigger = 1000, // px
 					backToTop = function() {
@@ -231,10 +186,63 @@
 						$('html,body').animate({scrollTop: 0}, 700);
 					})
 				}
+				
+				$('#joinbtn').click(function(event) {
+					var frm = $('#filesform').submit();
+					$('#filesform').closest('form').find("input[type=hidden], textarea").val('');
+					$('input[type=checkbox]').prop('checked',false);
+					$('#fileslist').empty();
+					$('#joindiv').removeClass('show');
+					return false;
+				});
+				
+				function discard_text(divid, idtext, idclient, idkeyword, iduser) {
+					$.ajax({
+						url: '<?php echo base_url('pages/discard_keyword')?>',
+						type: 'POST',
+						data: {
+							idtext: idtext,
+							idclient: idclient,
+							idkeyword: idkeyword,
+							iduser: iduser
+						},
+						success: function(result) {
+							// console.log('Discarded id_text = ' + idtext);
+							// alert('<?php echo get_phrase('discarded')?>')
+						}
+					})
+					document.getElementById(divid).classList.toggle('closed');
+				}
 
-				var firstidxml;
-				var firstidmp3;
-				var firstidtext;
+				function load_file(position,idclient,idkeyword,timestamp,idradio,divid,iloadid) {
+					$('#' + iloadid).css('display', 'inline-block');
+					$.ajax({
+						url: '<?php echo base_url('pages/load_file')?>',
+						type: 'POST',
+						data: {
+							position: position,
+							idclient: idclient,
+							idkeyword: idkeyword,
+							timestamp: timestamp,
+							idradio: idradio,
+							divid: divid
+						},
+						complete: function (response) {
+							if (position == 'next') {
+								$('#' + divid).before(response.responseText);
+							}
+							if (position == 'previous') {
+								$('#' + divid).after(response.responseText);
+							}
+							$('#' + iloadid).css('display', 'none');
+						},
+						error: function (response) {
+							alert(response.responseText)
+						},
+					})
+					return false;
+				}
+
 				function checkbox_join(id, timestamp, radio, idradio, idclient, idkeyword, idfilexml, idfilemp3, idtext) {
 					var previdsfilesxml;
 					var previdsfilesmp3;
@@ -322,14 +330,5 @@
 						}
 					}
 				}
-
-				$('#joinbtn').click(function(event) {
-					var frm = $('#filesform').submit();
-					$('#filesform').closest('form').find("input[type=hidden], textarea").val('');
-					$('input[type=checkbox]').prop('checked',false);
-					$('#fileslist').empty();
-					$('#joindiv').removeClass('show');
-					return false;
-				});
 			</script>
 		</div>

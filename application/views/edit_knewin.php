@@ -112,7 +112,7 @@ $content = $knewindoc->response->docs[0]->content_t[0];
 			
 			<div class="row">
 				<div class="col-lg-12">
-					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px; max-width: 98%"> <?php echo $content; ?></p>
+					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 450px; max-width: 98%"> <?php echo $content; ?></p>
 				</div>
 			</div>
 			

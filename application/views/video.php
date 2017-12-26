@@ -403,7 +403,7 @@
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends, 
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
-				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet;
+				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadthumbs;
 				var filestojoin = [];
 				var filesjoined = [];
 				var fileseq = 0;
@@ -678,6 +678,7 @@
 				function selectchannel(date) {
 					// tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
 					// tvch.prop('disabled', false)
+					tvch.html(null);
 					tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 					tvch.selectpicker('refresh');
 					// tvch.html(null);
@@ -686,7 +687,7 @@
 						function(data, textStatus, xhr) {
 							tvch.html(null);
 							$.each(data, function(elo, indexo) {
-								if (elo == "dvr01") {	
+								if (elo == "indian03") {
 									indexo.forEach(function(ela, indexa) {
 										switch (ela) {
 											case "NBR_RJ":
@@ -750,6 +751,7 @@
 									});
 								}
 							});
+
 							tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
 							tvch.prop('disabled', false)
 							tvch.selectpicker('refresh');

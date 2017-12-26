@@ -103,51 +103,53 @@
 				});
 
 				videoel.on('loadedmetadata', function() {
-					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
+					loadthumbs = setInterval(function() {
+						vvideosrc = videoel[0].currentSrc;
+						if (vvideosrc.match(vvideosrcsearch) == null) {
+							vduration = videoel[0].duration;
+							// durationh = ('0' + Math.floor(vduration / 3600)).slice(-2);
+							// // durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
+							// durationm = ('0' + Math.floor((vduration - ( durationh / 60))).slice(-2);
+							// durations = ('0' + Math.floor((vduration - durationm * 60))).slice(-2);
+							// durationmss = (vduration * 100 / 100).toFixed(3);
+							// durationms = durationmss.split(".");
+							// vdurtime.text(durationh+':'+durationm+':'+durations+'.'+durationms[1]);
 
-						vduration = videoel[0].duration;
-						// durationh = ('0' + Math.floor(vduration / 3600)).slice(-2);
-						// // durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
-						// durationm = ('0' + Math.floor((vduration - ( durationh / 60))).slice(-2);
-						// durations = ('0' + Math.floor((vduration - durationm * 60))).slice(-2);
-						// durationmss = (vduration * 100 / 100).toFixed(3);
-						// durationms = durationmss.split(".");
-						// vdurtime.text(durationh+':'+durationm+':'+durations+'.'+durationms[1]);
+							vdurtime.text(sectostring(vduration));
 
-						vdurtime.text(sectostring(vduration));
-
-						nimage = [];
-						if (joinvideos) {
-							vdfilename = videotitle.text();
-							srcarr = vdfilename.split("_");
-							srcfilename = srcarr[0];
-							if (srcfilename != 'dvr01') {
-								$.each(filesjoined, function(index, file) {
-									maxthumb = file.time;
-									vdfilename = file.file;
+							nimage = [];
+							if (joinvideos) {
+								vdfilename = videotitle.text();
+								srcarr = vdfilename.split("_");
+								srcfilename = srcarr[0];
+								if (srcfilename != 'indian03') {
+									$.each(filesjoined, function(index, file) {
+										maxthumb = file.time;
+										vdfilename = file.file;
+										for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
+											nthumbn = ("00" + thumbn).slice(-3);
+											nimage[thumbn] = new Image();
+											imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
+											nimage[thumbn].src = imgsrc;
+										}
+									});
+								}
+							} else {
+								vdfilename = videotitle.text();
+								sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
+								if (sfilename != 'indian03') {
+									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 										nthumbn = ("00" + thumbn).slice(-3);
 										nimage[thumbn] = new Image();
-										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
+										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
 										nimage[thumbn].src = imgsrc;
 									}
-								});								
-							}
-						} else {
-							vdfilename = videotitle.text();
-							sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-							if (sfilename != 'dvr01') {
-								maxthumb = Math.floor(videoel[0].duration);
-								for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-									nthumbn = ("00" + thumbn).slice(-3);
-									nimage[thumbn] = new Image();
-									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
-									nimage[thumbn].src = imgsrc;
+									clearInterval(loadthumbs);
 								}
 							}
 						}
-					}
+					}, 5000);
 				});
 
 				videoel.on('timeupdate', function() {
@@ -209,7 +211,7 @@
 					}
 
 					videoel[0].pause();
-					if (vsourcefile != 'dvr01') {
+					if (vsourcefile != 'indian03') {
 						videoel.css('display', 'none');
 						videoelth.css('display', 'block');
 					}
@@ -223,7 +225,7 @@
 						vfile = videotitle.text()
 						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
 						//videoel[0].pause();
-						if (vsourcefile != 'dvr01') {
+						if (vsourcefile != 'indian03') {
 							videoelth.css('display', 'none');
 							videoel.css('display', 'block');
 						}
@@ -264,7 +266,7 @@
 					if (joinvideos) {
 						filenarr = filesjoined[0].file.split("_");
 						thnsfilename = filenarr[0];
-						if (thnsfilename != 'dvr01') {
+						if (thnsfilename != 'indian03') {
 							var ttime = 0;
 							var thumbnnf;
 							var thnvdfilename;
@@ -283,7 +285,7 @@
 					} else {
 						vdfilename = videotitle.text();
 						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-						if (sfilename != 'dvr01') {
+						if (sfilename != 'indian03') {
 							uptadevThumb(sfilename, vdfilename, thumbnum);
 						}
 					}
@@ -532,6 +534,7 @@
 					cfileid = event.target.id;
 					elclick = event.target.tagName;
 					if (elclick == "SPAN") {
+						clearInterval(loadthumbs);
 						cfilename = event.target.innerText;
 						cfilevsource = event.target.dataset.vsrc;
 
