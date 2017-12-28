@@ -91,14 +91,14 @@
 					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 						<div class="panel-heading text-center">
 							<label class="pull-left" style="font-weight: normal">
-								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>"> <?php echo get_phrase('join');?>
+								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"> <?php echo get_phrase('join');?>
 							</label>
 							
 							<label class="labeltitle">
 								<i class="fa fa-search fa-fw"></i>
 								<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<i class="fa fa-television fa-fw"></i> 
+								<i class="fa fa-bullhorn fa-fw"></i> 
 								<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
 							</label>
 
@@ -156,6 +156,8 @@
 
 			<script type="text/javascript">
 				var newdivid = 0;
+				var filestojoin = [];
+				var joinfiles = false;
 
 				$('audio').bind('contextmenu', function() { return false; });
 
@@ -178,15 +180,101 @@
 						$('html,body').animate({scrollTop: 0}, 700);
 					})
 				}
-
+				
 				$('.loadprevious').click(function(event) {
 					loadp = $(this);
-					loadp.children('i').css('display', 'block');
+					loadp.children('i').css('display', 'inline-block');
+
+					iddiv = $(this).attr('data-iddiv');
+					iddivn = Number(iddiv.replace('div', ''));
 					idsource = $(this).attr('data-idsource');
 					startdate = $(this).attr('data-startdate');
-					$.get('<?php echo base_url('pages/getnext_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
-						loadp.children('i').css('display', 'none');
+					
+					$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 						console.log(data);
+						loadp.children('i').css('display', 'none');
+						numfound = data.response.numFound;
+						if (numfound == 0) {
+							warnhtml =	'<div class="alert alert-warning" role="alert">'+
+											'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+											'<span class="sr-only">Error:</span>'+
+											'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+										'</div>';
+							$('#'+iddiv).after(warnhtml);
+							
+							setTimeout(function() {
+								$('div.alert.alert-warning').fadeOut('slow');
+							}, 3000);
+						} else {
+							did = data.response.docs[0].id_i;
+							dsourceid = data.response.docs[0].source_id_i;
+							dsource = data.response.docs[0].source_s;
+							dmediaurl = data.response.docs[0].mediaurl_s;
+							dstartdate = data.response.docs[0].starttime_dt;
+							denddate = data.response.docs[0].endtime_dt;
+							dcontent = data.response.docs[0].content_t[0];
+							
+							var sd = new Date(dstartdate);
+							var sday = sd.getDate();
+							var sday = ('0' + sday).slice(-2);
+							var smonth = (sd.getMonth() + 1);
+							var smonth = ('0' + smonth).slice(-2);
+							var syear = sd.getFullYear();
+							var shour = sd.getHours();
+							var shour = ('0' + shour).slice(-2);
+							var sminute = sd.getMinutes();
+							var sminute = ('0' + sminute).slice(-2);
+							var ssecond = sd.getSeconds();
+							var ssecond = ('0' + ssecond).slice(-2);
+							var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+
+							var ed = new Date(denddate);
+							var eday = ed.getDate();
+							var eday = ('0' + eday).slice(-2);
+							var emonth = (ed.getMonth() + 1);
+							var emonth = ('0' + emonth).slice(-2);
+							var eyear = ed.getFullYear();
+							var ehour = ed.getHours();
+							var ehour = ('0' + ehour).slice(-2);
+							var eminute = ed.getMinutes();
+							var eminute = ('0' + eminute).slice(-2);
+							var esecond = ed.getSeconds();
+							var esecond = ('0' + esecond).slice(-2);
+							var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+
+							newdivid += 1;
+							// newdivid = iddivn + 1;
+							newdividn = iddiv + '-' + newdivid;
+							// newdividn = 'div' + newdivid;
+
+							divclone = $('#'+iddiv).clone(true);
+							console.log(divclone);
+							
+							divclone.removeClass('panel-default');
+							divclone.addClass('panel-info');
+							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+							divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+							divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+							divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+							divclone.attr('id', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+							divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+							divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
+							divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+
+							$('#'+iddiv).after(divclone);
+						}
 					});
 				});
 				
@@ -201,78 +289,89 @@
 					
 					$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
 						console.log(data);
-						did = data.response.docs[0].id_i;
-						dsourceid = data.response.docs[0].source_id_i;
-						dsource = data.response.docs[0].source_s;
-						dmediaurl = data.response.docs[0].mediaurl_s;
-						dstartdate = data.response.docs[0].starttime_dt;
-						denddate = data.response.docs[0].endtime_dt;
-						dcontent = data.response.docs[0].content_t[0];
-						
-						var sd = new Date(dstartdate);
-						var sday = sd.getDate();
-						var sday = ('0' + sday).slice(-2);
-						var smonth = (sd.getMonth() + 1);
-						var smonth = ('0' + smonth).slice(-2);
-						var syear = sd.getFullYear();
-						var shour = sd.getHours();
-						var shour = ('0' + shour).slice(-2);
-						var sminute = sd.getMinutes();
-						var sminute = ('0' + sminute).slice(-2);
-						var ssecond = sd.getSeconds();
-						var ssecond = ('0' + ssecond).slice(-2);
-						var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
-
-						var ed = new Date(denddate);
-						var eday = ed.getDate();
-						var eday = ('0' + eday).slice(-2);
-						var emonth = (ed.getMonth() + 1);
-						var emonth = ('0' + emonth).slice(-2);
-						var eyear = ed.getFullYear();
-						var ehour = ed.getHours();
-						var ehour = ('0' + ehour).slice(-2);
-						var eminute = ed.getMinutes();
-						var eminute = ('0' + eminute).slice(-2);
-						var esecond = ed.getSeconds();
-						var esecond = ('0' + esecond).slice(-2);
-						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
-
-						newdivid += 1;
-						// newdivid = iddivn + 1;
-						newdividn = iddiv + '-' + newdivid;
-						// newdividn = 'div' + newdivid;
 						loadp.children('i').css('display', 'none');
+						numfound = data.response.numFound;
+						if (numfound == 0) {
+							warnhtml =	'<div class="alert alert-warning" role="alert">'+
+											'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+											'<span class="sr-only">Error:</span>'+
+											'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+										'</div>';
+							$('#'+iddiv).before(warnhtml);
+							
+							setTimeout(function() {
+								$('div.alert.alert-warning').fadeOut('slow');
+							}, 3000);
+						} else {
+							did = data.response.docs[0].id_i;
+							dsourceid = data.response.docs[0].source_id_i;
+							dsource = data.response.docs[0].source_s;
+							dmediaurl = data.response.docs[0].mediaurl_s;
+							dstartdate = data.response.docs[0].starttime_dt;
+							denddate = data.response.docs[0].endtime_dt;
+							dcontent = data.response.docs[0].content_t[0];
+							
+							var sd = new Date(dstartdate);
+							var sday = sd.getDate();
+							var sday = ('0' + sday).slice(-2);
+							var smonth = (sd.getMonth() + 1);
+							var smonth = ('0' + smonth).slice(-2);
+							var syear = sd.getFullYear();
+							var shour = sd.getHours();
+							var shour = ('0' + shour).slice(-2);
+							var sminute = sd.getMinutes();
+							var sminute = ('0' + sminute).slice(-2);
+							var ssecond = sd.getSeconds();
+							var ssecond = ('0' + ssecond).slice(-2);
+							var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-						divclone = $('#'+iddiv).clone(true);
-						console.log(divclone);
-						
-						// divclone[0].classList.remove = 'panel-default';
-						// divclone[0].classList[1] = 'panel-info';
-						divclone.removeClass('panel-default');
-						divclone.addClass('panel-info');
-						
-						divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
-						divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
-						divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
-						divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
-						divclone.attr('id', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
-						divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-						divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
-						// divclone.children('panel-body').children('.row').children('.col-lg-12').children('audio').attr('src', dmediaurl);
-						divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
-						// divclone.children('panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
-						console.log(divclone)
+							var ed = new Date(denddate);
+							var eday = ed.getDate();
+							var eday = ('0' + eday).slice(-2);
+							var emonth = (ed.getMonth() + 1);
+							var emonth = ('0' + emonth).slice(-2);
+							var eyear = ed.getFullYear();
+							var ehour = ed.getHours();
+							var ehour = ('0' + ehour).slice(-2);
+							var eminute = ed.getMinutes();
+							var eminute = ('0' + eminute).slice(-2);
+							var esecond = ed.getSeconds();
+							var esecond = ('0' + esecond).slice(-2);
+							var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
-						$('#'+iddiv).before(divclone);
+							newdivid += 1;
+							// newdivid = iddivn + 1;
+							newdividn = iddiv + '-' + newdivid;
+							// newdividn = 'div' + newdivid;
+
+							divclone = $('#'+iddiv).clone(true);
+							console.log(divclone);
+							
+							divclone.removeClass('panel-default');
+							divclone.addClass('panel-info');
+							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+							divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+							divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+							divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+							divclone.attr('id', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+							divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+							divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
+							divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+
+							$('#'+iddiv).before(divclone);
+						}
 					});
 				});
 				
@@ -307,7 +406,7 @@
 						$(this).css('overflowY', 'hidden');
 					});
 					
-					ptexts = $('.ptext.text-justify')
+					ptexts = $('.ptext.text-justify');
 					$.each(ptexts, function(index, val) {
 						cpid = $(val).attr('id');
 						
