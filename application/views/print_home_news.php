@@ -9,7 +9,9 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">
-					<?php echo $client_print_news->Noticias[0]->Veiculo; ?>
+					<a href="<?php echo 'http://www.multclipp.com.br/admin/cadastroVeiculo.aspx?id='.$client_print_news->Noticias[0]->IdVeiculo; ?>" title="Editar veículo no Multclipp" target="_blank">
+						<?php echo $client_print_news->Noticias[0]->Veiculo; ?>
+					</a>		
 				</h1>
 				<h2>
 					<?php echo $client_print_news->Noticias[0]->Empresa; ?>
@@ -84,9 +86,10 @@
 									<div class="col-lg-4">
 										<?php 
 										$imgq = count($client_news->Imagens);
-										// var_dump($imgq);
+										// var_dump($client_news->Imagens);
 										if ($imgq == 1) { 
 											$imgcount++;
+											$idimg = $client_news->Imagens[0]->IdImagem;
 											if (!empty($client_news->Imagens[0]->Imagem)) {
 											 	$imgsrc = $client_news->Imagens[0]->Imagem;
 											} else if ($client_news->Imagens[0]->Imagem != " ") {
@@ -105,7 +108,7 @@
 													}
 												}
 											} ?>
-											<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
+											<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-idimg="<?php echo $idimg ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
 												<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>" alt="Imagem">
 											</a>
 										<?php } else if ($imgq == 0) { 
@@ -116,7 +119,7 @@
 											// if (preg_match('/^.*\.('.$imp.')$/i', $client_news->NoticiaURL)) {
 											if (preg_match('/'.$imp.'/', $client_news->NoticiaURL)) {
 												$imgsrc = $client_news->NoticiaURL; ?>
-												<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
+												<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-idimg="<?php echo $nidnews ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
 													<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>" alt="Imagem">
 												</a>
 											<?php } else { 
@@ -124,9 +127,8 @@
 												<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-imgsrc="<?php echo $imgsrc; ?>">
 													<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo $imgsrc; ?>" alt="Imagem">
 												</a>
-											<?php } ?>
-
-										<?php } else { ?>
+											<?php }
+										} else { ?>
 											<div class="row">
 												<?php 
 												asort($client_news->Imagens);
@@ -189,16 +191,19 @@
 											<button id="btncllast" type="button" class="btn btn-sm btn-default" title="Limpar última"><i class="fa fa-undo"></i></button>
 										</div>
 										<div class="btn-group">
-											<button id="btnocr" type="button" class="btn btn-sm btn-default disabled"><i class="fa fa-pencil-square-o" disabled></i> OCR</button>
+											<button id="btnocr" type="button" class="btn btn-sm btn-default disabled" disabled><i class="fa fa-pencil-square-o" disabled></i> OCR</button>
 										</div>
 										<div class="btn-group">
 											<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
 										</div>
 									</div>
 								</div>
-								<div id="divbtnmultclipp" class="row" style="padding-bottom: 15px; display: none;">
+								<div id="divbtnmultclipp" class="row" style="padding-bottom: 20px;">
 									<div class="col-lg-12">
-										<a id="btnmultclipp" href="#" type="button" class="btn btn-large btn-block btn-default" target="_blank">Abrir no Multclipp</a>
+										<div class="btn-toolbar">
+											<a id="btnmultclipp" href="#" type="button" class="btn btn-default " target="_blank">Editar no Multclipp</a>
+											<a id="btnfacsimile" href="#" type="button" class="btn btn-default " target="_blank">Marcar Fac-Simile</a>
+										</div>
 									</div>
 								</div>
 								<div id="rowcropped" class="row">
@@ -282,15 +287,15 @@
 			// });
 
 			$('.thumbnail').click(function(event) {
-				// console.log(event);
-
 				var imgobjctw, imgobjcth, timgwidth, timgheight;
 
 				climgid = event.target.id;
+				clidimg = $(this).attr('data-idimg');
 				// climgsrc = event.target.attributes[2].value;
 				climgsrc = $(this).attr('data-imgsrc');
 				clidnews = $(this).attr('data-idnews');
 				$('#btnmultclipp').attr('href', 'http://www.multclipp.com.br/admin/cadastroNoticia.aspx?id='+clidnews);
+				$('#btnfacsimile').attr('href', 'http://www.multclipp.com.br/admin/MarcarImagem.aspx?idImagem='+clidimg+'&idNoticia='+clidnews);
 
 				// var canvas = document.getElementById('cbigimg');
 				// var ctx = canvas.getContext('2d');
@@ -362,7 +367,7 @@
 				$('#divcroppped').empty();
 
 				$('#waitimg').css('display', 'none');
-				$('#divbtnmultclipp').css('display', 'none');
+				// $('#divbtnmultclipp').css('display', 'none');
 				$('#divtextarea').css('display', 'none');
 				$('#rowcropped').css('display', 'block');
 			});
@@ -370,7 +375,7 @@
 			$('#btnclall').click(function(event) {
 				$('#divcroppped').empty();
 				$('#waitimg').css('display', 'none');
-				$('#divbtnmultclipp').css('display', 'none');
+				// $('#divbtnmultclipp').css('display', 'none');
 				$('#divtextarea').css('display', 'none');
 				$('#rowcropped').css('display', 'block');
 				$('#btnocr').attr('disabled', true);
@@ -421,59 +426,85 @@
 				dimg = dturl.replace(/^data:image\/(png|jpg);base64,/, "");
 				// console.log(dimg);
 
-				var form = new FormData();
-				form.append("address", "http://192.168.0.15:1688/upload");
-				form.append("the_file", dimg);
+				// var form = new FormData();
+				// form.append("address", "http://192.168.0.15:1688/upload");
+				// form.append("the_file", dimg);
 
 				$('#rowcropped').css('display', 'none');
 				$('#waitimg').css('display', 'block');
 
-				var settings = {
-					"async": true,
-					"crossDomain": true,
-					"url": "<?php echo base_url('pages/proxy')?>",
-					"method": "POST",
-					"headers": {
-						"cache-control": "no-cache",
-					},
-					"processData": false,
-					"contentType": false,
-					"mimeType": "multipart/form-data",
-					"data": form
-				}
+				// var settings = {
+				// 	"async": true,
+				// 	"crossDomain": true,
+				// 	"url": "<?php echo base_url('pages/proxy')?>",
+				// 	"method": "POST",
+				// 	"headers": {
+				// 		"cache-control": "no-cache",
+				// 	},
+				// 	"processData": false,
+				// 	"contentType": false,
+				// 	"mimeType": "multipart/form-data",
+				// 	"data": form
+				// }
 
-				$.ajax(settings)
-				.done(function (response) {
-					console.log(response);
-					jresponse = JSON.parse(response);
-					console.log(jresponse);
-					$('#textresult').val(jresponse.result);
+				// $.ajax(settings)
+				// .done(function (response) {
+				// 	console.log(response);
+				// 	// jresponse = JSON.parse(response);
+				// 	// console.log(jresponse);
+				// 	$('#textresult').val(jresponse.result);
+				// 	$('#textresult').val(jresponse.text_content);
 
-					$('#waitimg').css('display', 'none');
-					$('#divbtnmultclipp').css('display', 'block');
-					$('#divtextarea').css('display', 'block');
+				// 	$('#waitimg').css('display', 'none');
+				// 	// $('#divbtnmultclipp').css('display', 'block');
+				// 	$('#divtextarea').css('display', 'block');
 
-					// var copyTextarea = document.querySelector('.js-copytextarea');
-					// copyTextarea.select();
-				    	// $("#textresult").select();
-    					// document.execCommand('copy');
-					// copyTextarea.val();
+				// 	// var copyTextarea = document.querySelector('.js-copytextarea');
+				// 	// copyTextarea.select();
+				// 	// $("#textresult").select();
+				// 	// document.execCommand('copy');
+				// 	// copyTextarea.val();
 
-					// try {
-					// 	var successful = document.execCommand('copy');
-					// 	var msg = successful ? 'successful' : 'unsuccessful';
-					// 	console.log('Copying text command was ' + msg);
-					// } catch (err) {
-					// 	console.log('Oops, unable to copy');
-					// 	console.log(err);
-					// }
+				// 	// try {
+				// 	// 	var successful = document.execCommand('copy');
+				// 	// 	var msg = successful ? 'successful' : 'unsuccessful';
+				// 	// 	console.log('Copying text command was ' + msg);
+				// 	// } catch (err) {
+				// 	// 	console.log('Oops, unable to copy');
+				// 	// 	console.log(err);
+				// 	// }
 						
+				// 	$('#btnocr').attr('disabled', true);
+				// 	$('#btnocr').addClass('disabled');
+				// })
+				// .fail(function(err){
+				// 	console.log(err.responseText);
+				// });
+				
+				
+				pdata = '{"user": "admin", "pass": "68cb24754f57ea169abb58c711347cdc", "image": "' + dimg + '"}';
+				$.ajax({
+					url: 'http://apiocr.multclipp.com.br/main/txt',
+					type: 'POST',
+					data: pdata
+				})
+				.done(function(ddata) {
+					// console.log("success");
+					console.log(ddata);
+					$('#textresult').val(ddata.text_content);
+					$('#waitimg').css('display', 'none');
+					$('#divtextarea').css('display', 'block');
 					$('#btnocr').attr('disabled', true);
 					$('#btnocr').addClass('disabled');
 				})
-				.fail(function(err){
-					console.log(err.responseText);
+				.fail(function(fdata) {
+					console.log("error");
+				})
+				.always(function(adata) {
+					console.log("complete");
 				});
+						
+
 			});
 
 			if ($('#back-to-top').length) {

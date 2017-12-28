@@ -37,7 +37,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<div class="timeline-badge"><i class="fa fa-newspaper-o"></i></div>
 								<div class="timeline-panel">
 									<div class="timeline-heading">
-										<h4 class="timeline-title"><?php echo $npveiculo; ?></h4>
+										<h4 class="timeline-title">
+											<a href="<?php echo 'http://www.multclipp.com.br/admin/cadastroVeiculo.aspx?id='.$npidveiculo; ?>" title="Editar veículo no Multclipp" target="_blank">
+												<?php echo $npveiculo; ?>
+											</a>
+										</h4>
 									</div>
 									<div class="timeline-body">
 										<?php
@@ -90,8 +94,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				$('.btnclient').show();
 			}
 		});
-
-		$('.pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
 
 		if ($('#back-to-top').length) {
 			var scrollTrigger = 1500, // px

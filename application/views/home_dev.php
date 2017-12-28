@@ -188,8 +188,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			}
 		});
 
-		$('.pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
-
 		if ($('#back-to-top').length) {
 			var scrollTrigger = 1000, // px
 			backToTop = function () {

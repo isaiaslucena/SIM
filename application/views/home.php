@@ -173,9 +173,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			}
 		};
 
-		// $('#allkeywordsquant').text("<?php echo array_sum($allkeywordquant) ;?>");
-		// $('#keywordsquant').text("<?php echo array_sum($keywordquant) ;?>");
-		$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
+		// $('#allkeywordsquant').text("<?php //echo array_sum($allkeywordquant) ;?>");
+		// $('#keywordsquant').text("<?php //echo array_sum($keywordquant) ;?>");
+		// $('#pageload').text("<?php //echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
 
 		if ($('#back-to-top').length) {
 			var scrollTrigger = 1000, // px

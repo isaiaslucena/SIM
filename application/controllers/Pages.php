@@ -496,6 +496,7 @@ class Pages extends CI_Controller {
 			$data['client_print_news'] = $client_nnews;
 
 			if ($jsonresp) {
+				header ('Access-Control-Allow-Origin: *');
 				header('Content-Type: application/json, charset=utf-8');
 				print json_encode($client_nnews);
 			} else {
@@ -1967,6 +1968,7 @@ class Pages extends CI_Controller {
 					break;
 				case 3:
 					$fcontenttype = "image/png";
+					break;
 				case 6:
 					$fcontenttype = "image/bmp";
 					break;

@@ -133,6 +133,7 @@
 											nimage[thumbn].src = imgsrc;
 										}
 									});
+									clearInterval(loadthumbs);
 								}
 							} else {
 								vdfilename = videotitle.text();

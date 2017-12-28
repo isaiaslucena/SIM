@@ -100,7 +100,7 @@
 				var selected_date = '<?php echo $selected_date; ?>';
 				var page = '<?php echo $spage; ?>';
 
-
+				starttime = new Date();
 				if (page == pagejoin) {
 					$.ajax({
 						url: page,
@@ -135,6 +135,9 @@
 							$('#loading_spinner').css('display', 'none');
 							$('#page-wrapper').append(data);
 							// $('#page-wrapper').css('display', 'block');
+							endtime = new Date();
+							timediff = ((endtime.getTime() - starttime.getTime()) / 1200).toFixed(3);
+							$('.pageload').text('<?php echo get_phrase('page_generated_in')?> '+timediff+'s');
 						},
 						error: function() {
 							swal("Erro!","Tente novamente atualizando a página!","error");

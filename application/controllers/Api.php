@@ -2,12 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Api extends CI_Controller {
-	public function index() {
-		header('Content-Type: application/json');
-		$message = "Não permitido!";
-		print json_encode($message, JSON_PRETTY_PRINT);
-	}
-
 	function get_client_ip() {
 		$ipaddress = '';
 		if (getenv('HTTP_CLIENT_IP')) {
@@ -26,6 +20,12 @@ class Api extends CI_Controller {
 			$ipaddress = 'UNKNOWN';
 		}
 		return $ipaddress;
+	}
+	
+	public function index() {
+		header('Content-Type: application/json');
+		$message = "Não permitido!";
+		print json_encode($message, JSON_PRETTY_PRINT);
 	}
 
 	public function veiculos() {
