@@ -502,8 +502,8 @@ class Pages extends CI_Controller {
 			} else {
 				header ('Access-Control-Allow-Origin: *');
 				$this->load->view('head');
-				$this->load->view('navbar',$data_navbar);
-				$this->load->view('print_home_news',$data);
+				$this->load->view('navbar', $data_navbar);
+				$this->load->view('print_home_news', $data);
 				$this->load->view('footer');
 			}
 		} else {

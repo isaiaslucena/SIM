@@ -31,6 +31,7 @@
 					$imgcount = 0;
 					$nnidnews = null;
 					foreach ($client_print_news->Noticias as $client_news) {
+						// var_dump($client_news);
 						$divcount++;
 						$icount++;
 						$nidvtype = $client_news->IdTVeiculo;
@@ -43,6 +44,7 @@
 						$nemp = $client_news->Empresa;
 						$nidnews = $client_news->Id;
 						$ntitle = $client_news->Titulo;
+						$nsubtitle = $client_news->Subtitulo;
 						$nnews = $client_news->Noticia;
 						$ndate = $client_news->Data;
 						$ntime = $client_news->Hora;
@@ -161,7 +163,12 @@
 									</div>
 
 									<div class="col-lg-8 pbodyt" id="<?php echo 'pbody'.$divcount;?>" style="max-height: 550px; overflow-y: auto">
-										<p class="lead"><?php echo $ntitle; ?></p>
+										<h3>
+											<?php echo $ntitle; 
+											if (!empty($nsubtitle)) { ?>
+												<br><small><?php echo $nsubtitle; ?></small>
+											<?php } ?>
+										</h3>
 										<p class="text-justify"><?php echo (string)$nnews;?></p>
 									</div>
 								</div>

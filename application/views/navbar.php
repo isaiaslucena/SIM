@@ -5,6 +5,9 @@
 	$id_group = $this->db->get_where('user', array('id_user' => $id_user))->row()->id_group;
 ?>
 <body>
+	<?php if ($id_group == 1) { ?>
+	<div id="wrapper">
+	<?php } ?>
 	<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

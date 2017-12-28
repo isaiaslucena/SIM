@@ -137,16 +137,10 @@
 							</div>
 
 							<div class="row textel">
-								<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>" style="height: 300px; overflow-y: auto">
-									<?php
-									if (!empty($keyword_selected)) {
-										$fulltext = (string)$stext;
-										//$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", " <strong class=\"str$divcount\" style=\"color: white; background-color: red; font-size: 110%;\">$keyword_selected</strong>", $fulltext);
-										$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
-										<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext"><?php echo (string)$fulltext;?></p>
-									<?php } else { ?>
-										<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext"><?php echo (string)$stext;?></p>
-									<?php } ?>
+								<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
+									<?php $fulltext = (string)$stext;
+									$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
+									<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto"><?php echo (string)$fulltext;?></p>
 								</div>
 							</div>
 						</div>
@@ -376,6 +370,7 @@
 				});
 				
 				$('.cbjoinfiles').click(function(event) {
+					cid = $(this).attr('data-idsource');
 					checked = event.target.checked
 					if (checked) {
 						console.log('Checked');
@@ -384,36 +379,33 @@
 					}
 				});
 				
+				$('.ptext').click(function() {
+					$(this).css('overflowY', 'auto');
+				})
+				
+				$('.ptext').hover(function() {
+					/*do nothing*/
+				}, function() {
+					$(this).css('overflowY', 'hidden');
+				});
+
 				$(document).ready(function() {
 					jQuery.fn.scrollTo = function(elem) {
 						$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 						return this;
 					}
 					
-					if($('.<?php echo 'str'.$divcount;?>').length != 0) {
-						$('.pbody').scrollTo('.kwfound');
-					}
-					
-					$('.pbody').css('overflowY', 'hidden');
-					
-					$('.pbody').click(function() {
-						$(this).css('overflowY', 'auto');
-					})
-					
-					$('.pbody').hover(function() {
-						/*do nothing*/
-					}, function() {
-						$(this).css('overflowY', 'hidden');
-					});
-					
 					ptexts = $('.ptext.text-justify');
 					$.each(ptexts, function(index, val) {
 						cpid = $(val).attr('id');
-						
-						qtkwf = $('#'+cpid+'> .kwfound').length
+						keywfound = '#'+cpid+' > .kwfound';
+						qtkwf = $(keywfound).length
 						// console.log(qtkwf);
 						$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+						$(val).scrollTo(keywfound);
 					});
+					
+					$('.ptext').css('overflowY', 'hidden');
 				});
 			</script>
 		</div>
