@@ -985,7 +985,6 @@ class Pages_model extends CI_Model {
 
 			$docinfo = $this->radio_text_byid_solr($iddoc);
 			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
-			// var_dump($docinfo);
 			
 			$dfilename = "jdownload_".strtotime("now").".mp3";
 			file_put_contents($temppath.$dfilename, fopen($docinfo->response->docs[0]->mediaurl_s, 'r'));
