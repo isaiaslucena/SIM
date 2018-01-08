@@ -1,21 +1,39 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); 
 
-$timezone = new DateTimeZone('UTC');
-$sd = new Datetime($knewindoc->response->docs[0]->starttime_dt);
-$ed = new Datetime($knewindoc->response->docs[0]->endtime_dt);
-$newtimezone = new DateTimeZone('America/Sao_Paulo');
-$sd->setTimezone($newtimezone);
-$ed->setTimezone($newtimezone);
-$sstartdate = $sd->format('d/m/Y H:i:s');
-$senddate = $ed->format('d/m/Y H:i:s');
+if (isset($knewindoc)) {
+	$timezone = new DateTimeZone('UTC');
+	$sd = new Datetime($knewindoc->response->docs[0]->starttime_dt);
+	$ed = new Datetime($knewindoc->response->docs[0]->endtime_dt);
+	$newtimezone = new DateTimeZone('America/Sao_Paulo');
+	$sd->setTimezone($newtimezone);
+	$ed->setTimezone($newtimezone);
+	$sstartdate = $sd->format('d/m/Y H:i:s');
+	$senddate = $ed->format('d/m/Y H:i:s');
 
-$idknewin = $knewindoc->response->docs[0]->id_i;
-$rstartdate = $knewindoc->response->docs[0]->starttime_dt;
-$renddate = $knewindoc->response->docs[0]->endtime_dt;
-$ssource = $knewindoc->response->docs[0]->source_s;
-$mediaurl = $knewindoc->response->docs[0]->mediaurl_s;
-$content = $knewindoc->response->docs[0]->content_t[0];
+	$idknewin = $knewindoc->response->docs[0]->id_i;
+	$rstartdate = $knewindoc->response->docs[0]->starttime_dt;
+	$renddate = $knewindoc->response->docs[0]->endtime_dt;
+	$ssource = $knewindoc->response->docs[0]->source_s;
+	$mediaurl = $knewindoc->response->docs[0]->mediaurl_s;
+	$content = $knewindoc->response->docs[0]->content_t[0];
+} else {
+	$timezone = new DateTimeZone('UTC');
+	$sd = new Datetime($starttime_dt);
+	$ed = new Datetime($endtime_dt);
+	$newtimezone = new DateTimeZone('America/Sao_Paulo');
+	$sd->setTimezone($newtimezone);
+	$ed->setTimezone($newtimezone);
+	$sstartdate = $sd->format('d/m/Y H:i:s');
+	$senddate = $ed->format('d/m/Y H:i:s');
+
+	//$idknewin = $id_i;
+	$rstartdate = $starttime_dt;
+	$renddate = $endtime_dt;
+	$ssource = $source_s;
+	$mediaurl = $mediaurl_s;
+	$content = $content_t;
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,14 +85,6 @@ $content = $knewindoc->response->docs[0]->content_t[0];
 			</div>
 		
 			<div class="row center-block text-center">
-				<!-- <div class="col-lg-1"> -->
-					<!-- <p class="playback-rate"> -->
-						<!-- <label for="playback-rate">Velocidade:</label> -->
-						<!-- <input id="playback-rate" type="range" min="0.5" max="2.0" value="1.0" step="0.1"> -->
-						<!-- <output>1&times;</output> -->
-					<!-- </p> -->
-				<!-- </div> -->
-				
 				<div class="col-lg-8">
 					<audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls></audio>
 				</div>
@@ -112,7 +122,7 @@ $content = $knewindoc->response->docs[0]->content_t[0];
 			
 			<div class="row">
 				<div class="col-lg-12">
-					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 450px; max-width: 98%"> <?php echo $content; ?></p>
+					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px;"> <?php echo $content; ?></p>
 				</div>
 			</div>
 			

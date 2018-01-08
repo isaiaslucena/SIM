@@ -134,7 +134,6 @@
 											<div class="row">
 												<?php 
 												asort($client_news->Imagens);
-												// var_dump($client_news->Imagens);
 												$newidimg = null;
 												foreach ($client_news->Imagens as $img) {
 													if ($newidimg != $img->IdImagem) {
@@ -165,7 +164,7 @@
 									<div class="col-lg-8 pbodyt" id="<?php echo 'pbody'.$divcount;?>" style="max-height: 550px; overflow-y: auto">
 										<h3>
 											<?php echo $ntitle; 
-											if (!empty($nsubtitle)) { ?>
+											if (!empty($nsubtitle) or $nsubtitle != " " or  !is_null($nsubtitle)) { ?>
 												<br><small><?php echo $nsubtitle; ?></small>
 											<?php } ?>
 										</h3>
@@ -208,8 +207,8 @@
 								<div id="divbtnmultclipp" class="row" style="padding-bottom: 20px;">
 									<div class="col-lg-12">
 										<div class="btn-toolbar">
-											<a id="btnmultclipp" href="#" type="button" class="btn btn-default " target="_blank">Editar no Multclipp</a>
-											<a id="btnfacsimile" href="#" type="button" class="btn btn-default " target="_blank">Marcar Fac-Simile</a>
+											<a id="btnmultclipp" href="#" type="button" class="btn btn-default" target="_blank">Editar Multclipp</a>
+											<a id="btnfacsimile" href="#" type="button" class="btn btn-default" target="_blank">Marcar fac-simile</a>
 										</div>
 									</div>
 								</div>
@@ -510,8 +509,6 @@
 				.always(function(adata) {
 					console.log("complete");
 				});
-						
-
 			});
 
 			if ($('#back-to-top').length) {

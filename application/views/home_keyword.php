@@ -283,12 +283,14 @@
 						} else {
 							$('#ff_ids_files_xml').val(previdsfilesxml + ',' + idfilexml);
 						}
+						
 						if (previdsfilesmp3 === '') {
 							$('#ff_ids_files_mp3').val(idfilemp3);
 							firstidmp3 = idfilemp3;
 						} else {
 							$('#ff_ids_files_mp3').val(previdsfilesmp3 + ',' + idfilemp3);
 						}
+						
 						if (previdstexts === '') {
 							$('#ff_ids_texts').val(idtext);
 							firstidtext = idtext;
@@ -310,6 +312,7 @@
 							removedidxml = previdsfilesxml.replace(','+idfilexml,'');
 							$('#ff_ids_files_xml').val(removedidxml);
 						}
+						
 						if (idfilemp3 == firstidmp3) {
 							removedidmp3 = previdsfilesmp3.replace(idfilemp3+',','');
 							$('#ff_ids_files_mp3').val(removedidmp3);
@@ -317,6 +320,7 @@
 							removedidmp3 = previdsfilesmp3.replace(','+idfilemp3,'');
 							$('#ff_ids_files_mp3').val(removedidmp3);
 						}
+						
 						if (idtext == firstidtext) {
 							removedidtext = previdstexts.replace(idtext+',','');
 							$('#ff_ids_texts').val(removedidtext);
@@ -324,6 +328,7 @@
 							removedidtext = previdstexts.replace(','+idtext,'');
 							$('#ff_ids_texts').val(removedidtext);
 						}
+						
 						aquant = $(".list-group-item").length;
 						if (aquant === 0) {
 							$('#joindiv').removeClass('show');

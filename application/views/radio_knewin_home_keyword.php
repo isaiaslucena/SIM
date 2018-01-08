@@ -52,9 +52,10 @@
 			font-size: 110%;
 		}
 	</style>
+
 	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
 
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
+	<div id="page-wrapper" style="min-height: 400px;">
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">
@@ -91,7 +92,7 @@
 					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 						<div class="panel-heading text-center">
 							<label class="pull-left" style="font-weight: normal">
-								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"> <?php echo get_phrase('join');?>
+								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
 							</label>
 							
 							<label class="labeltitle">
@@ -114,7 +115,10 @@
 									<?php echo get_phrase('next'); ?>
 								</button>
 
-								<button type="button" class="btn btn-danger btn-xs" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>"><?php echo get_phrase('discard');?></button>
+								<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>">
+									<i style="display: none" class="fa fa-refresh fa-spin"></i>
+									<?php echo get_phrase('discard');?>
+								</button>
 
 								<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
 								<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
@@ -129,6 +133,7 @@
 								</form>
 							</div>
 						</div>
+
 						<div class="panel-body">
 							<div class="row audioel">
 								<div class="col-lg-12">
@@ -138,9 +143,12 @@
 
 							<div class="row textel">
 								<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
-									<?php $fulltext = (string)$stext;
-									$fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
-									<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto"><?php echo (string)$fulltext;?></p>
+									<?php //$fulltext = (string)$stext;
+									// $fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
+									<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
+										<?php //echo (string)$fulltext;
+										echo (string)$stext; ?>
+									</p>
 								</div>
 							</div>
 						</div>
@@ -148,10 +156,24 @@
 				<?php } ?>
 			</div>
 
+			<div class="well well-sm" id="joindiv">
+				<span id="wsource" class="center-block text-center"></span>
+				<div class="list-group" style="max-height:  150px ; overflow: auto;">
+					<small id="fileslist"></small>
+				</div>
+				<button id="joinbtn" class="btn btn-default btn-block btn-sm disabled" disabled><?php echo get_phrase('join')?></button>
+				<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_knewin');?>" target="_blank" method="POST">
+					<input type="hidden" id="jids_doc" name="ids_doc">
+					<input type="hidden" id="jid_client" name="id_client">
+					<input type="hidden" id="jid_keyword" name="id_keyword">
+				</form>
+			<div>
+
 			<script type="text/javascript">
 				var newdivid = 0;
 				var filestojoin = [];
 				var joinfiles = false;
+				var cksource = 0;
 
 				$('audio').bind('contextmenu', function() { return false; });
 
@@ -185,7 +207,7 @@
 					startdate = $(this).attr('data-startdate');
 					
 					$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
-						console.log(data);
+						// console.log(data);
 						loadp.children('i').css('display', 'none');
 						numfound = data.response.numFound;
 						if (numfound == 0) {
@@ -242,11 +264,11 @@
 							// newdividn = 'div' + newdivid;
 
 							divclone = $('#'+iddiv).clone(true);
-							console.log(divclone);
+							// console.log(divclone);
 							
 							divclone.removeClass('panel-default');
 							divclone.addClass('panel-info');
-							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
 							divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
 							divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
 							divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
@@ -263,6 +285,10 @@
 							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
 							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
 							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
 							divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
 							divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
 							divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
@@ -282,7 +308,7 @@
 					startdate = $(this).attr('data-enddate');
 					
 					$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
-						console.log(data);
+						// console.log(data);
 						loadp.children('i').css('display', 'none');
 						numfound = data.response.numFound;
 						if (numfound == 0) {
@@ -339,11 +365,11 @@
 							// newdividn = 'div' + newdivid;
 
 							divclone = $('#'+iddiv).clone(true);
-							console.log(divclone);
+							// console.log(divclone);
 							
 							divclone.removeClass('panel-default');
 							divclone.addClass('panel-info');
-							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-television fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+							divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
 							divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
 							divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
 							divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
@@ -360,6 +386,10 @@
 							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
 							divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
 							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+							divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
 							divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
 							divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
 							divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
@@ -370,13 +400,102 @@
 				});
 				
 				$('.cbjoinfiles').click(function(event) {
-					cid = $(this).attr('data-idsource');
-					checked = event.target.checked
+					ciddoc = $(this).attr('data-iddoc');
+					cidsource = $(this).attr('data-idsource');
+					csource = $(this).attr('data-source');
+					cstartdate = $(this).attr('data-startdate');
+					cenddate = $(this).attr('data-enddate');
+					cidclient = $(this).attr('data-idclient');
+					cidkeyword = $(this).attr('data-idkeyword');
+
+					checked = event.target.checked;
 					if (checked) {
-						console.log('Checked');
+						if (cidsource == cksource || cksource == 0) {
+							$('#wsource').text(csource);
+							$('#fileslist').append('<a id="acb'+ciddoc+'" class="list-group-item">' + cstartdate + ' - '+ cenddate + '</a>');
+							filestojoin.push(ciddoc);
+							$('#joindiv').addClass('show');
+							cksource = cidsource;
+							if (filestojoin.length >= 2) {
+								$('#joinbtn').attr({
+									'data-idclient': cidclient,
+									'data-idkeyword': cidkeyword
+								});
+								$('#joinbtn').removeClass('disabled');
+								$('#joinbtn').removeAttr('disabled');
+								joinfiles = true;
+							}
+						} else {
+							swal("Atenção!", "A rádios devem ser iguais!", "error");
+							$(this).prop("checked", false);
+							$('#acb'+ciddoc).detach();
+							cksource = 0;
+						}
 					} else {
-						console.log('Unchecked');
+						fileindex = filestojoin.indexOf(ciddoc);
+						filestojoin.splice(fileindex,1);
+						$('#acb'+ciddoc).detach();
+						if (filestojoin.length < 2) {
+							$('#joinbtn').addClass('disabled');
+							$('#joinbtn').attr('disabled', true);
+							joinfiles = false;
+						} else if (filestojoin.length < 1) {
+							$('#joindiv').removeClass('show');
+						}
 					}
+				});
+				
+				$('#joinbtn').click(function(event) {
+					jbtn = $(this);
+					jidclient = jbtn.attr('data-idclient');
+					jidkeyword = jbtn.attr('data-idkeyword');
+					
+					$('#jids_doc').val(filestojoin);
+					$('#jid_client').val(jidclient);
+					$('#jid_keyword').val(jidkeyword);
+					
+					swal({
+						title: "Carregando...",
+						// text: "Aguarde...",
+						imageUrl: "<?php echo base_url('assets/imgs/loading.gif'); ?>",
+						showCancelButton: false,
+						showConfirmButton: false
+					});
+					
+					if (joinfiles) {
+						document.getElementById('joinform').submit();
+						$('#joindiv').removeClass('show');
+						$('#joinbtn').addClass('disabled');
+						$('#joinbtn').attr('disabled', true);
+						$('#fileslist').empty();
+						$('input[type="checkbox"]').prop("checked", false);
+						$('.panel-info').detach();
+						filestojoin = [];
+						joinfiles = false;
+						cksource = 0;
+						swal.close();
+					}
+				});
+				
+				$('.discarddoc').click(function(event) {
+					discardbtn = $(this);
+					discardbtn.children('i').css('display', 'inline-block');
+					
+					iddoc = discardbtn.attr('data-iddoc');
+					iddiv = discardbtn.attr('data-iddiv');
+					idkeyword = discardbtn.attr('data-idkeyword');
+					idclient = discardbtn.attr('data-idclient');
+					
+					$.post('<?php echo base_url("pages/discard_text_radio_knewin")?>',
+						{
+							iddoc: 'value1',
+							idkeyword: 'value',
+							idclient: 'value'
+						},
+						function(data, textStatus, xhr) {
+							console.log(data);
+						}
+					);
 				});
 				
 				$('.ptext').click(function() {
@@ -397,10 +516,21 @@
 					
 					ptexts = $('.ptext.text-justify');
 					$.each(ptexts, function(index, val) {
+						// console.log(event);
 						cpid = $(val).attr('id');
+						scpid = '#'+cpid;
 						keywfound = '#'+cpid+' > .kwfound';
-						qtkwf = $(keywfound).length
-						// console.log(qtkwf);
+						keyword = '<?php echo $keyword_selected; ?>';
+						// idkeyword = event.target.dataset.idkeyword;
+						// idpbodyt = event.target.dataset.pbodyt;
+						
+						pbodytext = $(val).text();
+						rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+						pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+						$(scpid).html(null);
+						$(scpid).html(pbodynewtext);
+						
+						qtkwf = $(keywfound).length;
 						$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
 						$(val).scrollTo(keywfound);
 					});

@@ -271,6 +271,7 @@
 				})
 				.fail(function(err){
 					console.log(err.responseText);
+					swal("Atenção!", "Alguma coisa deu errado. Por favor, tente novamente.!", "error");
 				});
 			});
 		</script>

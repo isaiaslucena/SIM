@@ -850,6 +850,28 @@ class Pages_model extends CI_Model {
 		$this->db->insert('discard_keyword', $data_insert_discard);
 	}
 
+	public function discard_doc_radio_knewin($data_discard) {
+		$data_insert_discard = array(
+			'id_doc' => $data_discard['id_doc'],
+			'id_client' => $data_discard['id_client'],
+			'id_keyword' => $data_discard['id_keyword'],
+			'timestamp' => strtotime("now"),
+			'id_user' => $data_discard['id_user']
+		);
+		$this->db->insert('discard_keyword_radio_knewin', $data_insert_discard);
+	}
+
+	public function discard_doc_tv_knewin($data_discard) {
+		$data_insert_discard = array(
+			'id_doc' => $data_discard['id_doc'],
+			'id_client' => $data_discard['id_client'],
+			'id_keyword' => $data_discard['id_keyword'],
+			'timestamp' => strtotime("now"),
+			'id_user' => $data_discard['id_user']
+		);
+		$this->db->insert('discard_keyword_tv_knewin', $data_insert_discard);
+	}
+
 	public function client_vhtype($data) {
 		if ($data['vhtype'] == "radio") {
 			$this->db->set('radio',$data['checked']);
@@ -899,11 +921,6 @@ class Pages_model extends CI_Model {
 		$cropfilename = "download_".strtotime("now")."_crop.mp3";
 		file_put_contents($temppath.$dfilename, fopen($urlmp3, 'r'));
 
-		// $filepath = "/app/application/repository/".mb_substr($mp3pathfilename, 47);
-		// $filename = mb_substr($mp3pathfilename, 62);
-		// copy($filepath, $temppath."/".$filename.".mp3");
-		// $filename = mb_substr($mp3pathfilename, 62).".mp3";
-
 		exec($soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration);
 		// echo $soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration;
 
@@ -949,6 +966,44 @@ class Pages_model extends CI_Model {
 		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
 		$finaltempurl = $temppathurl.$joinfile;
 		return $finaltempurl;
+	}
+	
+	public function join_radio_knewin($idsdocs) {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+
+		$filesline = null;
+		$datadoc['content_t'] = null;
+		$countf = 0;
+		$countfarr = count($idsdocs);
+		$docinfo = $this->radio_text_byid_solr($idsdocs[0]);
+		$datadoc['source_s'] = $docinfo->response->docs[0]->source_s;
+		$datadoc['starttime_dt'] = $docinfo->response->docs[0]->starttime_dt;
+		foreach ($idsdocs as $iddoc) {
+			$countf++;
+
+			$docinfo = $this->radio_text_byid_solr($iddoc);
+			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
+			// var_dump($docinfo);
+			
+			$dfilename = "jdownload_".strtotime("now").".mp3";
+			file_put_contents($temppath.$dfilename, fopen($docinfo->response->docs[0]->mediaurl_s, 'r'));
+
+			if ($countf == $countfarr) {
+				$filesline .= $temppath.$dfilename;
+				$datadoc['endtime_dt'] = $docinfo->response->docs[0]->endtime_dt;
+			} else {
+				$filesline .= $temppath.$dfilename.' ';
+			}
+		}
+		
+		$joinfile = 'join_'.date('d-m-Y_His', strtotime("now")).'.mp3';
+		
+		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
+		$datadoc['finalurl'] = $temppathurl.$joinfile;
+
+		return $datadoc;
 	}
 
 	public function search_result($vtype, $datasearch, $start) {

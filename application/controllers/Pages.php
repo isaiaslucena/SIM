@@ -747,6 +747,30 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function discard_doc_radio_knewin() {
+		if ($this->session->has_userdata('logged_in')) {
+			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
+			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
+			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
+			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
+			$this->pages_model->discard_text_radio_knewin($data_discard);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function discard_doc_tv_knewin() {
+		if ($this->session->has_userdata('logged_in')) {
+			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
+			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
+			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
+			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
+			$this->pages_model->discard_text_tv_knewin($data_discard);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
 	public function client_vhtype() {
 		if ($this->session->has_userdata('logged_in')) {
 			$data_cvhtype['id_client'] = $this->input->post('id_client', TRUE);
@@ -958,6 +982,45 @@ class Pages extends CI_Controller {
 			$data['page'] = 'pages/join';
 			// $this->load->view('head');
 			$this->load->view('loading',$data);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function join_radio_knewin() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'join_radio_knewin',
+				'last_page' => base_url('pages/join_radio_knewin')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'join_radio_knewin';
+
+			$ids_doc = explode(',', $this->input->post('ids_doc'));
+			$data['id_source'] = $this->input->post('id_source');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$datadoc = $this->pages_model->join_radio_knewin($ids_doc);
+			$data['source_s'] = $datadoc['source_s'];
+			$data['content_t'] = $datadoc['content_t'];
+			$data['mediaurl_s'] = $datadoc['finalurl'];
+			$data['starttime_dt'] = $datadoc['starttime_dt'];
+			$data['endtime_dt'] = $datadoc['endtime_dt'];
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('edit_knewin',$data);
 		} else {
 			redirect('login','refresh');
 		}
