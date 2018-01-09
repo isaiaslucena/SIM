@@ -423,7 +423,13 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
-	public function texts_keyword_byid_solr($ids_text,$keyword,$startdate,$enddate){
+	public function discarded_docs_knewin_radio($data_discarded) {
+		$sqlquery =	'SELECT id_doc FROM discard_keyword_radio_knewin
+						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
+		return $this->db->query($sqlquery)->result_array();
+	}
+
+	public function texts_keyword_byid_solr($ids_text, $keyword, $startdate, $enddate) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -477,7 +483,59 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function text_keyword_solr($startdate,$enddate,$keyword){
+	public function docs_byid_radio_knewin($ids_doc, $keyword, $startdate, $enddate) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if (!is_null($idsline)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idsline.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function text_keyword_solr($startdate, $enddate, $keyword) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -505,7 +563,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function tv_texts_keyword_byid_solr($ids_text,$keyword,$startdate,$enddate){
+	public function tv_texts_keyword_byid_solr($ids_text, $keyword, $startdate, $enddate) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -559,7 +617,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function tv_text_keyword_solr_info4($startdate,$enddate,$keyword){
+	public function tv_text_keyword_solr_info4($startdate, $enddate, $keyword) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -590,7 +648,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 	
-	public function tv_text_keyword_solr($startdate, $enddate, $keyword){
+	public function tv_text_keyword_solr($startdate, $enddate, $keyword) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';

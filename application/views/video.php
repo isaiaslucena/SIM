@@ -618,7 +618,7 @@
 														'<input id="chbx'+lastvplaylistidn+'" type="checkbox">'+
 														'<label for="chbx'+lastvplaylistidn+'">Juntar</label>'+
 													'</div>'+
-													'<span id="vspan'+lastvplaylistidn+'"  data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
+													'<span id="vspan'+lastvplaylistidn+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+lastvarraytm+'</span>'+
 												'</li>';
 										nextvideo.append(html);
 									}
@@ -655,7 +655,7 @@
 													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 													'<label for="chbx'+index+'">Juntar</label>'+
 												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'">'+file+'</span>'+
+												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
 								} else {
@@ -664,7 +664,7 @@
 													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 													'<label for="chbx'+index+'">Juntar</label>'+
 												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'">'+file+'</span>'+
+												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
 								}	
@@ -815,7 +815,7 @@
 													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 													'<label for="chbx'+index+'">Juntar</label>'+
 												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'">'+file+'</span>'+
+												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
 								} else {
@@ -824,7 +824,7 @@
 													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 													'<label for="chbx'+index+'">Juntar</label>'+
 												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'">'+file+'</span>'+
+												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
 								}	

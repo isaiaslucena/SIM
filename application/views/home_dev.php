@@ -67,8 +67,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
 													$ids_text = $this->pages_model->discarded_texts($data_discard);
-													$keyword_found = $this->pages_model->texts_keyword_byid_solr($ids_text,$keyword['keyword'],$startdate,$enddate);
-													$allkeyword_found = $this->pages_model->text_keyword_solr($startdate,$enddate,$keyword['keyword']);
+													$keyword_found = $this->pages_model->texts_keyword_byid_solr($ids_text, $keyword['keyword'], $startdate, $enddate);
+													$allkeyword_found = $this->pages_model->text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 													if (isset($keyword_found->response->docs)) {
 														$keyword_foundc = count($keyword_found->response->docs);
 													} else {

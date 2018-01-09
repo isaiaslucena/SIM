@@ -35,6 +35,9 @@
 													$data_discard['enddate'] = $enddate;
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
+													$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+													$keyword_foundc = count($keyword_found->response->docs);
 													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate,$enddate,$keyword['keyword']);
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
 													$ids_file_xml = null;
@@ -53,6 +56,7 @@
 															<?php } ?>
 														</form>
 														<?php
+														array_push($keywordquant, $keyword_foundc);
 														array_push($allkeywordquant, $allkeyword_foundc);
 														$client_keywords++;
 													}
@@ -60,6 +64,7 @@
 												<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($allkeywordquant);?>" style="display: none;">
 												<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
 												<script type="text/javascript">
+													$('#ikeywordquant').val("<?php echo array_sum($keywordquant) ;?>");
 													$('#iallkeywordquant').val("<?php echo array_sum($allkeywordquant) ;?>");
 												</script>
 										</p>

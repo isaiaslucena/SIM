@@ -26,6 +26,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
+						<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
+						<span class="pull-right" id="keywordsquant"></span>
+						<span class="pull-right"><?php echo  get_phrase('with_discard').':'?>&nbsp;</span>
 					</div>
 					<div id="timelinebody" class="panel-body">
 						<ul class="timeline" id="client-ul">
@@ -60,11 +63,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												$data_discard['enddate'] = $enddate;
 												$data_discard['id_client'] = $client['id_client'];
 												$data_discard['id_keyword'] = $keyword['id_keyword'];
+												$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
+												$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+												$keyword_foundc = count($keyword_found->response->docs);
 												$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 												$allkeyword_foundc = count($allkeyword_found->response->docs);
 												$ids_file_xml = null;
 												$ic = null;
-												if ($allkeyword_foundc != 0) { ?>
+												if ($keyword_foundc != 0) { ?>
 													<form style="all: unset;" action="<?php echo base_url('pages/radio_knewin_home_keyword');?>" method="post">
 														<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 														<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
@@ -72,21 +78,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														<input type="hidden" name="enddate" value="<?php echo $enddate;?>">
 														<?php if ($keyword['keyword_priority'] == 1) { ?>
 															<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?>
-																<span class="badge"><?php echo $allkeyword_foundc;?> </span>
+																<span class="badge"><?php echo $keyword_foundc;?> </span>
 															</button>
 														<?php } else { ?>
 															<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?>
-																<span class="badge"><?php echo $allkeyword_foundc;?> </span>
+																<span class="badge"><?php echo $keyword_foundc;?> </span>
 															</button>
 														<?php } ?>
 													</form>
 
 													<?php
 													array_push($allkeywordquant, $allkeyword_foundc);
+													array_push($keywordquant, $keyword_foundc);
 													$client_keywords++;
 												}
 											} ?>
-											<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
+											<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($allkeywordquant);?>" style="display: none;">
+											<input type="text" class="keyword_foundc" name="keyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
 											<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
 										</p>
 									</div>
@@ -96,6 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							}
 							?>
 						</ul>
+						<input type="text" id="ikeywordquant" style="display: none;">
 						<input type="text" id="iallkeywordquant" style="display: none;">
 						<input type="text" name="loadcf" id="loadcf" value="2" style="display: none;">
 						<span class="text-muted center-block text-center" id="loadmore" style="display: none;">
@@ -178,13 +187,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									$('#client-ul').append(data);
 									hidenokeyword();
 									hidegentime();
-									// upkeyw = parseInt($('#keywordsquant').text());
+									upkeyw = parseInt($('#keywordsquant').text());
 									upallkeyw = parseInt($('#allkeywordsquant').text());
-									// dowkeyw = parseInt($('#ikeywordquant').val());
+									dowkeyw = parseInt($('#ikeywordquant').val());
 									downallkeyw = parseInt($('#iallkeywordquant').val());
-									// upnkeyw = (upkeyw + dowkeyw);
+									upnkeyw = (upkeyw + dowkeyw);
 									upnallkeyw = (upallkeyw + downallkeyw);
-									// $('#keywordsquant').text(upnkeyw);
+									$('#keywordsquant').text(upnkeyw);
 									$('#allkeywordsquant').text(upnallkeyw);
 								},
 								error: function() {
@@ -208,13 +217,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$('#client-ul').append(data);
 						hidenokeyword();
 						hidegentime();
-						// upkeyw = parseInt($('#keywordsquant').text());
+						upkeyw = parseInt($('#keywordsquant').text());
 						upallkeyw = parseInt($('#allkeywordsquant').text());
-						// dowkeyw = parseInt($('#ikeywordquant').val());
+						dowkeyw = parseInt($('#ikeywordquant').val());
 						downallkeyw = parseInt($('#iallkeywordquant').val());
-						// upnkeyw = (upkeyw + dowkeyw);
+						upnkeyw = (upkeyw + dowkeyw);
 						upnallkeyw = (upallkeyw + downallkeyw);
-						// $('#keywordsquant').text(upnkeyw);
+						$('#keywordsquant').text(upnkeyw);
 						$('#allkeywordsquant').text(upnallkeyw);
 						if (upnallkeyw > 0) {
 							$('#btnloadmore').fadeOut('fast');

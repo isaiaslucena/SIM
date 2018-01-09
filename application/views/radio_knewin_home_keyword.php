@@ -1,39 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <body>
 	<style type="text/css">
-		.slider {
-			max-height: 400px
-			-webkit-transition-property: all;
-			-webkit-transition-duration: .5s;
-			-webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-moz-transition-property: all;
-			-moz-transition-duration: .5s;
-			-moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-ms-transition-property: all;
-			-ms-transition-duration: .5s;
-			-ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			transition-property: all;
-			transition-duration: .5s;
-			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			height: 400px;
-		}
-		.slider.closed {
-			display: none;
-		}
-		.affix {
-			top: 0;
-			width: 100%;
-		}
-		.affix + .container-fluid {
-			padding-top: 70px;
-		}
-
 		#joindiv {
 			position: fixed;
 			bottom: 0px;
 			left: 260px;
 			z-index: 9999;
-			cursor: pointer;
+			/*cursor: pointer;*/
 			/* transition: opacity 0.2s ease-out; */
 			/* opacity: 0; */
 			display: none;
@@ -89,7 +62,7 @@
 					
 					$stext = $found->content_t[0];
 					$ssource = $found->source_s; ?>
-					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
+					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
 						<div class="panel-heading text-center">
 							<label class="pull-left" style="font-weight: normal">
 								<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
@@ -115,7 +88,7 @@
 									<?php echo get_phrase('next'); ?>
 								</button>
 
-								<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>">
+								<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>" data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
 									<i style="display: none" class="fa fa-refresh fa-spin"></i>
 									<?php echo get_phrase('discard');?>
 								</button>
@@ -174,6 +147,7 @@
 				var filestojoin = [];
 				var joinfiles = false;
 				var cksource = 0;
+				var totalpanels, totalpanelsd = 0;
 
 				$('audio').bind('contextmenu', function() { return false; });
 
@@ -485,15 +459,27 @@
 					iddiv = discardbtn.attr('data-iddiv');
 					idkeyword = discardbtn.attr('data-idkeyword');
 					idclient = discardbtn.attr('data-idclient');
+					iduser = '<?php echo $this->session->userdata("id_user");?>';
 					
-					$.post('<?php echo base_url("pages/discard_text_radio_knewin")?>',
+					$.post('<?php echo base_url("pages/discard_doc_radio_knewin")?>',
 						{
-							iddoc: 'value1',
-							idkeyword: 'value',
-							idclient: 'value'
+							'iddoc': iddoc,
+							'idkeyword': idkeyword,
+							'idclient': idclient,
+							'iduser': iduser
 						},
 						function(data, textStatus, xhr) {
-							console.log(data);
+							// console.log(data);
+							discardbtn.children('i').css('display', 'none');
+							$('#'+iddiv).removeClass('panel-default');
+							$('#'+iddiv).addClass('panel-danger');
+							totalpanelsd += 1;
+							// console.log('total descarted panels = ' + $('div.panel.panel-danger.collapse').length);
+							
+							if (totalpanelsd == totalpanels) {
+								console.log('no more panels!');
+								window.location = '<?php echo base_url("pages/index_radio_knewin")?>';
+							}
 						}
 					);
 				});
@@ -509,6 +495,8 @@
 				});
 
 				$(document).ready(function() {
+					totalpanels = $('div.panel.panel-default.collapse.in').length;
+
 					jQuery.fn.scrollTo = function(elem) {
 						$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 						return this;
