@@ -191,6 +191,35 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function edit_audio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			
+			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
+			$data['changepass_id'] = $id_user;
+			$data_navbar['selected_page'] = 'edit_audio';
+
+			if ($id_group == 1 or $id_group == 4) {
+				$sessiondata = array(
+					'view' => 'edit_audio',
+					'last_page' => base_url('pages/index')
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['page'] = 'pages/edit_audio';
+				$data['selected_date'] = 'today';
+				$this->load->view('head');
+				$this->load->view('navbar',$data_navbar);
+				$this->load->view('edit_audio', $data);
+				$this->load->view('footer', $data_navbar);
+			} else {
+				redirect(base_url(),'refresh');
+			}
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
 	public function calendar_index($vtype, $selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
@@ -583,7 +612,14 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
-			$data['keyword_texts'] = $this->pages_model->radio_text_keyword_solr($data['startdate'], $data['enddate'], $data['keyword_selected']);
+			
+			$data_discard['startdate'] = $data['startdate'];
+			$data_discard['enddate'] = $data['enddate'];
+			$data_discard['id_client'] = $data['id_client'];
+			$data_discard['id_keyword'] = $data['id_keyword'];
+			$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
 			

@@ -116,11 +116,8 @@
 
 							<div class="row textel">
 								<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
-									<?php //$fulltext = (string)$stext;
-									// $fulltext = preg_replace("/\w*?".preg_quote($keyword_selected)."\w*/i", ' <strong class="kwfound">'.$keyword_selected.'</strong>', $fulltext); ?>
 									<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
-										<?php //echo (string)$fulltext;
-										echo (string)$stext; ?>
+										<?php echo (string)$stext; ?>
 									</p>
 								</div>
 							</div>
@@ -152,7 +149,7 @@
 				$('audio').bind('contextmenu', function() { return false; });
 
 				if ($('#back-to-top').length) {
-					var scrollTrigger = 1000, // px
+					var scrollTrigger = 1000,
 					backToTop = function() {
 						var scrollTop = $(window).scrollTop();
 						if (scrollTop > scrollTrigger) {
