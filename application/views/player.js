@@ -454,7 +454,7 @@
 						// videoel[0].currentTime+=1;
 						// seektime = videoel[0].currentTime+1;
 						seektime = videoel[0].currentTime+0.04;
-						// videoel[0].currentTime = seektime;
+						videoel[0].currentTime = seektime;
 						// videoel.css('display', 'none');
 						// videoelth.css('display', 'block');
 						// $("#ipause").addClass('hidden');

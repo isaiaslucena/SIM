@@ -111,14 +111,14 @@
 						<li>
 							<a href="<?php echo base_url('pages/edit_audio'); ?>" <?php if ($selected_page == "edit_audio") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar áudio</a>
 						</li>
-						<li>
-							<a href="<?php echo base_url('pages/edit_video'); ?>" <?php if ($selected_page == "edit_video") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar vídeo</a>
-						</li>
+						<!-- <li> -->
+							<!-- <a href="<?php echo base_url('pages/edit_video'); ?>" <?php if ($selected_page == "edit_video") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar vídeo</a> -->
+						<!-- </li> -->
 					<?php }
 					if ($id_group == 1 or $id_group == 4) { ?>
-						<li>
-							<a href="<?php echo base_url('pages/index_web'); ?>" <?php if ($selected_page == "home_web") {echo 'class="active"';} ?>><i class="fa fa-globe fa-fw"></i> <?php echo get_phrase('online');?></a>
-						</li>
+						<!-- <li> -->
+							<!-- <a href="<?php echo base_url('pages/index_web'); ?>" <?php if ($selected_page == "home_web") {echo 'class="active"';} ?>><i class="fa fa-globe fa-fw"></i> <?php echo get_phrase('online');?></a> -->
+						<!-- </li> -->
 						<li>
 							<a href="<?php echo base_url('pages/index_print'); ?>" <?php if ($selected_page == "home_print") {echo 'class="active"';} ?>><i class="fa fa-file-text-o fa-fw"></i> <?php echo get_phrase('print');?></a>
 						</li>

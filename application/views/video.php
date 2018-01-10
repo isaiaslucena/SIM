@@ -490,9 +490,6 @@
 						case "TV-BRASIL":
 							chlname = "TV Brasil";
 							break;
-						case "TVCAMARA":
-							chlname = "TV Camara";
-							break;
 						case "TV-CAMARA":
 							chlname = "TV Camara";
 							break;
@@ -522,9 +519,6 @@
 							break;
 						case "RECORD":
 							chlname = "TV Record";
-							break;
-						case "TVSENADO":
-							chlname = "TV Senado";
 							break;
 						case "TV-SENADO":
 							chlname = "TV Senado";
@@ -702,15 +696,7 @@
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;
-											case "TV-CAMARA_RJ":
-												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-												tvch.append(html);
-												break;
 											case "TV-JUSTICA_RJ":
-												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-												tvch.append(html);
-												break;
-											case "TV-SENADO_RJ":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;

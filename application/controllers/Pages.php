@@ -200,7 +200,7 @@ class Pages extends CI_Controller {
 			$data['changepass_id'] = $id_user;
 			$data_navbar['selected_page'] = 'edit_audio';
 
-			if ($id_group == 1 or $id_group == 4) {
+			if ($id_group == 1 or $id_group == 5) {
 				$sessiondata = array(
 					'view' => 'edit_audio',
 					'last_page' => base_url('pages/index')
@@ -215,6 +215,21 @@ class Pages extends CI_Controller {
 			} else {
 				redirect(base_url(),'refresh');
 			}
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function crop_edit_audio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$audiofile = $this->input->post('audiofile');
+			$starttime = $this->input->post('starttime');
+			$endtime = $this->input->post('endtime');
+
+			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile);
+			
+			header('Content-Type: application/json');
+			print json_encode($message);
 		} else {
 			redirect('login','refresh');
 		}

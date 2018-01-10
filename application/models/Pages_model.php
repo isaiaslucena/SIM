@@ -986,6 +986,22 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 
+	public function crop_edit_audio($starttime, $endtime, $fileb64) {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+		$duration = $endtime - $starttime;
+
+		$dfilename = "edit_".strtotime("now").".mp3";
+		$cropfilename = "edit_".strtotime("now")."_crop.mp3";		
+		file_put_contents($temppath.$dfilename, base64_decode($fileb64));
+
+		exec($soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration);
+
+		$finaltempurl = $temppathurl.$cropfilename;
+		return $finaltempurl;
+	}
+
 	public function crop_info($data) {
 		$data_insert_info = array(
 			'id_file' => $data['id_file'],
