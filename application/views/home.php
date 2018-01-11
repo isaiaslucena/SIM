@@ -119,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 															<?php if ($keyword['keyword_priority'] == 1) { ?>
 																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
 															<?php } else { ?>
-																<button type="submit" class="btn btn-lightblue btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
+																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
 															<?php } ?>
 														</form>
 														<?php

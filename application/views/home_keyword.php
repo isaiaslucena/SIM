@@ -1,33 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <body>
 	<style type="text/css">
-		.slider {
-			max-height: 400px
-			-webkit-transition-property: all;
-			-webkit-transition-duration: .5s;
-			-webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-moz-transition-property: all;
-			-moz-transition-duration: .5s;
-			-moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-ms-transition-property: all;
-			-ms-transition-duration: .5s;
-			-ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			transition-property: all;
-			transition-duration: .5s;
-			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			height: 400px;
-		}
-		.slider.closed {
-			display: none;
-		}
-		.affix {
-			top: 0;
-			width: 100%;
-		}
-		.affix + .container-fluid {
-			padding-top: 70px;
-		}
-
 		#joindiv {
 			position: fixed;
 			bottom: 0px;
@@ -72,10 +45,18 @@
 					$id_radio = $this->db->get_where('file',array('id_file' => $mp3fileid))->row()->id_radio;
 					$mp3pathnew = mb_substr($mp3pathorig, 16);
 					$mp3filename = $this->db->get_where('file',array('id_file' => $mp3fileid))->row()->filename; ?>
-					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default slider">
+					<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 						<div class="panel-heading text-center">
-							<label class="pull-left" style="font-weight: normal"><input type="checkbox" id="<?php echo 'cb'.$divcount;?>" onclick="checkbox_join(<?php echo $divcount.','.$text['timestamp'].',\''.$text['state'].' - '.$text['radio'].' - '.date('d/m/Y - H:i:s',$text['timestamp']).'\','.$id_radio.','.$id_client.','.$id_keyword.','.$text['id_file'].','.$mp3fileid.','.$text['id_text'];?>)"> <?php echo get_phrase('join');?></label>
-							<label><i class="fa fa-search fa-fw"></i><span id="<?php echo 'qtkwfid'.$divcount;?>"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-bullhorn fa-fw"></i><?php echo $text['state']." - ".$text['radio']." - ".date("d/m/Y - H:i:s",$text['timestamp']);?></label>
+							<label class="pull-left" style="font-weight: normal">
+								<input type="checkbox" id="<?php echo 'cb'.$divcount;?>" onclick="checkbox_join(<?php echo $divcount.','.$text['timestamp'].',\''.$text['state'].' - '.$text['radio'].' - '.date('d/m/Y - H:i:s',$text['timestamp']).'\','.$id_radio.','.$id_client.','.$id_keyword.','.$text['id_file'].','.$mp3fileid.','.$text['id_text'];?>)"> <?php echo get_phrase('join');?>
+							</label>
+							<label>
+								<i class="fa fa-search fa-fw"></i>
+								<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<i class="fa fa-bullhorn fa-fw"></i>
+								<?php echo $text['state']." - ".$text['radio']." - ".date("d/m/Y - H:i:s",$text['timestamp']);?>
+							</label>
+							
 							<form id="form_edit" style="all: unset;" action="<?php echo base_url('pages/edit_temp');?>" target="_blank" method="POST">
 								<input type="hidden" name="mp3pathfilename" value="<?php echo base_url("assets".$mp3pathnew."/".$mp3filename);?>">
 								<input type="hidden" name="xmlpathfilename" value="<?php echo $text['path']."/".$text['filename'];?>">
@@ -89,6 +70,7 @@
 								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
 								<button type="submit" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
 							</form>
+							
 							<span class="pull-right">&nbsp;</span>
 							<button onclick="discard_text(<?php echo '\'div'.$divcount.'\','.$text['id_text'].','.$id_client.','.$id_keyword.','.$id_user;?>)" class="btn btn-danger btn-xs pull-right"><?php echo get_phrase('discard');?></button>
 							<span class="pull-right">&nbsp;</span>

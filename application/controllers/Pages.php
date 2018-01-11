@@ -307,7 +307,7 @@ class Pages extends CI_Controller {
 
 			switch ($vtype) {
 				case 'radio':
-					$this->home($selecteddate, $limit, $offset);
+					$this->home_radio($selecteddate, $limit, $offset);
 					break;
 				case 'radio_knewin':
 					$this->home_radio_knewin($selecteddate, $limit, $offset);
@@ -345,7 +345,7 @@ class Pages extends CI_Controller {
 
 			switch ($vtype) {
 				case 'radio':
-					$data_navbar['selected_page'] = 'home';
+					$data_navbar['selected_page'] = 'home_radio';
 					break;
 				case 'radio_knewin':
 					$data_navbar['selected_page'] = 'home_radio_knewin';
@@ -372,7 +372,7 @@ class Pages extends CI_Controller {
 	public function home_radio($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
-				'view' => 'home',
+				'view' => 'home_radio',
 				'last_page' => base_url('pages/home')
 			);
 			$this->session->set_userdata($sessiondata);
@@ -666,6 +666,34 @@ class Pages extends CI_Controller {
 			$this->load->view('navbar',$data_navbar);
 			$this->load->view('home_keyword',$data);
 			$this->load->view('footer');
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function home_radio_keyword() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'home_radio_keyword',
+				'last_page' => base_url('pages/home_radio_keyword')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'home';
+			$data_navbar['vtype'] = 'radio';
+			$data_navbar['selected_date'] = $this->input->post('selecteddate');
+			
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['ids_file_xml'] = $this->input->post('ids_file_xml');
+			
+			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+			$data['keyword_texts'] = $this->pages_model->text_keyword_id($data['ids_file_xml']);
+			$data['id_user'] = $this->session->userdata('id_user');
+			
+			header('Content-Type: application/json, charset=utf-8');
+			print json_encode($data, JSON_PRETTY_PRINT);
 		} else {
 			redirect('login','refresh');
 		}

@@ -57,9 +57,9 @@
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 															<?php if ($keyword['keyword_priority'] == 1) { ?>
-																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
+																<button type="button" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
 															<?php } else { ?>
-																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
+																<button type="button" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $keyword_foundc;?></span></button>
 															<?php } ?>
 														</form>
 														<?php
