@@ -100,7 +100,7 @@
 					<?php
 					if ($id_group == 1 or $id_group == 5) { ?>
 						<li>
-							<a href="<?php echo base_url(''); ?>" <?php if ($selected_page == "home") {echo 'class="active"';} ?>><i style="font-size: 15px" class="material-icons">radio</i> <?php echo get_phrase('radio');?></a>
+							<a href="<?php echo base_url('pages/index_radio'); ?>" <?php if ($selected_page == "home_radio") {echo 'class="active"';} ?>><i style="font-size: 15px" class="material-icons">radio</i> <?php echo get_phrase('radio');?></a>
 						</li>
 						<li>
 							<a href="<?php echo base_url('pages/index_radio_knewin'); ?>" <?php if ($selected_page == "home_radio_knewin") {echo 'class="active"';} ?>><i style="font-size: 15px" class="material-icons">radio</i> <?php echo get_phrase('radio')." (knewin)";?></a>

@@ -8,8 +8,8 @@ class Pages extends CI_Controller {
 			$id_group = $this->db->get_where('user', array('id_user' => $id_user))->row()->id_group;
 			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
 			$data['changepass_id'] = $id_user;
+			
 			$data['selected_date'] = 'today';
-
 			$data_navbar['selected_date'] = 'today';
 
 			if ($id_group == 1 or $id_group == 5) {
@@ -18,9 +18,9 @@ class Pages extends CI_Controller {
 					'last_page' => base_url('pages/index')
 				);
 				$this->session->set_userdata($sessiondata);
-				$data_navbar['vtype'] = 'radio';
-				$data_navbar['selected_page'] = 'home';
-				$data['page'] = 'pages/home';
+				$data_navbar['vtype'] = 'radio_knewin';
+				$data_navbar['selected_page'] = 'home_radio_knewin';
+				$data['page'] = 'pages/home_radio_knewin';
 			} else if ($id_group == 4) {
 				$sessiondata = array(
 					'view' => 'index',
@@ -36,6 +36,37 @@ class Pages extends CI_Controller {
 			$this->load->view('navbar', $data_navbar);
 			$this->load->view('loading', $data);
 			$this->load->view('footer', $data_navbar);
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function index_radio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
+			$data['changepass_id'] = $id_user;
+			
+			if ($id_group == 1 or $id_group == 5) {
+				$sessiondata = array(
+					'view' => 'index_radio',
+					'last_page' => base_url('pages/index')
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['page'] = 'pages/home_radio';
+				$data['selected_date'] = 'today';
+				$data_navbar['selected_page'] = 'home_radio';
+				$data_navbar['selected_date'] = 'today';
+				$data_navbar['vtype'] = 'radio';
+				
+				$this->load->view('head');
+				$this->load->view('navbar',$data_navbar);
+				$this->load->view('loading', $data);
+				$this->load->view('footer', $data_navbar);
+			} else {
+				redirect(base_url(),'refresh');
+			}
 		} else {
 			redirect('login','refresh');
 		}
@@ -63,6 +94,7 @@ class Pages extends CI_Controller {
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);
 				$this->load->view('loading', $data);
+				$this->load->view('footer', $data_navbar);
 			} else {
 				redirect(base_url(),'refresh');
 			}
@@ -124,6 +156,7 @@ class Pages extends CI_Controller {
 				$this->load->view('head');
 				$this->load->view('navbar', $data_navbar);
 				$this->load->view('loading', $data);
+				$this->load->view('footer', $data_navbar);
 			} else {
 				redirect(base_url(),'refresh');
 			}
@@ -203,6 +236,35 @@ class Pages extends CI_Controller {
 			if ($id_group == 1 or $id_group == 5) {
 				$sessiondata = array(
 					'view' => 'edit_audio',
+					'last_page' => base_url('pages/index')
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['page'] = 'pages/edit_audio';
+				$data['selected_date'] = 'today';
+				$this->load->view('head');
+				$this->load->view('navbar',$data_navbar);
+				$this->load->view('edit_audio', $data);
+				$this->load->view('footer', $data_navbar);
+			} else {
+				redirect(base_url(),'refresh');
+			}
+		} else {
+			redirect('login','refresh');
+		}
+	}
+
+	public function edit_video() {
+		if ($this->session->has_userdata('logged_in')) {
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			
+			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
+			$data['changepass_id'] = $id_user;
+			$data_navbar['selected_page'] = 'edit_video';
+
+			if ($id_group == 1 or $id_group == 5) {
+				$sessiondata = array(
+					'view' => 'edit_video',
 					'last_page' => base_url('pages/index')
 				);
 				$this->session->set_userdata($sessiondata);
@@ -307,14 +369,14 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function home($selecteddate = null, $limit = null, $offset = null) {
+	public function home_radio($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'home',
 				'last_page' => base_url('pages/home')
 			);
 			$this->session->set_userdata($sessiondata);
-			$data_navbar['selected_page'] = 'home';
+			$data_navbar['selected_page'] = 'home_radio';
 			$data_navbar['selected_date'] = $selecteddate;
 
 			$clientsc = count($this->pages_model->clients(null, null, 'radio'));

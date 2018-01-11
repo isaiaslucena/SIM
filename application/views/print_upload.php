@@ -39,7 +39,7 @@
 							<button id="btncllast" type="button" class="btn btn-sm btn-default disabled" title="Limpar última" disabled><i class="fa fa-undo"></i></button>
 						</div>
 						<div class="btn-group">
-							<button id="btnocr" type="button" class="btn btn-sm btn-default disabled"><i class="fa fa-pencil-square-o" disabled></i> OCR</button>
+							<button id="btnocr" type="button" class="btn btn-sm btn-default disabled" disabled><i class="fa fa-pencil-square-o"></i> OCR</button>
 						</div>
 					</div>
 				</div>
