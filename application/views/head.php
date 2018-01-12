@@ -43,35 +43,14 @@
 		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
 
 		<style type="text/css">
-			#back-to-top {
-				position: fixed;
-				bottom: 20px;
-				right: 40px;
-				z-index: 500;
-				cursor: pointer;
-				opacity: 0;
-				visibility: hidden;
-				transition: opacity 600ms, visibility 600ms;
-			}
-			#back-to-top.show {
-				visibility: visible;
-				opacity: 1;
-			}
-			
-			#back-to-home {
+			#divback-to {
 				position: fixed;
 				bottom: 20px;
 				right: 20px;
 				z-index: 500;
 				cursor: pointer;
-				opacity: 0;
-				visibility: hidden;
-				transition: opacity 600ms, visibility 600ms;
 			}
-			#back-to-home.show {
-				visibility: visible;
-				opacity: 1;
-			}
+
 			#content {
 				height: 2000px;
 			}

@@ -5,16 +5,11 @@ $time = $time[1] + $time[0];
 $start = $time;
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-	<div class="row page-header">
+	<div class="row">
 		<div class="col-lg-12">
-			<div class="col-lg-4">
-				<h1><?php echo get_phrase('radio');?></h1>
-			</div>
-			<div class="col-lg-5">
-			</div>
-			<div class="col-lg-3" >
-				<small><span class="pull-right text-muted pageload"></span></small>
-			</div>
+			<h1 id="headerhome" class="page-header"><?php echo get_phrase('radio'); ?></h1>
+			<h1 id="headerkeyword" class="page-header" style="display: none;"><?php echo get_phrase('radio'); ?></h1>
+			<small><span class="pull-right text-muted pageload"></span></small>
 		</div>
 	</div>
 
@@ -162,7 +157,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<script type="text/javascript">
 		var clientsmp = '<?php echo $clientsmp?>';
 		var selected_date = '<?php echo $selected_date?>';
-		var cbtnspin, clickedbtn, pageYpos, tempScrollTop;
+		var cbtnspin, clickedbtn, pageYpos, tempScrollTop, didclient, didkeyword, dclientselected;
 
 		var d = new Date();
 		var day = d.getDate();
@@ -186,9 +181,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			backToTop = function () {
 				var scrollTop = $(window).scrollTop();
 				if (scrollTop > scrollTrigger) {
-					$('#back-to-top').addClass('show');
+					// $('#back-to-top').css('display', 'inline-block');
+					$('#back-to-top').fadeIn('fast');
+					// $('#divback-to').addClass('show');
 				} else {
-					$('#back-to-top').removeClass('show');
+					// $('#divback-to').addClass('show');
+					// $('#back-to-top').css('display', 'none');
+					$('#back-to-top').fadeOut('fast');
 				}
 			}
 			backToTop();
@@ -299,6 +298,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					console.log(data);
 					cbtnspin.css('display', 'none');
 
+					didclient = data.id_client;
+					dclientselected = data.client_selected;
+					didkeyword = data.id_keyword;
+					dkeywordselected = data.keyword_selected;
 					divcount = 1;
 					dtexts = data.keyword_texts;
 					$.each(dtexts, function(index, val) {
@@ -309,6 +312,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						xmlfilename = val.filename;
 						xmlstate = val.state;
 						xmlradio = val.radio;
+						xmlidradio = val.id_radio;
 						xts = new Date(val.timestamp * 1000);
 						xmltimestamp = ('0'+xts.getDay()).slice(-2) + '/' +('0'+(xts.getMonth() + 1)).slice(-2) + '/' + xts.getFullYear() + ' - ' + ('0'+xts.getHours()).slice(-2) + ':' + ('0'+xts.getMinutes()).slice(-2) + ':' + ('0'+xts.getSeconds()).slice(-2);
 						xmlid = val.id_text;
@@ -316,9 +320,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						
 						divhtml = '<div id="div'+divcount+'" class="panel panel-default">'+
 										'<div class="panel-heading text-center">'+
-											'<label class="labeltitle">'+
-												xmlradio + ' - ' +xmlstate + ' | ' + xmltimestamp+
+											'<label class="pull-left" style="font-weight: normal">'+
+												'<input type="checkbox" class="cbjoinfiles" id="cb'+divcount+'" '+
+												'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
+												'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'"><?php echo get_phrase("join"); ?>'+
 											'</label>'+
+											
+											'<label class="labeltitle">'+
+												'<i class="fa fa-search fa-fw"></i>'+
+												'<span class="sqtkwf" id="qtkwfid'+divcount+'"></span>'+
+												'&nbsp;&nbsp;&nbsp;&nbsp;'+
+												'<i class="fa fa-bullhorn fa-fw"></i> '+
+												xmlradio+ ' - ' +xmlstate+ ' | ' +xmltimestamp+
+											'</label>'+
+											
+											'<div class="btn-toolbar pull-right">'+
+												'<button class="btn btn-warning btn-xs loadprevious" '+
+												'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
+												'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'" data-position="previous">'+
+													'<i id="iload'+divcount+'" style="display: none" class="fa fa-refresh fa-spin"></i>'+
+													'<?php echo get_phrase("previous"); ?>'+
+												'</button>'+
+
+												'<button class="btn btn-warning btn-xs loadprevious" '+
+												'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
+												'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'" data-position="next">'+
+													'<i id="iload'+divcount+'" style="display: none" class="fa fa-refresh fa-spin"></i>'+
+													'<?php echo get_phrase("next"); ?>'+
+												'</button>'+
+
+												'<button type="button" class="btn btn-danger btn-xs discarddoc" '+
+												'data-iddiv="div'+divcount+'" data-idtext="'+xmlid+'" '+
+												'data-idkeyword="'+didkeyword+'" data-idclient="'+didclient+'" '+
+												'data-toggle="collapse" data-target="#div'+divcount+'">'+
+													'<i style="display: none" class="fa fa-refresh fa-spin"></i>'+
+													'<?php echo get_phrase('discard'); ?>'+
+												'</button>'+
+
+												'<form id="form_edit" style="all: unset;" action="<?php echo base_url("pages/edit_temp"); ?>" target="_blank" method="POST">'+
+													'<input type="hidden" name="mp3pathfilename" value="<?php echo base_url("assets/caminhodoarquivomp3"); ?>">'+
+													'<input type="hidden" name="xmlpathfilename" value="<?php echo base_url("assets/caminhodoarquivoxml"); ?>">'+
+													'<input type="hidden" name="state" value="'+xmlstate+'">'+
+													'<input type="hidden" name="radio" value="'+xmlradio+'">'+
+													'<input type="hidden" name="timestamp" value="'+xmltimestamp+'">'+
+													'<input type="hidden" name="id_keyword" value="'+didkeyword+'">'+
+													'<input type="hidden" name="id_client" value="'+didclient+'">'+
+													'<input type="hidden" name="id_file" value="'+didfile+'">'+
+													'<input type="hidden" name="id_text" value="'+xmlid+'">'+
+													'<input type="hidden" name="client_selected" value="'+dclientselected+'">'+
+													'<button type="submit" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase("edit"); ?></button>'+
+												'</form>'+
+											'</div>'+
 										'</div>'+
 										'<div class="panel-body">'+
 											'<div class="row audioel">'+
@@ -340,24 +392,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						divcount += 1;
 					});
 
-					$('#mainrow').hide('fast');
-					$('#keywordrow').show(600, function(){$(window).scrollTop(0)});
+					// $('#mainrow').hide('fast');
+					// $('#keywordrow').show(600, function(){
+						// $(window).scrollTop(0)
+					// });
+					$('#mainrow').slideUp(400);
+					$('#keywordrow').slideDown(400, function() {
+						$(window).scrollTop(0)
+					});
 					
-					$('#back-to-home').addClass('show');
-					
-					// $('html,body').animate({scrollTop: 0}, 'fast');
-					// $('html,body').scrollTo(clickedbtn);
+					// $('#back-to-home').css('display', 'inline-block');
+					$('#back-to-home').fadeIn('fast');
 				}
 			);
 		});
 
 		$('#back-to-home').click(function(event) {
-			$(this).removeClass('show');
-			$('#keywordrow').hide('fast');
-			$('#mainrow').show(600, function(){$(window).scrollTop(tempScrollTop)});
-			
-			// $('html,body').animate({scrollTop: pageYpos}, 'fast');
-			// $('html,body').animate({scrollTop: $('html,body').scrollTop() - $('html,body').offset().top + clickedbtn.offset().top}, 'fast');
+			$(this).css('display', 'none');
+			$(this).fadeOut('fast');
+
+			// $('#keywordrow').hide('fast');
+			// $('#mainrow').show(600, function(){
+				// $(window).scrollTop(tempScrollTop)
+			// });
+			$('#keywordrow').slideUp(400);
+			$('#mainrow').slideDown(400, function() {
+				$(window).scrollTop(tempScrollTop)
+			});
 		});
 
 		$(document).ready(function() {

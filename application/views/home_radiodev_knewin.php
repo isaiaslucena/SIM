@@ -148,9 +148,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				backToTop = function () {
 					var scrollTop = $(window).scrollTop();
 					if (scrollTop > scrollTrigger) {
-						$('#back-to-top').addClass('show')
+						// $('#back-to-top').addClass('show')
+						$('#back-to-top').fadeIn('fast');
 					} else {
-						$('#back-to-top').removeClass('show')
+						// $('#back-to-top').removeClass('show')
+						$('#back-to-top').fadeOut('fast');
 					}
 				}
 				backToTop();
