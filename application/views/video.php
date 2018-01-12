@@ -708,6 +708,10 @@
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;
+											case "RURAL_RJ":
+												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+												tvch.append(html);
+												break;
 											case "BAND_SP":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);

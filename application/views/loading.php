@@ -1,6 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	
 	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
+
+	<button href="#" id="back-to-home" class="btn btn-danger btn-circle btn-lg" title="Voltar"><i class="fa fa-arrow-left"></i></button>
+	
 	<div id="page-wrapper">
 		<div class="spinner" id="loading_spinner">
 			<div class="bounce1"></div>

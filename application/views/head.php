@@ -46,7 +46,7 @@
 			#back-to-top {
 				position: fixed;
 				bottom: 20px;
-				right: 20px;
+				right: 40px;
 				z-index: 500;
 				cursor: pointer;
 				opacity: 0;
@@ -54,6 +54,21 @@
 				transition: opacity 600ms, visibility 600ms;
 			}
 			#back-to-top.show {
+				visibility: visible;
+				opacity: 1;
+			}
+			
+			#back-to-home {
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				z-index: 500;
+				cursor: pointer;
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 600ms, visibility 600ms;
+			}
+			#back-to-home.show {
 				visibility: visible;
 				opacity: 1;
 			}

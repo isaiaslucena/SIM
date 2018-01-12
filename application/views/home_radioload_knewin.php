@@ -42,7 +42,7 @@
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
 													$ids_file_xml = null;
 													$ic = null;
-													if ($allkeyword_foundc != 0) { ?>
+													if ($keyword_foundc != 0) { ?>
 														<form style="all: unset;" action="<?php echo base_url('pages/radio_knewin_home_keyword');?>" method="post">
 															<input type="hidden" name="ids_file_xml" value="<?php echo $ids_file_xml;?>">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
@@ -50,9 +50,13 @@
 															<input type="hidden" name="startdate" value="<?php echo $startdate;?>">
 															<input type="hidden" name="enddate" value="<?php echo $enddate;?>">
 															<?php if ($keyword['keyword_priority'] == 1) { ?>
-																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $allkeyword_foundc;?></span></button>
+																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?> 
+																	<span class="badge"><?php echo $keyword_foundc;?></span>
+																</button>
 															<?php } else { ?>
-																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> <span class="badge"><?php echo $allkeyword_foundc;?></span></button>
+																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?> 
+																	<span class="badge"><?php echo $keyword_foundc;?></span>
+																</button>
 															<?php } ?>
 														</form>
 														<?php

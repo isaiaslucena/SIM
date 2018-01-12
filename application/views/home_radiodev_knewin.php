@@ -88,8 +88,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													</form>
 
 													<?php
-													array_push($allkeywordquant, $allkeyword_foundc);
 													array_push($keywordquant, $keyword_foundc);
+													array_push($allkeywordquant, $allkeyword_foundc);
 													$client_keywords++;
 												}
 											} ?>

@@ -146,7 +146,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 	<div id="keywordrow" class="row" style="display: none">
 		<div class="col-lg-12">
-			<button id="backmainrow" type="button" class="btn btn-default">Voltar</button>
+			<!-- <button id="backmainrow" type="button" class="btn btn-default">Voltar</button> -->
 		</div>
 	</div>
 
@@ -162,7 +162,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<script type="text/javascript">
 		var clientsmp = '<?php echo $clientsmp?>';
 		var selected_date = '<?php echo $selected_date?>';
-		var cbtnspin, pageYpos;
+		var cbtnspin, clickedbtn, pageYpos, tempScrollTop;
 
 		var d = new Date();
 		var day = d.getDate();
@@ -186,9 +186,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			backToTop = function () {
 				var scrollTop = $(window).scrollTop();
 				if (scrollTop > scrollTrigger) {
-					$('#back-to-top').addClass('show')
+					$('#back-to-top').addClass('show');
 				} else {
-					$('#back-to-top').removeClass('show')
+					$('#back-to-top').removeClass('show');
 				}
 			}
 			backToTop();
@@ -209,35 +209,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				winheight = $(document).height();
 				winheightm = (winheight - 70);
 				winheightn = (winheight - 65);
+				
 				if (winscrollToph == winheight) {
-					dataconfi = $('#loadcf').val();
-					if (dataconfi != 89) {
-						console.log('loading next page...');
-						$('#btnloadmore').fadeOut('fast');
-						$('#loadmore').fadeTo('fast',100);
-						plimit = (plimit + 5);
-						$.ajax({
-							url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
-							success: function(data) {
-								dataq = data.length;
-								$('#loadcf').val(dataq);
-								$('#loadmore').fadeTo('fast', 0);
-								$('#client-ul').append(data);
-								hidenokeyword();
-								hidegentime();
-								upkeyw = parseInt($('#keywordsquant').text());
-								upallkeyw = parseInt($('#allkeywordsquant').text());
-								dowkeyw = parseInt($('#ikeywordquant').val());
-								downallkeyw = parseInt($('#iallkeywordquant').val());
-								upnkeyw = (upkeyw + dowkeyw);
-								upnallkeyw = (upallkeyw + downallkeyw);
-								$('#keywordsquant').text(upnkeyw);
-								$('#allkeywordsquant').text(upnallkeyw);
-							},
-							error: function() {
-								swal("Atenção!", "Tente novamente atualizando a página!", "error");
-							}
-						});
+					mrstyle = $('#mainrow').css('display');
+					if (mrstyle == 'block') {
+						dataconfi = $('#loadcf').val();
+						if (dataconfi != 89) {
+							console.log('loading next page...');
+							$('#btnloadmore').fadeOut('fast');
+							$('#loadmore').fadeTo('fast', 100);
+							plimit = (plimit + 5);
+							$.ajax({
+								url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
+								success: function(data) {
+									dataq = data.length;
+									$('#loadcf').val(dataq);
+									$('#loadmore').fadeTo('fast', 0);
+									$('#client-ul').append(data);
+									hidenokeyword();
+									hidegentime();
+									upkeyw = parseInt($('#keywordsquant').text());
+									upallkeyw = parseInt($('#allkeywordsquant').text());
+									dowkeyw = parseInt($('#ikeywordquant').val());
+									downallkeyw = parseInt($('#iallkeywordquant').val());
+									upnkeyw = (upkeyw + dowkeyw);
+									upnallkeyw = (upallkeyw + downallkeyw);
+									$('#keywordsquant').text(upnkeyw);
+									$('#allkeywordsquant').text(upnallkeyw);
+								},
+								error: function() {
+									swal("Atenção!", "Tente novamente atualizando a página!", "error");
+								}
+							});
+						}
 					}
 				}
 			});
@@ -280,10 +284,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 		$(document).on('click', '.btn.btn-info.btn-sm, .btn.btn-danger.btn-sm', function(event) {
 			// console.log(event);
-			pageYpos = event.pageY - 200;
 			btnform = $(this).parent('form');
 			cbtnspin = $(this).children('i');
-			
+			clickedbtn = $(this);
+
+			tempScrollTop = $(window).scrollTop();
+
 			cbtnspin.css('display', 'inline-block');
 			$('#keywordrow > .col-lg-12 > .panel').detach();
 			
@@ -291,9 +297,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				btnform.serialize(),
 				function(data, textStatus, xhr) {
 					console.log(data);
-					
 					cbtnspin.css('display', 'none');
-					
+
 					divcount = 1;
 					dtexts = data.keyword_texts;
 					$.each(dtexts, function(index, val) {
@@ -334,24 +339,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						
 						divcount += 1;
 					});
-					
+
 					$('#mainrow').hide('fast');
-					$('#keywordrow').show('fast');
+					$('#keywordrow').show(600, function(){$(window).scrollTop(0)});
+					
+					$('#back-to-home').addClass('show');
+					
+					// $('html,body').animate({scrollTop: 0}, 'fast');
+					// $('html,body').scrollTo(clickedbtn);
 				}
 			);
 		});
 
-		$('#backmainrow').click(function(event) {
+		$('#back-to-home').click(function(event) {
+			$(this).removeClass('show');
 			$('#keywordrow').hide('fast');
-			$('#mainrow').show('fast');
+			$('#mainrow').show(600, function(){$(window).scrollTop(tempScrollTop)});
 			
-			$('html,body').animate({scrollTop: pageYpos}, 200);
+			// $('html,body').animate({scrollTop: pageYpos}, 'fast');
+			// $('html,body').animate({scrollTop: $('html,body').scrollTop() - $('html,body').offset().top + clickedbtn.offset().top}, 'fast');
 		});
 
 		$(document).ready(function() {
 			$('#keywordsquant').text("<?php echo array_sum($keywordquant) ;?>");
 			$('#allkeywordsquant').text("<?php echo array_sum($allkeywordquant) ;?>");
-			console.log(clientsmp);
+			// console.log(clientsmp);
 			hidenokeyword();
 
 			timelinebody = $('#timelinebody');
