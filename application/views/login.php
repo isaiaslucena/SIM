@@ -34,6 +34,7 @@
 									<div class="checkbox">
 										<label><input name="remember" type="checkbox" value="rememberme"><?php echo get_phrase('rememberme');?></label>
 									</div>
+									<input type="text" name="redirecturl" value="<?php echo $urlredirect?>" style="display: none;">
 									<button class="btn btn-lg btn-success btn-block"><?php echo get_phrase('login');?></button>
 								</fieldset>
 							</form>

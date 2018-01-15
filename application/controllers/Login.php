@@ -17,7 +17,9 @@ class Login extends CI_Controller {
 		else {
 			$data['message'] = null;
 		}
-		$this->load->view('login',$data);
+		
+		$data['urlredirect'] = $this->input->get('rdt', TRUE);
+		$this->load->view('login', $data);
 	}
 
 	public function mobile_index($message = '') {
@@ -43,6 +45,7 @@ class Login extends CI_Controller {
 		$datalogin['username'] = $this->input->post('username');
 		$datalogin['password'] = md5($this->input->post('password'));
 		$datalogin['rememberme'] = $this->input->post('rememberme');
+		$urlredirect = $this->input->post('redirecturl');
 		$login = $this->login_model->validate_login($datalogin);
 		if ($login) {
 			$datalogin['id_group'] = $this->db->get_where('user', array('username' => $datalogin['username'] , 'password' => $datalogin['password']))->row()->id_group;
@@ -58,7 +61,7 @@ class Login extends CI_Controller {
 				);
 				$this->session->set_userdata($sessiondata);
 
-				redirect(base_url(),'refresh');
+				redirect($urlredirect,'refresh');
 			}
 		}
 		else {
@@ -72,7 +75,8 @@ class Login extends CI_Controller {
 			'id_user',
 			'username',
 			'logged_in',
-			'last_page'
+			'last_page',
+			'view'
 		);
 		$this->session->unset_userdata($sessiondata);
 		$this->session->sess_destroy();

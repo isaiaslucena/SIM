@@ -68,7 +68,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -99,7 +99,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -129,7 +129,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_admin'), 'refresh');
 		}
 	}
 
@@ -161,7 +161,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
 	}
 
@@ -191,7 +191,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_print'), 'refresh');
 		}
 	}
 
@@ -220,7 +220,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/print_upload'), 'refresh');
 		}
 	}
 
@@ -249,7 +249,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
 		}
 	}
 
@@ -275,7 +275,7 @@ class Pages extends CI_Controller {
 				$this->load->view('edit_audio', $data);
 				$this->load->view('footer', $data_navbar);
 			} else {
-				redirect(base_url(),'refresh');
+				redirect('login?rdt='.urlencode('pages/edit_video'), 'refresh');
 			}
 		} else {
 			redirect('login','refresh');
@@ -293,7 +293,7 @@ class Pages extends CI_Controller {
 			header('Content-Type: application/json');
 			print json_encode($message);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
 		}
 	}
 
@@ -301,7 +301,7 @@ class Pages extends CI_Controller {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'calendar_index',
-				'last_page' => base_url('pages/calendar_index'.$vtype)
+				'last_page' => base_url('pages/calendar_index/'.$vtype)
 			);
 			$this->session->set_userdata($sessiondata);
 
@@ -320,7 +320,8 @@ class Pages extends CI_Controller {
 					break;
 			}
 		} else {
-			redirect('login','refresh');
+			// redirect('login?rdt='.urlencode('pages/calendar_index/'.$vtype.'/'.$selecteddate.'/'.$limit.'/'.$offset), 'refresh');
+			redirect('login?rdt='.urlencode('pages/calendar/'.$vtype.'/'.$selecteddate), 'refresh');
 		}
 	}
 
@@ -365,7 +366,7 @@ class Pages extends CI_Controller {
 			$this->load->view('navbar', $data_navbar);
 			$this->load->view('loading', $data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/calendar/'.$vtype.'/'.$selecteddate), 'refresh');
 		}
 	}
 
@@ -406,7 +407,7 @@ class Pages extends CI_Controller {
 				$this->load->view('home_load',$data);
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -446,7 +447,7 @@ class Pages extends CI_Controller {
 				$this->load->view('home_radioload_knewin', $data);
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -463,7 +464,7 @@ class Pages extends CI_Controller {
 			// print json_encode($stories);
 			print $doc;
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -491,11 +492,10 @@ class Pages extends CI_Controller {
 			if (is_null($selecteddate)  or $selecteddate == 'today') {
 				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime('today 00:00:00'));
 				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime('today 23:59:59'));
-			}
-			else {
+			} else {
 				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 00:00:00'));
 				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 23:59:59'));
-			}	
+			}
 			
 			if ($limit == 0) {
 				$this->load->view('home_tvdev',$data);
@@ -503,7 +503,7 @@ class Pages extends CI_Controller {
 				$this->load->view('home_tvload',$data);
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
 	}
 
@@ -554,7 +554,7 @@ class Pages extends CI_Controller {
 				$this->load->view('home_printload',$data);
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_print'), 'refresh');
 		}
 	}
 
@@ -613,7 +613,7 @@ class Pages extends CI_Controller {
 				$this->load->view('footer');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_print'), 'refresh');
 		}
 	}
 
@@ -640,7 +640,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect(base_url(),'refresh');
+			redirect('login?rdt='.urlencode('pages/dashboard'), 'refresh');
 		}
 	}
 
@@ -667,7 +667,7 @@ class Pages extends CI_Controller {
 			$this->load->view('home_keyword',$data);
 			$this->load->view('footer');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -701,7 +701,7 @@ class Pages extends CI_Controller {
 			header('Content-Type: application/json, charset=utf-8');
 			print json_encode($data, JSON_PRETTY_PRINT);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -739,7 +739,7 @@ class Pages extends CI_Controller {
 			$this->load->view('radio_knewin_home_keyword', $data);
 			$this->load->view('footer');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -769,7 +769,7 @@ class Pages extends CI_Controller {
 			$this->load->view('tv_home_keyword',$data);
 			$this->load->view('footer');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
 	}
 
@@ -890,7 +890,7 @@ class Pages extends CI_Controller {
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
 			$this->pages_model->discard_text($data_discard);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -902,7 +902,7 @@ class Pages extends CI_Controller {
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
 			$this->pages_model->discard_doc_radio_knewin($data_discard);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -914,7 +914,7 @@ class Pages extends CI_Controller {
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
 			$this->pages_model->discard_text_tv_knewin($data_discard);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
 	}
 
@@ -925,7 +925,7 @@ class Pages extends CI_Controller {
 			$data_cvhtype['checked'] = $this->input->post('checked', TRUE);
 			$this->pages_model->client_vhtype($data_cvhtype);
 		} else {
-			redirect('login','refresh');
+			redirect('login', 'refresh');
 		}
 	}
 
@@ -950,7 +950,7 @@ class Pages extends CI_Controller {
 			$this->load->view('edit',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -992,7 +992,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('edit_temp',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1034,7 +1034,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('edit_knewin',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -1104,7 +1104,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('edit_temp',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1130,7 +1130,7 @@ class Pages extends CI_Controller {
 			// $this->load->view('head');
 			$this->load->view('loading',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1169,7 +1169,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('edit_knewin',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -1196,7 +1196,7 @@ class Pages extends CI_Controller {
 			$this->load->view('crop',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1239,7 +1239,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('crop_temp',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1284,7 +1284,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('crop_knewin',$data);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
 	}
 
@@ -1302,7 +1302,7 @@ class Pages extends CI_Controller {
 			$this->load->view('keyword_file');
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -1373,9 +1373,8 @@ class Pages extends CI_Controller {
 			} else {
 				redirect(base_url(),'refresh');
 			}
-
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/reports/'.$page.'/'.$startdate.'/'.$enddate), 'refresh');
 		}
 	}
 
@@ -1428,7 +1427,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/reports/'.$page.'/'.$startdate.'/'.$enddate), 'refresh');
 		}
 	}
 
@@ -1457,7 +1456,7 @@ class Pages extends CI_Controller {
 			$this->load->view('search',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/search'), 'refresh');
 		}
 	}
 
@@ -1525,7 +1524,7 @@ class Pages extends CI_Controller {
 
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/search'), 'refresh');
 		}
 	}
 
@@ -1610,7 +1609,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/clients'), 'refresh');
 		}
 	}
 
@@ -1651,7 +1650,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->create_client($data_post);
 			redirect('pages/clients/create','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/clients'), 'refresh');
 		}
 	}
 
@@ -1661,7 +1660,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->delete_client($data_post);
 			redirect('pages/clients/delete','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/clients'), 'refresh');
 		}
 	}
 
@@ -1673,7 +1672,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->update_client($data_post);
 			redirect('pages/clients/update','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/clients'), 'refresh');
 		}
 	}
 
@@ -1686,7 +1685,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->update_client_keyword($data_post);
 			redirect('pages/clients/update','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/clients'), 'refresh');
 		}
 	}
 
@@ -1725,7 +1724,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/keywords'), 'refresh');
 		}
 	}
 
@@ -1777,7 +1776,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->create_keyword($data_post);
 			redirect('pages/keywords/create','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/keywords'), 'refresh');
 		}
 	}
 
@@ -1787,7 +1786,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->delete_keyword($data_post);
 			redirect('pages/keywords/delete','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/keywords'), 'refresh');
 		}
 	}
 
@@ -1799,7 +1798,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->update_keyword($data_post);
 			redirect('pages/keywords/update','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/keywords'), 'refresh');
 		}
 	}
 
@@ -1827,7 +1826,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/radios'), 'refresh');
 		}
 	}
 
@@ -1900,7 +1899,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/users'), 'refresh');
 		}
 	}
 
@@ -1913,7 +1912,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->create_user($data_post);
 			redirect('pages/users/create','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/users'), 'refresh');
 		}
 	}
 
@@ -1926,7 +1925,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->update_user($data_post);
 			redirect('pages/users/update','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/users'), 'refresh');
 		}
 	}
 
@@ -1943,7 +1942,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->changepasswd_user($data_post);
 			redirect('pages/users/update','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/users'), 'refresh');
 		}
 	}
 
@@ -1954,7 +1953,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->changepasswd($data_post);
 			redirect(base_url(),'refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/changepasswd'), 'refresh');
 		}
 	}
 
@@ -1964,7 +1963,7 @@ class Pages extends CI_Controller {
 			$this->pages_model->delete_user($data_post);
 			redirect('pages/users/delete','refresh');
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/users'), 'refresh');
 		}
 	}
 
@@ -1997,7 +1996,7 @@ class Pages extends CI_Controller {
 			$this->load->view('language_datatable',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/groups'), 'refresh');
 		}
 	}
 
@@ -2030,15 +2029,28 @@ class Pages extends CI_Controller {
 			$this->load->view('language_datatable',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/profile'), 'refresh');
 		}
 	}
 
 	public function video() {
-		$data['tvchannels'] = $this->pages_model->tvc();
-		$this->load->view('video', $data);
-		$this->load->view('player.js');
-		$this->load->view('editor');
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/video')
+			);
+			$this->session->set_userdata($sessiondata);
+	
+			// var_dump(current_url());
+	
+			// $data['tvchannels'] = $this->pages_model->tvc();
+			$this->load->view('video');
+			$this->load->view('player.js');
+			$this->load->view('editor.js');
+			$this->load->view('video-footer');
+		} else {
+			redirect('login?rdt='.urlencode('pages/video'),'refresh');
+		}
 	}
 
 	// public function videoplayer() {
@@ -2095,7 +2107,7 @@ class Pages extends CI_Controller {
 			$this->load->view('language_datatable',$data);
 			$this->load->view('footer',$data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect('login?rdt='.urlencode('pages/rec_radio'), 'refresh');
 		}
 	}
 
