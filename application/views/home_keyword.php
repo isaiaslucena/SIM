@@ -5,7 +5,7 @@
 			position: fixed;
 			bottom: 0px;
 			left: 260px;
-			z-index: 9999;
+			z-index: 500;
 			cursor: pointer;
 			/* transition: opacity 0.2s ease-out; */
 			/* opacity: 0; */
@@ -19,8 +19,6 @@
 			height: 2000px;
 		}
 	</style>
-
-	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
 
 	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 		<div class="row">
@@ -74,6 +72,7 @@
 							<span class="pull-right">&nbsp;</span>
 							<button onclick="discard_text(<?php echo '\'div'.$divcount.'\','.$text['id_text'].','.$id_client.','.$id_keyword.','.$id_user;?>)" class="btn btn-danger btn-xs pull-right"><?php echo get_phrase('discard');?></button>
 							<span class="pull-right">&nbsp;</span>
+							
 							<button onclick="return load_file(<?php echo '\'next\','.$id_client.','.$id_keyword.','.$text['timestamp'].','.$text['id_radio'].',\'div'.$divcount.'\',\'iload'.$icount.'\'';?>) ; return false;" class="btn btn-warning btn-xs pull-right">
 								<i style="display: none" class="fa fa-refresh fa-spin" id="<?php echo 'iload'.$icount;?>"></i>
 								<?php echo get_phrase('next');
@@ -85,6 +84,7 @@
 								<?php echo get_phrase('previous');?>
 							</button>
 						</div>
+						
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-lg-12">

@@ -691,10 +691,10 @@ class Pages extends CI_Controller {
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['keyword_texts'] = $this->pages_model->text_keyword_id($data['ids_file_xml']);
 			
-			foreach ($data['keyword_texts'] as $keywordtext) {
-				var_dump($keywordtext);
-			}
-			exit();
+			#foreach ($data['keyword_texts'] as $keywordtext) {
+				#var_dump($keywordtext);
+			#}
+			#exit();
 			
 			$data['id_user'] = $this->session->userdata('id_user');
 			

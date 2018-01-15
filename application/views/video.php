@@ -732,6 +732,11 @@
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;
+                                                                                        case "SPORTV_RJ":
+                                                                                                html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+                                                                                                tvch.append(html);
+                                                                                                break;
+
 										}
 									});
 								} else {

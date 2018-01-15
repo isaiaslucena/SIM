@@ -209,38 +209,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				winheightm = (winheight - 70);
 				winheightn = (winheight - 65);
 				
-				if (winscrollToph == winheight) {
-					mrstyle = $('#mainrow').css('display');
-					if (mrstyle == 'block') {
-						dataconfi = $('#loadcf').val();
-						if (dataconfi != 89) {
-							console.log('loading next page...');
-							$('#btnloadmore').fadeOut('fast');
-							$('#loadmore').fadeTo('fast', 100);
-							plimit = (plimit + 5);
-							$.ajax({
-								url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
-								success: function(data) {
-									dataq = data.length;
-									$('#loadcf').val(dataq);
-									$('#loadmore').fadeTo('fast', 0);
-									$('#client-ul').append(data);
-									hidenokeyword();
-									hidegentime();
-									upkeyw = parseInt($('#keywordsquant').text());
-									upallkeyw = parseInt($('#allkeywordsquant').text());
-									dowkeyw = parseInt($('#ikeywordquant').val());
-									downallkeyw = parseInt($('#iallkeywordquant').val());
-									upnkeyw = (upkeyw + dowkeyw);
-									upnallkeyw = (upallkeyw + downallkeyw);
-									$('#keywordsquant').text(upnkeyw);
-									$('#allkeywordsquant').text(upnallkeyw);
-								},
-								error: function() {
-									swal("Atenção!", "Tente novamente atualizando a página!", "error");
-								}
-							});
-						}
+				mrstyle = $('#mainrow').css('display');
+				if (mrstyle == 'block') {
+					if (winscrollToph == winheight) {
+						//mrstyle = $('#mainrow').css('display');
+						//if (mrstyle == 'block') {
+							dataconfi = $('#loadcf').val();
+							if (dataconfi != 89) {
+								console.log('loading next page...');
+								$('#btnloadmore').fadeOut('fast');
+								$('#loadmore').fadeTo('fast', 100);
+								plimit = (plimit + 5);
+								$.ajax({
+									url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
+									success: function(data) {
+										dataq = data.length;
+										$('#loadcf').val(dataq);
+										$('#loadmore').fadeTo('fast', 0);
+										$('#client-ul').append(data);
+										hidenokeyword();
+										hidegentime();
+										upkeyw = parseInt($('#keywordsquant').text());
+										upallkeyw = parseInt($('#allkeywordsquant').text());
+										dowkeyw = parseInt($('#ikeywordquant').val());
+										downallkeyw = parseInt($('#iallkeywordquant').val());
+										upnkeyw = (upkeyw + dowkeyw);
+										upnallkeyw = (upallkeyw + downallkeyw);
+										$('#keywordsquant').text(upnkeyw);
+										$('#allkeywordsquant').text(upnallkeyw);
+									},
+									error: function() {
+										swal("Atenção!", "Tente novamente atualizando a página!", "error");
+									}
+								});
+							}
+						//}
 					}
 				}
 			});
@@ -305,11 +308,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					divcount = 1;
 					dtexts = data.keyword_texts;
 					$.each(dtexts, function(index, val) {
-						audiofpath = '<?php echo base_url("assets")?>';
-						audiofilename = 'teste.mp4';
+						audiofpath = '<?php echo base_url("assets/temp/")?>';
+						audiofilename = 'teste.mp3';
 						
 						xmlfpath = val.path;
 						xmlfilename = val.filename;
+						xmlidfile = val.id_file;
 						xmlstate = val.state;
 						xmlradio = val.radio;
 						xmlidradio = val.id_radio;
@@ -365,7 +369,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													'<input type="hidden" name="timestamp" value="'+xmltimestamp+'">'+
 													'<input type="hidden" name="id_keyword" value="'+didkeyword+'">'+
 													'<input type="hidden" name="id_client" value="'+didclient+'">'+
-													'<input type="hidden" name="id_file" value="'+didfile+'">'+
+													'<input type="hidden" name="id_file" value="'+xmlidfile+'">'+
 													'<input type="hidden" name="id_text" value="'+xmlid+'">'+
 													'<input type="hidden" name="client_selected" value="'+dclientselected+'">'+
 													'<button type="submit" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase("edit"); ?></button>'+
@@ -393,14 +397,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					});
 
 					// $('#mainrow').hide('fast');
-					// $('#keywordrow').show(600, function(){
+					// $('#keywordrow').fadeIn(600, function(){
 						// $(window).scrollTop(0)
 					// });
-					$('#mainrow').slideUp(400);
-					$('#keywordrow').slideDown(400, function() {
-						$(window).scrollTop(0)
+					//$('#mainrow').slideUp(400, function() {
+					//	$('#keywordrow').slideDown(600, function() {
+					//		$(window).scrollTop(0)
+					//	});
+					//});
+				
+
+					$('#mainrow').fadeOut(200, function() {
+						$('#keywordrow').fadeIn(300, function() {
+							$(window).scrollTop(0)
+						});
 					});
-					
+	
+
+
+	
 					// $('#back-to-home').css('display', 'inline-block');
 					$('#back-to-home').fadeIn('fast');
 				}
@@ -412,13 +427,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			$(this).fadeOut('fast');
 
 			// $('#keywordrow').hide('fast');
-			// $('#mainrow').show(600, function(){
+			// $('#mainrow').fadeIn(600, function(){
 				// $(window).scrollTop(tempScrollTop)
 			// });
-			$('#keywordrow').slideUp(400);
-			$('#mainrow').slideDown(400, function() {
-				$(window).scrollTop(tempScrollTop)
+			//$('#keywordrow').slideUp(400, function() {
+			//	$('#mainrow').slideDown(600, function() {
+			//		$(window).scrollTop(tempScrollTop)
+			//	});
+			//});
+
+
+			$('#keywordrow').fadeOut(200, function() {
+				$('#mainrow').fadeIn(300, function() {
+					$(window).scrollTop(tempScrollTop)
+				});
 			});
+
+
+
 		});
 
 		$(document).ready(function() {
