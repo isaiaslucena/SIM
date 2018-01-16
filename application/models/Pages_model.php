@@ -986,15 +986,20 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 
-	public function crop_edit_audio($starttime, $endtime, $fileb64) {
+	public function crop_edit_audio($starttime, $endtime, $fileb64, $join) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
 		$duration = $endtime - $starttime;
 
-		$dfilename = "edit_".strtotime("now").".mp3";
-		$cropfilename = "edit_".strtotime("now")."_crop.mp3";		
-		file_put_contents($temppath.$dfilename, base64_decode($fileb64));
+		$cropfilename = "edit_".strtotime("now")."_crop.mp3";
+		
+		if ($join) {
+			$dfilename = $fileb64;
+		} else {
+			$dfilename = "edit_".strtotime("now").".mp3";
+			file_put_contents($temppath.$dfilename, base64_decode($fileb64));
+		}
 
 		exec($soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration);
 
@@ -1042,12 +1047,27 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 	
-	public function join_edit_audio() {
+	public function join_edit_audio($audiofiles) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
 		
 		$filesline = null;
+		$countfarr = count($audiofiles);
+		$countf = 0;
+		foreach ($audiofiles as $audiofile) {
+			if ($countf == $countfarr) {
+				$filesline .= $temppath.$audiofile;
+			} else {
+				$filesline .= $temppath.$audiofile.' ';
+			}
+		}
+		
+		$joinfile = 'join_edit_audio_'.date('d-m-Y_His', strtotime("now")).'.mp3';
+		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
+		$data['finalurl'] = $temppathurl.$joinfile;
+
+		return $data;
 	}
 	
 	public function join_radio_knewin($idsdocs) {

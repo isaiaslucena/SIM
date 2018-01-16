@@ -1093,16 +1093,33 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function upload_join_edit_audio() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$audioname = $this->input->post('audioname');
+			$audiofile = $this->input->post('audiofile');
+			
+			file_put_contents('/app/assets/temp/'.$audioname, base64_decode($audiofile));
+			$message['log'] = "Received file and writed to /app/assets/temp/".$audioname;
+
+			header('Content-Type: application/json');
+			print json_encode($message);
+		} else {
+			header("HTTP/1.1 403 Forbidden");
+		}
+	}
+
 	public function join_edit_audio() {
 		if ($this->session->has_userdata('logged_in')) {
-			$audiofiles = $this->input->post('audiofiles');
-			// var_dump($audiofiles);
-			// exit();
-			
-			// $message['filejoinurl'] = $this->pages_model->join_edit_audio($audiofiles);
-			
-			header('Content-Type: application/json');
-			print json_encode($audiofiles);
+			if ($this->input->method(TRUE) == 'POST') {
+				$audiofiles = $this->input->post('adfiles');
+
+				$message = $this->pages_model->join_edit_audio($audiofiles);
+				
+				header('Content-Type: application/json');
+				print json_encode($message);
+			} else {
+				header("HTTP/1.1 403 Forbidden");
+			}
 		} else {
 			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
 		}
@@ -1248,8 +1265,9 @@ class Pages extends CI_Controller {
 			$audiofile = $this->input->post('audiofile');
 			$starttime = $this->input->post('starttime');
 			$endtime = $this->input->post('endtime');
+			$join = $this->input->post('join');
 
-			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile);
+			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile, $join);
 			
 			header('Content-Type: application/json');
 			print json_encode($message);
@@ -1631,7 +1649,7 @@ class Pages extends CI_Controller {
 	public function api_keywords_client($id_client = null) {
 		$keywords = $this->pages_model->keywords_client($id_client);
 		header('Content-Type: application/json');
-		echo json_encode($keywords,JSON_PRETTY_PRINT);
+		echo json_encode($keywords, JSON_PRETTY_PRINT);
 	}
 
 	public function api_radios() {
@@ -2136,7 +2154,6 @@ class Pages extends CI_Controller {
 		if ($this->input->method(TRUE) == 'POST') {
 			// $postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 			// var_dump($postdata);
-
 			$address = $this->input->post("address");
 
 			$pattern = 'http://video.dataclip.com.br:8001';

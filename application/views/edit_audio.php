@@ -16,7 +16,7 @@
 					<audio id="audiofile" style="display: none; width: 100%;" controls></audio>
 					<div id="waitimg" style="display: none;">
 						<img src="<?php echo base_url('assets/imgs/loading.gif')?>" alt="Carregando" width="60">
-						<h3>Carregando...</h3>
+						<h3 id="waitmsg">Carregando...</h3>
 					</div>
 				</div>
 			</div>
@@ -43,73 +43,120 @@
 			var count = 0,
 			ratec = 1,
 			audioel = $('#audiofile'),
-			ccrops = false, ccrope = false,
-			audiofilestojoin = [],
-			cropstart, cropend, cropstartss, cropendss, cropstarts, cropends;
+			ccrops = false, ccrope = false, joinfiles = false, fileerr = false,
+			audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
+			ajaxpostsd = [];;
 			
 			$('#btnupload').change(function(event) {
+				var audiofilestojoin = new Array();
+
 				$('#iconimg').css('display', 'none');
 				$('#wellbigimg').css('vertical-align', 'center');
 				$('#wellbigimg').addClass('center-block');
+				$('#waitmsg').text('Aguarde...');
+				$('#waitimg').css('display', 'block');
 
-				audiofiles = document.querySelector('#btnupload').files;
-				audiofilesc = audiofiles.length;
-				filesreader = new FileReader();
+				var audiofiles = document.querySelector('#btnupload').files;
+				var audiofilesc = audiofiles.length;
 
 				$.each(audiofiles, function(index, val) {
-					filename = val.name;
-					filetype = val.type;
+					var filelastmod = val.lastModified;
+					var filename = val.name;
+					var filesize = val.size;
+					var filetype = val.type;
+					var fileb64;
+
 					if (filetype != 'audio/mp3') {
-						swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio mp3.\n\nTodos os arquivos devem ser do mesmo tipo!', 'error');
+						swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
 						audiofilestojoin = [];
+						joinfiles = false;
+						fileerr = true;
 						return false;
 					} else {
-						audiofilestojoin.push(val);
+						audiofilestojoin.push(filename);
+						
+						filereader = new FileReader();
+						filereader.readAsDataURL(val);
+						filereader.onload = function(e) {
+							// console.log(e);
+							fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
+
+							$('#waitmsg').text('Enviando arquivo "'+filename+'"...');
+
+							$.ajax({
+								url: '<?php echo base_url("pages/upload_join_edit_audio")?>',
+								type: 'POST',
+								dataType: 'html',
+								async: false,
+								data: {'audioname': filename, 'audiofile': fileb64},
+							})
+							.done(function(data) {
+								console.log(data);
+							})
+							.fail(function() {
+								console.log("error");
+							})
+							.always(function() {
+								console.log("complete");
+							});
+
+							// $.post(
+							// 	'<?php echo base_url("pages/upload_join_edit_audio")?>',
+							// 	{
+							// 		'audioname': filename,
+							// 		'audiofile': fileb64
+							// 	},
+							// 	function(data, textStatus, xhr) {
+							// 		console.log(data);
+							// 	}
+							// );	
+						}
 					}
 				});
-
+				
+				if (fileerr) {
+					$('#waitimg').css('display', 'none');
+					$('#iconimg').css('display', 'block');
+					fileerr = false;
+					return false;
+				}
+				
 				audiofilestojoinc = audiofilestojoin.length;
 				if (audiofilestojoinc > 1) {
-					console.log(audiofilestojoin);
-					$.post('<?php echo base_url("pages/join_edit_audio")?>',
-						{audiofiles: audiofilestojoin},
-						function(data, textStatus, xhr) {
-							console.log(data);
-						}
-					);
-				} else {
-					filesreader.readAsDataURL(audiofiles);
+					$('#waitmsg').text('Aguarde, juntando arquivos...');
 					
-					filesreader.onload = function(e) {
-				// 		// console.log(e);
-				// 		audioel.attr('src', e.target.result);
-				// 		audioel.css('display', 'block');
-						
-				// 		$('#btncstart').text(null);
-				// 		$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
-				// 		$('#btncstart').removeClass('btn-success');
-				// 		$('#btncstart').addClass('btn-default');
+					$.ajax({
+						url: '<?php echo base_url("pages/join_edit_audio"); ?>',
+						type: 'POST',
+						dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+						async: false,
+						data: {adfiles: audiofilestojoin},
+					})
+					.done(function() {
+						// console.log("success");
+						joinfiles = true;
+						enable_editor(data.finalurl);
+					})
+					.fail(function() {
+						console.log("error");
+					})
+					.always(function() {
+						console.log("complete");
+					});
+					
+					// $.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: audiofilestojoin}, function(data, textStatus, xhr) {
+					// 	// console.log(data);
+					// 	joinfiles = true;
+					// 	enable_editor(data.finalurl);
+					// });
+				} else {
+					joinfiles = false;
+					var filereader = new FileReader();
+					filereader.readAsDataURL(audiofiles[0]);
 
-				// 		$('#btncend').text(null);
-				// 		$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
-				// 		$('#btncend').removeClass('btn-success');
-				// 		$('#btncend').addClass('btn-default');
-
-				// 		ccrope = false;
-				// 		ccrope = false;
-				// 		cropstart = null;
-				// 		cropend = null;
-				// 		cropstartss = null;
-				// 		cropendss = null;
-				// 		cropstarts = null;
-				// 		cropends = null;
-						
-				// 		$('#btnpbrate').removeClass('disabled');
-				// 		$('#btnpbrate').removeAttr('disabled');
-				// 		$('#btncstart').removeClass('disabled');
-				// 		$('#btncstart').removeAttr('disabled');
-				// 		$('#btndown').addClass('disabled');
-				// 		$('#btndown').attr('disabled', true);
+					filereader.onload = function(e) {
+						// console.log(e);
+						enable_editor(e.target.result);
 					}
 				}
 			});
@@ -247,13 +294,15 @@
 			
 			$('#btncrop').click(function(event) {
 				$('#audiofile').css('display', 'none');
+				$('#waitmsg').text('Carregando...');
 				$('#waitimg').css('display', 'block');
 				
 				$.post('<?php echo base_url("pages/crop_edit_audio")?>',
 					{
-						audiofile: audioel.attr('src').replace(/^data:audio\/(mp3|mp4);base64,/, ""),
+						audiofile: joinfiles ? audioel.attr('src').replace('<?php echo base_url("assets/temp/")?>', '') : audioel.attr('src').replace(/^data:audio\/(mp3|mp4);base64,/, ""),
 						starttime: cropstarts,
-						endtime: cropends
+						endtime: cropends,
+						join: joinfiles
 					},
 					function(data, textStatus, xhr) {
 						console.log(data);
@@ -262,38 +311,11 @@
 						$('#btndown').attr('href', afileurl);
 						$('#btndown').attr('download', 'audio_editado_'+Date.now());
 
-						$('#btncstart').text(null);
-						$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
-						$('#btncstart').removeClass('btn-success');
-						$('#btncstart').addClass('btn-default');
-						ccrope = false;
-						$('#btncend').text(null);
-						$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
-						$('#btncend').removeClass('btn-success');
-						$('#btncend').addClass('btn-default');
-						ccrope = false;
-						cropstart = null;
-						cropend = null;
-						cropstartss = null;
-						cropendss = null;
-						cropstarts = null;
-						cropends = null;
-
-						$('#btncstart').addClass('disabled');
-						$('#btncstart').attr('disabled', true);
-						$('#btncend').addClass('disabled');
-						$('#btncend').attr('disabled', true);
-						$('#btncrop').addClass('disabled');
-						$('#btncrop').attr('disabled', true);
-						$('#btndown').removeClass('disabled');
-						$('#btndown').removeAttr('disabled');
-
-						$('#waitimg').css('display', 'none');
-						$('#audiofile').css('display', 'block');
+						disable_editor();
 					}
 				);
 			});
-			
+
 			function sectostring(secs) {
 				var sec_num = parseInt(secs, 10);
 				var hours   = Math.floor(sec_num / 3600);
@@ -315,5 +337,71 @@
 				} else {
 					aaudioelmt[0].pause();
 				}
+			}
+
+			function enable_editor(audiodata) {
+				audioel.attr('src', audiodata);
+				audioel.css('display', 'block');
+				
+				$('#btncstart').text(null);
+				$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
+				$('#btncstart').removeClass('btn-success');
+				$('#btncstart').addClass('btn-default');
+
+				$('#btncend').text(null);
+				$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
+				$('#btncend').removeClass('btn-success');
+				$('#btncend').addClass('btn-default');
+
+				ccrops = false;
+				ccrope = false;
+				cropstart = null;
+				cropend = null;
+				cropstartss = null;
+				cropendss = null;
+				cropstarts = null;
+				cropends = null;
+				
+				$('#btnpbrate').removeClass('disabled');
+				$('#btnpbrate').removeAttr('disabled');
+				$('#btncstart').removeClass('disabled');
+				$('#btncstart').removeAttr('disabled');
+				$('#btndown').addClass('disabled');
+				$('#btndown').attr('disabled', true);
+				
+				$('#waitimg').css('display', 'none');
+			}
+			
+			function disable_editor() {
+				$('#btncstart').text(null);
+				$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
+				$('#btncstart').removeClass('btn-success');
+				$('#btncstart').addClass('btn-default');
+
+				$('#btncend').text(null);
+				$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
+				$('#btncend').removeClass('btn-success');
+				$('#btncend').addClass('btn-default');
+				ccrops = false;
+				ccrope = false;
+				joinfiles = false;
+				cropstart = null;
+				cropend = null;
+				cropstartss = null;
+				cropendss = null;
+				cropstarts = null;
+				cropends = null;
+
+				$('#btncstart').addClass('disabled');
+				$('#btncstart').attr('disabled', true);
+				$('#btncend').addClass('disabled');
+				$('#btncend').attr('disabled', true);
+				$('#btncrop').addClass('disabled');
+				$('#btncrop').attr('disabled', true);
+				$('#btndown').removeClass('disabled');
+				$('#btndown').removeAttr('disabled');
+
+				$('#waitimg').css('display', 'none');
+				$('#audiofile').css('display', 'block');
 			}
 		</script>
