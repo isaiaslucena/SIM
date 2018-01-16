@@ -282,21 +282,6 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function crop_edit_audio() {
-		if ($this->session->has_userdata('logged_in')) {
-			$audiofile = $this->input->post('audiofile');
-			$starttime = $this->input->post('starttime');
-			$endtime = $this->input->post('endtime');
-
-			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile);
-			
-			header('Content-Type: application/json');
-			print json_encode($message);
-		} else {
-			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
-		}
-	}
-
 	public function calendar_index($vtype, $selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
@@ -1108,6 +1093,21 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function join_edit_audio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$audiofiles = $this->input->post('audiofiles');
+			// var_dump($audiofiles);
+			// exit();
+			
+			// $message['filejoinurl'] = $this->pages_model->join_edit_audio($audiofiles);
+			
+			header('Content-Type: application/json');
+			print json_encode($audiofiles);
+		} else {
+			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
+		}
+	}
+
 	public function join_edit_temp() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
@@ -1240,6 +1240,21 @@ class Pages extends CI_Controller {
 			$this->load->view('crop_temp',$data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
+	public function crop_edit_audio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$audiofile = $this->input->post('audiofile');
+			$starttime = $this->input->post('starttime');
+			$endtime = $this->input->post('endtime');
+
+			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile);
+			
+			header('Content-Type: application/json');
+			print json_encode($message);
+		} else {
+			redirect('login?rdt='.urlencode('pages/edit_audio'), 'refresh');
 		}
 	}
 
@@ -2075,37 +2090,43 @@ class Pages extends CI_Controller {
 
 	public function rec_radio($success_msg = '') {
 		if ($this->session->has_userdata('logged_in')) {
-			$sessiondata = array(
-				'view' => 'groups',
-				'last_page' => base_url('pages/groups')
-			);
-			$this->session->set_userdata($sessiondata);
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			if ($id_group == 1) {
+				$sessiondata = array(
+					'view' => 'rec_radio',
+					'last_page' => base_url('pages/rec_radio')
+				);
+				$this->session->set_userdata($sessiondata);
 
-			$data_navbar['selected_page'] = 'rec_radio';
-			$this->load->view('head');
-			$this->load->view('navbar',$data_navbar);
-			$data['groups'] = $this->pages_model->groups();
-			$data['datatablename'] = 'table_rec_radios';
+				$data_navbar['selected_page'] = 'rec_radio';
+				$this->load->view('head');
+				$this->load->view('navbar',$data_navbar);
+				$data['groups'] = $this->pages_model->groups();
+				$data['datatablename'] = 'table_rec_radios';
 
-			$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radio/getradios'));
-			// var_dump($data['rec_radios']);
-		
-			if ($success_msg == 'create') {
-				$data['success_msg'] = get_phrase('radio_created_successfuly');
-			}
-			else if ($success_msg == 'delete') {
-				$data['success_msg'] = get_phrase('radio_deleted_successfuly');
-			}
-			else if ($success_msg == 'update') {
-				$data['success_msg'] = get_phrase('radio_updated_successfuly');
-			}
-			else if (!empty($success_msg)){
-				redirect('pages/rec_radio','refresh');
-			}
+				$data['rec_radios'] = json_decode(file_get_contents('http://radio.intranet.dataclip/index.php/radio/getradios'));
+				// var_dump($data['rec_radios']);
 			
-			$this->load->view('rec_radio',$data);
-			$this->load->view('language_datatable',$data);
-			$this->load->view('footer',$data_navbar);
+				if ($success_msg == 'create') {
+					$data['success_msg'] = get_phrase('radio_created_successfuly');
+				}
+				else if ($success_msg == 'delete') {
+					$data['success_msg'] = get_phrase('radio_deleted_successfuly');
+				}
+				else if ($success_msg == 'update') {
+					$data['success_msg'] = get_phrase('radio_updated_successfuly');
+				}
+				else if (!empty($success_msg)){
+					redirect('pages/rec_radio','refresh');
+				}
+				
+				$this->load->view('rec_radio',$data);
+				$this->load->view('language_datatable',$data);
+				$this->load->view('footer',$data_navbar);
+			} else {
+				redirect(base_url(), 'refresh');
+			}
 		} else {
 			redirect('login?rdt='.urlencode('pages/rec_radio'), 'refresh');
 		}

@@ -1,33 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <body>
 	<style type="text/css">
-		.slider {
-			max-height: 400px
-			-webkit-transition-property: all;
-			-webkit-transition-duration: .5s;
-			-webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-moz-transition-property: all;
-			-moz-transition-duration: .5s;
-			-moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			-ms-transition-property: all;
-			-ms-transition-duration: .5s;
-			-ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			transition-property: all;
-			transition-duration: .5s;
-			transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-			height: 400px;
-		}
-		.slider.closed {
-			display: none;
-		}
-		.affix {
-			top: 0;
-			width: 100%;
-		}
-		.affix + .container-fluid {
-			padding-top: 70px;
-		}
-
 		#joindiv {
 			position: fixed;
 			bottom: 0px;

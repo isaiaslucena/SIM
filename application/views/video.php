@@ -188,43 +188,44 @@
 		</span>
 		<span class="tooltiptime"></span>
 		
-		<div class="container-fluid">
-			<div class="row center-block text-center" style="padding-bottom: 8px">
-				<div class="col-lg-8 center-block text-center">
+		<div class="container-fluid center-block text-center">
+			<div class="row">
+				<div class="col-lg-7">
 					<h2 id="vtitle">Nenhuma seleção</h2>
-					<div id="divvideo">
-						<div id="vvideobtn" class='vbutton' style="display: none"></div>
-						<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
-						<img id="thvideo" class="pthvideo" style="display: none;">
-					</div>
 				</div>
 
-				<div class="col-lg-4">
-					<div class="row">
-						<div class="col-lg-5">
-							<div class="input-group date">
-								<input id="seldate" type="text" class="form-control">
-								<div class="input-group-addon">
-									<span class="fa fa-calendar"></span>
-								</div>
+				<div class="col-lg-5">
+					<div class="btn-toolbar">
+						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
+						<a href="<?php echo base_url('pages/index_radio_knewin')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						
+
+						<div class="input-group date" style="width: 32%">
+							<input id="seldate" type="text" class="form-control">
+							<div class="input-group-addon">
+								<span class="fa fa-calendar"></span>
 							</div>
 						</div>
 
-						<div class="col-lg-7">
-							<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" title="Selecione uma data" disabled></select>
-						</div>
-					</div>
-					<div class="row">
-						<h4>Vídeos</h4>
+						<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" title="Selecione uma data" disabled></select>
 					</div>
 				</div>
+			</div>
 
-				<div id="vnextdiv" class="col-lg-4" style="overflow-y: auto; height: 464px;">
-					<ul id="vnext" class="list-group"></ul>
+			<div class="row">
+				<div id="divvideo" class="col-lg-8">
+					<div id="vvideobtn" class='vbutton' style="display: none"></div>
+					<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
+					<img id="thvideo" class="pthvideo" width="840" height="480" style="display: none;">
+				</div>
+				
+				<div id="vnextdiv" class="col-lg-4">
+					<!-- <h4>Vídeos</h4> -->
+					<ul id="vnext" class="list-group" style="overflow-y: auto; height: 480px;"></ul>
 				</div>
 			</div>
 			
-			<div class="row center-block text-center" style="padding-bottom: 8px">
+			<div class="row">
 				<div class="col-lg-1">
 					<span id="currtime">--:--</span>
 				</div>
@@ -242,51 +243,53 @@
 				</div>
 			</div>
 
-			<div class="row center-block text-center" style="padding-bottom: 8px">
+			<div class="row">
 				<div id="controls" class="col-lg-12">
-					<div class="btn-group" role="group" aria-label="...">
-						<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
-							<i id="iplay" class="fa fa-play hidden"></i>
-							<i id="ipause" class="fa fa-pause"></i>
-						</a>
-						<a id="btnstop" type="button" class="btn btn-default disabled" title="Parar"><i class="fa fa-stop"></i></a>
-					</div>
+					<!-- <div class="btn-toolbar"> -->
+						<div class="btn-group" role="group" aria-label="...">
+							<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
+								<i id="iplay" class="fa fa-play hidden"></i>
+								<i id="ipause" class="fa fa-pause"></i>
+							</a>
+							<a id="btnstop" type="button" class="btn btn-default disabled" title="Parar"><i class="fa fa-stop"></i></a>
+						</div>
 
-					<div class="btn-group" role="group" aria-label="...">
-						<a id="btnrn" type="button" class="btn btn-default disabled" title="Velocidade normal" disabled><i class="fa fa-angle-right"></i></a>
-						<a id="btnrs" type="button" class="btn btn-default disabled" title="Reduzir velocidade" disabled><i class="fa fa-angle-double-left"></i></a>
-						<a id="btnrf" type="button" class="btn btn-default disabled" title="Aumentar velocidade" disabled><i class="fa fa-angle-double-right"></i></a>
-					</div>
+						<div class="btn-group" role="group" aria-label="...">
+							<a id="btnrn" type="button" class="btn btn-default disabled" title="Velocidade normal" disabled><i class="fa fa-angle-right"></i></a>
+							<a id="btnrs" type="button" class="btn btn-default disabled" title="Reduzir velocidade" disabled><i class="fa fa-angle-double-left"></i></a>
+							<a id="btnrf" type="button" class="btn btn-default disabled" title="Aumentar velocidade" disabled><i class="fa fa-angle-double-right"></i></a>
+						</div>
 
-					<div class="btn-group" role="group" aria-label="...">
-						<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i></a>
-						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
-						<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></a>
-						<input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="Juntar" data-off="Juntar" disabled>
-					</div>
+						<div class="btn-group" role="group" aria-label="...">
+							<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i></a>
+							<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
+							<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></a>
+							<input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="Juntar" data-off="Juntar" disabled>
+						</div>
 
-					<!-- <div class="btn-group" role="group" aria-label="Juntar cortes"> -->
-						<!-- <a id="btnjcrop" type="button" class="btn btn-default" title="Juntar cortes" disabled><i class="fa fa-plus-circle"></i></a> -->
-						<!-- <input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-close'></i>" disabled> -->
+						<!-- <div class="btn-group" role="group" aria-label="Juntar cortes"> -->
+							<!-- <a id="btnjcrop" type="button" class="btn btn-default" title="Juntar cortes" disabled><i class="fa fa-plus-circle"></i></a> -->
+							<!-- <input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-close'></i>" disabled> -->
+						<!-- </div> -->
+
+						<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
+
+						<a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a>
+
+						<div class="btn-group" role="group" aria-label="...">
+							<a id="btnvol" type="button" class="btn btn-default disabled" title="Mudo" disabled><i class="fa fa-volume-off"></i></a>
+							<a id="btnvolm" type="button" class="btn btn-default disabled" title="Reduzir volume" disabled><i class="fa fa-volume-down"></i></a>
+							<a id="btnvolp" type="button" class="btn btn-default disabled" title="Aumentar volume" disabled><i class="fa fa-volume-up"></i></a>
+						</div>
+
+						<div class="btn-group" role="group" aria-label="...">
+							<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
+						</div>
+
+						<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+
+						<!-- <a id="btnnight" type="button" class="btn btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a> -->
 					<!-- </div> -->
-
-					<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
-
-					<a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a>
-
-					<div class="btn-group" role="group" aria-label="...">
-						<a id="btnvol" type="button" class="btn btn-default disabled" title="Mudo" disabled><i class="fa fa-volume-off"></i></a>
-						<a id="btnvolm" type="button" class="btn btn-default disabled" title="Reduzir volume" disabled><i class="fa fa-volume-down"></i></a>
-						<a id="btnvolp" type="button" class="btn btn-default disabled" title="Aumentar volume" disabled><i class="fa fa-volume-up"></i></a>
-					</div>
-
-					<div class="btn-group" role="group" aria-label="...">
-						<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
-					</div>
-
-					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
-
-					<!-- <a id="btnnight" type="button" class="btn btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a> -->
 				</div>
 			</div>
 		</div>
@@ -834,7 +837,7 @@
 						return this;
 					}
 
-					$('#vnextdiv').scrollTo('.active');
+					$('#vnext').scrollTo('.active');
 					// $('#vnextdiv').animate({scrollTop: $('.active').offset().top}, 100);
 				}
 

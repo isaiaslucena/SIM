@@ -25,8 +25,8 @@
 		<div class="row">
 			<div class="col-lg-3">
 				<label class="btn btn-default">
-					<i class="fa fa-upload"></i> Selecionar arquivo
-					<input id="btnupload" type="file" style="display: none;">
+					<i class="fa fa-upload"></i> Selecionar arquivos
+					<input id="btnupload" type="file" multiple style="display: none;">
 				</label>
 			</div>
 
@@ -44,6 +44,7 @@
 			ratec = 1,
 			audioel = $('#audiofile'),
 			ccrops = false, ccrope = false,
+			audiofilestojoin = [],
 			cropstart, cropend, cropstartss, cropendss, cropstarts, cropends;
 			
 			$('#btnupload').change(function(event) {
@@ -51,41 +52,65 @@
 				$('#wellbigimg').css('vertical-align', 'center');
 				$('#wellbigimg').addClass('center-block');
 
-				file = document.querySelector('#btnupload').files[0];
-				reader = new FileReader();
+				audiofiles = document.querySelector('#btnupload').files;
+				audiofilesc = audiofiles.length;
+				filesreader = new FileReader();
 
-				reader.onload = function(e) {
-					audioel.attr('src', e.target.result);
-					audioel.css('display', 'block');
+				$.each(audiofiles, function(index, val) {
+					filename = val.name;
+					filetype = val.type;
+					if (filetype != 'audio/mp3') {
+						swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio mp3.\n\nTodos os arquivos devem ser do mesmo tipo!', 'error');
+						audiofilestojoin = [];
+						return false;
+					} else {
+						audiofilestojoin.push(val);
+					}
+				});
+
+				audiofilestojoinc = audiofilestojoin.length;
+				if (audiofilestojoinc > 1) {
+					console.log(audiofilestojoin);
+					$.post('<?php echo base_url("pages/join_edit_audio")?>',
+						{audiofiles: audiofilestojoin},
+						function(data, textStatus, xhr) {
+							console.log(data);
+						}
+					);
+				} else {
+					filesreader.readAsDataURL(audiofiles);
 					
-					$('#btncstart').text(null);
-					$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
-					$('#btncstart').removeClass('btn-success');
-					$('#btncstart').addClass('btn-default');
-					ccrope = false;
-					$('#btncend').text(null);
-					$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
-					$('#btncend').removeClass('btn-success');
-					$('#btncend').addClass('btn-default');
-					ccrope = false;
-					ccrope = false;
-					cropstart = null;
-					cropend = null;
-					cropstartss = null;
-					cropendss = null;
-					cropstarts = null;
-					cropends = null;
-					
-					$('#btnpbrate').removeClass('disabled');
-					$('#btnpbrate').removeAttr('disabled');
-					$('#btncstart').removeClass('disabled');
-					$('#btncstart').removeAttr('disabled');
-					$('#btndown').addClass('disabled');
-					$('#btndown').attr('disabled', true);
-				}
-				
-				if (file) {
-					reader.readAsDataURL(file);
+					filesreader.onload = function(e) {
+				// 		// console.log(e);
+				// 		audioel.attr('src', e.target.result);
+				// 		audioel.css('display', 'block');
+						
+				// 		$('#btncstart').text(null);
+				// 		$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
+				// 		$('#btncstart').removeClass('btn-success');
+				// 		$('#btncstart').addClass('btn-default');
+
+				// 		$('#btncend').text(null);
+				// 		$('#btncend').append('<i class="fa fa-hourglass-end"></i> Fim');
+				// 		$('#btncend').removeClass('btn-success');
+				// 		$('#btncend').addClass('btn-default');
+
+				// 		ccrope = false;
+				// 		ccrope = false;
+				// 		cropstart = null;
+				// 		cropend = null;
+				// 		cropstartss = null;
+				// 		cropendss = null;
+				// 		cropstarts = null;
+				// 		cropends = null;
+						
+				// 		$('#btnpbrate').removeClass('disabled');
+				// 		$('#btnpbrate').removeAttr('disabled');
+				// 		$('#btncstart').removeClass('disabled');
+				// 		$('#btncstart').removeAttr('disabled');
+				// 		$('#btndown').addClass('disabled');
+				// 		$('#btndown').attr('disabled', true);
+					}
 				}
 			});
 			

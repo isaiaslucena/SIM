@@ -1042,6 +1042,14 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 	
+	public function join_edit_audio() {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+		
+		$filesline = null;
+	}
+	
 	public function join_radio_knewin($idsdocs) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');

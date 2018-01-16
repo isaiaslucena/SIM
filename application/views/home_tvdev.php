@@ -5,16 +5,10 @@ $time = $time[1] + $time[0];
 $start = $time;
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-		<div class="row page-header">
+		<div class="row">
 			<div class="col-lg-12">
-				<div class="col-lg-4">
-					<h1><?php echo get_phrase('television');?></h1>
-				</div>
-				<div class="col-lg-5">
-				</div>
-				<div class="col-lg-3" >
-					<small><span class="pull-right text-muted pageload"></span></small>
-				</div>
+				<h1 class=" page-header"><?php echo get_phrase('television');?></h1>
+				<small><span class="pull-right text-muted pageload"></span></small>
 			</div>
 		</div>
 
