@@ -81,23 +81,16 @@
 							// console.log(e);
 							fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
 
-							$('#waitmsg').text('Enviando arquivo "'+filename+'"...');
+							// $('#waitmsg').text('Enviando arquivo "'+filename+'"...');
 
 							$.ajax({
 								url: '<?php echo base_url("pages/upload_join_edit_audio")?>',
 								type: 'POST',
 								dataType: 'html',
-								async: false,
 								data: {'audioname': filename, 'audiofile': fileb64},
 							})
 							.done(function(data) {
 								console.log(data);
-							})
-							.fail(function() {
-								console.log("error");
-							})
-							.always(function() {
-								console.log("complete");
 							});
 
 							// $.post(
@@ -129,19 +122,12 @@
 						url: '<?php echo base_url("pages/join_edit_audio"); ?>',
 						type: 'POST',
 						dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-						async: false,
 						data: {adfiles: audiofilestojoin},
 					})
 					.done(function() {
 						// console.log("success");
 						joinfiles = true;
 						enable_editor(data.finalurl);
-					})
-					.fail(function() {
-						console.log("error");
-					})
-					.always(function() {
-						console.log("complete");
 					});
 					
 					// $.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: audiofilestojoin}, function(data, textStatus, xhr) {
