@@ -40,16 +40,17 @@
 		</div>
 
 		<script type="text/javascript">
-			var count = 0,
-			ratec = 1,
+			var count = 0, fcount, ratec = 1,
 			audioel = $('#audiofile'),
-			ccrops = false, ccrope = false, joinfiles = false, fileerr = false,
+			ccrops = false, ccrope = false, joinfiles = false, fileerr = false, lastfile,
 			audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
-			ajaxpostsd = [];;
+			audiofilestojoin = [], uploadaudiofiles = [];
 			
 			$('#btnupload').change(function(event) {
-				var audiofilestojoin = new Array();
+				audiofilestojoin = [];
+				uploadaudiofiles = [];
 
+				audioel.css('display', 'none');
 				$('#iconimg').css('display', 'none');
 				$('#wellbigimg').css('vertical-align', 'center');
 				$('#wellbigimg').addClass('center-block');
@@ -57,8 +58,9 @@
 				$('#waitimg').css('display', 'block');
 
 				var audiofiles = document.querySelector('#btnupload').files;
-				var audiofilesc = audiofiles.length;
+				audiofilesc = audiofiles.length;
 
+				fcount = 1;
 				$.each(audiofiles, function(index, val) {
 					var filelastmod = val.lastModified;
 					var filename = val.name;
@@ -68,7 +70,6 @@
 
 					if (filetype != 'audio/mp3') {
 						swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
-						audiofilestojoin = [];
 						joinfiles = false;
 						fileerr = true;
 						return false;
@@ -80,29 +81,15 @@
 						filereader.onload = function(e) {
 							// console.log(e);
 							fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
-
-							// $('#waitmsg').text('Enviando arquivo "'+filename+'"...');
-
-							$.ajax({
-								url: '<?php echo base_url("pages/upload_join_edit_audio")?>',
-								type: 'POST',
-								dataType: 'html',
-								data: {'audioname': filename, 'audiofile': fileb64},
-							})
-							.done(function(data) {
-								console.log(data);
-							});
-
-							// $.post(
-							// 	'<?php echo base_url("pages/upload_join_edit_audio")?>',
-							// 	{
-							// 		'audioname': filename,
-							// 		'audiofile': fileb64
-							// 	},
-							// 	function(data, textStatus, xhr) {
-							// 		console.log(data);
-							// 	}
-							// );	
+							uploadaudiofiles.push(
+								$.post('<?php echo base_url("pages/upload_join_edit_audio")?>',
+									{'audioname': filename,'audiofile': fileb64}
+								)
+							);
+							if (fcount == audiofilesc) {
+								lastfile = filename;
+							}
+							fcount += 1;
 						}
 					}
 				});
@@ -111,30 +98,25 @@
 					$('#waitimg').css('display', 'none');
 					$('#iconimg').css('display', 'block');
 					fileerr = false;
+					lastfile = null;
+					uploadaudiofiles = [];
+					audiofilestojoinc = [];
 					return false;
 				}
-				
+
 				audiofilestojoinc = audiofilestojoin.length;
 				if (audiofilestojoinc > 1) {
-					$('#waitmsg').text('Aguarde, juntando arquivos...');
-					
-					$.ajax({
-						url: '<?php echo base_url("pages/join_edit_audio"); ?>',
-						type: 'POST',
-						dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-						data: {adfiles: audiofilestojoin},
-					})
-					.done(function() {
-						// console.log("success");
-						joinfiles = true;
-						enable_editor(data.finalurl);
+					$(document).ajaxComplete(function(event, xhr, settings) {
+						// console.log(xhr);
+						fdata = settings.data;
+						rgx = new RegExp ('\\b'+lastfile+'\\b', 'ig');
+						if (settings.url === '<?php echo base_url("pages/upload_join_edit_audio")?>' && rgx.test(fdata)) {
+							join_files(audiofilestojoin);
+							lastfile = null;
+							audiofilestojoinc = [];
+							uploadaudiofiles = [];
+						}
 					});
-					
-					// $.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: audiofilestojoin}, function(data, textStatus, xhr) {
-					// 	// console.log(data);
-					// 	joinfiles = true;
-					// 	enable_editor(data.finalurl);
-					// });
 				} else {
 					joinfiles = false;
 					var filereader = new FileReader();
@@ -279,7 +261,8 @@
 			});
 			
 			$('#btncrop').click(function(event) {
-				$('#audiofile').css('display', 'none');
+				playpauseaudio('audiofile');
+				audioel.css('display', 'none');
 				$('#waitmsg').text('Carregando...');
 				$('#waitimg').css('display', 'block');
 				
@@ -296,6 +279,8 @@
 						audioel.attr('src', afileurl);
 						$('#btndown').attr('href', afileurl);
 						$('#btndown').attr('download', 'audio_editado_'+Date.now());
+						$('#waitimg').css('display', 'none');
+						audioel.css('display', 'block');
 
 						disable_editor();
 					}
@@ -323,6 +308,19 @@
 				} else {
 					aaudioelmt[0].pause();
 				}
+			}
+
+			function join_files(jaudiofilestojoin) {
+				$('#waitmsg').text('Aguarde, juntando arquivos...');
+				
+				$.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: jaudiofilestojoin},
+					function(data, textStatus, xhr) {
+						// console.log(data);
+						console.log('Joined files!')
+						joinfiles = true;
+						enable_editor(data.finalurl);
+					}
+				);
 			}
 
 			function enable_editor(audiodata) {
@@ -386,8 +384,5 @@
 				$('#btncrop').attr('disabled', true);
 				$('#btndown').removeClass('disabled');
 				$('#btndown').removeAttr('disabled');
-
-				$('#waitimg').css('display', 'none');
-				$('#audiofile').css('display', 'block');
 			}
 		</script>
