@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
+
 		<div class="row page-header">
 			<div class="col-lg-12">
 				<h1><?php echo get_phrase('reports');?></h1>
@@ -66,7 +65,7 @@
 													<td class="text-center"><?php echo $uinfo['keyword']; ?></td>
 													<?php if ($page == 'crop') { ?>
 													<td class="text-center">
-														<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="<?php echo $uinfo['text_cropped']; ?>" data-original-title="" title="" aria-describedby="popover">
+														<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="<?php echo $uinfo['content']; ?>" data-original-title="Texto" title="Texto Cortado" aria-describedby="popover">
 														Detalhes
 														</button>
 													</td>
@@ -83,7 +82,7 @@
 			</div>
 		</div>
 
-		<script>
+		<script type="text/javascript">
 			$('[data-toggle="popover"]').popover();
 
 			$('#textview').on('shown.bs.modal', function (event) {

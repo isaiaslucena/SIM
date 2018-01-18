@@ -9,8 +9,13 @@
 	<?php } ?>
 		<!-- page-wrapper -->
 		</div>
+		<!-- page-wrapper -->
+
 		<!-- wrapper -->
 		</div>
-		<!-- body -->
+		<!-- wrapper -->
+		
+	<!-- body -->
 	</body>
+	<!-- body -->
 </html>

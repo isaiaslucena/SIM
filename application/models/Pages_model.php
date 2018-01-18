@@ -429,6 +429,12 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function discarded_docs_knewin_tv($data_discarded) {
+		$sqlquery =	'SELECT id_doc FROM discard_keyword_tv_knewin
+						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
+		return $this->db->query($sqlquery)->result_array();
+	}
+
 	public function texts_keyword_byid_solr($ids_text, $keyword, $startdate, $enddate) {
 		//Solr Connection
 		$protocol='http';
@@ -488,6 +494,58 @@ class Pages_model extends CI_Model {
 		$port='8983';
 		$host='172.17.0.3';
 		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if (!is_null($idsline)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idsline.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_tv_knewin($ids_doc, $keyword, $startdate, $enddate) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_tv/query?rows=500&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$idsline = null;
@@ -1013,9 +1071,44 @@ class Pages_model extends CI_Model {
 			'id_user' => $data['id_user'],
 			'id_client' => $data['id_client'],
 			'id_keyword' => $data['id_keyword'],
+			'id_text' => $data['id_text'],
+			'content' => $data['content'],
 			'timestamp' => strtotime("now")
 		);
 		$this->db->insert('crop_info', $data_insert_info);
+	}
+
+	public function crop_info_radio_knewin($data) {
+		$data_insert_info = array(
+			'id_doc' => $data['id_doc'],
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'starttime' => $data['starttime'],
+			'endtime' => $data['endtime'],
+			'content' => $data['content'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('crop_info_radio_knewin', $data_insert_info);
+		return $this->db->insert_id();
+	}
+
+	public function crop_info_radio_knewin_download($cropid) {
+		$this->db->set('download_timestamp', strtotime("now"));
+		$this->db->where('id_crop_info', $cropid);
+		$this->db->update('crop_info_radio_knewin');
+	}
+
+	public function crop_info_tv_knewin($data) {
+		$data_insert_info = array(
+			'id_doc' => $data['id_doc'],
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'content' => $data['content'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('crop_info_tv_knewin', $data_insert_info);
 	}
 
 	public function join_mp3files($idsfilesmp3) {
@@ -2000,7 +2093,7 @@ class Pages_model extends CI_Model {
 			return $this->db->query($sqlquery)->result_array();
 		}
 		else if ($type == 'crop') {
-			$sqlquery =	'SELECT u.id_user, u.username, ci.id_client, cl.name as client, ci.id_file, kw.keyword, ci.id_text, ci.text_cropped,ci.timestamp
+			$sqlquery =	'SELECT u.id_user, u.username, ci.id_client, cl.name as client, ci.id_file, kw.keyword, ci.id_text, ci.content,ci.timestamp
 							FROM crop_info ci
 							JOIN `user` u ON ci.id_user=u.id_user
 							JOIN client cl ON ci.id_client=cl.id_client

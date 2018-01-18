@@ -197,7 +197,7 @@
 				<div class="col-lg-5">
 					<div class="btn-toolbar">
 						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
-						<a href="<?php echo base_url('pages/index_radio_knewin')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
 						
 
 						<div class="input-group date" style="width: 32%">

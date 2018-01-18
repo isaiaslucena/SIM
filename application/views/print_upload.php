@@ -1,9 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
+
 	<script type="text/javascript" src="<?php echo base_url('assets/jcrop/js/jquery.Jcrop.min.js')?>"></script>
 	<link rel="stylesheet" href="<?php echo base_url('assets/jcrop/css/jquery.Jcrop.min.css')?>">
 
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">

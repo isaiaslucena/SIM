@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
+
 		<div class="row page-header">
 			<div class="col-lg-12">
 				<div class="col-lg-4">
@@ -34,75 +33,71 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
+				<div class="table-responsive">
+					<table class="table table-hover" id="<?php echo $datatablename;?>">
+						<thead>
+							<tr>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('id');?></th>
+								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('username');?></th>
+								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('logged_in');?></th>
+								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('session');?></th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('email');?></th>
+								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('options');?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+								foreach ($users as $user) {
+									$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE \'%;logged_in|b:1;%\' AND data LIKE \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
+									$check_session = $this->db->query($sqlquery)->result_array();
+									if (empty($check_session) or is_null($check_session)) {
+										$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE  \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
+										$session_user = $this->db->query($sqlquery)->result_array();
+										$logged_in = 0;
+									} else {
+										$session_user = $check_session;
+										$logged_in = 1;
+									} ?>
 									<tr>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('id');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('username');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('logged_in');?></th>
-										<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('session');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('email');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('options');?></th>
+										<td class="text-center"><?php echo $user['id_user']; ?></td>
+										<td class="text-center"><?php echo $user['username']; ?></td>
+										<td class="text-center">
+										<?php
+											if ($logged_in === 0) { ?>
+												<input type="checkbox" disabled>
+										<?php } else if ($logged_in === 1) { ?>
+												<input type="checkbox" disabled checked>
+										<?php }	?>
+										</td>
+										<td class="text-center">
+										<?php
+										if (!isset($session_user[0])) {
+											echo '-';
+										} else {
+											echo date('d/m/Y H:i:s',$session_user[0]['timestamp']);
+										}
+										?>
+										</td>
+										<td class="text-center"><?php echo $user['email']; ?></td>
+										<td class="text-center">
+											<button id="client_edit_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>" data-toggle="modal" data-target=".edit_modal">
+												<i class="fa fa-edit"></i>
+												<?php echo get_phrase('edit');?>
+											</button>
+											<button id="client_passwd_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-toggle="modal" data-target=".passwd_modal">
+												<i class="fa fa-lock"></i>
+												<?php echo get_phrase('password');?>
+											</button>
+											<button type="button"  class="btn btn-danger btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".delete_modal">
+												<i class="fa fa-times"></i>
+												<?php echo get_phrase('delete');?>
+											</button>
+										</td>
 									</tr>
-								</thead>
-								<tbody>
-									<?php
-										foreach ($users as $user) {
-											$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE \'%;logged_in|b:1;%\' AND data LIKE \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
-											$check_session = $this->db->query($sqlquery)->result_array();
-											if (empty($check_session) or is_null($check_session)) {
-												$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE  \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
-												$session_user = $this->db->query($sqlquery)->result_array();
-												$logged_in = 0;
-											} else {
-												$session_user = $check_session;
-												$logged_in = 1;
-											} ?>
-											<tr>
-												<td class="text-center"><?php echo $user['id_user']; ?></td>
-												<td class="text-center"><?php echo $user['username']; ?></td>
-												<td class="text-center">
-												<?php
-													if ($logged_in === 0) { ?>
-														<input type="checkbox" disabled>
-												<?php } else if ($logged_in === 1) { ?>
-														<input type="checkbox" disabled checked>
-												<?php }	?>
-												</td>
-												<td class="text-center">
-												<?php
-												if (!isset($session_user[0])) {
-													echo '-';
-												} else {
-													echo date('d/m/Y H:i:s',$session_user[0]['timestamp']);
-												}
-												?>
-												</td>
-												<td class="text-center"><?php echo $user['email']; ?></td>
-												<td class="text-center">
-													<button id="client_edit_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>" data-toggle="modal" data-target=".edit_modal">
-														<i class="fa fa-edit"></i>
-														<?php echo get_phrase('edit');?>
-													</button>
-													<button id="client_passwd_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-toggle="modal" data-target=".passwd_modal">
-														<i class="fa fa-lock"></i>
-														<?php echo get_phrase('password');?>
-													</button>
-													<button type="button"  class="btn btn-danger btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".delete_modal">
-														<i class="fa fa-times"></i>
-														<?php echo get_phrase('delete');?>
-													</button>
-												</td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
-						</div><!-- /.table-responsive -->
-					</div><!-- /.panel-body -->
-				</div><!-- /.panel -->
+								<?php } ?>
+						</tbody>
+					</table>
+				</div><!-- /.table-responsive -->
 			</div>
 
 			<div id="add_modal" class="modal fade add_modal" tabindex="-1" role="dialog" aria-labelledby="add_modal" aria-hidden="true" style="display: none;">

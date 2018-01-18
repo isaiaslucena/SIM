@@ -1,9 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
-		<div class="row page-header">
+
+		<div class="row">
 			<div class="col-lg-12">
-				<h1><?php echo get_phrase('dashboard');?></h1>
+				<h1 class="page-header"><?php echo get_phrase('dashboard');?></h1>
 			</div>
 		</div>
 
@@ -161,8 +160,5 @@
 								</a>
 							</div>
 						</div> -->
-
-<!-- 					</div>/.panel-body
-				</div>/.panel -->
 			</div>
-	</div>
+		</div>

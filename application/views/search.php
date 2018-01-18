@@ -73,7 +73,7 @@
 									</div>
 									<div class="radio">
 										<label>
-											<input id="searchrstart" type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
+											<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
 											Televisão
 										</label>
 									</div>
@@ -119,6 +119,8 @@
 				</div>
 			</div>
 		</div>
+	
+		<div id="searchtop"></div>
 
 		<?php
 			$clientslinevar = null;
@@ -331,13 +333,13 @@
 			});
 
 			if ($('#back-to-top').length) {
-				var scrollTrigger = 1000, // px
+				var scrollTrigger = 1000,
 				backToTop = function () {
 					var scrollTop = $(window).scrollTop();
 					if (scrollTop > scrollTrigger) {
-						$('#back-to-top').addClass('show')
+						$('#back-to-top').fadeIn('fast');
 					} else {
-						$('#back-to-top').removeClass('show')
+						$('#back-to-top').fadeOut('fast');
 					}
 				}
 				backToTop();
@@ -351,8 +353,12 @@
 			};
 
 			$( document ).ready(function(){
-				$('html, body').animate({
-					scrollTop: $("#searchrstart").offset().top
-				}, 600);
+				vsearchresult = '<?php echo $vsr; ?>';
+				
+				if (vsearchresult == 'true') {
+					$('html, body').animate({
+						scrollTop: $("#searchtop").offset().top
+					}, 400);
+				}
 			});
 		</script>

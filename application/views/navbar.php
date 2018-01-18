@@ -222,10 +222,15 @@
 					window.location ='<?php echo base_url("pages/calendar/"); ?>' + vtype + '/' + selecteddate;
 				});
 
-				if (idgroup == 1 || idgroup == 5 ) {
-					$(function() { getradios(); });
-				}
-
+				$(document).ready(function() {
+					if (idgroup == 1) {
+						$('nav.navbar-default').css('position', 'absolute');
+					}
+					
+					if (idgroup == 1 || idgroup == 5 ) {
+						$(function() { getradios(); });
+					}
+				});
 				function getradios() {
 					setTimeout(getradios, 60000);
 					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radio/getstopradios'))?>'}, function(data, textStatus, xhr) {

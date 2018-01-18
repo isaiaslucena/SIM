@@ -24,6 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$sd->setTimezone($newtimezone);
 						$sstartdate = $sd->format('d/m/Y H:i:s');
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
+					
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
 						<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
@@ -63,12 +64,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												$data_discard['enddate'] = $enddate;
 												$data_discard['id_client'] = $client['id_client'];
 												$data_discard['id_keyword'] = $keyword['id_keyword'];
+												
 												$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
 												$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
 												$keyword_foundc = count($keyword_found->response->docs);
 												$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 												$allkeyword_foundc = count($allkeyword_found->response->docs);
-												$ids_file_xml = null;
+
 												$ic = null;
 												if ($keyword_foundc != 0) { ?>
 													<form style="all: unset;" action="<?php echo base_url('pages/radio_knewin_home_keyword');?>" method="post">
@@ -76,15 +78,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 														<input type="hidden" name="startdate" value="<?php echo $startdate;?>">
 														<input type="hidden" name="enddate" value="<?php echo $enddate;?>">
-														<?php if ($keyword['keyword_priority'] == 1) { ?>
-															<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?>
-																<span class="badge"><?php echo $keyword_foundc;?> </span>
-															</button>
-														<?php } else { ?>
-															<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?>
-																<span class="badge"><?php echo $keyword_foundc;?> </span>
-															</button>
-														<?php } ?>
+														<button type="submit" class="btn <?php echo $keyword['keyword_priority'] == 1 ? 'btn-danger' : 'btn-info' ?> btn-sm">
+															<?php echo $keyword['keyword'];?>
+															<span class="badge"><?php echo $keyword_foundc;?> </span>
+														</button>
 													</form>
 
 													<?php
@@ -98,9 +95,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
 										</p>
 									</div>
-								</div>
-							</li>
-							<?php $invert++;
+									</div>
+								</li>
+								<?php $invert++;
 							}
 							?>
 						</ul>
@@ -144,7 +141,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			});
 
 			if ($('#back-to-top').length) {
-				var scrollTrigger = 1000, // px
+				var scrollTrigger = 1000,
 				backToTop = function () {
 					var scrollTop = $(window).scrollTop();
 					if (scrollTop > scrollTrigger) {

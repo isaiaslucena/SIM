@@ -1,25 +1,24 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
-		<div class="row page-header">
-			<div class="col-lg-12">
-				<div class="col-lg-4">
-					<h1><?php echo get_phrase('reports');?></h1>
-				</div>
-				<div class="col-lg-3"></div>
-				<div class="col-lg-5">
-					<div class="form-group pull-right">
-					<label><?php echo get_phrase('select_date');?></label>
-						<div class="input-daterange input-group" id="datepicker">
-							<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" autocomplete="off"/>
-							<span class="input-group-addon"><?php echo get_phrase('until');?></span>
-							<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" autocomplete="off"/>
-							<span class="input-group-btn"><button class="btn btn-default btn-sm" id="btndate" type="button"><?php echo get_phrase('send')?></button></span>
-						</div>
+
+	<div class="row page-header">
+		<div class="col-lg-12">
+			<div class="col-lg-4">
+				<h1><?php echo get_phrase('reports');?></h1>
+			</div>
+			<div class="col-lg-3"></div>
+			<div class="col-lg-5">
+				<div class="form-group pull-right">
+				<label><?php echo get_phrase('select_date');?></label>
+					<div class="input-daterange input-group" id="datepicker">
+						<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" autocomplete="off"/>
+						<span class="input-group-addon"><?php echo get_phrase('until');?></span>
+						<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" autocomplete="off"/>
+						<span class="input-group-btn"><button class="btn btn-default btn-sm" id="btndate" type="button"><?php echo get_phrase('send')?></button></span>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
 	<!-- Today -->
 	<?php if (empty($pstartdate) || empty($penddate)) { ?>

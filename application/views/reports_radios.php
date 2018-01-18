@@ -1,8 +1,7 @@
 <?php
 	defined('BASEPATH') OR exit('No direct script access allowed'); 
 ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
+
 		<div class="row page-header">
 			<div class="col-lg-12">
 				<h1><?php echo get_phrase('reports');?></h1>

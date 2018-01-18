@@ -713,6 +713,7 @@ class Pages extends CI_Controller {
 			$data_discard['enddate'] = $data['enddate'];
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
+			
 			$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
 			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
 			
@@ -728,7 +729,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function tv_home_keyword() {
+	public function tv_knewin_home_keyword() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'tv_home_keyword',
@@ -745,7 +746,16 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
-			$data['keyword_texts'] = $this->pages_model->tv_text_keyword_solr($data['startdate'], $data['enddate'], $data['keyword_selected']);
+			
+
+			$data_discard['startdate'] = $data['startdate'];
+			$data_discard['enddate'] = $data['enddate'];
+			$data_discard['id_client'] = $data['id_client'];
+			$data_discard['id_keyword'] = $data['id_keyword'];
+
+			$discardeddocs = $this->pages_model->discarded_docs_knewin_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_knewin($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
 
@@ -1239,12 +1249,13 @@ class Pages extends CI_Controller {
 			$data['timestamp'] = $this->input->post('timestamp');
 			$data['text_crop'] = $this->input->post('result');
 			$data['mp3pathfilename'] = $this->input->post('mp3pathfilename');
+			
 			$data_crop_info['id_file'] = $this->input->post('id_file');
 			$data_crop_info['id_user'] = $this->session->userdata('id_user');
 			$data_crop_info['id_client'] = $this->input->post('id_client');
 			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
 			$data_crop_info['id_text'] = $this->input->post('id_text');
-			$data_crop_info['text_cropped'] = $this->input->post('result');
+			$data_crop_info['content'] = $this->input->post('result');
 			$data['finalfile'] = $this->pages_model->crop($data['starttime'],$data['endtime'],$data['mp3pathfilename']);
 			$this->pages_model->crop_info($data_crop_info);
 
@@ -1254,7 +1265,7 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('crop_temp',$data);
+			$this->load->view('crop_temp', $data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
@@ -1284,7 +1295,7 @@ class Pages extends CI_Controller {
 			$start = $time;
 
 			$sessiondata = array(
-				'view' => 'crop_temp',
+				'view' => 'crop_knewin',
 				'last_page' => base_url('pages/crop_knewin')
 			);
 			$this->session->set_userdata($sessiondata);
@@ -1299,15 +1310,17 @@ class Pages extends CI_Controller {
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
 			
-			$data_crop_info['id_knewin'] = $this->input->post('id_knewin');
+			$data_crop_info['id_doc'] = $this->input->post('id_doc');
 			$data_crop_info['id_user'] = $this->session->userdata('id_user');
 			$data_crop_info['id_client'] = $this->input->post('id_client');
 			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
 			$data_crop_info['id_text'] = $this->input->post('id_text');
-			$data_crop_info['text_cropped'] = $this->input->post('textseld');
+			$data_crop_info['starttime'] = $data['starttime'];
+			$data_crop_info['endtime'] = $data['endtime'];
+			$data_crop_info['content'] = $this->input->post('textseld');
 			
+			$data['crop_inserted_id'] = $this->pages_model->crop_info_radio_knewin($data_crop_info);
 			$data['finalfile'] = $this->pages_model->crop_knewin($data['starttime'], $data['endtime'], $data['urlmp3']);
-			// $this->pages_model->crop_info($data_crop_info);
 
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1315,7 +1328,18 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('crop_knewin',$data);
+			$this->load->view('crop_knewin', $data);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+		}
+	}
+
+	public function crop_info_radio_knewin_down($cropid) {
+		if ($this->session->has_userdata('logged_in')) {
+			$this->pages_model->crop_info_radio_knewin_download($cropid);
+			
+			header('Content-Type: application/json');
+			print json_encode('Download!');
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
@@ -1480,14 +1504,17 @@ class Pages extends CI_Controller {
 			$this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'search';
-			$this->load->view('head');
-			$this->load->view('navbar',$data_navbar);
-			$data['allclients'] = $this->pages_model->clients(null,null,'radio');
+
+			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
 			$data['alltvc'] = $this->pages_model->tvc();
+			$data['vsr'] = 'false';
 			// $data['alltvp'] = = $this->pages_model->tvp();
-			$this->load->view('search',$data);
-			$this->load->view('footer',$data_navbar);
+
+			$this->load->view('head');
+			$this->load->view('navbar',$data_navbar);
+			$this->load->view('search' ,$data);
+			$this->load->view('footer', $data_navbar);
 		} else {
 			redirect('login?rdt='.urlencode('pages/search'), 'refresh');
 		}
@@ -1544,15 +1571,16 @@ class Pages extends CI_Controller {
 			$searchresult = $this->pages_model->search_result($vtype, $data_search, $start);
 			$data_sresult['searchresult'] = $searchresult;
 			$data['searchresult'] = $searchresult;
+			$data['vsr'] = 'true';
 
 			$this->load->view('head');
-			$this->load->view('navbar',$data_navbar);
-			$this->load->view('search',$data);
+			$this->load->view('navbar', $data_navbar);
+			$this->load->view('search', $data);
 
 			if ($vtype == 'radio') {
-				$this->load->view('search_result',$data_sresult);
+				$this->load->view('search_result', $data_sresult);
 			} else if ($vtype == 'tv') {
-				$this->load->view('tvsearch_result',$data_sresult);
+				$this->load->view('tvsearch_result', $data_sresult);
 			}
 
 			$this->load->view('footer',$data_navbar);
@@ -1772,7 +1800,7 @@ class Pages extends CI_Controller {
 				);
 				$this->session->set_userdata($sessiondata);
 
-				$data_navbar['selected_page'] = 'keywords';
+				$data_navbar['selected_page'] = 'terms';
 
 				$data['keywords'] = $this->pages_model->terms();
 				$data['datatablename'] = 'table_keywords';

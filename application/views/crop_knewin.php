@@ -61,7 +61,7 @@ $senddate = $ed->format('d/m/Y H:i:s');
 						<!-- <a id="btncstart" type="button" class="btn btn-default" title="Marcar início"><i class="fa fa-hourglass-start"></i></a> -->
 						<!-- <a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a> -->
 						<!-- <button id="btncrop" type="submit" form="cropknewin" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></button> -->
-						<a type="button" class="btn btn-default" title="Baixar" href="<?php echo $finalfile;?>" download="<?php echo mb_strtoupper($dwstartdate.'_'.$ssource.'_'.$dwstarttime.'_'.$client_selected);?>"><i class="fa fa-download"></i></a>
+						<a id="btndownload" type="button" class="btn btn-default" title="Baixar" data-cropid="<?php echo $crop_inserted_id; ?>" href="<?php echo $finalfile;?>" download="<?php echo mb_strtoupper($dwstartdate.'_'.$ssource.'_'.$dwstarttime.'_'.$client_selected);?>"><i class="fa fa-download"></i></a>
 					</div>
 				</div>
 			</div>
@@ -117,6 +117,13 @@ $senddate = $ed->format('d/m/Y H:i:s');
 							ratec = 1;
 							break;
 					}
+				});
+
+				$('#btndownload').click(function(event) {
+					cropid = $(this).attr('data-cropid');
+					$.get('<?php echo base_url("pages/crop_info_radio_knewin_down/"); ?>'+cropid, function(data) {
+						console.log(data);
+					});
 				});
 
 				$(document).keypress(function(event) {

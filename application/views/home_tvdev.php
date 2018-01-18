@@ -25,32 +25,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$sstartdate = $sd->format('d/m/Y H:i:s');
 
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
+
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
+						<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
+						<span class="pull-right" id="keywordsquant"></span>
+						<span class="pull-right"><?php echo  get_phrase('with_discard').':'?>&nbsp;</span>
 					</div>
-						<div id="timelinebody" class="panel-body">
-							<ul class="timeline" id="client-ul">
-								<?php
-								$clientn = 0;
-								$invert=0;
-								$keywordquant = array();
-								$allkeywordquant = array();
-								$keyword_found_arr = array();
-								foreach ($clients as $client) {
-									$clientn++;
-									if($invert % 2 == 0){ ?>
-										<li id="<?php echo 'li-'.$client['id_client'];?>">
-									<?php } else { ?>
-										<li class="timeline-inverted" id="<?php echo 'li-'.$client['id_client'];?>">
-									<?php }
-									if ($client['priority'] == 1) { ?>
+					<div id="timelinebody" class="panel-body">
+						<ul class="timeline" id="client-ul">
+							<?php
+							$clientn = 0;
+							$invert=0;
+							$keywordquant = array();
+							$allkeywordquant = array();
+							$keyword_found_arr = array();
+							foreach ($clients as $client) {
+								$clientn++;
+								if($invert % 2 == 0){ ?>
+									<li id="<?php echo 'li-'.$client['id_client'];?>">
+								<?php } else { ?>
+									<li class="timeline-inverted" id="<?php echo 'li-'.$client['id_client'];?>">
+								<?php }
+								if ($client['priority'] == 1) { ?>
 										<div class="timeline-badge danger"><i class="fa fa-exclamation"></i></div>
-									 	<div class="timeline-panel-high">
-									<?php }
-									else { ?>
+								 		<div class="timeline-panel-high">
+								<?php }
+								else { ?>
 										<div class="timeline-badge"><i class="fa fa-tag"></i></div>
 										<div class="timeline-panel">
-									<?php } ?>
+								<?php } ?>
 										<div class="timeline-heading"><h4 class="timeline-title"><?php echo $client['name'];?></h4></div>
 										<div class="timeline-body">
 											<p class="text-center">
@@ -61,50 +65,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$data_discard['enddate'] = $enddate;
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
+
+													$discardeddocs = $this->pages_model->discarded_docs_knewin_tv($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_tv_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+													$keyword_foundc = count($keyword_found->response->docs);
 													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
-													$ids_file_xml = null;
+
 													$ic = null;
 													if ($allkeyword_foundc != 0) { ?>
-														<form style="all: unset;" action="<?php echo base_url('pages/tv_home_keyword');?>" method="post">
-															<input type="hidden" name="ids_file_xml" value="<?php echo $ids_file_xml;?>">
+														<form style="all: unset;" action="<?php echo base_url('pages/tv_knewin_home_keyword');?>" method="post">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 															<input type="hidden" name="startdate" value="<?php echo $startdate;?>">
 															<input type="hidden" name="enddate" value="<?php echo $enddate;?>">
-															<?php if ($keyword['keyword_priority'] == 1) { ?>
-																<button type="submit" class="btn btn-danger btn-sm"><?php echo $keyword['keyword'];?>
-																	<span class="badge"><?php echo $allkeyword_foundc;?> </span>
-																</button>
-															<?php } else { ?>
-																<button type="submit" class="btn btn-info btn-sm"><?php echo $keyword['keyword'];?>
-																	<span class="badge"><?php echo $allkeyword_foundc;?> </span>
-																</button>
-															<?php } ?>
+															<button type="submit" class="btn <?php echo $keyword['keyword_priority'] == 1 ? 'btn-danger' : 'btn-info' ?> btn-sm"><?php echo $keyword['keyword'];?>
+																<span class="badge"><?php echo $keyword_foundc;?> </span>
+															</button>
 														</form>
 
 														<?php
+														array_push($keywordquant, $keyword_foundc);
 														array_push($allkeywordquant, $allkeyword_foundc);
 														$client_keywords++;
 													}
 												} ?>
-												<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
+												<input type="text" class="allkeyword_foundc" name="allkeyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($allkeywordquant);?>" style="display: none;">
+												<input type="text" class="keyword_foundc" name="keyword_foundc" id="<?php echo $client['id_client'];?>-allkeyword_foundc" value="<?php echo array_sum($keywordquant);?>" style="display: none;">
 												<input type="text" class="client_keywords" name="client_keywords" id="<?php echo $client['id_client'];?>-client_keywords" value="<?php echo $client_keywords;?>" style="display: none;">
 											</p>
+											</div>
 										</div>
-									</div>
-								</li>
-								<?php $invert++;
-								}
-								?>
-							</ul>
-							<input type="text" id="iallkeywordquant" style="display: none;">
-							<input type="text" name="loadcf" id="loadcf" value="2" style="display: none;">
-							<span class="text-muted center-block text-center" id="loadmore" style="display: none;">
-								<i class="fa fa-refresh fa-spin"></i> Carregando...
-							</span>
-							<button id="btnloadmore" type="button" class="btn btn-primary btn-sm center-block" style="display: none;">Carregar mais</button>
-						</div>
+									</li>
+							<?php $invert++;
+							}
+							?>
+						</ul>
+						<input type="text" id="ikeywordquant" style="display: none;">
+						<input type="text" id="iallkeywordquant" style="display: none;">
+						<input type="text" name="loadcf" id="loadcf" value="2" style="display: none;">
+						<span class="text-muted center-block text-center" id="loadmore" style="display: none;">
+							<i class="fa fa-refresh fa-spin"></i> Carregando...
+						</span>
+						<button id="btnloadmore" type="button" class="btn btn-primary btn-sm center-block" style="display: none;">Carregar mais</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -172,24 +176,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						if (dataconfi != 89) {
 							console.log('loading next page...');
 							$('#btnloadmore').fadeOut('fast');
-							$('#loadmore').fadeTo('fast',100);
+							$('#loadmore').fadeTo('fast', 100);
 							plimit = (plimit + 5);
 							$.ajax({
 								url: page+'/'+selected_date+'/'+plimit+'/'+poffset,
 								success: function(data) {
 									dataq = data.length;
 									$('#loadcf').val(dataq);
-									$('#loadmore').fadeTo('fast',0);
+									$('#loadmore').fadeTo('fast', 0);
 									$('#client-ul').append(data);
 									hidenokeyword();
 									hidegentime();
-									// upkeyw = parseInt($('#keywordsquant').text());
+									upkeyw = parseInt($('#keywordsquant').text());
 									upallkeyw = parseInt($('#allkeywordsquant').text());
-									// dowkeyw = parseInt($('#ikeywordquant').val());
+									dowkeyw = parseInt($('#ikeywordquant').val());
 									downallkeyw = parseInt($('#iallkeywordquant').val());
-									// upnkeyw = (upkeyw + dowkeyw);
+									upnkeyw = (upkeyw + dowkeyw);
 									upnallkeyw = (upallkeyw + downallkeyw);
-									// $('#keywordsquant').text(upnkeyw);
+									$('#keywordsquant').text(upnkeyw);
 									$('#allkeywordsquant').text(upnallkeyw);
 								},
 								error: function() {
@@ -213,13 +217,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$('#client-ul').append(data);
 						hidenokeyword();
 						hidegentime();
-						// upkeyw = parseInt($('#keywordsquant').text());
+						upkeyw = parseInt($('#keywordsquant').text());
 						upallkeyw = parseInt($('#allkeywordsquant').text());
-						// dowkeyw = parseInt($('#ikeywordquant').val());
+						dowkeyw = parseInt($('#ikeywordquant').val());
 						downallkeyw = parseInt($('#iallkeywordquant').val());
-						// upnkeyw = (upkeyw + dowkeyw);
+						upnkeyw = (upkeyw + dowkeyw);
 						upnallkeyw = (upallkeyw + downallkeyw);
-						// $('#keywordsquant').text(upnkeyw);
+						$('#keywordsquant').text(upnkeyw);
 						$('#allkeywordsquant').text(upnallkeyw);
 						if (upnallkeyw > 0) {
 							$('#btnloadmore').fadeOut('fast');

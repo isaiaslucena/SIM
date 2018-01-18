@@ -1,9 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		<link rel="shortcut icon" href="<?php echo base_url('assets/imgs/favicon.ico');?>" type="image/x-icon">
 		<link rel="icon" href="<?php echo base_url('assets/imgs/favicon.ico');?>" type="image/x-icon">
 		<title>Sistema Integrado de Monitoramento</title>
@@ -13,7 +15,7 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/datatable/dataTables.bootstrap.min.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/datatable/buttons.bootstrap.min.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
-		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap-theme.css');?>"/>
+		<!-- <link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap-theme.css');?>"/> -->
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/metisMenu/metisMenu.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/dist/css/sb-admin-2.css');?>">
@@ -22,11 +24,9 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/typeahead-0111/typeahead-tags.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
 
-		<!-- <script src="<?php //echo //base_url('assets/jquery/jquery-3.1.1.min.js');?>"></script> -->
 		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/metisMenu/metisMenu.min.js');?>"></script>
-		<script src="<?php echo base_url('assets/sb-admin2/vendor/raphael/raphael.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/dist/js/sb-admin-2.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/datatable/jquery.dataTables.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/datatable/dataTables.bootstrap.min.js');?>"></script>
