@@ -750,8 +750,8 @@ class Pages extends CI_Controller {
 			$data['id_user'] = $this->session->userdata('id_user');
 
 			$this->load->view('head');
-			$this->load->view('navbar',$data_navbar);
-			$this->load->view('tv_home_keyword',$data);
+			$this->load->view('navbar', $data_navbar);
+			$this->load->view('tv_home_keyword', $data);
 			$this->load->view('footer');
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
@@ -897,7 +897,7 @@ class Pages extends CI_Controller {
 			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
 			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
-			$this->pages_model->discard_text_tv_knewin($data_discard);
+			$this->pages_model->discard_doc_tv_knewin($data_discard);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}

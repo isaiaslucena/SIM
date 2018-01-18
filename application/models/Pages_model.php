@@ -994,7 +994,7 @@ class Pages_model extends CI_Model {
 
 		$cropfilename = "edit_".strtotime("now")."_crop.mp3";
 		
-		if ($join) {
+		if ($join == 'true') {
 			$dfilename = $fileb64;
 		} else {
 			$dfilename = "edit_".strtotime("now").".mp3";

@@ -1,12 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
-<body>
 
-	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
-
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
-		<div class="row page-header">
+		<div class="row">
 			<div class="col-lg-12">
-				<h1><?php echo get_phrase('search');?></h1>
+				<h1 class="page-header"><?php echo get_phrase('search');?></h1>
 			</div>
 		</div>
 

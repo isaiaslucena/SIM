@@ -1,6 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">
@@ -60,51 +58,54 @@
 				var audiofiles = document.querySelector('#btnupload').files;
 				audiofilesc = audiofiles.length;
 
-				fcount = 1;
-				$.each(audiofiles, function(index, val) {
-					var filelastmod = val.lastModified;
-					var filename = val.name;
-					var filesize = val.size;
-					var filetype = val.type;
-					var fileb64;
+				if (audiofilesc > 1) {
+					fcount = 1;
+					$.each(audiofiles, function(index, val) {
+						var filelastmod = val.lastModified;
+						var filename = val.name;
+						var filesize = val.size;
+						var filetype = val.type;
+						var fileb64;
 
-					if (filetype != 'audio/mp3') {
-						swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
-						joinfiles = false;
-						fileerr = true;
-						return false;
-					} else {
-						audiofilestojoin.push(filename);
-						
-						filereader = new FileReader();
-						filereader.readAsDataURL(val);
-						filereader.onload = function(e) {
-							// console.log(e);
-							fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
-							uploadaudiofiles.push(
-								$.post('<?php echo base_url("pages/upload_join_edit_audio")?>',
-									{'audioname': filename,'audiofile': fileb64}
-								)
-							);
-							if (fcount == audiofilesc) {
-								lastfile = filename;
+						if (filetype != 'audio/mp3') {
+							swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
+							joinfiles = false;
+							fileerr = true;
+							return false;
+						} else {
+							audiofilestojoin.push(filename);
+							
+							filereader = new FileReader();
+							filereader.readAsDataURL(val);
+							filereader.onload = function(e) {
+								// console.log(e);
+								fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
+								uploadaudiofiles.push(
+									$.post('<?php echo base_url("pages/upload_join_edit_audio")?>',
+										{'audioname': filename,'audiofile': fileb64}
+									)
+								);
+								if (fcount == audiofilesc) {
+									lastfile = filename;
+								}
+								fcount += 1;
 							}
-							fcount += 1;
 						}
+					});
+					
+					if (fileerr) {
+						$('#waitimg').css('display', 'none');
+						$('#iconimg').css('display', 'block');
+						fileerr = false;
+						lastfile = null;
+						uploadaudiofiles = [];
+						audiofilestojoinc = [];
+						return false;
 					}
-				});
-				
-				if (fileerr) {
-					$('#waitimg').css('display', 'none');
-					$('#iconimg').css('display', 'block');
-					fileerr = false;
-					lastfile = null;
-					uploadaudiofiles = [];
-					audiofilestojoinc = [];
-					return false;
 				}
 
 				audiofilestojoinc = audiofilestojoin.length;
+				console.log(audiofilestojoinc);
 				if (audiofilestojoinc > 1) {
 					$(document).ajaxComplete(function(event, xhr, settings) {
 						// console.log(xhr);
@@ -265,7 +266,7 @@
 				audioel.css('display', 'none');
 				$('#waitmsg').text('Carregando...');
 				$('#waitimg').css('display', 'block');
-				
+
 				$.post('<?php echo base_url("pages/crop_edit_audio")?>',
 					{
 						audiofile: joinfiles ? audioel.attr('src').replace('<?php echo base_url("assets/temp/")?>', '') : audioel.attr('src').replace(/^data:audio\/(mp3|mp4);base64,/, ""),
