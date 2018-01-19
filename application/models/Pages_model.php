@@ -825,6 +825,42 @@ class Pages_model extends CI_Model {
 		return curl_exec($ch);
 	}
 
+	public function get_tv_bysd_solr($idsource, $startdate, $position) {
+		//Solr Connection
+		$protocol = 'http';
+		$port = '8983';
+		$host = '172.17.0.3';
+		if ($position == 'previous') {
+			$path='/solr/knewin_tv/query?wt=json&rows=1&sort=starttime_dt+desc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'endtime_dt:[* TO "'.$startdate.'"]'
+			);
+		} else if ($position == 'next') {
+			$path = '/solr/knewin_tv/query?wt=json&rows=1&sort=starttime_dt+asc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'starttime_dt:["'.$startdate.'" TO *]'
+			);
+		}
+		
+		$url = $protocol."://".$host.":".$port.$path;
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		// return json_decode(curl_exec($ch));
+		return curl_exec($ch);
+	}
+
 	public function text_keywords_solr($startdate,$enddate){
 		//Solr Connection
 		$protocol='http';

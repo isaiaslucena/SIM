@@ -438,15 +438,20 @@ class Pages extends CI_Controller {
 
 	public function get_radio_knewin($idsource, $startdate, $position) {
 		if ($this->session->has_userdata('logged_in')) {
-
-			// $idsource = $this->input->get('idsource');
-			// $startdate = $this->input->get('startdate');
-			// $position = $this->input->get('position');
-
 			$doc = $this->pages_model->get_radio_bysd_solr($idsource, urldecode($startdate), $position);
 
 			header('Content-Type: application/json');
-			// print json_encode($stories);
+			print $doc;
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+		}
+	}
+
+	public function get_tv_knewin($idsource, $startdate, $position) {
+		if ($this->session->has_userdata('logged_in')) {
+			$doc = $this->pages_model->get_tv_bysd_solr($idsource, urldecode($startdate), $position);
+
+			header('Content-Type: application/json');
 			print $doc;
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');

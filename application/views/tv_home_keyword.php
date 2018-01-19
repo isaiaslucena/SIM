@@ -59,9 +59,8 @@
 				$ssource = $found->source_s; ?>
 				<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
 					<div class="panel-heading text-center">
-
-						<label class="pull-left" style="font-weight: normal">
-							<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
+						<label class="pull-left disabled" style="font-weight: normal">
+							<input type="checkbox" class="cbjoinfiles disabled" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>" disabled> <?php echo get_phrase('join');?>
 						</label>
 						
 						<label class="labeltitle">
@@ -116,31 +115,6 @@
 						</div>							
 					</div>
 				</div>
-
-				<script type="text/javascript">
-					jQuery.fn.scrollTo = function(elem) {
-						$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-						return this;
-					}
-
-					if($('.<?php echo 'str'.$divcount;?>').length != 0) {
-						$('#<?php echo 'pbody'.$divcount;?>').scrollTo('.<?php echo 'str'.$divcount;?>');
-					}
-					$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
-					$('#<?php echo 'pbody'.$divcount;?>').click(function() {
-						$(this).css('overflowY', 'auto');
-					})
-					$('#<?php echo 'pbody'.$divcount;?>').hover(function() {
-						/*do nothing*/
-					}, function() {
-						$('#<?php echo 'pbody'.$divcount;?>').css('overflowY', 'hidden');
-					});
-
-					<?php if (!empty($keyword_selected)) { ?>
-					var qtkwf = $('<?php echo '.str'.$divcount?>').length;
-					$('<?php echo '#qtkwfid'.$divcount;?>').text(qtkwf);
-					<?php } ?>
-				</script>
 			<?php } ?>
 		</div>
 
@@ -189,7 +163,7 @@
 										'<span class="sr-only">Error:</span>'+
 										'<?php echo get_phrase('no_more_files'); ?>'+'!'+
 									'</div>';
-						$('#'+iddiv).after(warnhtml);
+						$('#'+iddiv).before(warnhtml);
 						
 						setTimeout(function() {
 							$('div.alert.alert-warning').fadeOut('slow');
@@ -232,12 +206,9 @@
 						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
 						newdivid += 1;
-						// newdivid = iddivn + 1;
 						newdividn = iddiv + '-' + newdivid;
-						// newdividn = 'div' + newdivid;
 
 						divclone = $('#'+iddiv).clone(true);
-						// console.log(divclone);
 						
 						divclone.removeClass('panel-default');
 						divclone.addClass('panel-info');
@@ -262,9 +233,9 @@
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-						divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-						divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
-						divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+						divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
+						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
 
 						$('#'+iddiv).after(divclone);
 					}
@@ -333,12 +304,9 @@
 						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
 						newdivid += 1;
-						// newdivid = iddivn + 1;
 						newdividn = iddiv + '-' + newdivid;
-						// newdividn = 'div' + newdivid;
 
 						divclone = $('#'+iddiv).clone(true);
-						// console.log(divclone);
 						
 						divclone.removeClass('panel-default');
 						divclone.addClass('panel-info');
@@ -363,9 +331,9 @@
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-						divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-						divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
-						divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+						divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
+						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
 
 						$('#'+iddiv).before(divclone);
 					}
