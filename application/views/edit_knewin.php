@@ -27,7 +27,11 @@ if (isset($knewindoc)) {
 	$sstartdate = $sd->format('d/m/Y H:i:s');
 	$senddate = $ed->format('d/m/Y H:i:s');
 
-	$idknewin = $id_i;
+	if (isset($idknewin)) {
+		$idknewin = $id_i;
+	} else {
+		$idknewin = 0;
+	}
 	$rstartdate = $starttime_dt;
 	$renddate = $endtime_dt;
 	$ssource = $source_s;
@@ -110,6 +114,7 @@ if (isset($knewindoc)) {
 							<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>"></input>
 							<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>"></input>
 							<input type="text" id="id_doc" name="id_doc" value="<?php echo $idknewin; ?>"></input>
+							<input type="text" id="id_join_info" name="id_join_info" value="<?php echo $id_join_info; ?>"></input>
 							<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>"></input>
 							<input type="text" id="startdate" name="startdate" value="<?php echo $rstartdate; ?>"></input>
 							<input type="text" id="enddate" name="enddate" value="<?php echo $renddate; ?>"></input>

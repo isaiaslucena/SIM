@@ -1117,6 +1117,7 @@ class Pages_model extends CI_Model {
 	public function crop_info_radio_knewin($data) {
 		$data_insert_info = array(
 			'id_doc' => $data['id_doc'],
+			'id_join_info' => $data['id_join_info'],
 			'id_user' => $data['id_user'],
 			'id_client' => $data['id_client'],
 			'id_keyword' => $data['id_keyword'],
@@ -1234,6 +1235,18 @@ class Pages_model extends CI_Model {
 		$datadoc['finalurl'] = $temppathurl.$joinfile;
 
 		return $datadoc;
+	}
+
+	public function join_info_radio_knewin($data) {
+		$data_insert_info = array(
+			'ids_docs' => json_encode($data['ids_docs']),
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('join_info_radio_knewin', $data_insert_info);
+		return $this->db->insert_id();
 	}
 
 	public function search_result($vtype, $datasearch, $start) {

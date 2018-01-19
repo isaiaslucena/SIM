@@ -179,6 +179,23 @@
 				margin: auto;
 				top: 80px;	
 			}
+
+			.box {
+				outline: 2px dashed #92b0b3;
+				outline-color: rgb(146, 176, 179);
+				outline-style: dashed;
+				outline-width: 2px;
+				outline-offset: -10px;
+				-webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+				transition: outline-offset .15s ease-in-out, background-color .15s linear;
+				background-color: #c8dadf;
+				position: relative;
+				padding-top: 120px;
+				padding-left: 10px;
+				height: 480px;
+				width: 840px;
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
@@ -198,7 +215,6 @@
 					<div class="btn-toolbar">
 						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
 						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
-						
 
 						<div class="input-group date" style="width: 32%">
 							<input id="seldate" type="text" class="form-control">
@@ -217,6 +233,11 @@
 					<div id="vvideobtn" class='vbutton' style="display: none"></div>
 					<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
 					<img id="thvideo" class="pthvideo" width="840" height="480" style="display: none;">
+					<div id="divdrop" class="box">
+						<input id="dropfile" type="file" style="display: none;">
+						<i class="fa fa-download" style="font-size: 10em"></i>
+						<h3>Arraste e solte o arquivo aqui!</h3>
+					</div>
 				</div>
 				
 				<div id="vnextdiv" class="col-lg-4">
@@ -445,9 +466,50 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
-				function sleep(ms) {
-					return new Promise(resolve => setTimeout(resolve, ms));
-				}
+				$(document).on('dragenter', function(event) {
+					videoel.css('display', 'none');
+					$('#divdrop').css('display', 'block');
+				});
+
+				$(document).on('dragexit', '#divdrop', function(event) {
+					$('#divdrop').css('display', 'none');
+					videoel.css('display', 'block');
+					console.log('DRAG EXIT');
+				});
+
+				$(document).on('dragleave', '#divdrop', function(event) {
+					// $('#divdrop').css('display', 'none');
+					// videoel.css('display', 'block');
+					$(this).children('h3').text('Arraste o arquivo aqui!');
+					// console.log('DRAG LEAVE');
+				});
+
+				$(document).on('dragover', '#divdrop', function(event) {
+					$(this).children('h3').text('Agora solte!');
+					// console.log('DRAG OVER');
+				});
+
+				$(document).on('drop', '#divdrop', function(event) {
+					console.log('DROPED');
+				});
+
+				$(document).on('dragstart', '#divdrop', function(event) {
+					// videoel.css('display', 'none');
+					// $('#divdrop').css('display', 'block');
+					console.log('DRAG');
+				});
+
+				$(document).on('drag', '#divdrop', function(event) {
+					// videoel.css('display', 'none');
+					// $('#divdrop').css('display', 'block');
+					console.log('DRAG');
+				});
+
+				$(document).on('dragend', '#divdrop', function(event) {
+					// videoel.css('display', 'none');
+					// $('#divdrop').css('display', 'block');
+					console.log('DRAG END');
+				});
 
 				function channelname(name) {
 					switch (name) {

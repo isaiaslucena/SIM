@@ -13,6 +13,10 @@ $dwstartdate = $sd->format('d-m-Y');
 $dwstarttime = $sd->format('H\hi\m');
 $senddate = $ed->format('d/m/Y H:i:s');
 
+if (!isset($id_join_info)) {
+	$id_join_info = 0;
+} 
+
 ?>
 
 <!DOCTYPE html>

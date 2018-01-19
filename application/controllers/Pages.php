@@ -1032,7 +1032,7 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('edit_knewin',$data);
+			$this->load->view('edit_knewin', $data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
@@ -1187,6 +1187,13 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
 			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
 			$datadoc = $this->pages_model->join_radio_knewin($ids_doc);
+			
+			$datajoin['ids_docs'] = $ids_doc;
+			$datajoin['id_client'] = $data['id_client'];
+			$datajoin['id_keyword'] = $data['id_keyword'];
+			$datajoin['id_user'] = $this->session->userdata('id_user');
+			$data['id_join_info'] = $this->pages_model->join_info_radio_knewin($datajoin);
+			
 			$data['source_s'] = $datadoc['source_s'];
 			$data['content_t'] = $datadoc['content_t'];
 			$data['mediaurl_s'] = $datadoc['finalurl'];
@@ -1199,7 +1206,7 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('edit_knewin',$data);
+			$this->load->view('edit_knewin', $data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
@@ -1316,6 +1323,7 @@ class Pages extends CI_Controller {
 			$data['enddate'] = $this->input->post('enddate');
 			
 			$data_crop_info['id_doc'] = $this->input->post('id_doc');
+			$data_crop_info['id_join_info'] = $this->input->post('id_join_info');
 			$data_crop_info['id_user'] = $this->session->userdata('id_user');
 			$data_crop_info['id_client'] = $this->input->post('id_client');
 			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
