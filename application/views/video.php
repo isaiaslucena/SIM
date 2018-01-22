@@ -466,50 +466,50 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
-				$(document).on('dragenter', function(event) {
-					videoel.css('display', 'none');
-					$('#divdrop').css('display', 'block');
-				});
+				// $(document).on('dragenter', function(event) {
+				// 	videoel.css('display', 'none');
+				// 	$('#divdrop').css('display', 'block');
+				// });
 
-				$(document).on('dragexit', '#divdrop', function(event) {
-					$('#divdrop').css('display', 'none');
-					videoel.css('display', 'block');
-					console.log('DRAG EXIT');
-				});
+				// $(document).on('dragexit', '#divdrop', function(event) {
+				// 	$('#divdrop').css('display', 'none');
+				// 	videoel.css('display', 'block');
+				// 	console.log('DRAG EXIT');
+				// });
 
-				$(document).on('dragleave', '#divdrop', function(event) {
-					// $('#divdrop').css('display', 'none');
-					// videoel.css('display', 'block');
-					$(this).children('h3').text('Arraste o arquivo aqui!');
-					// console.log('DRAG LEAVE');
-				});
+				// $(document).on('dragleave', '#divdrop', function(event) {
+				// 	// $('#divdrop').css('display', 'none');
+				// 	// videoel.css('display', 'block');
+				// 	$(this).children('h3').text('Arraste o arquivo aqui!');
+				// 	// console.log('DRAG LEAVE');
+				// });
 
-				$(document).on('dragover', '#divdrop', function(event) {
-					$(this).children('h3').text('Agora solte!');
-					// console.log('DRAG OVER');
-				});
+				// $(document).on('dragover', '#divdrop', function(event) {
+				// 	$(this).children('h3').text('Agora solte!');
+				// 	// console.log('DRAG OVER');
+				// });
 
-				$(document).on('drop', '#divdrop', function(event) {
-					console.log('DROPED');
-				});
+				// $(document).on('drop', '#divdrop', function(event) {
+				// 	console.log('DROPED');
+				// });
 
-				$(document).on('dragstart', '#divdrop', function(event) {
-					// videoel.css('display', 'none');
-					// $('#divdrop').css('display', 'block');
-					console.log('DRAG');
-				});
+				// $(document).on('dragstart', '#divdrop', function(event) {
+				// 	// videoel.css('display', 'none');
+				// 	// $('#divdrop').css('display', 'block');
+				// 	console.log('DRAG');
+				// });
 
-				$(document).on('drag', '#divdrop', function(event) {
-					// videoel.css('display', 'none');
-					// $('#divdrop').css('display', 'block');
-					console.log('DRAG');
-				});
+				// $(document).on('drag', '#divdrop', function(event) {
+				// 	// videoel.css('display', 'none');
+				// 	// $('#divdrop').css('display', 'block');
+				// 	console.log('DRAG');
+				// });
 
-				$(document).on('dragend', '#divdrop', function(event) {
-					// videoel.css('display', 'none');
-					// $('#divdrop').css('display', 'block');
-					console.log('DRAG END');
-				});
+				// $(document).on('dragend', '#divdrop', function(event) {
+				// 	// videoel.css('display', 'none');
+				// 	// $('#divdrop').css('display', 'block');
+				// 	console.log('DRAG END');
+				// });
 
 				function channelname(name) {
 					switch (name) {

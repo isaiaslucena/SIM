@@ -47,7 +47,6 @@
 					</div>
 				</div>
 				<div class="panel-body">
-
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
@@ -375,7 +374,6 @@
 					<?php echo get_phrase('users')?>
 				</div>
 				<div class="panel-body">
-
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
@@ -505,7 +503,6 @@
 							</div><!-- /.panel-body -->
 						</div><!-- /.panel -->
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -518,6 +515,7 @@
 		var nenddate = '<?php echo $penddate?>';
 		var npstartdate = nstartdate.replace(/-/g,'/');
 		var npenddate = nenddate.replace(/-/g,'/');
+		
 		$('#startdate').val(npstartdate);
 		$('#enddate').val(npenddate);
 
@@ -536,7 +534,7 @@
 			var enddate = $('#enddate').val();
 			var nstartdate = startdate.replace(/\//g,"-");
 			var nenddate = enddate.replace(/\//g,"-");
-			window.location = "<?php echo base_url('pages/reports/users/');?>" + nstartdate + "/" + nenddate;
+			window.location = '<?php echo base_url("pages/reports/users/");?>' + nstartdate + '/' + nenddate;
 		});
 
 		<?php if (empty($pstartdate) || empty($penddate)) { ?>
@@ -546,7 +544,7 @@
 				<?php
 				$startdate = strtotime($pstartdate.' 00:00:00');
 				$enddate = strtotime($penddate.' 23:59:59');
-				$selectedallinfo = $this->pages_model->report_users('all',$startdate,$enddate);
+				$selectedallinfo = $this->pages_model->report_users('all', $startdate, $enddate);
 				$dcount = 0;
 				$darrcount = count($selectedallinfo);
 				foreach ($selectedallinfo as $sainfo) {

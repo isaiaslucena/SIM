@@ -621,6 +621,8 @@ class Pages extends CI_Controller {
 
 				$data['connected_users'] = $this->pages_model->connected_users();
 				$data['total_radios'] = $this->pages_model->rradios();
+				$data['knewin_radios'] = $this->pages_model->knewin_radios();
+				$data['knewin_tvcns'] = $this->pages_model->knewin_tvcns();
 
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);
@@ -990,7 +992,7 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('edit_temp',$data);
+			$this->load->view('edit_temp', $data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
@@ -1268,8 +1270,9 @@ class Pages extends CI_Controller {
 			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
 			$data_crop_info['id_text'] = $this->input->post('id_text');
 			$data_crop_info['content'] = $this->input->post('result');
+			
+			$data['crop_inserted_id'] = $this->pages_model->crop_info($data_crop_info);
 			$data['finalfile'] = $this->pages_model->crop($data['starttime'],$data['endtime'],$data['mp3pathfilename']);
-			$this->pages_model->crop_info($data_crop_info);
 
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1347,6 +1350,17 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function crop_info_down($cropid) {
+		if ($this->session->has_userdata('logged_in')) {
+			$this->pages_model->crop_info_download($cropid);
+			
+			header('Content-Type: application/json');
+			print json_encode('Download!');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+		}
+	}
+
 	public function crop_info_radio_knewin_down($cropid) {
 		if ($this->session->has_userdata('logged_in')) {
 			$this->pages_model->crop_info_radio_knewin_download($cropid);
@@ -1402,9 +1416,9 @@ class Pages extends CI_Controller {
 					$data['pstartdate'] = $startdate;
 					$data['penddate'] = $enddate;
 					$this->load->view('head');
-					$this->load->view('navbar',$data_navbar);
-					$this->load->view('reports_users',$data);
-					$this->load->view('footer',$data_navbar);
+					$this->load->view('navbar', $data_navbar);
+					$this->load->view('reports_users', $data);
+					$this->load->view('footer', $data_navbar);
 				} else if ($page == 'all_discard') {
 					$data_navbar['selected_page'] = 'reports_users';
 					$data['datatablename'] = 'table_report_allusers';
@@ -1506,6 +1520,23 @@ class Pages extends CI_Controller {
 		$data['radiosinfo'] = $this->pages_model->rradios();
 		$this->load->view('reports_radios_table',$data);
 		$this->load->view('language_datatable',$data);
+	}
+
+	public function reports_info() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'reports_info',
+				'last_page' => base_url('pages/reports_info')
+			);
+			$this->session->set_userdata($sessiondata);
+		
+			$message = 'Test';
+		
+			header('Content-Type: application/json');
+			print json_encode($message);
+		} else {
+			redirect('login?rdt='.urlencode('pages/dashboard'), 'refresh');
+		}
 	}
 
 	public function search() {

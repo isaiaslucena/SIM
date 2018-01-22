@@ -141,7 +141,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 	<div id="keywordrow" class="row" style="display: none">
 		<div class="col-lg-12">
-			<!-- <button id="backmainrow" type="button" class="btn btn-default">Voltar</button> -->
 		</div>
 	</div>
 
@@ -308,26 +307,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					divcount = 1;
 					dtexts = data.keyword_texts;
 					$.each(dtexts, function(index, val) {
-						audiofpath = '<?php echo base_url("assets/temp/")?>';
-						audiofilename = 'teste.mp3';
-						
-						xmlfpath = val.path;
+						xmlfpath = val.path.replace('/app/application/', '');
 						xmlfilename = val.filename;
 						xmlidfile = val.id_file;
 						xmlstate = val.state;
 						xmlradio = val.radio;
 						xmlidradio = val.id_radio;
 						xts = new Date(val.timestamp * 1000);
-						xmltimestamp = ('0'+xts.getDay()).slice(-2) + '/' +('0'+(xts.getMonth() + 1)).slice(-2) + '/' + xts.getFullYear() + ' - ' + ('0'+xts.getHours()).slice(-2) + ':' + ('0'+xts.getMinutes()).slice(-2) + ':' + ('0'+xts.getSeconds()).slice(-2);
+						xmltimestamp = val.timestamp;
+						xmltimestampf = ('0'+xts.getDay()).slice(-2) + '/' +('0'+(xts.getMonth() + 1)).slice(-2) + '/' + xts.getFullYear() + ' - ' + ('0'+xts.getHours()).slice(-2) + ':' + ('0'+xts.getMinutes()).slice(-2) + ':' + ('0'+xts.getSeconds()).slice(-2);
 						xmlid = val.id_text;
 						xmltext = val.text_content;
+						
+						audiofpath = xmlfpath;
+						audioidfile = xmlidfile - 1;
+						str = (parseInt(xmlfilename, 16) - 1).toString(16);
+						audiofilename = "0".repeat(3) + str.toUpperCase();
+						audiofpath = xmlfpath;
 						
 						divhtml = '<div id="div'+divcount+'" class="panel panel-default">'+
 										'<div class="panel-heading text-center">'+
 											'<label class="pull-left" style="font-weight: normal">'+
 												'<input type="checkbox" class="cbjoinfiles" id="cb'+divcount+'" '+
 												'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
-												'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'"><?php echo get_phrase("join"); ?>'+
+												'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'"> <?php echo get_phrase("join"); ?>'+
 											'</label>'+
 											
 											'<label class="labeltitle">'+
@@ -335,9 +338,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												'<span class="sqtkwf" id="qtkwfid'+divcount+'"></span>'+
 												'&nbsp;&nbsp;&nbsp;&nbsp;'+
 												'<i class="fa fa-bullhorn fa-fw"></i> '+
-												xmlradio+ ' - ' +xmlstate+ ' | ' +xmltimestamp+
+												xmlradio+ ' - ' +xmlstate+ ' | ' +xmltimestampf+
 											'</label>'+
-											
+
 											'<div class="btn-toolbar pull-right">'+
 												'<button class="btn btn-warning btn-xs loadprevious" '+
 												'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
@@ -361,9 +364,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													'<?php echo get_phrase('discard'); ?>'+
 												'</button>'+
 
-												'<form id="form_edit" style="all: unset;" action="<?php echo base_url("pages/edit_temp"); ?>" target="_blank" method="POST">'+
-													'<input type="hidden" name="mp3pathfilename" value="<?php echo base_url("assets/caminhodoarquivomp3"); ?>">'+
-													'<input type="hidden" name="xmlpathfilename" value="<?php echo base_url("assets/caminhodoarquivoxml"); ?>">'+
+												'<button type="submit" form="form_edit_'+divcount+'" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase("edit"); ?></button>'+
+
+												'<form id="form_edit_'+divcount+'" action="<?php echo base_url("pages/edit_temp"); ?>" target="_blank" method="POST">'+
+													'<input type="hidden" name="mp3pathfilename" value="<?php echo base_url("assets/");?>'+audiofpath+'/'+audiofilename+'">'+
+													'<input type="hidden" name="xmlpathfilename" value="<?php echo base_url("assets/");?>'+xmlfpath+'/'+xmlfilename+'">'+
 													'<input type="hidden" name="state" value="'+xmlstate+'">'+
 													'<input type="hidden" name="radio" value="'+xmlradio+'">'+
 													'<input type="hidden" name="timestamp" value="'+xmltimestamp+'">'+
@@ -372,14 +377,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													'<input type="hidden" name="id_file" value="'+xmlidfile+'">'+
 													'<input type="hidden" name="id_text" value="'+xmlid+'">'+
 													'<input type="hidden" name="client_selected" value="'+dclientselected+'">'+
-													'<button type="submit" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase("edit"); ?></button>'+
 												'</form>'+
 											'</div>'+
 										'</div>'+
 										'<div class="panel-body">'+
 											'<div class="row audioel">'+
 												'<div class="col-lg-12">'+
-													'<audio class="center-block" style="width: 100%" src="'+audiofpath+audiofilename+'" controls></audio>'+
+													'<audio class="center-block" style="width: 100%" src="<?php echo base_url("assets/");?>'+audiofpath+'/'+audiofilename+'" controls></audio>'+
 												'</div>'+
 											'</div>'+
 											'<div class="row textel">'+
@@ -412,10 +416,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							$(window).scrollTop(0)
 						});
 					});
-	
 
-
-	
 					// $('#back-to-home').css('display', 'inline-block');
 					$('#back-to-home').fadeIn('fast');
 				}
@@ -436,15 +437,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			//	});
 			//});
 
-
 			$('#keywordrow').fadeOut(200, function() {
 				$('#mainrow').fadeIn(300, function() {
 					$(window).scrollTop(tempScrollTop)
 				});
 			});
-
-
-
 		});
 
 		$(document).ready(function() {

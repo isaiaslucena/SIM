@@ -1112,6 +1112,7 @@ class Pages_model extends CI_Model {
 			'timestamp' => strtotime("now")
 		);
 		$this->db->insert('crop_info', $data_insert_info);
+		return $this->db->insert_id();
 	}
 
 	public function crop_info_radio_knewin($data) {
@@ -1128,6 +1129,12 @@ class Pages_model extends CI_Model {
 		);
 		$this->db->insert('crop_info_radio_knewin', $data_insert_info);
 		return $this->db->insert_id();
+	}
+
+	public function crop_info_download($cropid) {
+		$this->db->set('download_timestamp', strtotime("now"));
+		$this->db->where('id_crop_info', $cropid);
+		$this->db->update('crop_info');
 	}
 
 	public function crop_info_radio_knewin_download($cropid) {
@@ -2058,7 +2065,7 @@ class Pages_model extends CI_Model {
 		}
 	}
 
-	public function report_users($type,$startdate,$enddate) {
+	public function report_users($type, $startdate, $enddate) {
 		if ($type == 'discard') {
 			if (is_null($startdate) || is_null($enddate)) {
 				$sqlquery =	'SELECT u.id_user, u.username,
@@ -2075,6 +2082,40 @@ class Pages_model extends CI_Model {
 				return $this->db->query($sqlquery)->result_array();
 			}
 		}
+		else if ($type == 'discard_radio_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(dk.id_discard) as discard_count
+								FROM discard_keyword_radio_knewin dk
+								JOIN `user` u ON dk.id_user=u.id_user
+								GROUP BY dk.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(dk.id_discard) as discard_count
+								FROM discard_keyword_radio_knewin dk
+								JOIN `user` u ON dk.id_user=u.id_user
+								WHERE dk.timestamp >= '.$startdate.' AND dk.timestamp <= '.$enddate.'
+								GROUP BY dk.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'discard_tv_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(dk.id_discard) as discard_count
+								FROM discard_keyword_tv_knewin dk
+								JOIN `user` u ON dk.id_user=u.id_user
+								GROUP BY dk.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(dk.id_discard) as discard_count
+								FROM discard_keyword_tv_knewin dk
+								JOIN `user` u ON dk.id_user=u.id_user
+								WHERE dk.timestamp >= '.$startdate.' AND dk.timestamp <= '.$enddate.'
+								GROUP BY dk.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
 		else if ($type == 'all_discard') {
 			$sqlquery =	'SELECT u.id_user, u.username, COUNT(dk.id_user) as quantity, FROM_UNIXTIME(dk.timestamp,\'%Y-%m-%d\') as date
 							FROM discard_keyword dk
@@ -2085,6 +2126,40 @@ class Pages_model extends CI_Model {
 							JOIN file fl ON tx.id_file=fl.id_file
 							WHERE dk.timestamp >= '.$startdate.' AND dk.timestamp <= '.$enddate.' GROUP BY date ORDER BY date ASC';
 			return $this->db->query($sqlquery)->result_array();
+		}
+		else if ($type == 'join') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ji.id_join_info) as join_count
+								FROM join_info ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								GROUP BY ji.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_join_info) as join_count
+								FROM join_info ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								WHERE ji.timestamp >= '.$startdate.' AND ji.timestamp <= '.$enddate.'
+								GROUP BY ji.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'join_radio_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ji.id_join_info) as join_count
+								FROM join_info_radio_knewin ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								GROUP BY ji.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_join_info) as join_count
+								FROM join_info_radio_knewin ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								WHERE ji.timestamp >= '.$startdate.' AND ji.timestamp <= '.$enddate.'
+								GROUP BY ji.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
 		}
 		else if ($type == 'crop') {
 			if (is_null($startdate) || is_null($enddate)) {
@@ -2098,7 +2173,99 @@ class Pages_model extends CI_Model {
 				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
 								FROM crop_info ci
 								JOIN `user` u ON ci.id_user=u.id_user
-								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.' GROUP BY ci.id_user ORDER BY username ASC';
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.'
+								GROUP BY ci.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'crop_radio_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_radio_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								GROUP BY ci.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_radio_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.'
+								GROUP BY ci.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'crop_tv_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_tv_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								GROUP BY ci.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_tv_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.'
+								GROUP BY ci.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'crop_down') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =		'SELECT u.id_user, u.username,
+								COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE download_timestamp IS NOT NULL
+								GROUP BY ci.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.' AND
+								download_timestamp IS NOT NULL
+								GROUP BY ci.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'crop_down_radio_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_radio_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE download_timestamp IS NOT NULL
+								GROUP BY ci.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =		'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_radio_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.' AND
+								download_timestamp IS NOT NULL
+								GROUP BY ci.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'crop_down_tv_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_tv_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE download_timestamp IS NOT NULL
+								GROUP BY ci.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_crop_info) as crop_count
+								FROM crop_info_tv_knewin ci
+								JOIN `user` u ON ci.id_user=u.id_user
+								WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.' AND
+								download_timestamp IS NOT NULL
+								GROUP BY ci.id_user ORDER BY username ASC';
 				return $this->db->query($sqlquery)->result_array();
 			}
 		}
@@ -2114,7 +2281,7 @@ class Pages_model extends CI_Model {
 			return $this->db->query($sqlquery)->result_array();
 		}
 		else if ($type == 'all') {
-			$sqlquery =	'SELECT id_user,username,SUM(user_count) as total_count FROM
+			$sqlquery =		"SELECT id_user,username,SUM(user_count) as total_count FROM
 							((SELECT u.id_user, u.username, COUNT(dk.id_discard) as user_count
 							FROM discard_keyword dk
 							JOIN `user` u ON dk.id_user=u.id_user
@@ -2124,7 +2291,7 @@ class Pages_model extends CI_Model {
 							FROM crop_info ci
 							JOIN `user` u ON ci.id_user=u.id_user
 							WHERE ci.timestamp >= '.$startdate.' AND ci.timestamp <= '.$enddate.' GROUP BY ci.id_user ORDER BY username ASC))
-							x GROUP BY username ORDER BY username ASC';
+							x GROUP BY username ORDER BY username ASC";
 			return $this->db->query($sqlquery)->result_array();
 		}
 	}
@@ -2181,7 +2348,17 @@ class Pages_model extends CI_Model {
 	}
 
 	public function rradios() {
-		$sqlquery = 'SELECT rd.id_radio FROM radio rd WHERE rd.name <> \'\' AND rd.name <> \'NO-NAME\' ORDER BY rd.name';
+		$sqlquery = "SELECT rd.id_radio FROM radio rd WHERE rd.name <> '' AND rd.name <> 'NO-NAME' ORDER BY rd.name";
+		return $this->db->query($sqlquery)->result_array();
+	}
+
+	public function knewin_radios() {
+		$sqlquery = 'SELECT * FROM knewin_radio ORDER BY source ASC';
+		return $this->db->query($sqlquery)->result_array();
+	}
+
+	public function knewin_tvcns() {
+		$sqlquery = 'SELECT * FROM knewin_tv ORDER BY source ASC';
 		return $this->db->query($sqlquery)->result_array();
 	}
 

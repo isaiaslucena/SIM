@@ -1,11 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
 	<script type="text/javascript" src="<?php echo base_url('assets/jcrop/js/jquery.Jcrop.min.js')?>"></script>
 	<link rel="stylesheet" href="<?php echo base_url('assets/jcrop/css/jquery.Jcrop.min.css')?>">
 
-	<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
-
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">
@@ -232,7 +228,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 
 		<script type="text/javascript">
 			var jcropapi;

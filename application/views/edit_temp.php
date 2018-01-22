@@ -47,7 +47,7 @@ if (!isset($id_text)) {
 						} else {
 							$keyword_selected = null;
 						}
-						echo $state." - ".$radio." - ".date("d/m/Y - H:i:s",$timestamp);
+						echo $state." - ".$radio." - ".date("d/m/Y - H:i:s", $timestamp);
 					?>
 				</h2>
 			</center>

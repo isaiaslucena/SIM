@@ -53,7 +53,7 @@
 					<em class="error"><strong>Error:</strong> <?php echo get_phrase('your_browser_do_not_support_html5_audio')?>.</em>
 				</audio>
 				<br>
-				<a href="<?php echo $finalfile;?>" download="<?php echo  mb_strtoupper(date('d-m-Y',$timestamp).'_'.$radio.'_'.$state.'_'.date('H\hi\m',$timestamp).'_'.$client_selected);?>"><span><?php echo get_phrase('download');?></span></a>
+				<a id="btndownload" href="<?php echo $finalfile;?>" data-cropid="<?php echo $crop_inserted_id; ?>" download="<?php echo  mb_strtoupper(date('d-m-Y',$timestamp).'_'.$radio.'_'.$state.'_'.date('H\hi\m',$timestamp).'_'.$client_selected);?>"><span><?php echo get_phrase('download');?></span></a>
 				<small><span style="display: inline-block; text-align: right;" id="pageload"></span></small>
 			</p>
 			<br>
@@ -95,7 +95,15 @@
 
 		<script type="text/javascript">
 			$('audio').bind('contextmenu',function() { return false; });
+			
 			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
+			
+			$('#btndownload').click(function(event) {
+				cropid = $(this).attr('data-cropid');
+				$.get('<?php echo base_url("pages/crop_info_down/"); ?>'+cropid, function(data) {
+					console.log(data);
+				});
+			});
 		</script>
 
 		<footer class="credits">
