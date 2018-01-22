@@ -104,8 +104,8 @@ $enddate = strtotime('today 23:59:59');
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<!-- <i class="fa fa-tasks fa-5x"></i> -->
-								<i style="font-size: 72px" class="material-icons">tv</i>
+								<i class="fa fa-television fa-5x"></i>
+								<!-- <i style="font-size: 72px" class="material-icons">tv</i> -->
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge">
@@ -236,7 +236,7 @@ $enddate = strtotime('today 23:59:59');
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-cut fa-5x"></i>
+								<i class="fa fa-plus-circle fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge">
@@ -244,7 +244,7 @@ $enddate = strtotime('today 23:59:59');
 									$cropsum = array();
 									$todaycropinfo = $this->pages_model->report_users('join',$startdate,$enddate);
 									foreach ($todaycropinfo as $cinfo) {
-										array_push($cropsum, (int)$cinfo['crop_count']);
+										array_push($cropsum, (int)$cinfo['join_count']);
 									}
 									echo array_sum($cropsum);
 									?>
@@ -268,7 +268,7 @@ $enddate = strtotime('today 23:59:59');
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-cut fa-5x"></i>
+								<i class="fa fa-plus-circle fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge">
@@ -276,7 +276,7 @@ $enddate = strtotime('today 23:59:59');
 									$cropsum = array();
 									$todaycropinfo = $this->pages_model->report_users('join_radio_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
-										array_push($cropsum, (int)$cinfo['crop_count']);
+										array_push($cropsum, (int)$cinfo['join_count']);
 									}
 									echo array_sum($cropsum);
 									?>
@@ -300,7 +300,7 @@ $enddate = strtotime('today 23:59:59');
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-cut fa-5x"></i>
+								<i class="fa fa-plus-circle fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge">
@@ -308,7 +308,7 @@ $enddate = strtotime('today 23:59:59');
 									$cropsum = array();
 									$todaycropinfo = $this->pages_model->report_users('join_tv_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
-										array_push($cropsum, (int)$cinfo['crop_count']);
+										array_push($cropsum, (int)$cinfo['join_count']);
 									}
 									echo array_sum($cropsum);
 									?>

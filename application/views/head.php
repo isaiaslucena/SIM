@@ -51,8 +51,22 @@
 				cursor: pointer;
 			}
 
+			#joindiv {
+				position: fixed;
+				bottom: 0px;
+				left: 260px;
+				z-index: 9999;
+				display: none;
+			}
+
 			#content {
 				height: 2000px;
+			}
+			
+			.kwfound{
+				color: white;
+				background-color: red;
+				font-size: 110%;
 			}
 
 			audio::-webkit-media-controls-enclosure {overflow:hidden;}

@@ -436,9 +436,20 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function get_radio($idsource, $startdate, $position) {
+		if ($this->session->has_userdata('logged_in')) {
+			$radio = $this->pages_model->get_radio_byid_solr($idsource, urldecode($startdate), $position);
+
+			header('Content-Type: application/json');
+			print $doc;
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+		}
+	}
+
 	public function get_radio_knewin($idsource, $startdate, $position) {
 		if ($this->session->has_userdata('logged_in')) {
-			$doc = $this->pages_model->get_radio_bysd_solr($idsource, urldecode($startdate), $position);
+			$doc = $this->pages_model->get_radio_byid_solr($idsource, urldecode($startdate), $position);
 
 			header('Content-Type: application/json');
 			print $doc;
@@ -1077,6 +1088,12 @@ class Pages extends CI_Controller {
 			$idsfilesmp3 = $this->input->post('ff_ids_files_mp3');
 			$data['mp3pathfilename'] = $this->pages_model->join_mp3files($idsfilesmp3);
 
+			$datajoin['ids_files'] = explode(',', $idsfilesmp3);
+			$datajoin['id_client'] = $data['id_client'];
+			$datajoin['id_keyword'] = $data['id_keyword'];
+			$datajoin['id_user'] = $this->session->userdata('id_user');
+			$data['id_join_info'] = $this->pages_model->join_info($datajoin);
+
 			$idsfilesxmlv = $this->input->post('ff_ids_files_xml');
 			if (strpos($idsfilesxmlv, ',') !== FALSE) {
 				$idsfilesxmlarr = array();
@@ -1131,6 +1148,10 @@ class Pages extends CI_Controller {
 				$audiofiles = $this->input->post('adfiles');
 
 				$message = $this->pages_model->join_edit_audio($audiofiles);
+				
+				$datajoin['filenames'] = $audiofiles;
+				$datajoin['id_user'] = $this->session->userdata('id_user');
+				$message['id_join_info'] = $this->pages_model->join_info_edit_audio($datajoin);
 				
 				header('Content-Type: application/json');
 				print json_encode($message);

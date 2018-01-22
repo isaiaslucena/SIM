@@ -789,7 +789,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function get_radio_bysd_solr($idsource, $startdate, $position) {
+	public function get_radio_byid_solr($idsource, $startdate, $position) {
 		//Solr Connection
 		$protocol = 'http';
 		$port = '8983';
@@ -1184,6 +1184,18 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 	
+	public function join_info($data) {
+		$data_insert_info = array(
+			'ids_files' => json_encode($data['ids_files']),
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('join_info', $data_insert_info);
+		return $this->db->insert_id();
+	}
+	
 	public function join_edit_audio($audiofiles) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
@@ -1205,6 +1217,16 @@ class Pages_model extends CI_Model {
 		$data['finalurl'] = $temppathurl.$joinfile;
 
 		return $data;
+	}
+	
+	public function join_info_edit_audio($data) {
+		$data_insert_info = array(
+			'filenames' => json_encode($data['filenames']),
+			'id_user' => $data['id_user'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('join_info_edit_audio', $data_insert_info);
+		return $this->db->insert_id();
 	}
 	
 	public function join_radio_knewin($idsdocs) {
@@ -2136,7 +2158,7 @@ class Pages_model extends CI_Model {
 								GROUP BY ji.id_user';
 				return $this->db->query($sqlquery)->result_array();
 			} else {
-				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_join_info) as join_count
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ji.id_join_info) as join_count
 								FROM join_info ji
 								JOIN `user` u ON ji.id_user=u.id_user
 								WHERE ji.timestamp >= '.$startdate.' AND ji.timestamp <= '.$enddate.'
@@ -2153,8 +2175,25 @@ class Pages_model extends CI_Model {
 								GROUP BY ji.id_user';
 				return $this->db->query($sqlquery)->result_array();
 			} else {
-				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ci.id_join_info) as join_count
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ji.id_join_info) as join_count
 								FROM join_info_radio_knewin ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								WHERE ji.timestamp >= '.$startdate.' AND ji.timestamp <= '.$enddate.'
+								GROUP BY ji.id_user ORDER BY username ASC';
+				return $this->db->query($sqlquery)->result_array();
+			}
+		}
+		else if ($type == 'join_tv_knewin') {
+			if (is_null($startdate) || is_null($enddate)) {
+				$sqlquery =	'SELECT u.id_user, u.username,
+								COUNT(ji.id_join_info) as join_count
+								FROM join_info_tv_knewin ji
+								JOIN `user` u ON ji.id_user=u.id_user
+								GROUP BY ji.id_user';
+				return $this->db->query($sqlquery)->result_array();
+			} else {
+				$sqlquery =	'SELECT u.id_user, u.username, COUNT(ji.id_join_info) as join_count
+								FROM join_info_tv_knewin ji
 								JOIN `user` u ON ji.id_user=u.id_user
 								WHERE ji.timestamp >= '.$startdate.' AND ji.timestamp <= '.$enddate.'
 								GROUP BY ji.id_user ORDER BY username ASC';

@@ -21,136 +21,139 @@
 	</div>
 
 	
-	<?php
-	if (empty($pstartdate) || empty($penddate)) { 
-		$startdate = strtotime('today 00:00:00');
-		$enddate = strtotime('today 23:59:59'); ?>
-		
-		<!-- Today Discarded-->
+	<?php if (empty($pstartdate) || empty($penddate)) { ?>
+		<!-- Today -->
 		<div class="row">
-			<!-- Audimus-->
-			<div class="col-lg-4">
+			<?php
+				$startdate = strtotime('today 00:00:00');
+				$enddate = strtotime('today 23:59:59');
+			?>
+			<div class="col-lg-12">
 				<div class="panel panel-default">
-					<div class="panel-heading text-center">Audimus</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-										$todaydiscardinfo = $this->pages_model->report_users('discard', $startdate, $enddate);
-										foreach ($todaydiscardinfo as $tdinfo) { ?>
-											<tr>
-												<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
-												<td class="text-center"><?php echo $tdinfo['discard_count']; ?></td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
+					<div class="panel-heading text-center">
+						<?php echo get_phrase('today')?>
+						<div class="pull-right">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Opções
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu pull-right" role="menu">
+									<li><a href="<?php echo base_url('pages/reports/all_day/'.$startdate.'/'.$enddate)?>">Detalhes</a></li>
+									<li class="divider"></li>
+									<li><a href="#">Exportar</a>
+									</li>
+								</ul>
+							</div>
 						</div>
-						<div id="audimusdchart" class="donutchart" style="height: 250px;"></div>
+					</div>
+					<div class="panel-body">
+						<div class="col-lg-12">
+							<div class="panel panel-default">
+								<div class="panel-heading text-center">
+									<?php echo get_phrase('total')?>
+									<div class="pull-right">
+										<div class="btn-group">
+											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+												<?php echo get_phrase('options')?>
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu pull-right" role="menu">
+												<li><a href="<?php echo base_url('pages/reports/all/'.$startdate.'/'.$enddate)?>">Detalhes</a></li>
+												<li class="divider"></li>
+												<li><a href="#">Exportar</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-hover" id="<?php echo $datatablename;?>">
+											<thead>
+												<tr>
+													<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
+													<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													$selectedallinfo = $this->pages_model->report_users('all',$startdate,$enddate);
+													foreach ($selectedallinfo as $sainfo) { ?>
+														<tr>
+															<td class="text-center"><a href="<?php echo base_url('pages/report_user/all/'.$sainfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $sainfo['username']; ?></a></td>
+															<td class="text-center"><?php echo $sainfo['total_count']; ?></td>
+														</tr>
+													<?php } ?>
+											</tbody>
+										</table>
+									</div><!-- /.table-responsive -->
+									<div id="tsallchart" style="height: 150px;width: 100%"></div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
+						</div>
+						<div class="col-lg-6">
+							<div class="panel panel-default">
+								<div class="panel-heading text-center">Palavras-chave Descartadas</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-hover" id="<?php echo $datatablename;?>">
+											<thead>
+												<tr>
+													<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
+													<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													$todaydiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
+													foreach ($todaydiscardinfo as $tdinfo) { ?>
+														<tr>
+															<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
+															<td class="text-center"><?php echo $tdinfo['discard_count']; ?></td>
+														</tr>
+													<?php } ?>
+											</tbody>
+										</table>
+									</div><!-- /.table-responsive -->
+									<div id="tdiscardchart" style="height: 250px;"></div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
+						</div>
+						<div class="col-lg-6">
+							<div class="panel panel-default">
+								<div class="panel-heading text-center">Textos Cortados</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-hover" id="<?php echo $datatablename;?>">
+											<thead>
+												<tr>
+													<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
+													<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													$todaycropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
+													foreach ($todaycropinfo as $tcinfo) { ?>
+														<tr>
+															<td class="text-center"><a href="<?php echo base_url('pages/report_user/crop/'.$tcinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tcinfo['username']; ?></a></td>
+															<td class="text-center"><?php echo $tcinfo['crop_count']; ?></td>
+														</tr>
+													<?php } ?>
+											</tbody>
+										</table>
+									</div><!-- /.table-responsive -->
+									<div id="tcropchart" style="height: 250px;"></div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
+						</div>
 					</div>
 				</div>
-			</div>
-			<!-- Radio Knewin -->
-			<div class="col-lg-4">
-				<div class="panel panel-default">
-					<div class="panel-heading text-center">Radio Knewin</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-										$todaydiscardinfo = $this->pages_model->report_users('discard_radio_knewin', $startdate, $enddate);
-										foreach ($todaydiscardinfo as $tdinfo) { ?>
-											<tr>
-												<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
-												<td class="text-center"><?php echo $tdinfo['discard_count']; ?></td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
-						</div>
-						<div id="rknewindchart" class="donutchart" style="height: 250px;"></div>
-					</div>
-				</div>
-			</div>
-			<!-- TV Knewin -->
-			<div class="col-lg-4">
-				<div class="panel panel-default">
-					<div class="panel-heading text-center">TV Knewin</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-										$todaydiscardinfo = $this->pages_model->report_users('discard_tv_knewin', $startdate, $enddate);
-										foreach ($todaydiscardinfo as $tdinfo) { ?>
-											<tr>
-												<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
-												<td class="text-center"><?php echo $tdinfo['discard_count']; ?></td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
-						</div>
-						<div id="tknewindchart" class="donutchart" style="height: 250px;"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- Cropped -->
-		<div class="row">
-			<div class="col-lg-6">
-				<div class="panel panel-default">
-					<div class="panel-heading text-center">Textos Cortados</div>
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-hover" id="<?php echo $datatablename;?>">
-								<thead>
-									<tr>
-										<th class="sorting_asc text-center" tabindex="0" rowspan="1" colspan="1" style="width: 40px;"><?php echo get_phrase('user');?></th>
-										<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1" style="width: 100px;"><?php echo get_phrase('quantity');?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-										$todaycropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
-										foreach ($todaycropinfo as $tcinfo) { ?>
-											<tr>
-												<td class="text-center"><a href="<?php echo base_url('pages/report_user/crop/'.$tcinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tcinfo['username']; ?></a></td>
-												<td class="text-center"><?php echo $tcinfo['crop_count']; ?></td>
-											</tr>
-										<?php } ?>
-								</tbody>
-							</table>
-						</div><!-- /.table-responsive -->
-						<div id="tcropchart" style="height: 250px;"></div>
-					</div><!-- /.panel-body -->
-				</div><!-- /.panel -->
 			</div>
 		</div>
 
 		<!-- This Week -->
-		<!-- <div class="row">
+		<div class="row">
 			<?php
 				$day = date('w');
 				$weekstart = date('d-m-Y', strtotime('-'.$day.' days'));
@@ -200,10 +203,10 @@
 													<?php } ?>
 											</tbody>
 										</table>
-									</div>
+									</div><!-- /.table-responsive -->
 									<div id="wdiscardchart" style="height: 250px;"></div>
-								</div>
-							</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
 						</div>
 						<div class="col-lg-6">
 							<div class="panel panel-default">
@@ -243,18 +246,18 @@
 													<?php } ?>
 											</tbody>
 										</table>
-									</div>
+									</div><!-- /.table-responsive -->
 									<div id="wcropchart" style="height: 250px;"></div>
-								</div>
-							</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
 						</div>
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 
 		<!-- This Month -->
-		<!-- <div class="row">
+		<div class="row">
 			<?php
 				$fd = new DateTime('first day of this month');
 				$monthstart = $fd->format('d-m-Y');
@@ -306,10 +309,10 @@
 													<?php } ?>
 											</tbody>
 										</table>
-									</div>
+									</div><!-- /.table-responsive -->
 									<div id="mdiscardchart" style="height: 250px;"></div>
-								</div>
-							</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
 						</div>
 						<div class="col-lg-6">
 							<div class="panel panel-default">
@@ -349,18 +352,17 @@
 													<?php } ?>
 											</tbody>
 										</table>
-									</div>
+									</div><!-- /.table-responsive -->
 									<div id="mcropchart" style="height: 250px;"></div>
-								</div>
-							</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
 						</div>
 					</div>
 				</div>
 			</div>
-		</div> -->
-
-	<!-- Selected Date -->
+		</div>	
 	<?php } else { ?>
+		<!-- Selected Date -->
 		<div class="row">
 			<?php
 				$startdate = strtotime($pstartdate.' 00:00:00');
@@ -536,93 +538,214 @@
 		});
 
 		<?php if (empty($pstartdate) || empty($penddate)) { ?>
-			var donutscharts = $('.donutchart');
-			$.each(donutscharts, function(index, val) {
-				console.log(val);
-				var elem = $(val).attr('id');
-				
-				Morris.Donut({
-					element: elem,
-					data: [
-						<?php
-						$startdate = strtotime('today 00:00:00');
-						$enddate = strtotime('today 23:59:59');
-						$todaydiscardinfo = $this->pages_model->report_users('discard', $startdate,$enddate);
-						$dcount = 0;
-						$darrcount = count($todaydiscardinfo);
-						foreach ($todaydiscardinfo as $tdinfo) {
-							$dcount++;
-							if ($dcount == $darrcount) { ?>
-								{label: "<?php echo $tdinfo['username']; ?>", value: <?php echo $tdinfo['discard_count']; ?>}
-							<?php } else { ?>
-								{label: "<?php echo $tdinfo['username']; ?>", value: <?php echo $tdinfo['discard_count']; ?>},
-						<?php }
-						} ?>
-					]
-				});	
-			});
+		Morris.Bar({
+			element: 'tsallchart',
+			data: [
+				<?php
+				$startdate = strtotime($pstartdate.' 00:00:00');
+				$enddate = strtotime($penddate.' 23:59:59');
+				$selectedallinfo = $this->pages_model->report_users('all', $startdate, $enddate);
+				$dcount = 0;
+				$darrcount = count($selectedallinfo);
+				foreach ($selectedallinfo as $sainfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>}
+					<?php } else { ?>
+						{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>},
+				<?php }
+				} ?>
+			],
+			xkey: 'y',
+			ykeys: ['a'],
+			labels: ['Total'],
+			hideHover: 'auto',
+			horizontal: true
+		});
+
+		Morris.Donut({
+			element: 'tdiscardchart',
+			data: [
+				<?php
+				$startdate = strtotime('today 00:00:00');
+				$enddate = strtotime('today 23:59:59');
+				$todaydiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
+				$dcount = 0;
+				$darrcount = count($todaydiscardinfo);
+				foreach ($todaydiscardinfo as $tdinfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{label: "<?php echo $tdinfo['username']; ?>",value:<?php echo $tdinfo['discard_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $tdinfo['username']; ?>",value:<?php echo $tdinfo['discard_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
+		Morris.Donut({
+			element: 'tcropchart',
+			data: [
+				<?php
+				$todaycropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
+				$ccount = 0;
+				$carrcount = count($todaycropinfo);
+				foreach ($todaycropinfo as $tcinfo) {
+					$ccount++;
+					if ($ccount == $carrcount) { ?>
+						{label: "<?php echo $tcinfo['username']; ?>",value:<?php echo $tcinfo['crop_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $tcinfo['username']; ?>",value:<?php echo $tcinfo['crop_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
+		Morris.Donut({
+			element: 'wdiscardchart',
+			data: [
+				<?php
+				$day = date('w');
+				$weekstart = date('d-m-Y', strtotime('-'.$day.' days'));
+				$weekend = date('d-m-Y', strtotime('+'.(6-$day).' days'));
+				$startdate = strtotime($weekstart.' 00:00:00');
+				$enddate = strtotime($weekend.' 23:59:59');
+				$weekdiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
+				$dcount = 0;
+				$darrcount = count($weekdiscardinfo);
+				foreach ($weekdiscardinfo as $wdinfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{label: "<?php echo $wdinfo['username']; ?>",value:<?php echo $wdinfo['discard_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $wdinfo['username']; ?>",value:<?php echo $wdinfo['discard_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
+		Morris.Donut({
+			element: 'wcropchart',
+			data: [
+				<?php
+				$weekcropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
+				$ccount = 0;
+				$carrcount = count($weekcropinfo);
+				foreach ($weekcropinfo as $wcinfo) {
+					$ccount++;
+					if ($ccount == $carrcount) { ?>
+						{label: "<?php echo $wcinfo['username']; ?>",value:<?php echo $wcinfo['crop_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $wcinfo['username']; ?>",value:<?php echo $wcinfo['crop_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
+		Morris.Donut({
+			element: 'mdiscardchart',
+			data: [
+				<?php
+				$fd = new DateTime('first day of this month');
+				$monthstart = $fd->format('d-m-Y');
+				$ld = new DateTime('last day of this month');
+				$monthend = $ld->format('d-m-Y');
+				$startdate = strtotime($monthstart.' 00:00:00');
+				$enddate = strtotime($monthend.' 23:59:59');
+				$monthdiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
+				$dcount = 0;
+				$darrcount = count($monthdiscardinfo);
+				foreach ($monthdiscardinfo as $mdinfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{label: "<?php echo $mdinfo['username']; ?>",value:<?php echo $mdinfo['discard_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $mdinfo['username']; ?>",value:<?php echo $mdinfo['discard_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
+		Morris.Donut({
+			element: 'mcropchart',
+			data: [
+				<?php
+				$monthcropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
+				$ccount = 0;
+				$carrcount = count($monthcropinfo);
+				foreach ($monthcropinfo as $mcinfo) {
+					$ccount++;
+					if ($ccount == $carrcount) { ?>
+						{label: "<?php echo $mcinfo['username']; ?>",value:<?php echo $mcinfo['crop_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $mcinfo['username']; ?>",value:<?php echo $mcinfo['crop_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
+
 		<?php } else { ?>
-			Morris.Bar({
-				element: 'sallchart',
-				data: [
-					<?php
-					$startdate = strtotime($pstartdate.' 00:00:00');
-					$enddate = strtotime($penddate.' 23:59:59');
-					$selectedallinfo = $this->pages_model->report_users('all',$startdate,$enddate);
-					$dcount = 0;
-					$darrcount = count($selectedallinfo);
-					foreach ($selectedallinfo as $sainfo) {
-						$dcount++;
-						if ($dcount == $darrcount) { ?>
-							{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>}
-						<?php } else { ?>
-							{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>},
-					<?php }
-					} ?>
-				],
-				xkey: 'y',
-				ykeys: ['a'],
-				labels: ['Total'],
-				hideHover: 'auto',
-				horizontal: true
-			});
+		Morris.Bar({
+			element: 'sallchart',
+			data: [
+				<?php
+				$startdate = strtotime($pstartdate.' 00:00:00');
+				$enddate = strtotime($penddate.' 23:59:59');
+				$selectedallinfo = $this->pages_model->report_users('all',$startdate,$enddate);
+				$dcount = 0;
+				$darrcount = count($selectedallinfo);
+				foreach ($selectedallinfo as $sainfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>}
+					<?php } else { ?>
+						{y: "<?php echo $sainfo['username']; ?>",a:<?php echo $sainfo['total_count']; ?>},
+				<?php }
+				} ?>
+			],
+			xkey: 'y',
+			ykeys: ['a'],
+			labels: ['Total'],
+			hideHover: 'auto',
+			horizontal: true
+		});
 
-			Morris.Donut({
-				element: 'sdiscardchart',
-				data: [
-					<?php
-					$startdate = strtotime($pstartdate.' 00:00:00');
-					$enddate = strtotime($penddate.' 23:59:59');
-					$selecteddiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
-					$dcount = 0;
-					$darrcount = count($selecteddiscardinfo);
-					foreach ($selecteddiscardinfo as $sdinfo) {
-						$dcount++;
-						if ($dcount == $darrcount) { ?>
-							{label: "<?php echo $sdinfo['username']; ?>",value:<?php echo $sdinfo['discard_count']; ?>}
-						<?php } else { ?>
-							{label: "<?php echo $sdinfo['username']; ?>",value:<?php echo $sdinfo['discard_count']; ?>},
-					<?php }
-					} ?>
-				]
-			});
+		Morris.Donut({
+			element: 'sdiscardchart',
+			data: [
+				<?php
+				$startdate = strtotime($pstartdate.' 00:00:00');
+				$enddate = strtotime($penddate.' 23:59:59');
+				$selecteddiscardinfo = $this->pages_model->report_users('discard',$startdate,$enddate);
+				$dcount = 0;
+				$darrcount = count($selecteddiscardinfo);
+				foreach ($selecteddiscardinfo as $sdinfo) {
+					$dcount++;
+					if ($dcount == $darrcount) { ?>
+						{label: "<?php echo $sdinfo['username']; ?>",value:<?php echo $sdinfo['discard_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $sdinfo['username']; ?>",value:<?php echo $sdinfo['discard_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
 
-			Morris.Donut({
-				element: 'scropchart',
-				data: [
-					<?php
-					$selectedcropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
-					$ccount = 0;
-					$carrcount = count($selectedcropinfo);
-					foreach ($selectedcropinfo as $scinfo) {
-						$ccount++;
-						if ($ccount == $carrcount) { ?>
-							{label: "<?php echo $scinfo['username']; ?>",value:<?php echo $scinfo['crop_count']; ?>}
-						<?php } else { ?>
-							{label: "<?php echo $scinfo['username']; ?>",value:<?php echo $scinfo['crop_count']; ?>},
-					<?php }
-					} ?>
-				]
-			});
+		Morris.Donut({
+			element: 'scropchart',
+			data: [
+				<?php
+				$selectedcropinfo = $this->pages_model->report_users('crop',$startdate,$enddate);
+				$ccount = 0;
+				$carrcount = count($selectedcropinfo);
+				foreach ($selectedcropinfo as $scinfo) {
+					$ccount++;
+					if ($ccount == $carrcount) { ?>
+						{label: "<?php echo $scinfo['username']; ?>",value:<?php echo $scinfo['crop_count']; ?>}
+					<?php } else { ?>
+						{label: "<?php echo $scinfo['username']; ?>",value:<?php echo $scinfo['crop_count']; ?>},
+				<?php }
+				} ?>
+			]
+		});
 		<?php } ?>
 	</script>
