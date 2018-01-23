@@ -32,8 +32,8 @@
 				<a id="btnpbrate" type="button" class="btn btn-default disabled" title="Aumentar velocidade" disabled><i class="fa fa-angle-double-right"></i> Velocidade</a>
 				<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i> Início</a>
 				<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i> Fim</a>
-				<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" disabled><i class="fa fa-scissors"></i> Cortar</a>
-				<a id="btndown" type="button" class="btn btn-default disabled" title="Baixar" disabled><i class="fa fa-download"></i> Baixar</a>
+				<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-joinid="0" disabled><i class="fa fa-scissors"></i> Cortar</a>
+				<a id="btndown" type="button" class="btn btn-default disabled" title="Baixar" data-cropid="null" disabled><i class="fa fa-download"></i> Baixar</a>
 			</div>
 		</div>
 
@@ -264,6 +264,7 @@
 			$('#btncrop').click(function(event) {
 				playpauseaudio('audiofile');
 				audioel.css('display', 'none');
+				cjoinid = $(this).attr('data-joinid');
 				$('#waitmsg').text('Carregando...');
 				$('#waitimg').css('display', 'block');
 
@@ -272,12 +273,15 @@
 						audiofile: joinfiles ? audioel.attr('src').replace('<?php echo base_url("assets/temp/")?>', '') : audioel.attr('src').replace(/^data:audio\/(mp3|mp4);base64,/, ""),
 						starttime: cropstarts,
 						endtime: cropends,
+						joinid: cjoinid,
 						join: joinfiles
 					},
 					function(data, textStatus, xhr) {
 						console.log(data);
 						afileurl = data.cropfileurl;
 						audioel.attr('src', afileurl);
+						acropid = data.crop_inserted_id;
+						$('#btndown').attr('data-cropid', acropid);
 						$('#btndown').attr('href', afileurl);
 						$('#btndown').attr('download', 'audio_editado_'+Date.now());
 						$('#waitimg').css('display', 'none');
@@ -286,6 +290,13 @@
 						disable_editor();
 					}
 				);
+			});
+
+			$('#btndown').click(function(event) {
+				cropid = $(this).attr('data-cropid');
+				$.get('<?php echo base_url("pages/crop_info_edit_audio_down/"); ?>'+cropid, function(data) {
+					console.log(data);
+				});
 			});
 
 			function sectostring(secs) {
@@ -319,6 +330,8 @@
 						// console.log(data);
 						console.log('Joined files!')
 						joinfiles = true;
+						joinned_id = data.id_join_info;
+						$('#btncrop').attr('data-joinid', joinned_id);
 						enable_editor(data.finalurl);
 					}
 				);

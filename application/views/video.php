@@ -749,6 +749,10 @@
 								if (elo == "indian03") {
 									indexo.forEach(function(ela, indexa) {
 										switch (ela) {
+											case "FUTURA_RJ":
+												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+												tvch.append(html);
+												break;
 											case "NBR_RJ":
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
@@ -797,11 +801,10 @@
 												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
 												tvch.append(html);
 												break;
-                                                                                        case "SPORTV_RJ":
-                                                                                                html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
-                                                                                                tvch.append(html);
-                                                                                                break;
-
+											case "SPORTV_RJ":
+												html = '<option data-vsrc="' + elo + '" data-vchn="' + ela + '">' + elo +":" + ela + '</option>';
+												tvch.append(html);
+												break;
 										}
 									});
 								} else {

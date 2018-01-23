@@ -1312,10 +1312,18 @@ class Pages extends CI_Controller {
 			$audiofile = $this->input->post('audiofile');
 			$starttime = $this->input->post('starttime');
 			$endtime = $this->input->post('endtime');
+			$joinid = $this->input->post('joinid');
 			$join = $this->input->post('join');
 
 			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile, $join);
 			
+			$data_crop_info['filename'] = $audiofile;
+			$data_crop_info['id_join_info'] = $joinid;
+			$data_crop_info['id_user'] = $this->session->userdata('id_user');
+			$data_crop_info['starttime'] = $starttime;
+			$data_crop_info['endtime'] = $endtime;
+			$message['crop_inserted_id'] = $this->pages_model->crop_info_edit_audio($data_crop_info);
+
 			header('Content-Type: application/json');
 			print json_encode($message);
 		} else {
@@ -1385,6 +1393,17 @@ class Pages extends CI_Controller {
 	public function crop_info_radio_knewin_down($cropid) {
 		if ($this->session->has_userdata('logged_in')) {
 			$this->pages_model->crop_info_radio_knewin_download($cropid);
+			
+			header('Content-Type: application/json');
+			print json_encode('Download!');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+		}
+	}
+
+	public function crop_info_edit_audio_down($cropid) {
+		if ($this->session->has_userdata('logged_in')) {
+			$this->pages_model->crop_info_edit_audio_download($cropid);
 			
 			header('Content-Type: application/json');
 			print json_encode('Download!');

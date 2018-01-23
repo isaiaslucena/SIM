@@ -1137,6 +1137,12 @@ class Pages_model extends CI_Model {
 		$this->db->update('crop_info');
 	}
 
+	public function crop_info_edit_audio_download($cropid) {
+		$this->db->set('download_timestamp', strtotime("now"));
+		$this->db->where('id_crop_info', $cropid);
+		$this->db->update('crop_info_edit_audio');
+	}
+
 	public function crop_info_radio_knewin_download($cropid) {
 		$this->db->set('download_timestamp', strtotime("now"));
 		$this->db->where('id_crop_info', $cropid);
@@ -1153,6 +1159,19 @@ class Pages_model extends CI_Model {
 			'timestamp' => strtotime("now")
 		);
 		$this->db->insert('crop_info_tv_knewin', $data_insert_info);
+	}
+
+	public function crop_info_edit_audio($data) {
+		$data_insert_info = array(
+			'filename' => $data['filename'],
+			'id_join_info' => $data['id_join_info'],
+			'id_user' => $data['id_user'],
+			'starttime' => $data['starttime'],
+			'endtime' => $data['endtime'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('crop_info_edit_audio', $data_insert_info);
+		return $this->db->insert_id();
 	}
 
 	public function join_mp3files($idsfilesmp3) {
