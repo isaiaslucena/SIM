@@ -1077,7 +1077,12 @@ class Pages extends CI_Controller {
 
 			$data['id_file'] = $this->input->post('id_file');
 			$data['id_client'] = $this->input->post('id_client');
-			$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			if ($data['id_client'] == 0) {
+				$data['client_selected'] = '';
+			} else {
+				$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			}
+			
 			$data['id_keyword'] = $this->input->post('id_keyword');
 			if (empty($data['id_keyword'])) {
 				$data['keyword_selected'] = $this->input->post('keyword');
@@ -1591,7 +1596,7 @@ class Pages extends CI_Controller {
 
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
-			$data['alltvc'] = $this->pages_model->tvc();
+			$data['alltvc'] = $this->pages_model->tvc_knewin();
 			$data['vsr'] = 'false';
 			// $data['alltvp'] = = $this->pages_model->tvp();
 
@@ -1615,7 +1620,7 @@ class Pages extends CI_Controller {
 			$data_navbar['selected_page'] = 'search';
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
-			$data['alltvc'] = $this->pages_model->tvc();
+			$data['alltvc'] = $this->pages_model->tvc_knewin();
 			if (empty($pageselected)) {
 				$data_sresult['pageselected'] = 1;
 			} else {

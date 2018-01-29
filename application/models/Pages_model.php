@@ -162,6 +162,11 @@ class Pages_model extends CI_Model {
 		return $this->db->get('tvsource_info4')->result_array();
 	}
 
+	public function tvc_knewin() {
+		$this->db->order_by('source','asc');
+		return $this->db->get('knewin_tv')->result_array();
+	}
+
 	public function rac() {
 		$this->db->order_by('name','asc');
 		return $this->db->get('radiosource_info4')->result_array();

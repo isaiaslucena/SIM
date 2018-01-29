@@ -157,11 +157,11 @@
 			foreach ($alltvc as $tvc) {
 				$tvccount++;
 				if ($tvccount == $tcountarr) {
-					$tvclinevar .= "{'id':".$tvc['id_tvsource'].",";
-					$tvclinevar .= "'name':"."'".$tvc['name']."'}";
+					$tvclinevar .= "{'id':".$tvc['id_source'].",";
+					$tvclinevar .= "'name':"."'".$tvc['source']."'}";
 				} else {
-					$tvclinevar .= "{'id':".$tvc['id_tvsource'].",";
-					$tvclinevar .= "'name':"."'".$tvc['name']."'},";
+					$tvclinevar .= "{'id':".$tvc['id_source'].",";
+					$tvclinevar .= "'name':"."'".$tvc['source']."'},";
 				}
 			}
 		?>
