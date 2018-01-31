@@ -395,7 +395,6 @@ class Pages_model extends CI_Model {
 
 	public function solr_text_keyword_id($id_file) {
 		$todaydate = strtotime('today 00:00:00');
-
 		$sqlquery =	"SELECT t.id_file,t.id_text,f.type,f.path,f.filename,f.timestamp,r.name as radio,r.state,t.text_content
 						FROM text t
 						JOIN file f ON t.id_file=f.id_file

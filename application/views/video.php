@@ -223,7 +223,7 @@
 							</div>
 						</div>
 
-						<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" title="Selecione uma data" disabled></select>
+						<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" data-live-search="true" title="Selecione uma data" disabled></select>
 					</div>
 				</div>
 			</div>
