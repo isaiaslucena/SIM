@@ -227,9 +227,9 @@
 						$('nav.navbar-default').css('position', 'absolute');
 					}
 					
-					if (idgroup == 1 || idgroup == 5 ) {
-						$(function() { getradios(); });
-					}
+					// if (idgroup == 1 || idgroup == 5 ) {
+					// 	$(function() { getradios(); });
+					// }
 				});
 				function getradios() {
 					setTimeout(getradios, 60000);

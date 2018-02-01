@@ -460,7 +460,7 @@
 					
 					if (totalpanelsd == totalpanels) {
 						console.log('no more panels!');
-						window.location = '<?php echo base_url("pages/index_tv_knewin")?>';
+						window.location = '<?php echo base_url("pages/index_radio_knewin")?>';
 					}
 				}
 			);
