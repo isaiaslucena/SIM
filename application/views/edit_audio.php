@@ -61,13 +61,14 @@
 				if (audiofilesc > 1) {
 					fcount = 1;
 					$.each(audiofiles, function(index, val) {
+						// console.log(val);
 						var filelastmod = val.lastModified;
 						var filename = val.name;
 						var filesize = val.size;
 						var filetype = val.type;
 						var fileb64;
 
-						if (filetype != 'audio/mp3') {
+						if (filetype != 'audio/mp3' && filetype != 'audio/mpeg') {
 							swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
 							joinfiles = false;
 							fileerr = true;
@@ -79,7 +80,7 @@
 							filereader.readAsDataURL(val);
 							filereader.onload = function(e) {
 								// console.log(e);
-								fileb64 = e.target.result.replace(/^data:audio\/(mp3|mp4);base64,/, "");
+								fileb64 = e.target.result.replace(/^data:audio\/(mp3|mpeg);base64,/, "");
 								uploadaudiofiles.push(
 									$.post('<?php echo base_url("pages/upload_join_edit_audio")?>',
 										{'audioname': filename,'audiofile': fileb64}

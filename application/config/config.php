@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // $config['base_url'] = '';
 #$config['base_url'] .= preg_replace('@/+$@', '', dirname($_SERVER['SCRIPT_NAME'])).'/';
 
-$allowed_domains = array('sim.intranet.dataclip', 'sim.dataclip.com.br:8001', '172.17.0.6');
+$allowed_domains = array('sim.intranet.dataclip', 'sim.dataclip.com.br:8001', 'sim.dataclip.com.br:8080', '172.17.0.6');
 $default_domain  = 'sim.intranet.dataclip';
 
 if (in_array($_SERVER['HTTP_HOST'], $allowed_domains, TRUE)) {
