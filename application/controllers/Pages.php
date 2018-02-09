@@ -2203,6 +2203,19 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function live() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'live',
+				'last_page' => base_url('pages/live')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('live');
+		} else {
+			redirect('login?rdt='.urlencode('pages/live'),'refresh');
+		}
+	}
+
 	// public function videoplayer() {
 		// if ($this->session->has_userdata('logged_in')) {
 			// $this->load->view('player.js');
