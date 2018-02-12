@@ -2210,6 +2210,7 @@ class Pages extends CI_Controller {
 				'last_page' => base_url('pages/live')
 			);
 			$this->session->set_userdata($sessiondata);
+			header ('Access-Control-Allow-Origin: *');
 			$this->load->view('live');
 		} else {
 			redirect('login?rdt='.urlencode('pages/live'),'refresh');

@@ -36,7 +36,7 @@
 			if(Hls.isSupported()) {
 				var video = document.getElementById('video');
 				var hls = new Hls();
-				hls.loadSource('rtmp://192.168.0.19/live/indian-globo');
+				hls.loadSource('http://192.168.0.19:8080/hls/indian-globo.m3u8');
 				hls.attachMedia(video);
 				hls.on(Hls.Events.MANIFEST_PARSED,function() {
 					video.play();
