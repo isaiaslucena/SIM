@@ -36,7 +36,7 @@
 			if(Hls.isSupported()) {
 				var video = document.getElementById('video');
 				var hls = new Hls();
-				hls.loadSource('http://virtua.dataclip.com.br:8081/indian02/tv/MIDIA/02-February/2018-02-13/GLOBO_RJ/playlist.m3u8');
+				hls.loadSource('http://virtua.dataclip.com.br:8081/hls/indian-globo/index.m3u8');
 				hls.attachMedia(video);
 				hls.on(Hls.Events.MANIFEST_PARSED,function() {
 					video.play();
@@ -46,7 +46,7 @@
 			// When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
 			// This is using the built-in support of the plain video element, without using hls.js.
 			else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-				video.src = 'http://virtua.dataclip.com.br:8081/indian02/tv/MIDIA/02-February/2018-02-13/GLOBO_RJ/playlist.m3u8';
+				video.src = 'http://virtua.dataclip.com.br:8081/hls/indian-globo/index.m3u8';
 				video.addEventListener('canplay',function() {
 					video.play();
 				});
