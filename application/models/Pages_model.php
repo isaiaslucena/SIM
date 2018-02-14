@@ -16,13 +16,13 @@ class Pages_model extends CI_Model {
 				$sqlquery = 'SELECT * FROM client WHERE radio = 1 ORDER BY priority,name ASC LIMIT '.$limit.','.$offset;
 			} elseif ($vhtype == 'tv') {
 				$sqlquery = 'SELECT * FROM client WHERE tv = 1 ORDER BY priority,name ASC LIMIT '.$limit.','.$offset;
-			}	
+			}
 		} else {
 			if ($vhtype == 'radio') {
 				$sqlquery = 'SELECT * FROM client WHERE radio = 1 ORDER BY priority,name ASC';
 			} elseif ($vhtype == 'tv') {
 				$sqlquery = 'SELECT * FROM client WHERE tv = 1 ORDER BY priority,name ASC';
-			}	
+			}
 		}
 		return $this->db->query($sqlquery)->result_array();
 	}
@@ -709,7 +709,7 @@ class Pages_model extends CI_Model {
 
 		return json_decode(curl_exec($ch));
 	}
-	
+
 	public function tv_text_keyword_solr($startdate, $enddate, $keyword) {
 		//Solr Connection
 		$protocol='http';
@@ -737,7 +737,7 @@ class Pages_model extends CI_Model {
 
 		return json_decode(curl_exec($ch));
 	}
-	
+
 	public function radio_text_keyword_solr($startdate, $enddate, $keyword){
 		//Solr Connection
 		$protocol='http';
@@ -811,7 +811,7 @@ class Pages_model extends CI_Model {
 				'filter' => 'starttime_dt:["'.$startdate.'" TO *]'
 			);
 		}
-		
+
 		$url = $protocol."://".$host.":".$port.$path;
 		$data_string = json_encode($data);
 		$header = array(
@@ -847,7 +847,7 @@ class Pages_model extends CI_Model {
 				'filter' => 'starttime_dt:["'.$startdate.'" TO *]'
 			);
 		}
-		
+
 		$url = $protocol."://".$host.":".$port.$path;
 		$data_string = json_encode($data);
 		$header = array(
@@ -1091,7 +1091,7 @@ class Pages_model extends CI_Model {
 		$duration = $endtime - $starttime;
 
 		$cropfilename = "edit_".strtotime("now")."_crop.mp3";
-		
+
 		if ($join == 'true') {
 			$dfilename = $fileb64;
 		} else {
@@ -1206,7 +1206,7 @@ class Pages_model extends CI_Model {
 		$finaltempurl = $temppathurl.$joinfile;
 		return $finaltempurl;
 	}
-	
+
 	public function join_info($data) {
 		$data_insert_info = array(
 			'ids_files' => json_encode($data['ids_files']),
@@ -1218,12 +1218,12 @@ class Pages_model extends CI_Model {
 		$this->db->insert('join_info', $data_insert_info);
 		return $this->db->insert_id();
 	}
-	
+
 	public function join_edit_audio($audiofiles) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
-		
+
 		$filesline = null;
 		$countfarr = count($audiofiles);
 		$countf = 0;
@@ -1234,14 +1234,14 @@ class Pages_model extends CI_Model {
 				$filesline .= $temppath.$audiofile.' ';
 			}
 		}
-		
+
 		$joinfile = 'join_edit_audio_'.date('d-m-Y_His', strtotime("now")).'.mp3';
 		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
 		$data['finalurl'] = $temppathurl.$joinfile;
 
 		return $data;
 	}
-	
+
 	public function join_info_edit_audio($data) {
 		$data_insert_info = array(
 			'filenames' => json_encode($data['filenames']),
@@ -1251,7 +1251,7 @@ class Pages_model extends CI_Model {
 		$this->db->insert('join_info_edit_audio', $data_insert_info);
 		return $this->db->insert_id();
 	}
-	
+
 	public function join_radio_knewin($idsdocs) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
@@ -1269,7 +1269,7 @@ class Pages_model extends CI_Model {
 
 			$docinfo = $this->radio_text_byid_solr($iddoc);
 			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
-			
+
 			$dfilename = "jdownload_".strtotime("now").".mp3";
 			file_put_contents($temppath.$dfilename, fopen($docinfo->response->docs[0]->mediaurl_s, 'r'));
 
@@ -1280,9 +1280,9 @@ class Pages_model extends CI_Model {
 				$filesline .= $temppath.$dfilename.' ';
 			}
 		}
-		
+
 		$joinfile = 'join_'.date('d-m-Y_His', strtotime("now")).'.mp3';
-		
+
 		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
 		$datadoc['finalurl'] = $temppathurl.$joinfile;
 
@@ -1535,7 +1535,7 @@ class Pages_model extends CI_Model {
 				// }
 			} else if ($datasearch['vtype'] == 'tv') {
 				$knewinday = strtotime('29-11-2017 12:00');
-				
+
 				if ($startdate < $knewinday) {
 					$startdatem = $startdate * 1000;
 					$enddatem = $enddate * 1000;
@@ -1680,7 +1680,7 @@ class Pages_model extends CI_Model {
 							"filter" => array(
 								'startdate_l:['.$startdatem.' TO '.$enddatem.']',
 								'source_s:'.$channelsline
-							)	
+							)
 						);
 					} else {
 						$data = array(
@@ -1688,7 +1688,7 @@ class Pages_model extends CI_Model {
 							"filter" => array(
 								'starttime_dt:['.$startdatem.' TO '.$enddatem.']',
 								'source_s:'.$channelsline
-							)	
+							)
 						);
 					}
 					$data_string = json_encode($data);
@@ -1823,7 +1823,7 @@ class Pages_model extends CI_Model {
 						"filter" => array(
 							'startdate_l:['.$startdatem.' TO '.$enddatem.']',
 							'source_s:'.$channelsline
-						)	
+						)
 					);
 					$data_string = json_encode($data);
 
@@ -1873,8 +1873,8 @@ class Pages_model extends CI_Model {
 					$path = '/solr/knewin_tv/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
 					$datastr = 2;
 				}
-				
-				
+
+
 				// $path='/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 				$url=$protocol."://".$host.":".$port.$path;
 				$data_string = $datasearch;
@@ -1909,6 +1909,33 @@ class Pages_model extends CI_Model {
 				return json_decode(curl_exec($ch));
 			}
 		}
+	}
+
+	public function crawler_search_result($searchdata) {
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/crawler/query?wt=json&start='.$searchdata['start'].'&sort=inserted_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => "_text_:\"".$searchdata['search_text']."\""
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
 	}
 
 	public function tv_words($hash, $starttime, $endtime) {

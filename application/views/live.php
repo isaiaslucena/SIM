@@ -27,11 +27,11 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-lg-12">
-					<video id="video"></video>
+					<video id="video" controls></video>
 				</div>
 			</div>
 		</div>
-		
+
 		<script type="text/javascript">
 			if(Hls.isSupported()) {
 				var video = document.getElementById('video');
