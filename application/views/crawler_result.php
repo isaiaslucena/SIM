@@ -29,9 +29,12 @@
 				</div>
 				<div class="col-lg-7">
 					<div class="input-group input-group-lg" style="vertical-align: middle;">
-						<input type="text" class="form-control" value="<?php echo $search_text;?>">
+						<form id="formsearch" action="<?php echo base_url('pages/crawler_result');?>" method="post" accept-charset="utf-8" style="display: none;">
+							<input id="search_text" name="search_text" type="text" class="form-control" value="<?php echo $search_text;?>">
+						</form>
+						<input id="searchtext" type="text" class="form-control" form="formsearch" value="<?php echo $search_text;?>">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">
+							<button class="btn btn-default" type="submit" form="formsearch">
 								<i class="fa fa-search fa-fw"></i>
 							</button>
 						</span>
@@ -47,7 +50,9 @@
 
 			<div class="row">
 				<div class="col-lg-12">
-					Encontrado <?php echo $search_result->response->numFound;?>
+					<span class="text-muted">
+						Encontrado <?php echo $search_result->response->numFound;?>
+					</span>
 				</div>
 			</div>
 
@@ -83,6 +88,11 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
+				$('#searchtext').keyup(function(event) {
+					var stext = $(this).val();
+					$('#search_text').val(stext);
+				});
+
 				// $(document).on('click', 'a.ntitle', function(event) {
 				// 	//console.log(event);
 

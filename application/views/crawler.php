@@ -44,7 +44,7 @@
 						<form id="formsearch" action="<?php echo base_url('pages/crawler_result');?>" method="post" accept-charset="utf-8" style="display: none;">
 							<input id="search_text" name="search_text" type="text" class="form-control">
 						</form>
-						<input id="searchtext" type="text" class="form-control">
+						<input id="searchtext" type="text" form="formsearch" class="form-control">
 						<span class="input-group-btn">
 							<button id="btnsubmit" class="btn btn-default" form="formsearch" type="submit">
 								<i class="fa fa-search fa-fw"></i>
