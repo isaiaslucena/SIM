@@ -56,7 +56,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row center-block text-center">
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<?php
 						$query = base64_encode($search_result->responseHeader->params->json);
@@ -72,7 +72,7 @@
 							$pageselectedend = $pageselected;
 						}
 					if ($totalfound > 10) { ?>
-						<ul class="pagination pull-right">
+						<ul class="pagination">
 							<?php if ($firstpage == 0) { ?>
 								<li class="disabled">
 									<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
@@ -163,10 +163,14 @@
 					<?php
 						// var_dump($search_result);
 						foreach ($search_result->response->docs as $sresult) { ?>
-							<div class="well">
-								<span class="label label-default">
-									<?php echo str_replace('T', ' ', str_replace('Z', '', $sresult->published_dt));?>
+							<div class="well center-block" style="width: 50%">
+								<span class="pull-left label label-default">
+									Publicado: <?php echo str_replace('T', ' ', str_replace('Z', '', $sresult->published_dt));?>
 								</span>
+								<span class="pull-right label label-default">
+									Inserido: <?php echo str_replace('T', ' ', str_replace('Z', '', $sresult->inserted_dt));?>
+								</span>
+								<br>
 								<h4 class="ntitle text-primary" data-docid="<?php echo $sresult->id;?>">
 									<?php echo $sresult->title_t[0];?>
 								</h4>
@@ -177,6 +181,7 @@
 								</p>
 								<div id="<?php echo 'f_'.$sresult->id;?>" class="fcontent text-justify" data-docid="<?php echo $sresult->id;?>" style="overflow-y: auto; max-height: 50px">
 									<?php echo strip_tags($sresult->content_t[0], '<br><p>');?>
+									<!-- <?php //echo $sresult->content_t[0];?> -->
 								</div>
 							</div>
 						<?php }
@@ -184,7 +189,7 @@
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row center-block text-center">
 				<div class="col-sm-12 col-md-12 col-lg-12">
 					<?php
 						$query = base64_encode($search_result->responseHeader->params->json);
@@ -338,10 +343,12 @@
 				});
 				
 				$('.fcontent.text-justify').click(function() {
+					$(this).parent().animate({'width': '100%'}, 500);
 					$(this).animate({
 						'overflow-y': 'auto',
-						'max-height': '600px'},
-						'slow', function() {
+						'max-height': '600px'
+					}, 500,
+					function() {
 						/* stuff to do after animation is complete */
 					});
 				});
@@ -350,12 +357,13 @@
 					/*do nothing*/
 				}, function() {
 					var ctextid = $(this).attr('id');
-					
+					$(this).parent().animate({'width': '50%'}, 500);
 					$(this).animate({
-						'overflow-y': 'hidden',
-						'max-height': '50px'},
-						'slow', function() {
+						'max-height': '50px'
+					}, 500,
+					function() {
 						$(this).scrollTo('.stext');
+						$(this).css({'overflow-y': 'hidden'});
 					});
 				});
 			});
