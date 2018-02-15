@@ -1653,7 +1653,7 @@ class Pages extends CI_Controller {
 				$vtype = $this->input->post('optionsRadios');
 			} else {
 				$data_search = base64_decode($query);
-				$data['search'] = base64_decode($query);
+				$data['search'] = $data_search;
 				$data['vtype'] = $vtype;
 			}
 
@@ -2231,7 +2231,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function crawler_result() {
+	public function crawler_result($pageselected = 1, $query = null, $start = 0) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'live',
@@ -2239,10 +2239,20 @@ class Pages extends CI_Controller {
 			);
 			$this->session->set_userdata($sessiondata);
 
-			$data['search_text'] = $this->input->post('search_text');
-			$data['start'] = 0;
+			if (is_null($query)) {
+				$data['search_text'] = $this->input->post('search_text');
+				$data['pageselected'] = $pageselected;
+				$data['start'] = 0;
 
-			$data['search_result'] = $this->pages_model->crawler_search_result($data);
+				$data['search_result'] = $this->pages_model->crawler_search_result($data);
+			} else {
+				$data['search_text'] = $this->input->post('search_text');
+				$data['pageselected'] = $pageselected;
+				$searchqjson = base64_decode($query);
+				//$data['search_data'] = $data_search;
+
+				$data['search_result'] = $this->pages_model->crawler_search_result($searchqjson, $start);
+			}
 
 			$this->load->view('crawler_result', $data);
 		} else {

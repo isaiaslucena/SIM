@@ -1911,31 +1911,51 @@ class Pages_model extends CI_Model {
 		}
 	}
 
-	public function crawler_search_result($searchdata) {
+	public function crawler_search_result($searchdata, $start = 0) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/crawler/query?wt=json&start='.$searchdata['start'].'&sort=inserted_dt+desc';
-		$url=$protocol."://".$host.":".$port.$path;
 
-		$data = array(
-			"query" => "_text_:\"".$searchdata['search_text']."\""
-		);
-		$data_string = json_encode($data);
 
-		$header = array(
-			'Content-Type: application/json',
-			'Content-Length: '.strlen($data_string),
-			'charset=UTF-8'
-		);
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		if (is_array($searchdata)) {
+			$path='/solr/crawler/query?wt=json&start='.$searchdata['start'].'&sort=inserted_dt+desc';
+			$url=$protocol."://".$host.":".$port.$path;
 
-		return json_decode(curl_exec($ch));
+			$data = array(
+				"query" => "_text_:\"".$searchdata['search_text']."\""
+			);
+			$data_string = json_encode($data);
+
+			$header = array(
+				'Content-Type: application/json',
+				'Content-Length: '.strlen($data_string),
+				'charset=UTF-8'
+			);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+			return json_decode(curl_exec($ch));
+		} else {
+			$path='/solr/crawler/query?wt=json&start='.$start.'&sort=inserted_dt+desc';
+			$url=$protocol."://".$host.":".$port.$path;
+			$data_string = $searchdata;
+			$header = array(
+				'Content-Type: application/json',
+				'Content-Length: '.strlen($data_string),
+				'charset=UTF-8'
+			);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+			return json_decode(curl_exec($ch));
+		}
 	}
 
 	public function tv_words($hash, $starttime, $endtime) {

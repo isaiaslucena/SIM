@@ -55,90 +55,90 @@
 			</div>
 			<div class="col-lg-6">
 				<?php if ($totalfound > 10) { ?>
-				<ul class="pagination pull-right">
-					<?php
-						if ($firstpage == 0) { ?>
-						<li class="disabled">
-							<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
-						<?php } else {
-						$totalpagesstart = $firstpage / 10;
-						$startff = $firstpage;
-						$startf = $startff - 10; ?>
-						<li>
-							<a href="<?php echo base_url('pages/search_result/radio/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
-						<?php } ?>
-						</li>
-					<?php
-					if ($pageselected == $totalpages) { ?>
-						<li>
-							<a href="<?php echo base_url('pages/search_result/radio/1/'.$query.'/0')?>">1</a>
-						</li>
-						<li class="disabled">
-							<a>...<span class="sr-only"></span></a>
-						</li>
+					<ul class="pagination pull-right">
 						<?php
-						$pageselectedend = $pageselected - 1;
-						$pageselectstart = $pageselected - 3;
-						$startf = $firstpage;
-						for ($page=$pageselectstart; $page <= $pageselectedend ; $page++) {
-							$startff = $page.'0';
-							$startf = $startff - 10;
-							 if ($pageselected == $page) { ?>
-							<li class="active">
-								<a><?php echo $page; ?></a>
-							<?php } else { ?>
+							if ($firstpage == 0) { ?>
+							<li class="disabled">
+								<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
+							<?php } else {
+							$totalpagesstart = $firstpage / 10;
+							$startff = $firstpage;
+							$startf = $startff - 10; ?>
 							<li>
-								<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<a href="<?php echo base_url('pages/search_result/radio/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
 							<?php } ?>
 							</li>
-						<?php }
-					} else {
-						$startf = $firstpage;
-						for ($page=$pageselected; $page <= $pageselectedend ; $page++) {
-							if ($page == $totalpages) { ?>
-								<li class="active">
-								<?php break 1;
-							} else {
-							$startff = $page.'0';
-							$startf = $startff - 10;
-							 if ($pageselected == $page) { ?>
-							<li class="active">
-							<a><?php echo $page; ?></a>
-							<?php } else { ?>
-							<li>
-							<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
-							<?php }
-							} ?>
-							</li>
-						<?php }
-					} ?>
-					<?php
+						<?php
 						if ($pageselected == $totalpages) { ?>
-						<li class="active">
-						<a><?php echo $totalpages?><span class="sr-only"></span></a>
-						<?php } else {
-						$totalpagesend = ($totalpages * 10) - 10; ?>
+							<li>
+								<a href="<?php echo base_url('pages/search_result/radio/1/'.$query.'/0')?>">1</a>
+							</li>
+							<li class="disabled">
+								<a>...<span class="sr-only"></span></a>
+							</li>
+							<?php
+							$pageselectedend = $pageselected - 1;
+							$pageselectstart = $pageselected - 3;
+							$startf = $firstpage;
+							for ($page=$pageselectstart; $page <= $pageselectedend ; $page++) {
+								$startff = $page.'0';
+								$startf = $startff - 10;
+								 if ($pageselected == $page) { ?>
+								<li class="active">
+									<a><?php echo $page; ?></a>
+								<?php } else { ?>
+								<li>
+									<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<?php } ?>
+								</li>
+							<?php }
+						} else {
+							$startf = $firstpage;
+							for ($page=$pageselected; $page <= $pageselectedend ; $page++) {
+								if ($page == $totalpages) { ?>
+									<li class="active">
+									<?php break 1;
+								} else {
+								$startff = $page.'0';
+								$startf = $startff - 10;
+								 if ($pageselected == $page) { ?>
+								<li class="active">
+								<a><?php echo $page; ?></a>
+								<?php } else { ?>
+								<li>
+								<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+								<?php }
+								} ?>
+								</li>
+							<?php }
+						} ?>
+						<?php
+							if ($pageselected == $totalpages) { ?>
+							<li class="active">
+							<a><?php echo $totalpages?><span class="sr-only"></span></a>
+							<?php } else {
+							$totalpagesend = ($totalpages * 10) - 10; ?>
+							<li class="disabled">
+								<a>...<span class="sr-only"></span></a>
+							</li>
+							<li>
+							<a href="<?php echo base_url('pages/search_result/radio/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
+							<?php } ?>
+							</li>
+						<?php
+						if ($pageselected == $totalpages) { ?>
 						<li class="disabled">
-							<a>...<span class="sr-only"></span></a>
-						</li>
+						<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+						<?php } else {
+						$page = $pageselected + 1;
+						$startff = $firstpage;
+						$startf = $startff + 10; ?>
 						<li>
-						<a href="<?php echo base_url('pages/search_result/radio/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
-						<?php } ?>
+						<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+						<?php }
+						?>
 						</li>
-					<?php
-					if ($pageselected == $totalpages) { ?>
-					<li class="disabled">
-					<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
-					<?php } else {
-					$page = $pageselected + 1;
-					$startff = $firstpage;
-					$startf = $startff + 10; ?>
-					<li>
-					<a href="<?php echo base_url('pages/search_result/radio/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
-					<?php }
-					?>
-					</li>
-				</ul>
+					</ul>
 				<?php }  ?>
 			</div>
 		</div>
@@ -240,8 +240,8 @@
 					<?php if (!empty($keyword)) { ?></div><?php } ?>
 				<?php if (!empty($keyword)) { ?></div><?php } ?>
 			</div>
-		</div> 
-	
+		</div>
+
 		<!-- pagination -->
 		<div class="row">
 			<div class="col-lg-6">

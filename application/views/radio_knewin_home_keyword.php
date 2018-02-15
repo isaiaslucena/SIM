@@ -12,7 +12,7 @@
 		#content {
 			height: 2000px;
 		}
-		
+
 		.kwfound{
 			color: white;
 			background-color: red;
@@ -44,13 +44,13 @@
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
-				
+
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
-				
+
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
 				<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
@@ -58,12 +58,12 @@
 						<label class="pull-left" style="font-weight: normal">
 							<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
 						</label>
-						
+
 						<label class="labeltitle">
 							<i class="fa fa-search fa-fw"></i>
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<i class="fa fa-bullhorn fa-fw"></i> 
+							<i class="fa fa-bullhorn fa-fw"></i>
 							<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
 						</label>
 
@@ -156,7 +156,7 @@
 				$('html,body').animate({scrollTop: 0}, 700);
 			})
 		}
-		
+
 		$('.loadprevious').click(function(event) {
 			loadp = $(this);
 			loadp.children('i').css('display', 'inline-block');
@@ -165,7 +165,7 @@
 			iddivn = Number(iddiv.replace('div', ''));
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-startdate');
-			
+
 			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
@@ -177,7 +177,7 @@
 									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
 								'</div>';
 					$('#'+iddiv).after(warnhtml);
-					
+
 					setTimeout(function() {
 						$('div.alert.alert-warning').fadeOut('slow');
 					}, 3000);
@@ -189,7 +189,7 @@
 					dstartdate = data.response.docs[0].starttime_dt;
 					denddate = data.response.docs[0].endtime_dt;
 					dcontent = data.response.docs[0].content_t[0];
-					
+
 					var sd = new Date(dstartdate);
 					var sday = sd.getDate();
 					var sday = ('0' + sday).slice(-2);
@@ -225,7 +225,7 @@
 
 					divclone = $('#'+iddiv).clone(true);
 					// console.log(divclone);
-					
+
 					divclone.removeClass('panel-default');
 					divclone.addClass('panel-info');
 					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
@@ -257,7 +257,7 @@
 				}
 			});
 		});
-		
+
 		$('.loadnext').click(function(event) {
 			loadp = $(this);
 			loadp.children('i').css('display', 'inline-block');
@@ -266,7 +266,7 @@
 			iddivn = Number(iddiv.replace('div', ''));
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-enddate');
-			
+
 			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
@@ -278,7 +278,7 @@
 									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
 								'</div>';
 					$('#'+iddiv).before(warnhtml);
-					
+
 					setTimeout(function() {
 						$('div.alert.alert-warning').fadeOut('slow');
 					}, 3000);
@@ -290,7 +290,7 @@
 					dstartdate = data.response.docs[0].starttime_dt;
 					denddate = data.response.docs[0].endtime_dt;
 					dcontent = data.response.docs[0].content_t[0];
-					
+
 					var sd = new Date(dstartdate);
 					var sday = sd.getDate();
 					var sday = ('0' + sday).slice(-2);
@@ -326,7 +326,7 @@
 
 					divclone = $('#'+iddiv).clone(true);
 					// console.log(divclone);
-					
+
 					divclone.removeClass('panel-default');
 					divclone.addClass('panel-info');
 					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
@@ -358,7 +358,7 @@
 				}
 			});
 		});
-		
+
 		$('.cbjoinfiles').click(function(event) {
 			ciddoc = $(this).attr('data-iddoc');
 			cidsource = $(this).attr('data-idsource');
@@ -408,16 +408,16 @@
 				}
 			}
 		});
-		
+
 		$('#joinbtn').click(function(event) {
 			jbtn = $(this);
 			jidclient = jbtn.attr('data-idclient');
 			jidkeyword = jbtn.attr('data-idkeyword');
-			
+
 			$('#jids_doc').val(filestojoin);
 			$('#jid_client').val(jidclient);
 			$('#jid_keyword').val(jidkeyword);
-			
+
 			if (joinfiles) {
 				document.getElementById('joinform').submit();
 				$('#joindiv').fadeOut('fast');
@@ -432,17 +432,17 @@
 				swal.close();
 			}
 		});
-		
+
 		$('.discarddoc').click(function(event) {
 			discardbtn = $(this);
 			discardbtn.children('i').css('display', 'inline-block');
-			
+
 			iddoc = discardbtn.attr('data-iddoc');
 			iddiv = discardbtn.attr('data-iddiv');
 			idkeyword = discardbtn.attr('data-idkeyword');
 			idclient = discardbtn.attr('data-idclient');
 			iduser = '<?php echo $this->session->userdata("id_user");?>';
-			
+
 			$.post('<?php echo base_url("pages/discard_doc_radio_knewin")?>',
 				{
 					'iddoc': iddoc,
@@ -457,7 +457,7 @@
 					$('#'+iddiv).addClass('panel-danger');
 					totalpanelsd += 1;
 					// console.log('total descarted panels = ' + $('div.panel.panel-danger.collapse').length);
-					
+
 					if (totalpanelsd == totalpanels) {
 						console.log('no more panels!');
 						window.location = '<?php echo base_url("pages/index_radio_knewin")?>';
@@ -465,11 +465,11 @@
 				}
 			);
 		});
-		
+
 		$('.ptext').click(function() {
 			$(this).css('overflowY', 'auto');
 		})
-		
+
 		$('.ptext').hover(function() {
 			/*do nothing*/
 		}, function() {
@@ -483,7 +483,7 @@
 				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 				return this;
 			}
-			
+
 			ptexts = $('.ptext.text-justify');
 			$.each(ptexts, function(index, val) {
 				// console.log(event);
@@ -493,19 +493,18 @@
 				keyword = '<?php echo $keyword_selected; ?>';
 				// idkeyword = event.target.dataset.idkeyword;
 				// idpbodyt = event.target.dataset.pbodyt;
-				
+
 				pbodytext = $(val).text();
 				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
 				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
 				$(scpid).html(null);
 				$(scpid).html(pbodynewtext);
-				
+
 				qtkwf = $(keywfound).length;
 				$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
 				$(val).scrollTo(keywfound);
 			});
-			
+
 			$('.ptext').css('overflowY', 'hidden');
 		});
 	</script>
-	
