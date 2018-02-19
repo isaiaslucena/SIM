@@ -1,22 +1,23 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 	<body>
-		<div class="container">
+		<div class="container-">
 			<div class="row">
-				<div class="col-lg-4 col-lg-offset-4">
+				<div class="col-xs-10 col-sm-10 col-md-6 col-lg-4 col-lg-4 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
 						<?php
 							if (isset($message)) { ?>
-							<div class="text-center alert alert-danger fade in" id="success-alert" style="display: none; position: absolute; width: 100%">
-								<?php echo $message ?>!
-							</div>
+								<div class="alert alert-danger text-center" id="success-alert" role="alert" style="display: none; position: absolute; z-index: 999;">
+									<?php echo $message ?>!
+								</div>
 						<?php } ?>
 				</div>
 			</div>
-		</div>
-		<div class="container">
+
 			<div class="row">
-				<div class="col-lg-4 col-lg-offset-4">
+				<div class="col-xs-10 col-sm-10 col-md-6 col-lg-4 col-lg-4 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
 					<div class="login-panel panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title text-center">Login</h3></div>
+						<div class="panel-heading">
+							<h3 class="panel-title text-center">Login</h3>
+						</div>
 						<div class="panel-body">
 							<form action="<?php echo base_url('login/signin')?>" method="POST" role="form">
 								<fieldset>
@@ -32,7 +33,7 @@
 										<input required id="password"  name="password" type="password" class="form-control" placeholder="<?php echo get_phrase('password');?>">
 									</div>
 									<div class="checkbox">
-										<label><input name="remember" type="checkbox" value="rememberme"><?php echo get_phrase('rememberme');?></label>
+										<label><input name="remember" type="checkbox" value="rememberme" disabled><?php echo get_phrase('rememberme');?></label>
 									</div>
 									<input type="text" name="redirecturl" value="<?php echo $urlredirect?>" style="display: none;">
 									<button class="btn btn-lg btn-success btn-block"><?php echo get_phrase('login');?></button>
@@ -43,6 +44,7 @@
 				</div>
 			</div>
 		</div>
+
 		<script type="text/javascript">
 			window.mobilecheck = function() {
 				var check = false;
@@ -54,8 +56,8 @@
 
 			if (mobilecheck()) {
 				console.log('Mobile Agent!');
-				url = "<?php echo base_url('login/mobile_index')?>";
-				$(location).attr("href", url);
+				// url = "<?php echo base_url('login/mobile_index')?>";
+				// $(location).attr("href", url);
 			} else {
 				console.log('Desktop Agent!');
 			}

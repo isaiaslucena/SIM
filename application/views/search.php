@@ -113,13 +113,13 @@
 										<button class="btn btn-default btn-sm" type="submit" name="text"><i class="fa fa-search"></i></button>
 									</span>
 								</div>
-							</div>	
+							</div>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	
+
 		<div id="searchtop"></div>
 
 		<?php
@@ -354,7 +354,7 @@
 
 			$( document ).ready(function(){
 				vsearchresult = '<?php echo $vsr; ?>';
-				
+
 				if (vsearchresult == 'true') {
 					$('html, body').animate({
 						scrollTop: $("#searchtop").offset().top

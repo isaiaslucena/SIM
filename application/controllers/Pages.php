@@ -2220,7 +2220,7 @@ class Pages extends CI_Controller {
 	public function crawler() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
-				'view' => 'live',
+				'view' => 'crawler',
 				'last_page' => base_url('pages/crawler')
 			);
 			$this->session->set_userdata($sessiondata);
@@ -2231,27 +2231,46 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function crawler_result($pageselected = 1, $query = null, $start = 0) {
+	public function crawler_result($pageselected = 1, $query = null, $start = 0, $qrows = 10) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
-				'view' => 'live',
+				'view' => 'crawler_result',
 				'last_page' => base_url('pages/crawler_result')
 			);
 			$this->session->set_userdata($sessiondata);
 
 			if (is_null($query)) {
 				$data['search_text'] = $this->input->post('search_text');
+				
+				if (is_null($this->input->post('startday'))) {
+					$nowts = strtotime("now");
+					$nowday = date('Y-m-d', $nowts);
+					$nowtime = date('H:i:s', $nowts);
+					$data['startday'] = date('Y-m-d', $nowts);
+        	                        $data['endday'] = date('Y-m-d', $nowts);
+               	        	        #$data['starttime'] = date('H:i:s', $nowts);
+               	        	        $data['starttime'] = '00:00';
+                	                #$data['endtime'] = date('H:i:s', $nowts);
+                	                $data['endtime'] = '23:59';
+				} else {
+					$data['startday'] = $this->input->post('startday');
+					$data['endday'] = $this->input->post('endday');
+					$data['starttime'] = $this->input->post('starttime');
+					$data['endtime'] = $this->input->post('endtime');
+				}
+
 				$data['pageselected'] = $pageselected;
 				$data['start'] = 0;
-
-				$data['search_result'] = $this->pages_model->crawler_search_result($data);
+				
+				$data['search_result'] = $this->pages_model->crawler_search_result($data, $start, $qrows);
 			} else {
-				$data['search_text'] = $this->input->post('search_text');
-				$data['pageselected'] = $pageselected;
 				$searchqjson = base64_decode($query);
+				$data['pageselected'] = $pageselected;
+				$searchq = json_decode($searchqjson);
+				$data['search_text'] = str_replace('_text_:', '', str_replace('"', '', $searchq->query));
 				//$data['search_data'] = $data_search;
 
-				$data['search_result'] = $this->pages_model->crawler_search_result($searchqjson, $start);
+				$data['search_result'] = $this->pages_model->crawler_search_result($searchqjson, $start, $qrows);
 			}
 
 			$this->load->view('crawler_result', $data);

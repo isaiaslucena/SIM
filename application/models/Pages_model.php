@@ -1911,22 +1911,50 @@ class Pages_model extends CI_Model {
 		}
 	}
 
-	public function crawler_search_result($searchdata, $start = 0) {
+	public function crawler_search_result($searchdata, $start = 0, $qrows) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-
-
+		#$qrows = 100;
+	
 		if (is_array($searchdata)) {
-			$path='/solr/crawler/query?wt=json&start='.$searchdata['start'].'&sort=inserted_dt+desc';
-			$url=$protocol."://".$host.":".$port.$path;
+			if (isset($searchdata['startday']) and isset($searchdata['endday'])) {
+				$path='/solr/crawler/query?wt=json&start='.$searchdata['start'].'&rows='.$qrows.'&sort=inserted_dt+desc';
+				$url=$protocol."://".$host.":".$port.$path;
 
-			$data = array(
-				"query" => "_text_:\"".$searchdata['search_text']."\""
-			);
+	                	$starttime = $searchdata['starttime'];
+				$endtime = $searchdata['endtime'];
+				$startdate = strtotime(str_replace('/','-',$searchdata['startday']).' '.$starttime);
+                	       	$enddate = strtotime(str_replace('/','-',$searchdata['endday']).' '.$endtime);	
+
+				//$startdate = $searchdata['startday'])."T".$searchdata['starttime']).":00Z";
+				//$enddate = $searchdata['endday'])."T".$searchdata['endtime']).":00Z";
+                        	$timezone = new DateTimeZone('UTC');
+                      		$sd = new Datetime("@$startdate", $timezone);
+                    	    	$ed = new Datetime("@$enddate", $timezone);
+
+                                $newtimezone = new DateTimeZone('America/Sao_Paulo');
+                                $sd->setTimezone($newtimezone);
+                                $ed->setTimezone($newtimezone);
+                                $fstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+                                $fenddate = $ed->format('Y-m-d\TH:i:s\Z');
+				
+				$data = array(
+					"query" => "_text_:\"".$searchdata['search_text']."\"",
+					"filter" => "published_dt:[".$fstartdate." TO ".$fenddate."]"
+				);
+				$order = "asc";
+			} else {
+				$data = array(
+					"query" => "_text_:\"".$searchdata['search_text']."\""
+				);
+				$order = "desc";
+			}
+
+                     	$path = '/solr/crawler/query?wt=json&start='.$start.'&rows='.$qrows.'&sort=inserted_dt+'.$order;
+                     	$url = $protocol."://".$host.":".$port.$path;			
 			$data_string = json_encode($data);
-
 			$header = array(
 				'Content-Type: application/json',
 				'Content-Length: '.strlen($data_string),
@@ -1940,7 +1968,7 @@ class Pages_model extends CI_Model {
 
 			return json_decode(curl_exec($ch));
 		} else {
-			$path='/solr/crawler/query?wt=json&start='.$start.'&sort=inserted_dt+desc';
+			$path='/solr/crawler/query?wt=json&start='.$start.'&rows='.$qrows.'&sort=inserted_dt+desc';
 			$url=$protocol."://".$host.":".$port.$path;
 			$data_string = $searchdata;
 			$header = array(
