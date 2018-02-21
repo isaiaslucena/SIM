@@ -22,7 +22,7 @@
 			<ul class="nav navbar-top-links navbar-right">
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="msgbnum" class="badge-notification" style="display: none"></span></sup> 
+						<sup><span id="msgbnum" class="badge-notification" style="display: none"></span></sup>
 						<i class="fa fa-envelope fa-fw"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -49,10 +49,10 @@
 						</li>
 					</ul>
 				</li>
-				
+
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="alertbnum" class="badge-notification" style="display: none"></span></sup> 
+						<sup><span id="alertbnum" class="badge-notification" style="display: none"></span></sup>
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -198,7 +198,7 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<script type="text/javascript">
 				var idgroup = <?php echo $id_group; ?>;
 
@@ -213,10 +213,10 @@
 					$('#selected_date').val($('#datepicker_static').datepicker('getFormattedDate'));
 					var sdate = $('#selected_date').val();
 					var selecteddate = sdate.replace(/\//g,'-');
-					var vtype = '<?php 
+					var vtype = '<?php
 								if (isset($vtype)) {
 									echo $vtype;
-								} else { 
+								} else {
 									echo ($id_group == 1 ? "radio" : "print");
 								} ?>';
 					window.location ='<?php echo base_url("pages/calendar/"); ?>' + vtype + '/' + selecteddate;
@@ -226,61 +226,110 @@
 					if (idgroup == 1) {
 						$('nav.navbar-default').css('position', 'absolute');
 					}
-					
-					// if (idgroup == 1 || idgroup == 5 ) {
+
+					if (idgroup == 1 || idgroup == 5 ) {
 					// 	$(function() { getradios(); });
-					// }
-				});
-				function getradios() {
-					setTimeout(getradios, 60000);
-					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radio/getstopradios'))?>'}, function(data, textStatus, xhr) {
-						radiocount = 0;
-						$('#msglist').html(null);
-						datac = (data.length - 1);
-						$.each(data, function(index, val) {
-							valjson = JSON.parse(val);
-							$.each(valjson, function(index, val) {
-								radioname = index.replace("_", " - ");
-								ffmpeglastmsg = val.ffmpeg_last_log;
-								ffmpegpid = val.ffmpeg_PID;
-								html = 	'<li>'+
-											'<a href="#">'+
-												'<div>'+
-													'<strong>'+radioname+'</strong>'+
-														'<span class="pull-right text-muted"><em>'+ffmpegpid+'</em></span>'+
-													'</div>'+
-												'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+						var getradios = setInterval(function() {
+							$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radio/getstopradios'))?>'}, function(data, textStatus, xhr) {
+								radiocount = 0;
+								$('#msglist').html(null);
+								datac = (data.length - 1);
+								$.each(data, function(index, val) {
+									valjson = JSON.parse(val);
+									$.each(valjson, function(index, val) {
+										radioname = index.replace("_", " - ");
+										ffmpeglastmsg = val.ffmpeg_last_log;
+										ffmpegpid = val.ffmpeg_PID;
+										html = 	'<li>'+
+													'<a href="#">'+
+														'<div>'+
+															'<strong>'+radioname+'</strong>'+
+																'<span class="pull-right text-muted"><em>'+ffmpegpid+'</em></span>'+
+															'</div>'+
+														'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+													'</a>'+
+												'</li>';
+										$('#msglist').append(html);
+										if (radiocount < datac) {
+											$('#msglist').append('<li class="divider"></li>');
+										}
+										radiocount += 1;
+									});
+								});
+								fhtml = '<li>'+
+											'<a class="text-center" href="#">'+
+												'<strong>Ver todas as mensagens </strong>'+
+												'<i class="fa fa-angle-right"></i>'+
 											'</a>'+
 										'</li>';
-								$('#msglist').append(html);
-								if (radiocount < datac) {
-									$('#msglist').append('<li class="divider"></li>');
+								// $('#msglist').append(fhtml);
+								if (radiocount > 0) {
+									$('#msgbnum').text(radiocount);
+									$('#msgbnum').fadeIn('fast');
+								} else {
+									$('#msgbnum').fadeOut('fast');
+									$('#msgbnum').text(radiocount);
+									fhtml = '<li>'+
+												'<a class="text-center" href="#">'+
+													'<strong>Nenhuma mensagem! </strong>'+
+												'</a>'+
+											'</li>';
+									$('#msglist').append(fhtml);
 								}
-								radiocount += 1;
 							});
-						});
-						fhtml = '<li>'+
-									'<a class="text-center" href="#">'+
-										'<strong>Ver todas as mensagens </strong>'+
-										'<i class="fa fa-angle-right"></i>'+
-									'</a>'+
-								'</li>';
-						// $('#msglist').append(fhtml);
-						if (radiocount > 0) {
-							$('#msgbnum').text(radiocount);
-							$('#msgbnum').fadeIn('fast');
-						} else {
-							$('#msgbnum').fadeOut('fast');
-							$('#msgbnum').text(radiocount);
-							fhtml = '<li>'+
-										'<a class="text-center" href="#">'+
-											'<strong>Nenhuma mensagem! </strong>'+
-										'</a>'+
-									'</li>';
-							$('#msglist').append(fhtml);
-						}
-					});
-				}
+						}, 60000);
+					}
+				});
+				// function getradios() {
+				// 	setTimeout(getradios, 60000);
+				// 	$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.',base_url('index.php/radio/getstopradios'))?>'}, function(data, textStatus, xhr) {
+				// 		radiocount = 0;
+				// 		$('#msglist').html(null);
+				// 		datac = (data.length - 1);
+				// 		$.each(data, function(index, val) {
+				// 			valjson = JSON.parse(val);
+				// 			$.each(valjson, function(index, val) {
+				// 				radioname = index.replace("_", " - ");
+				// 				ffmpeglastmsg = val.ffmpeg_last_log;
+				// 				ffmpegpid = val.ffmpeg_PID;
+				// 				html = 	'<li>'+
+				// 							'<a href="#">'+
+				// 								'<div>'+
+				// 									'<strong>'+radioname+'</strong>'+
+				// 										'<span class="pull-right text-muted"><em>'+ffmpegpid+'</em></span>'+
+				// 									'</div>'+
+				// 								'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+				// 							'</a>'+
+				// 						'</li>';
+				// 				$('#msglist').append(html);
+				// 				if (radiocount < datac) {
+				// 					$('#msglist').append('<li class="divider"></li>');
+				// 				}
+				// 				radiocount += 1;
+				// 			});
+				// 		});
+				// 		fhtml = '<li>'+
+				// 					'<a class="text-center" href="#">'+
+				// 						'<strong>Ver todas as mensagens </strong>'+
+				// 						'<i class="fa fa-angle-right"></i>'+
+				// 					'</a>'+
+				// 				'</li>';
+				// 		// $('#msglist').append(fhtml);
+				// 		if (radiocount > 0) {
+				// 			$('#msgbnum').text(radiocount);
+				// 			$('#msgbnum').fadeIn('fast');
+				// 		} else {
+				// 			$('#msgbnum').fadeOut('fast');
+				// 			$('#msgbnum').text(radiocount);
+				// 			fhtml = '<li>'+
+				// 						'<a class="text-center" href="#">'+
+				// 							'<strong>Nenhuma mensagem! </strong>'+
+				// 						'</a>'+
+				// 					'</li>';
+				// 			$('#msglist').append(fhtml);
+				// 		}
+				// 	});
+				// }
 			</script>
 		</nav>
 		<div id="page-wrapper" style="min-height: 621px;">

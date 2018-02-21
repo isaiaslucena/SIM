@@ -34,7 +34,7 @@
 			.modal-md-join { height: 800px; }
 
 			textarea { resize: none; }
-			
+
 			video { z-index: 1; }
 
 			#vvideo {
@@ -177,7 +177,7 @@
 				position: relative;
 				vertical-align: center;
 				margin: auto;
-				top: 80px;	
+				top: 80px;
 			}
 
 			.box {
@@ -204,7 +204,7 @@
 			<span id="thumbtime"></span>
 		</span>
 		<span class="tooltiptime"></span>
-		
+
 		<div class="container-fluid center-block text-center">
 			<div class="row">
 				<div class="col-lg-7">
@@ -239,13 +239,13 @@
 						<h3>Arraste e solte o arquivo aqui!</h3>
 					</div>
 				</div>
-				
+
 				<div id="vnextdiv" class="col-lg-4">
 					<!-- <h4>Vídeos</h4> -->
 					<ul id="vnext" class="list-group" style="overflow-y: auto; height: 480px;"></ul>
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<div class="col-lg-1">
 					<span id="currtime">--:--</span>
@@ -356,7 +356,7 @@
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Baixar</button> -->
 						<a id="mbtnvdown" class="btn btn-sm btn-default" href="#" download="tempname">
 							<i class="fa fa-download"></i>
-							<?php echo get_phrase('download');?> 
+							<?php echo get_phrase('download');?>
 						</a>
 						<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
 						<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Salvar</button>
@@ -414,7 +414,7 @@
 					<div class="modal-footer">
 						<a id="mbtnjcdown" class="btn btn-sm btn-default" href="#" download="tempjcname">
 							<i class="fa fa-download"></i>
-							<?php echo get_phrase('download');?> 
+							<?php echo get_phrase('download');?>
 						</a>
 						<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
 					</div>
@@ -424,7 +424,7 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends, 
+				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadthumbs;
@@ -655,7 +655,7 @@
 					state = selvalarr2[1];
 
 					getlistchannel(vsource, selformdate, channel, state);
-					
+
 					setTimeout(scrollnextvideo, 1000);
 
 					$(function() {
@@ -726,7 +726,7 @@
 												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
-								}	
+								}
 							});
 
 							scrollnextvideo();
@@ -890,7 +890,7 @@
 												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 											'</li>';
 									nextvideo.append(html);
-								}	
+								}
 							});
 						}
 					);
