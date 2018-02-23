@@ -20,13 +20,13 @@
 									}, 2000);
 							</script>
 						<?php } ?>
-					</div>					
+					</div>
 					<div class="col-lg-2">
 						<h1>
 							<button id="btnschanges" type="button" class="btn btn-success pull-right" style="display: none">
 								<i class="fa fa-check"></i>
 								Salvar alterações
-							</button>	
+							</button>
 						</h1>
 					</div>
 					<div class="col-lg-2">
@@ -54,7 +54,7 @@
 							</tr>
 						</thead>
 						<tbody id="tablebody">
-							<?php 
+							<?php
 							$trid = 0;
 							$trgid = 0;
 							$rrestados = array();
@@ -64,7 +64,7 @@
 								foreach ($estado as $radios) {
 									foreach ($radios as $radio) {
 										$radioname = $radio->radio;
-										$urlstream = $radio->stream; 
+										$urlstream = $radio->stream;
 										$trid++;?>
 										<tr id="<?php echo 'tr'.$trid; ?>">
 											<td><?php echo $estadoname; ?></td>
@@ -80,7 +80,7 @@
 													<?php echo get_phrase('delete');?>
 												</button>
 											</td>
-										</tr>	
+										</tr>
 									<?php }
 								}
 							} ?>
@@ -252,7 +252,7 @@
 				radioname = button.attr('data-name');
 				radiourlid = button.attr('data-idurl');
 				radiourl = button.attr('data-url');
-				
+
 				modal = $(this);
 				modal.find('.modal-body [name="trid_edit_modal"]').val(trid);
 				modal.find('.modal-body [name="idbtn_edit_modal"]').val(radiobtnid);
@@ -267,14 +267,14 @@
 				// var DTable = $('#table_rec_radios').dataTable();
 				// var DTable = $('#table_rec_radios').DataTable();
 				// DTable.fnDestroy();
-				
+
 				trid = $('#trid_edit_modal').val();
 				btnid = $('#idbtn_edit_modal').val();
 				nameid = $('#idname_edit_modal').val();
 				newname = $('#name_edit_modal').val();
 				urlid = $('#idurl_edit_modal').val();
 				newurl = $('#url_edit_modal').val();
-				
+
 				// $('#'+nameid).text(newname);
 				// $('#'+urlid).text(newurl);
 				// $('#'+btnid).attr('data-name', newname);
@@ -285,9 +285,9 @@
 
 				// var DTable = $('#table_rec_radios').dataTable();
 				// DTable.fnDraw();
-				// tlines = DTable.fnGetData();			
+				// tlines = DTable.fnGetData();
 				// console.log(tlines);
-				
+
 				$('#edit_modal').modal('hide');
 				$('#btnschanges').fadeIn('slow');
 			});

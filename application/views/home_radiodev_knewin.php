@@ -17,14 +17,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
-						<?php 
+						<?php
 						$timezone = new DateTimeZone('UTC');
 						$sd = new Datetime($startdate, $timezone);
+						$ed = new Datetime($enddate, $timezone);
 						$newtimezone = new DateTimeZone('America/Sao_Paulo');
 						$sd->setTimezone($newtimezone);
 						$sstartdate = $sd->format('d/m/Y H:i:s');
+						$epochstartdate = $sd->format('U');
+						$epochenddate = $ed->format('U');
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
-					
+
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
 						<span class="pull-right">&nbsp;&brvbar;&nbsp;</span>
@@ -60,13 +63,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<?php $keywords = $this->pages_model->keywords_client($client['id_client']);
 											$client_keywords = 0;
 											foreach ($keywords as $keyword) {
-												$data_discard['startdate'] = $startdate;
-												$data_discard['enddate'] = $enddate;
+												$data_discard['startdate'] = $epochstartdate;
+												$data_discard['enddate'] = $epochenddate;
 												$data_discard['id_client'] = $client['id_client'];
 												$data_discard['id_keyword'] = $keyword['id_keyword'];
-												
+
 												$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
-												$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+												$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $startdate, $enddate);
 												$keyword_foundc = count($keyword_found->response->docs);
 												$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 												$allkeyword_foundc = count($allkeyword_found->response->docs);
@@ -246,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#btnloadmore').fadeOut('fast');
 				}
 			});
-			
+
 			function hidenokeyword() {
 				clientkeywords = $('.client_keywords');
 				clientkeywords.each( function(element, index) {

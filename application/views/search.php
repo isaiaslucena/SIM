@@ -63,21 +63,40 @@
 									<input disabled id="keywordid" name="clientkeywordid" type="text"  class="form-control input-sm" autocomplete="off">
 								</div>
 
+								<div class="col-lg-3">
 								<div id="radiosel" class="form-group">
 									<label>Tipo de Veículo</label>
 									<div class="radio">
 										<label>
-											<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') { echo "checked";} ?> required>
+											<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') {echo "checked";} ?> required>
 											Rádio
 										</label>
 									</div>
 									<div class="radio">
 										<label>
-											<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') { echo "checked";} ?> required>
+											<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') {echo "checked";} ?> required>
 											Televisão
 										</label>
 									</div>
 								</div>
+
+								<div id="radioseltype" class="form-group">
+									<label>Tipo da fonte</label>
+									<div class="radio">
+										<label>
+											<input type="radio" name="optionsRadios" id="optradiotype1" value="radiotype" <?php if (isset($vtype) and $vsrctype == 'audimus') {echo "checked";} ?> required>
+											Audimus
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" name="optionsRadios" id="optradiotype2" value="radiotype" <?php if (isset($vtype) and $vsrctype == 'knewin') {echo "checked";} ?> required>
+											Knewin
+										</label>
+									</div>
+								</div>
+								</div>
+
 
 								<div id="radioidsel" class="form-group" style="display: none;">
 									<label><?php echo get_phrase('radio');?></label>

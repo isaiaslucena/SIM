@@ -4,6 +4,16 @@
 							$time = explode(' ', $time);
 							$time = $time[1] + $time[0];
 							$start = $time;
+
+							$timezone = new DateTimeZone('UTC');
+							$sd = new Datetime($startdate, $timezone);
+							$ed = new Datetime($enddate, $timezone);
+							$newtimezone = new DateTimeZone('America/Sao_Paulo');
+							$sd->setTimezone($newtimezone);
+							$sstartdate = $sd->format('d/m/Y H:i:s');
+							$epochstartdate = $sd->format('U');
+							$epochenddate = $ed->format('U');
+
 							$clientn = 0;
 							$invert=0;
 							$keywordquant = array();
@@ -31,13 +41,13 @@
 												$keywords = $this->pages_model->keywords_client($client['id_client']);
 												$client_keywords = 0;
 												foreach ($keywords as $keyword) {
-													$data_discard['startdate'] = $startdate;
-													$data_discard['enddate'] = $enddate;
+													$data_discard['startdate'] = $epochstartdate;
+													$data_discard['enddate'] = $epochenddate;
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
-													
+
 													$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+													$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $startdate, $enddate);
 													$keyword_foundc = count($keyword_found->response->docs);
 													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate,$enddate,$keyword['keyword']);
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
@@ -53,7 +63,7 @@
 																<span class="badge"><?php echo $keyword_foundc;?> </span>
 															</button>
 														</form>
-														
+
 														<?php
 														array_push($keywordquant, $keyword_foundc);
 														array_push($allkeywordquant, $allkeyword_foundc);

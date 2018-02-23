@@ -420,16 +420,17 @@ class Pages_model extends CI_Model {
 	//return the id_text from discard_text by id_client and id_keyword
 	public function discarded_texts($data_discarded) {
 		$sqlquery =	'SELECT dk.id_text FROM discard_keyword dk
-						JOIN text t ON dk.id_text = t.id_text
-						JOIN file f ON t.id_file = f.id_file
-						WHERE dk.id_client = '.$data_discarded['id_client'].' AND dk.id_keyword = '.$data_discarded['id_keyword'].' AND
-						f.timestamp >= '.$data_discarded['startdate'].' AND f.timestamp <= '.$data_discarded['enddate'];
+								JOIN text t ON dk.id_text = t.id_text
+								JOIN file f ON t.id_file = f.id_file
+								WHERE dk.id_client = '.$data_discarded['id_client'].' AND dk.id_keyword = '.$data_discarded['id_keyword'].' AND
+								f.timestamp >= '.$data_discarded['startdate'].' AND f.timestamp <= '.$data_discarded['enddate'];
 		return $this->db->query($sqlquery)->result_array();
 	}
 
 	public function discarded_docs_knewin_radio($data_discarded) {
-		$sqlquery =	'SELECT id_doc FROM discard_keyword_radio_knewin
-						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
+		$sqlquery =	"SELECT id_doc FROM discard_keyword_radio_knewin
+								WHERE id_client = ".$data_discarded['id_client']." AND id_keyword = ".$data_discarded['id_keyword']." AND
+								timestamp >= ".$data_discarded['startdate']." AND timestamp <= ".$data_discarded['enddate'];
 		return $this->db->query($sqlquery)->result_array();
 	}
 
