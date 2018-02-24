@@ -727,13 +727,23 @@ class Pages extends CI_Controller {
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
 
-			$data_discard['startdate'] = $data['startdate'];
-			$data_discard['enddate'] = $data['enddate'];
+
+			$timezone = new DateTimeZone('UTC');
+			$sd = new Datetime($data['startdate'], $timezone);
+			$ed = new Datetime($data['enddate'], $timezone);
+			$newtimezone = new DateTimeZone('America/Sao_Paulo');
+			$sd->setTimezone($newtimezone);
+			$epochstartdate = $sd->format('U');
+			$epochenddate = $ed->format('U');
+
+			$data_discard['startdate'] = $epochstartdate;
+			$data_discard['enddate'] = $epochenddate;
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
+
 			$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');

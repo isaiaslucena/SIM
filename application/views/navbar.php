@@ -109,9 +109,9 @@
 							<li>
 								<a href="<?php echo base_url('pages/edit_audio'); ?>" <?php if ($selected_page == "edit_audio") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar áudio</a>
 							</li>
-							<!-- <li> -->
-								<!-- <a href="<?php echo base_url('pages/edit_video'); ?>" <?php if ($selected_page == "edit_video") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar vídeo</a> -->
-							<!-- </li> -->
+							<li>
+								<a href="<?php echo base_url('pages/video'); ?>" <?php if ($selected_page == "edit_video") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar vídeo</a>
+							</li>
 						<?php }
 						if ($id_group == 1 or $id_group == 4) { ?>
 							<!-- <li> -->

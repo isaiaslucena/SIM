@@ -44,12 +44,13 @@
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
-
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>

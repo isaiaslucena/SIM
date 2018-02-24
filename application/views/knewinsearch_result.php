@@ -387,17 +387,39 @@
 									} ?>
 									<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 										<div class="panel-heading text-center">
-											<?php if (!empty($keyword)) { ?>
-												<label>
-													<i class="fa fa-search fa-fw"></i>
-													<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
-													&nbsp;&nbsp;&nbsp;&nbsp;
-													<i class="fa fa-bullhorn fa-fw"></i>
-													<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
-												</label>
-											<?php } else { ?>
-												<i class="fa fa-bullhorn fw"></i> <?php echo $ssource." | ".$sstartdate." - ".$senddate; ?>
-											<?php } ?>
+											<label>
+												<i class="fa fa-search fa-fw"></i>
+												<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
+												&nbsp;&nbsp;&nbsp;&nbsp;
+												<i class="fa fa-bullhorn fa-fw"></i>
+												<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+											</label>
+
+											<div class="btn-toolbar pull-right">
+												<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $story->starttime_dt?>" data-enddate="<?php echo $story->endtime_dt?>" data-position="previous">
+													<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
+													<?php echo get_phrase('previous');
+													$icount++; ?>
+												</button>
+
+												<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $story->starttime_dt?>" data-enddate="<?php echo $story->endtime_dt?>" data-position="next">
+													<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
+													<?php echo get_phrase('next'); ?>
+												</button>
+
+												<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
+												<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+													<input type="hidden" name="sid" value="<?php echo $sid;?>">
+													<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
+													<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
+													<input type="hidden" name="sstartdate" value="<?php echo $sstartdate;?>">
+													<input type="hidden" name="senddate" value="<?php echo $senddate;?>">
+													<input type="hidden" name="id_keyword" value="">
+													<input type="hidden" name="id_client" value="">
+													<input type="hidden" name="client_selected" value="">
+												</form>
+											</div>
+
 										</div>
 										<div class="panel-body">
 											<div class="row">
@@ -475,130 +497,6 @@
 
 		$('.ptext').css('overflowY', 'hidden');
 
-		function load_file(position,idclient,idkeyword,timestamp,idradio,divid,iloadid) {
-			$('#' + iloadid).css('display', 'inline-block');
-			$.ajax({
-				url: '<?php echo base_url('pages/load_file')?>',
-				type: 'POST',
-				data: {
-					position: position,
-					idclient: idclient,
-					idkeyword: idkeyword,
-					timestamp: timestamp,
-					idradio: idradio,
-					divid: divid
-				},
-				complete: function (response) {
-					if (position == 'next') {
-						$('#' + divid).before(response.responseText);
-					}
-					if (position == 'previous') {
-						$('#' + divid).after(response.responseText);
-					}
-					$('#' + iloadid).css('display', 'none');
-				},
-				error: function (response) {
-					alert(response.responseText)
-				},
-			})
-			return false;
-		}
-
-		var firstidxml;
-		var firstidmp3;
-		var firstidtext;
-		function checkbox_join(id,timestamp,radio,idradio,idclient,keyword,idfilexml,idfilemp3,idtext) {
-			var previdsfilesxml;
-			var previdsfilesmp3;
-			var previdstexts;
-			var previdradio = $('#ff_id_radio').val();
-			if (previdradio !== '') {
-				if (idradio != previdradio) {
-					alert('A rádio não pode ser diferente!');
-					$('#filesform').closest('form').find("input[type=hidden], textarea").val('');
-					$('input[type=checkbox]').prop('checked',false);
-					$('#fileslist').empty();
-					$('#joindiv').removeClass('show');
-					return;
-				}
-			}
-
-			var aquant = $(".list-group-item").length;
-			if (aquant >= 1) {
-				$('#joindiv').addClass('show');
-			}
-
-			var checkboxes = $('#cb'+id);
-			var verify = checkboxes.is(":checked");
-			var checkboxesload = $('#cbload'+id);
-			var verifyload = checkboxesload.is(":checked");
-			if (verify || verifyload) {
-				previdsfilesxml = $('#ff_ids_files_xml').val();
-				previdsfilesmp3 = $('#ff_ids_files_mp3').val();
-				previdstexts = $('#ff_ids_texts').val();
-				$('#fileslist').append('<a id=acb'+ id +' class="list-group-item">' + radio +'</a>');
-				$('#ff_id_radio').val(idradio);
-				$('#ff_timestamp').val(timestamp);
-				$('#ff_id_client').val(idclient);
-				if (keyword == 0) {
-					//do nothing
-				} else {
-					$('#ff_keyword').val(keyword);
-				}
-				if (previdsfilesxml === '') {
-					$('#ff_ids_files_xml').val(idfilexml);
-					firstidxml = idfilexml;
-				} else {
-					$('#ff_ids_files_xml').val(previdsfilesxml + ',' + idfilexml);
-				}
-				if (previdsfilesmp3 === '') {
-					$('#ff_ids_files_mp3').val(idfilemp3);
-					firstidmp3 = idfilemp3;
-				} else {
-					$('#ff_ids_files_mp3').val(previdsfilesmp3 + ',' + idfilemp3);
-				}
-				if (previdstexts === '') {
-					$('#ff_ids_texts').val(idtext);
-					firstidtext = idtext;
-				} else {
-					$('#ff_ids_texts').val(previdstexts + ',' + idtext);
-				}
-			} else if (!verify || !verifyload) {
-				var removedidxml;
-				var removedidmp3;
-				var removedidtext;
-				previdsfilesxml = $('#ff_ids_files_xml').val();
-				previdsfilesmp3 = $('#ff_ids_files_mp3').val();
-				previdstexts = $('#ff_ids_texts').val();
-				$('#acb'+id).detach();
-				if (idfilexml == firstidxml) {
-					removedidxml = previdsfilesxml.replace(idfilexml+',','');
-					$('#ff_ids_files_xml').val(removedidxml);
-				} else {
-					removedidxml = previdsfilesxml.replace(','+idfilexml,'');
-					$('#ff_ids_files_xml').val(removedidxml);
-				}
-				if (idfilemp3 == firstidmp3) {
-					removedidmp3 = previdsfilesmp3.replace(idfilemp3+',','');
-					$('#ff_ids_files_mp3').val(removedidmp3);
-				} else {
-					removedidmp3 = previdsfilesmp3.replace(','+idfilemp3,'');
-					$('#ff_ids_files_mp3').val(removedidmp3);
-				}
-				if (idtext == firstidtext) {
-					removedidtext = previdstexts.replace(idtext+',','');
-					$('#ff_ids_texts').val(removedidtext);
-				} else {
-					removedidtext = previdstexts.replace(','+idtext,'');
-					$('#ff_ids_texts').val(removedidtext);
-				}
-				aquant = $(".list-group-item").length;
-				if (aquant === 0) {
-					$('#joindiv').removeClass('show');
-				}
-			}
-		}
-
 		$('#joinbtn').click(function(event) {
 			var frm = $('#filesform').submit();
 			$('#filesform').closest('form').find("input[type=hidden], textarea").val('');
@@ -606,6 +504,208 @@
 			$('#fileslist').empty();
 			$('#joindiv').removeClass('show');
 			return false;
+		});
+
+		$('.loadprevious').click(function(event) {
+			loadp = $(this);
+			loadp.children('i').css('display', 'inline-block');
+
+			iddiv = $(this).attr('data-iddiv');
+			iddivn = Number(iddiv.replace('div', ''));
+			idsource = $(this).attr('data-idsource');
+			startdate = $(this).attr('data-startdate');
+
+			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+				// console.log(data);
+				loadp.children('i').css('display', 'none');
+				numfound = data.response.numFound;
+				if (numfound == 0) {
+					warnhtml =	'<div class="alert alert-warning" role="alert">'+
+									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+									'<span class="sr-only">Error:</span>'+
+									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+								'</div>';
+					$('#'+iddiv).after(warnhtml);
+
+					setTimeout(function() {
+						$('div.alert.alert-warning').fadeOut('slow');
+					}, 3000);
+				} else {
+					did = data.response.docs[0].id_i;
+					dsourceid = data.response.docs[0].source_id_i;
+					dsource = data.response.docs[0].source_s;
+					dmediaurl = data.response.docs[0].mediaurl_s;
+					dstartdate = data.response.docs[0].starttime_dt;
+					denddate = data.response.docs[0].endtime_dt;
+					dcontent = data.response.docs[0].content_t[0];
+
+					var sd = new Date(dstartdate);
+					var sday = sd.getDate();
+					var sday = ('0' + sday).slice(-2);
+					var smonth = (sd.getMonth() + 1);
+					var smonth = ('0' + smonth).slice(-2);
+					var syear = sd.getFullYear();
+					var shour = sd.getHours();
+					var shour = ('0' + shour).slice(-2);
+					var sminute = sd.getMinutes();
+					var sminute = ('0' + sminute).slice(-2);
+					var ssecond = sd.getSeconds();
+					var ssecond = ('0' + ssecond).slice(-2);
+					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+
+					var ed = new Date(denddate);
+					var eday = ed.getDate();
+					var eday = ('0' + eday).slice(-2);
+					var emonth = (ed.getMonth() + 1);
+					var emonth = ('0' + emonth).slice(-2);
+					var eyear = ed.getFullYear();
+					var ehour = ed.getHours();
+					var ehour = ('0' + ehour).slice(-2);
+					var eminute = ed.getMinutes();
+					var eminute = ('0' + eminute).slice(-2);
+					var esecond = ed.getSeconds();
+					var esecond = ('0' + esecond).slice(-2);
+					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+
+					newdivid += 1;
+					// newdivid = iddivn + 1;
+					newdividn = iddiv + '-' + newdivid;
+					// newdividn = 'div' + newdivid;
+
+					divclone = $('#'+iddiv).clone(true);
+					// console.log(divclone);
+
+					divclone.removeClass('panel-default');
+					divclone.addClass('panel-info');
+					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+					divclone.attr('id', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+					divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+					divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
+					divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+
+					$('#'+iddiv).after(divclone);
+				}
+			});
+		});
+
+		$('.loadnext').click(function(event) {
+			loadp = $(this);
+			loadp.children('i').css('display', 'inline-block');
+
+			iddiv = $(this).attr('data-iddiv');
+			iddivn = Number(iddiv.replace('div', ''));
+			idsource = $(this).attr('data-idsource');
+			startdate = $(this).attr('data-enddate');
+
+			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
+				// console.log(data);
+				loadp.children('i').css('display', 'none');
+				numfound = data.response.numFound;
+				if (numfound == 0) {
+					warnhtml =	'<div class="alert alert-warning" role="alert">'+
+									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+									'<span class="sr-only">Error:</span>'+
+									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+								'</div>';
+					$('#'+iddiv).before(warnhtml);
+
+					setTimeout(function() {
+						$('div.alert.alert-warning').fadeOut('slow');
+					}, 3000);
+				} else {
+					did = data.response.docs[0].id_i;
+					dsourceid = data.response.docs[0].source_id_i;
+					dsource = data.response.docs[0].source_s;
+					dmediaurl = data.response.docs[0].mediaurl_s;
+					dstartdate = data.response.docs[0].starttime_dt;
+					denddate = data.response.docs[0].endtime_dt;
+					dcontent = data.response.docs[0].content_t[0];
+
+					var sd = new Date(dstartdate);
+					var sday = sd.getDate();
+					var sday = ('0' + sday).slice(-2);
+					var smonth = (sd.getMonth() + 1);
+					var smonth = ('0' + smonth).slice(-2);
+					var syear = sd.getFullYear();
+					var shour = sd.getHours();
+					var shour = ('0' + shour).slice(-2);
+					var sminute = sd.getMinutes();
+					var sminute = ('0' + sminute).slice(-2);
+					var ssecond = sd.getSeconds();
+					var ssecond = ('0' + ssecond).slice(-2);
+					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+
+					var ed = new Date(denddate);
+					var eday = ed.getDate();
+					var eday = ('0' + eday).slice(-2);
+					var emonth = (ed.getMonth() + 1);
+					var emonth = ('0' + emonth).slice(-2);
+					var eyear = ed.getFullYear();
+					var ehour = ed.getHours();
+					var ehour = ('0' + ehour).slice(-2);
+					var eminute = ed.getMinutes();
+					var eminute = ('0' + eminute).slice(-2);
+					var esecond = ed.getSeconds();
+					var esecond = ('0' + esecond).slice(-2);
+					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+
+					newdivid += 1;
+					// newdivid = iddivn + 1;
+					newdividn = iddiv + '-' + newdivid;
+					// newdividn = 'div' + newdivid;
+
+					divclone = $('#'+iddiv).clone(true);
+					// console.log(divclone);
+
+					divclone.removeClass('panel-default');
+					divclone.addClass('panel-info');
+					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+					divclone.attr('id', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+					divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+					divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
+					divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+
+					$('#'+iddiv).before(divclone);
+				}
+			});
 		});
 
 		var pagclone = $('#rowpagination').clone(true);
