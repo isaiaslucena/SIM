@@ -104,7 +104,6 @@
 								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls></audio>
 							</div>
 						</div>
-
 						<div class="row textel">
 							<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
 								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">

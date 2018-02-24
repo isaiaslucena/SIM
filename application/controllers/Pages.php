@@ -1596,6 +1596,7 @@ class Pages extends CI_Controller {
 
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
+			$data['allradios_knewin'] = $this->pages_model->radios_knewin();
 			$data['alltvc'] = $this->pages_model->tvc_knewin();
 			$data['vsr'] = 'false';
 			// $data['alltvp'] = = $this->pages_model->tvp();
@@ -1620,6 +1621,7 @@ class Pages extends CI_Controller {
 			$data_navbar['selected_page'] = 'search';
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
+			$data['allradios_knewin'] = $this->pages_model->radios_knewin();
 			$data['alltvc'] = $this->pages_model->tvc_knewin();
 			if (empty($pageselected)) {
 				$data_sresult['pageselected'] = 1;
@@ -1631,7 +1633,9 @@ class Pages extends CI_Controller {
 				$data_search['id_client'] = $this->input->post('clientid');
 				$data_search['clientkeywordid'] = $this->input->post('clientkeywordid');
 				$data_search['vtype'] = $this->input->post('optionsRadios');
+				$data_search['vsrctype'] = $this->input->post('optionssrcadios');
 				$data_search['id_radio'] = $this->input->post('radioid');
+				$data_search['id_radio_knewin'] = $this->input->post('kneradioid');
 				$data_search['tvchannel'] = $this->input->post('tvchannel');
 				$data_search['startdate'] = $this->input->post('startdate');
 				$data_search['enddate'] = $this->input->post('enddate');
@@ -1639,22 +1643,32 @@ class Pages extends CI_Controller {
 				$data_search['endtime'] = $this->input->post('endtime');
 				$data_search['keyword'] = $this->input->post('keyword');
 
-				$data['id_client'] = $this->input->post('clientid');
-				$data['clientkeywordid'] = $this->input->post('clientkeywordid');
-				$data['vtype'] = $this->input->post('optionsRadios');
-				$data['id_radio'] = $this->input->post('radioid');
-				$data['tvchannel'] = $this->input->post('tvchannel');
-				$data['startdate'] = $this->input->post('startdate');
-				$data['enddate'] = $this->input->post('enddate');
-				$data['starttime'] = $this->input->post('starttime');
-				$data['endtime'] = $this->input->post('endtime');
-				$data['keyword'] = $this->input->post('keyword');
+				$data['id_client'] = $data_search['id_client'];
+				$data['clientkeywordid'] = $data_search['clientkeywordid'];
+				$data['vtype'] = $data_search['vtype'];
+				$data['vsrctype'] = $data_search['vsrctype'];
+				$data['id_radio'] = $data_search['id_radio'];
+				$data['id_radio_knewin'] = $data_search['id_radio_knewin'];
+				$data['tvchannel'] = $data_search['tvchannel'];
+				$data['startdate'] = $data_search['startdate'];
+				$data['enddate'] = $data_search['enddate'];
+				$data['starttime'] = $data_search['starttime'];
+				$data['endtime'] = $data_search['endtime'];
+				$data['keyword'] = $data_search['keyword'];
 
-				$vtype = $this->input->post('optionsRadios');
+				$vtype = $data['vtype'];
+				$vsrctype = $data['vsrctype'];
 			} else {
 				$data_search = base64_decode($query);
 				$data['search'] = $data_search;
 				$data['vtype'] = $vtype;
+				if ($vtype == 'radio') {
+					$data['vsrctype'] = 'audimus';
+					$data_sresult['vsrctype'] = 'audimus';
+				} else if ($vtype == 'radio_knewin'){
+					$data_sresult['vsrctype'] = 'knewin';
+					$data['vsrctype'] = 'knewin';
+				}
 			}
 
 			$searchresult = $this->pages_model->search_result($vtype, $data_search, $start);
@@ -1668,7 +1682,9 @@ class Pages extends CI_Controller {
 
 			if ($vtype == 'radio') {
 				$this->load->view('search_result', $data_sresult);
-			} else if ($vtype == 'tv') {
+			} else if ($vtype == 'radio_knewin') {
+				$this->load->view('knewinsearch_result', $data_sresult);
+			}else if ($vtype == 'tv') {
 				$this->load->view('tvsearch_result', $data_sresult);
 			}
 

@@ -55,7 +55,6 @@
 								<div class="form-group">
 									<label><?php echo get_phrase('client');?></label>
 									<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
-									<input style="display: none" id="clientid" name="clientid" type="text" >
 								</div>
 								<div id="scrollable-dropdown-menu" class="form-group">
 									<label><?php echo get_phrase('keyword');?></label>
@@ -63,44 +62,52 @@
 									<input disabled id="keywordid" name="clientkeywordid" type="text"  class="form-control input-sm" autocomplete="off">
 								</div>
 
-								<div class="col-lg-3">
-								<div id="radiosel" class="form-group">
-									<label>Tipo de Veículo</label>
-									<div class="radio">
-										<label>
-											<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') {echo "checked";} ?> required>
-											Rádio
-										</label>
+								<div class="row">
+									<div class="col-lg-6">
+										<div id="radiosel" class="form-group">
+											<label>Tipo de Veículo</label>
+											<div class="radio">
+												<label>
+													<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') {echo "checked";} ?> required>
+													Rádio
+												</label>
+											</div>
+											<div class="radio">
+												<label>
+													<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') {echo "checked";} ?> required>
+													Televisão
+												</label>
+											</div>
+										</div>
 									</div>
-									<div class="radio">
-										<label>
-											<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') {echo "checked";} ?> required>
-											Televisão
-										</label>
-									</div>
-								</div>
 
-								<div id="radioseltype" class="form-group">
-									<label>Tipo da fonte</label>
-									<div class="radio">
-										<label>
-											<input type="radio" name="optionsRadios" id="optradiotype1" value="radiotype" <?php if (isset($vtype) and $vsrctype == 'audimus') {echo "checked";} ?> required>
-											Audimus
-										</label>
-									</div>
-									<div class="radio">
-										<label>
-											<input type="radio" name="optionsRadios" id="optradiotype2" value="radiotype" <?php if (isset($vtype) and $vsrctype == 'knewin') {echo "checked";} ?> required>
-											Knewin
-										</label>
+									<div class="col-lg-6">
+										<div id="radioselsrctype" class="form-group" style="display: none;">
+											<label>Fonte</label>
+											<div class="radio">
+												<label>
+													<input type="radio" name="optionssrcadios" id="optradiotype1" value="audimus" <?php if (isset($vsrctype) and $vsrctype == 'audimus') {echo "checked";} ?> required>
+													Audimus
+												</label>
+											</div>
+											<div class="radio">
+												<label>
+													<input type="radio" name="optionssrcadios" id="optradiotype2" value="knewin" <?php if (isset($vsrctype) and $vsrctype == 'knewin') {echo "checked";} ?> required>
+													Knewin
+												</label>
+											</div>
+										</div>
 									</div>
 								</div>
-								</div>
-
 
 								<div id="radioidsel" class="form-group" style="display: none;">
 									<label><?php echo get_phrase('radio');?></label>
 									<input id="radioid" name="radioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+								</div>
+
+								<div id="kneradioidsel" class="form-group" style="display: none;">
+									<label><?php echo get_phrase('radio');?></label>
+									<input id="kneradioid" name="kneradioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 
 								<div id="tvidsel" class="form-group" style="display: none;">
@@ -132,6 +139,7 @@
 										<button class="btn btn-default btn-sm" type="submit" name="text"><i class="fa fa-search"></i></button>
 									</span>
 								</div>
+								<div id="searchtop"></div>
 							</div>
 						</form>
 					</div>
@@ -139,7 +147,6 @@
 			</div>
 		</div>
 
-		<div id="searchtop"></div>
 
 		<?php
 			$clientslinevar = null;
@@ -167,6 +174,20 @@
 				} else {
 					$radioslinevar .= "{'id':".$radio['id_radio'].",";
 					$radioslinevar .= "'name':"."'".$radio['name']."-".$radio['state']."'},";
+				}
+			}
+
+			$knewinradioslinevar = null;
+			$rcountarr = count($allradios_knewin);
+			$rcount = 0;
+			foreach ($allradios_knewin as $radio) {
+				$rcount++;
+				if ($rcount == $rcountarr) {
+					$knewinradioslinevar .= "{'id':".$radio['id_source'].",";
+					$knewinradioslinevar .= "'name':"."'".$radio['source']."'}";
+				} else {
+					$knewinradioslinevar .= "{'id':".$radio['id_source'].",";
+					$knewinradioslinevar .= "'name':"."'".$radio['source']."'},";
 				}
 			}
 
@@ -208,14 +229,26 @@
 				autoclose: true
 			});
 
-			$( "input[type=radio]" ).on( "click", function() {
-				rchecked = $( "input:checked" ).val();
+			$('input[name=optionsRadios]').on("click", function() {
+				rchecked = $('input[name=optionsRadios]:checked').val();
 				if (rchecked == 'radio') {
+					$('input[name=optionssrcadios]').attr('required', true);
 					$('#tvidsel').hide('fast');
-					$('#radioidsel').show('fast');
-
+					$('#radioselsrctype').show('fast');
+					$('input[name=optionssrcadios').on('click', function() {
+						rsrcchecked = $('input[name=optionssrcadios]:checked').val();
+						if (rsrcchecked == 'audimus') {
+							$('#radioidsel').show('fast');
+						} else {
+							$('#optradio').val('radio_knewin');
+							$('#kneradioidsel').show('fast');
+						}
+					});
 				} else if (rchecked == 'tv') {
+					$('input[name=optionssrcadios]').removeAttr('required');
 					$('#radioidsel').hide('fast');
+					$('#kneradioidsel').hide('fast');
+					$('#radioselsrctype').hide('fast');
 					$('#tvidsel').show('fast');
 				}
 			});
@@ -325,6 +358,31 @@
 				}
 			});
 
+			//radios knewin typeahead and tagsinput
+			var radios = [<?php echo $knewinradioslinevar; ?>];
+			var radiosblood = new Bloodhound({
+				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				local: radios
+			});
+			radiosblood.initialize();
+			var radioid_input = $('#kneradioid');
+			//radioid_input.tagsinput('destroy')
+			radioid_input.tagsinput({
+				focusClass: 'form-control input-sm',
+				itemValue: 'id',
+				itemText: 'name',
+				allowDuplicates: false,
+				typeaheadjs: {
+					name: 'radio',
+					displayKey: 'name',
+					hint: true,
+					highlight: true,
+					limit: 20,
+					source: radiosblood.ttAdapter()
+				}
+			});
+
 			//tv channels typeahead and tagsinput
 			var tvc = [<?php echo $tvclinevar; ?>];
 			var tvcblood = new Bloodhound({
@@ -371,7 +429,7 @@
 				})
 			};
 
-			$( document ).ready(function(){
+			$(document).ready(function(){
 				vsearchresult = '<?php echo $vsr; ?>';
 
 				if (vsearchresult == 'true') {
