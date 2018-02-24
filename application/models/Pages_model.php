@@ -435,7 +435,7 @@ class Pages_model extends CI_Model {
 	public function discarded_docs_knewin_radio($data_discarded) {
 		$sqlquery =	"SELECT id_doc FROM discard_keyword_radio_knewin
 								WHERE id_client = ".$data_discarded['id_client']." AND id_keyword = ".$data_discarded['id_keyword']." AND
-								timestamp >= ".$data_discarded['startdate']." AND timestamp <= ".$data_discarded['enddate'];
+								timestamp >= '".$data_discarded['startdate']."' AND timestamp <= '".$data_discarded['enddate']."'";
 		return $this->db->query($sqlquery)->result_array();
 	}
 
