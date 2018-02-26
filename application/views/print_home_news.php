@@ -7,11 +7,11 @@
 				<h1 class="page-header">
 					<a href="<?php echo 'http://www.multclipp.com.br/admin/cadastroVeiculo.aspx?id='.$client_print_news->Noticias[0]->IdVeiculo; ?>" title="Editar veículo no Multclipp" target="_blank">
 						<?php echo $client_print_news->Noticias[0]->Veiculo; ?>
-					</a>		
+					</a>
 				</h1>
 				<h2>
 					<?php echo $client_print_news->Noticias[0]->Empresa; ?>
-					<small><?php echo ' - '.count($client_print_news->Noticias).' '.get_phrase('news'); ?></small>		
+					<small><?php echo ' - '.count($client_print_news->Noticias).' '.get_phrase('news'); ?></small>
 				</h2>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 						<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 							<div class="panel-heading text-center">
 								<strong>
-									<i class="fa fa-file-text-o fa-fw"></i> 
+									<i class="fa fa-file-text-o fa-fw"></i>
 									<?php echo $ned." | ".$ndate." - ".$ntime; ?>
 								</strong>
 
@@ -64,7 +64,7 @@
 										 	echo $keyquantm = " palavra-chave";
 										} else {
 											echo $keyquantm = " palavras-chave";
-										} ?> 
+										} ?>
 										<span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu dropup pull-right scrollable-menu" role="menu">
@@ -82,10 +82,10 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-4">
-										<?php 
+										<?php
 										$imgq = count($client_news->Imagens);
 										// var_dump($client_news->Imagens);
-										if ($imgq == 1) { 
+										if ($imgq == 1) {
 											$imgcount++;
 											$idimg = $client_news->Imagens[0]->IdImagem;
 											if (!empty($client_news->Imagens[0]->Imagem)) {
@@ -109,7 +109,7 @@
 											<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-idimg="<?php echo $idimg ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
 												<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>" alt="Imagem">
 											</a>
-										<?php } else if ($imgq == 0) { 
+										<?php } else if ($imgq == 0) {
 											$imgcount++;
 											// $except = array("png", "gif", "jpg", "bmp","com");
 											$imp = "s3.amazonaws.com";
@@ -120,7 +120,7 @@
 												<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-idimg="<?php echo $nidnews ;?>" data-imgsrc="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>">
 													<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo base_url('pages/proxy/').base64_encode($imgsrc); ?>" alt="Imagem">
 												</a>
-											<?php } else { 
+											<?php } else {
 												$imgsrc = base_url("assets/imgs/noimage.png"); ?>
 												<a class="thumbnail" data-idnews="<?php echo $nidnews ;?>" data-imgsrc="<?php echo $imgsrc; ?>">
 													<img id="<?php echo 'thumbimg'.$imgcount?>" class="img-responsive" src="<?php echo $imgsrc; ?>" alt="Imagem">
@@ -128,7 +128,7 @@
 											<?php }
 										} else { ?>
 											<div class="row">
-												<?php 
+												<?php
 												asort($client_news->Imagens);
 												$newidimg = null;
 												foreach ($client_news->Imagens as $img) {
@@ -159,7 +159,7 @@
 
 									<div class="col-lg-8 pbodyt" id="<?php echo 'pbody'.$divcount;?>" style="max-height: 550px; overflow-y: auto">
 										<h3>
-											<?php echo $ntitle; 
+											<?php echo $ntitle;
 											if (!empty($nsubtitle) or $nsubtitle != " " or  !is_null($nsubtitle)) { ?>
 												<br><small><?php echo $nsubtitle; ?></small>
 											<?php } ?>
@@ -257,13 +257,13 @@
 				keyword = event.target.text;
 				idkeyword = event.target.dataset.idkeyword;
 				idpbodyt = event.target.dataset.pbodyt;
-				
+
 				pbodytext = $('#'+idpbodyt+' .text-justify').text();
 				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
 				pbodynewtext = pbodytext.replace(rgx, '<strong class="str" style="color: white; background-color: red; font-size: 110%;">'+keyword+'</strong>');
 				$('#'+idpbodyt+' .text-justify').html(null);
 				$('#'+idpbodyt+' .text-justify').html(pbodynewtext);
-				
+
 				if ($('#'+idpbodyt+ '> p > .str').length != 0) {
 					$('#'+idpbodyt).scrollTo('.str');
 				}
@@ -281,7 +281,7 @@
 
 			// 	$('#'+idpbodyt+' .text-justify').html(null);
 			// 	$('#'+idpbodyt+' .text-justify').html(pbodynewtext);
-				
+
 			// 	if ($('.str').length != 0) {
 			// 		$('.pbodyt').scrollTo('.str');
 			// 	}
@@ -316,7 +316,7 @@
 					timgheight = imageObj.height / 3;
 				} else {
 					timgwidth = imageObj.width / 2;
-					timgheight = imageObj.height / 2;					
+					timgheight = imageObj.height / 2;
 				}
 
 				// console.log('timgwidth: '+timgwidth);
@@ -331,7 +331,7 @@
 					{
 						trueSize: [imageObj.width, imageObj.height],
 						boxWidth: timgwidth,
-						boxHeight: timgheight, 
+						boxHeight: timgheight,
 						onSelect: showCoords,
 					},
 					function() { jcropapi = this; }
@@ -416,13 +416,13 @@
 				});
 
 				//localStorage.setItem( "savedImageData", joincanvas.toDataURL("image/png"));
-			
+
 				var djoincanvas = document.getElementById("joincanvas");
 
 				// dimg = new Image();
 				// dimg.src = djoincanvas.toDataURL();
 				// console.log(dimg);
-				
+
 				dturl = djoincanvas.toDataURL();
 				dimg = dturl.replace(/^data:image\/(png|jpg);base64,/, "");
 				// console.log(dimg);
@@ -474,15 +474,15 @@
 				// 	// 	console.log('Oops, unable to copy');
 				// 	// 	console.log(err);
 				// 	// }
-						
+
 				// 	$('#btnocr').attr('disabled', true);
 				// 	$('#btnocr').addClass('disabled');
 				// })
 				// .fail(function(err){
 				// 	console.log(err.responseText);
 				// });
-				
-				
+
+
 				pdata = '{"user": "admin", "pass": "68cb24754f57ea169abb58c711347cdc", "image": "' + dimg + '"}';
 				$.ajax({
 					url: 'http://apiocr.multclipp.com.br/main/txt',

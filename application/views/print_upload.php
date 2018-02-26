@@ -22,11 +22,11 @@
 				<div class="row" style="padding-bottom: 15px">
 					<div class="col-lg-12">
 						<label class="btn btn-sm btn-block btn-default">
-							Selecionar Arquivo&hellip; 
+							Selecionar Arquivo&hellip;
 							<input id="btnupload" type="file" style="display: none;">
 						</label>
 					</div>
-				</div>				
+				</div>
 				<div class="row" style="padding-bottom: 15px;">
 					<div class="col-lg-12">
 						<div class="btn-group">
@@ -121,7 +121,7 @@
 							{
 								trueSize: [imgobjctw, imgobjcth],
 								boxWidth: timgwidth,
-								boxHeight: timgheight, 
+								boxHeight: timgheight,
 								onSelect: showCoords,
 							},
 							function() {
@@ -151,14 +151,14 @@
 						};
 					}
 				}
-				
+
 				if (file) {
 					reader.readAsDataURL(file);
 				}
-				
+
 				$('#btnclall').removeClass('disabled');
 				$('#btnclall').removeAttr('disabled');
-				croppedcvns = $('#divcroppped').children();	
+				croppedcvns = $('#divcroppped').children();
 				if (croppedcvns.length > 1) {
 					$('#btncllast').removeClass('disabled');
 					$('#btncllast').removeAttr('disabled');
@@ -179,6 +179,75 @@
 				croppedcvns = $('#divcroppped').children();
 				lastitem = croppedcvns[croppedcvns.length - 1];
 				lastitem.remove();
+			});
+
+			$('#btnocr_old').click(function(event) {
+				joincanvas = document.getElementById('joincanvas');
+				joinctx = joincanvas.getContext('2d');
+
+				croppedcvns = $('#divcroppped').children();
+				tcanvasheight = 0;
+				tcanvaswidth = 0;
+				tcanvaslastwidth = 0;
+				$.each(croppedcvns, function(index, val) {
+					tcanvasheight += val.height;
+					if (val.width > tcanvaslastwidth) {
+						tcanvaswidth = val.width;
+					}
+					tcanvaslastwidth = val.width;
+				});
+
+				lastwidth = 0;
+				lastheight = 0;
+				joinctx.canvas.width = tcanvaswidth;
+				joinctx.canvas.height = tcanvasheight;
+				$.each(croppedcvns, function(index, val) {
+					joinctx.drawImage(val, 0, 0, val.width, val.height, 0, lastheight, val.width, val.height);
+					lastwidth = val.width;
+					lastheight += val.height;
+				});
+
+				//localStorage.setItem( "savedImageData", joincanvas.toDataURL("image/png"));
+
+				var djoincanvas = document.getElementById("joincanvas");
+
+				// dimg = new Image();
+				// dimg.src = djoincanvas.toDataURL();
+				// console.log(dimg);
+
+				dturl = djoincanvas.toDataURL();
+				dimg = dturl.replace(/^data:image\/(png|jpg);base64,/, "");
+				// console.log(dimg);
+
+				var form = new FormData();
+				form.append("address", "http://192.168.0.15:1688/upload");
+				form.append("the_file", dimg);
+
+				$('#rowcropped').css('display', 'none');
+				$('#waitimg').css('display', 'block');
+
+				pdata = '{"user": "admin", "pass": "68cb24754f57ea169abb58c711347cdc", "image": "' + dimg + '"}';
+				$.ajax({
+					url: 'http://apiocr.multclipp.com.br/main/txt',
+					type: 'POST',
+					data: pdata
+				})
+				.done(function(ddata) {
+					jresponse = JSON.parse(ddata);
+					console.log(jresponse);
+					$('#textresult').val(jresponse.result);
+
+					$('#waitimg').css('display', 'none');
+					$('#divbtnmultclipp').css('display', 'block');
+					$('#divtextarea').css('display', 'block');
+
+					$('#btnocr').attr('disabled', true);
+					$('#btnocr').addClass('disabled');
+				})
+				.fail(function(err){
+					console.log(err.responseText);
+					swal("Atenção!", "Erro! Por favor, tente novamente.", "error");
+				});
 			});
 
 			$('#btnocr').click(function(event) {
@@ -207,70 +276,35 @@
 					lastheight += val.height;
 				});
 
-				//localStorage.setItem( "savedImageData", joincanvas.toDataURL("image/png"));
-			
+
 				var djoincanvas = document.getElementById("joincanvas");
 
-				// dimg = new Image();
-				// dimg.src = djoincanvas.toDataURL();
-				// console.log(dimg);
-				
 				dturl = djoincanvas.toDataURL();
 				dimg = dturl.replace(/^data:image\/(png|jpg);base64,/, "");
-				// console.log(dimg);
-
-				var form = new FormData();
-				form.append("address", "http://192.168.0.15:1688/upload");
-				form.append("the_file", dimg);
 
 				$('#rowcropped').css('display', 'none');
 				$('#waitimg').css('display', 'block');
 
-				var settings = {
-					"async": true,
-					"crossDomain": true,
-					"url": "<?php echo base_url('pages/proxy')?>",
-					"method": "POST",
-					"headers": {
-						"cache-control": "no-cache",
-					},
-					"processData": false,
-					"contentType": false,
-					"mimeType": "multipart/form-data",
-					"data": form
-				}
-
-				$.ajax(settings)
-				.done(function (response) {
-					jresponse = JSON.parse(response);
-					console.log(jresponse);
-					$('#textresult').val(jresponse.result);
-
+				pdata = '{"user": "admin", "pass": "68cb24754f57ea169abb58c711347cdc", "image": "' + dimg + '"}';
+				$.ajax({
+					url: 'http://apiocr.multclipp.com.br/main/txt',
+					type: 'POST',
+					data: pdata
+				})
+				.done(function(ddata) {
+					console.log(ddata);
+					$('#textresult').val(ddata.text_content);
 					$('#waitimg').css('display', 'none');
-					$('#divbtnmultclipp').css('display', 'block');
 					$('#divtextarea').css('display', 'block');
-
-					// var copyTextarea = document.querySelector('.js-copytextarea');
-					// copyTextarea.select();
-				    	// $("#textresult").select();
-    					// document.execCommand('copy');
-					// copyTextarea.val();
-
-					// try {
-					// 	var successful = document.execCommand('copy');
-					// 	var msg = successful ? 'successful' : 'unsuccessful';
-					// 	console.log('Copying text command was ' + msg);
-					// } catch (err) {
-					// 	console.log('Oops, unable to copy');
-					// 	console.log(err);
-					// }
-						
 					$('#btnocr').attr('disabled', true);
 					$('#btnocr').addClass('disabled');
 				})
-				.fail(function(err){
-					console.log(err.responseText);
-					swal("Atenção!", "Alguma coisa deu errado. Por favor, tente novamente.!", "error");
+				.fail(function(fdata) {
+					console.log("error");
+					swal("Atenção!", "Erro! Por favor, tente novamente.", "error");
+				})
+				.always(function(adata) {
+					console.log("complete");
 				});
 			});
 		</script>
