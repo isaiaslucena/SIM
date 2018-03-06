@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); 
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (isset($knewindoc)) {
 	$timezone = new DateTimeZone('UTC');
@@ -62,17 +62,17 @@ if (isset($knewindoc)) {
 			audio::-internal-media-controls-download-button { display:none; }
 			audio::-webkit-media-controls-enclosure { overflow:hidden; }
 			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
-			
+
 			body {
 				background-color: #FEFEFE;
 			}
-			
+
 			.kword{
 				color: white;
 				background-color: red;
 				font-size: 110%;
 			}
-			
+
 			.selectedt{
 				color: white;
 				background-color: darkblue;
@@ -87,7 +87,7 @@ if (isset($knewindoc)) {
 					<h3><?php echo $ssource?> | <?php echo $sstartdate." - ".$senddate;?></h3>
 				</div>
 			</div>
-		
+
 			<div class="row center-block text-center">
 				<div class="col-lg-8">
 					<audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls></audio>
@@ -102,7 +102,7 @@ if (isset($knewindoc)) {
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<div class="col-lg-12">
 					<form id="cropknewin" action="<?php echo site_url('pages/crop_knewin')?>" method="post" accept-charset="utf-8" style="display: none;">
@@ -124,22 +124,23 @@ if (isset($knewindoc)) {
 					</form>
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<div class="col-lg-12">
-					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px;"> <?php echo $content; ?></p>
+					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px; max-width: 95%"> <?php echo $content; ?></p>
 				</div>
 			</div>
-			
+
 			<div class="row">
 				<div class="col-lg-12">
 					<small id="pageload" class="text-muted pull-right"></small>
 				</div>
 			</div>
 		</div>
-		
+
 		<script type="text/javascript">
-			var starttimev, endtimev, indexstartv, indexendv, spantex, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends, fulltext;
+			var starttimev, endtimev, indexstartv, indexendv, spantex, cropstart,
+			cropend, cropstartss, cropendss, cropstarts, cropends, fulltext;
 			var ccrops = false, ccrope = false, croptext = false;
 			var result = $('#result');
 			var audioel = $('#passage-audio');
@@ -152,11 +153,11 @@ if (isset($knewindoc)) {
 				this.nextElementSibling.textContent = String(Math.round(this.valueAsNumber * 10) / 10) + "\u00D7";
 				audioel[0].playbackRate = event.target.value;
 			});
-			
+
 			$('#btnpbrate').click(function(event) {
 				count+=1;
 				ratep = 0.65;
-				
+
 				switch (count) {
 					case 1:
 						audioel[0].playbackRate+=ratep;
@@ -197,7 +198,7 @@ if (isset($knewindoc)) {
 			$('#btncstart').click(function(event) {
 				cropstartss = audioel[0].currentTime;
 				cropstarts = (cropstartss * 100 / 100).toFixed(3);
-				
+
 				if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 					$(this).text(null);
@@ -216,14 +217,14 @@ if (isset($knewindoc)) {
 					$(this).removeClass('btn-default');
 					$(this).addClass('btn-success');
 					$(this).append(' '+cropstartt);
-					
+
 					$('#btncend').removeClass('disabled');
 					$('#btncend').removeAttr('disabled');
-					
+
 					$('#starttime').val(cropstarts);
 
 					console.log('crop starttime (string): '+cropstartt);
-					console.log('crop starttime (seconds): '+cropstarts);	
+					console.log('crop starttime (seconds): '+cropstarts);
 				}
 			});
 
@@ -256,7 +257,7 @@ if (isset($knewindoc)) {
 						cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 						cropdur = '00-'+cropdurmm+'-'+cropdurss;
 						ccrope = true;
-						
+
 						$(this).text(null);
 						$(this).append('<i class="fa fa-hourglass-end"></i>');
 						$(this).removeClass('btn-default');
@@ -268,17 +269,17 @@ if (isset($knewindoc)) {
 						console.log('crop endtime (string): '+cropendt);
 						console.log('crop endtime (seconds): '+cropends);
 					}
-					
+
 					if (croptext) {
 						$('#btncrop').removeClass('disabled');
 						$('#btncrop').removeAttr('disabled');
-					}					
+					}
 				} else {
 					swal("Atenção!", "Você deve marcar primeiro o tempo inicial.", "error");
 				}
 			});
 
-			$('#passage-text').mouseup(function(e) {  
+			$('#passage-text').mouseup(function(e) {
 				// selection = window.getSelection().toString();
 				// $('#textseld').val(selection.toString());
 				// console.log(window. window.getSelection().getRangeAt(0));
@@ -293,7 +294,7 @@ if (isset($knewindoc)) {
 				// tresult = ftext2.replace(pattern, replacement);
 				// console.log(tresult);
 				// $(this).html(result);
-				
+
 				var selection = window.getSelection().getRangeAt(0);
 				// console.log(selection);
 				var selectedText = selection.extractContents();
@@ -316,17 +317,17 @@ if (isset($knewindoc)) {
 				} else if (window.getSelection) {
 					window.getSelection().removeAllRanges();
 				}
-				
+
 				$('#textseld').val(selectedText.textContent);
-				
+
 				croptext = true;
-				
+
 				if (ccrope) {
 					$('#btncrop').removeClass('disabled');
 					$('#btncrop').removeAttr('disabled');
 				}
 			});
-			
+
 			$('btncrop').click(function(event) {
 				swal("Aguarde", "Carregando...", "warn");
 			});
