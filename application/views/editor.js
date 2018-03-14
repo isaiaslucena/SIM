@@ -157,7 +157,7 @@
 						cropstartt = $('#currtime').text();
 						ccrops = true;
 						// console.log('crop starttime: '+cropstartt);
-						// console.log('crop starttime: '+cropstarts);	
+						// console.log('crop starttime: '+cropstarts);
 					}
 				});
 
@@ -209,7 +209,7 @@
 						croptimestart = new Date();
 						$('#cropvideoload').text(null);
 						$('.cropmodal').modal('show');
-						
+
 						cfile = videotitle.text();
 						cfilearr = cfile.split("_");
 						cfiledate = cfilearr[0];
@@ -236,22 +236,11 @@
 						cropendts = cropends;
 						cfiletstampst = cfilestimestamp.setSeconds(cfilestimestamp.getSeconds() + Number(cropstartts));
 						cfiletstampet = cfilesstimestamp.setSeconds(cfilesstimestamp.getSeconds() + Number(cropendts));
-						
-						// console.log('source: '+cfilesource);
-						// console.log('story startdate: '+cfiletimestampt);
-						// console.log('story enddate: '+cfiletstamp);
-						// console.log('word wordstart: '+cfiletstampst);
-						// console.log('word wordend: '+cfiletstampet);
 
 						hstorydates = new Date(cfiletimestampt)
 						hstorydatee = new Date(cfiletstamp)
 						hwordtimes = new Date(cfiletstampst)
 						hwordtimee = new Date(cfiletstampet)
-
-						// console.log('story startdate: '+hstorydates);
-						// console.log('story enddate: '+hstorydatee);
-						// console.log('word wordstart: '+hwordtimes);
-						// console.log('word wordend: '+hwordtimee);
 
 						$('#transct').val(null);
 						$.post('/pages/get_tvwords',

@@ -121,8 +121,8 @@
 							if (joinvideos) {
 								vdfilename = videotitle.text();
 								srcarr = vdfilename.split("_");
-								srcfilename = srcarr[0];
-								if (srcfilename != 'indian03') {
+								srcfilename = srcarr[0].replace(/[0-9]/g, '');
+								if (srcfilename != 'cagiva') {
 									$.each(filesjoined, function(index, file) {
 										maxthumb = file.time;
 										vdfilename = file.file;
@@ -137,8 +137,8 @@
 								}
 							} else {
 								vdfilename = videotitle.text();
-								sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-								if (sfilename != 'indian03') {
+								sfilename = $("span:contains('"+vdfilename+"')").data('vsrc').replace(/[0-9]/g, '');
+								if (sfilename != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 										nthumbn = ("00" + thumbn).slice(-3);
@@ -170,7 +170,7 @@
 
 						vcurrtime.text(sectostring(currentPos));
 						// vcurrtime.text(currentPosh+':'+currentPosm+':'+currentPoss+'.'+currentPossms[1]);
-						
+
 						//$('.tooltiptext').text(currentPosm+':'+currentPoss);
 						videoelBuffer();
 						if (currentPos == maxduration) {
@@ -374,7 +374,7 @@
 					}
 
 					videotime = ((maxduration * percentage) / 100).toFixed(3);
-					videotimesec = Math.floor(videotime);					
+					videotimesec = Math.floor(videotime);
 					// currentPosh = ('0' + Math.floor(maxduration / 60 / 60)).slice(-2);
 					// // currentPosm = ('0' + Math.floor(videotime / 60)).slice(-2);
 					// currentPosm = ('0' + Math.floor(maxduration - currentPosh * 60)).slice(-2);
