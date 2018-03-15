@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 	public function index($message = '') {
-		$this->load->view('head');
 		if ($message == 'fail'){
 			$data['message'] = get_phrase('user_password_incorrect');
 		}
@@ -17,8 +16,10 @@ class Login extends CI_Controller {
 		else {
 			$data['message'] = null;
 		}
-		
+
 		$data['urlredirect'] = $this->input->get('rdt', TRUE);
+
+		$this->load->view('head');
 		$this->load->view('login', $data);
 	}
 

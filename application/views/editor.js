@@ -89,15 +89,10 @@
 													$('.vbutton').removeClass('paused');
 
 													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
-													// videovurlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/verifyjoinvideo/' + data.joinfilename;
-													// $.post('/pages/proxy', {address: videovurlmjoin}, function(data, textStatus, xhr) {
-													// 	if (data == "OK") {
-													// 		videoel.attr({src: videourlmjoin});
-													// 		// videoel[0].play();
-													// 	}
-													// });
 
 													videotitle.text(data.joinfilename);
+													vsrcarr = data.joinfilename.split('_');
+													videotitle.attr('data-vsrc', vsrcarr[0]);
 													videotitle.css('font-size', '18px');
 													videoel.attr({
 														poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
@@ -106,8 +101,9 @@
 
 													$('input').prop("checked", false);
 													$('.list-group').children().removeClass('active');
-													$.each(vbtnjoin, function(index, val) {
-														document.getElementById(val).className += ' active';
+													$.each(filestojoin, function(index, val) {
+														var nval = val.replace('.mp4', '');
+														$('span:contains('+nval+')').parent().addClass('active');
 													});
 
 													filestojoin = [];
@@ -434,9 +430,9 @@
 						}
 					} else {
 						fileindex = filestojoin.indexOf(jfilename);
-						filestojoin.splice(fileindex,1);
+						filestojoin.splice(fileindex, 1);
 						vbntindex = vbtnjoin.indexOf(jvbtn);
-						vbtnjoin.splice(vbntindex,1);
+						vbtnjoin.splice(vbntindex, 1);
 						if (filestojoin.length < 2) {
 							$('#btnjoin').addClass('disabled');
 							$('#btnjoin').attr('disabled', true);

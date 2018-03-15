@@ -121,8 +121,8 @@
 							if (joinvideos) {
 								vdfilename = videotitle.text();
 								srcarr = vdfilename.split("_");
-								srcfilename = srcarr[0].replace(/[0-9]/g, '');
-								if (srcfilename != 'cagiva') {
+								srcfilename = srcarr[0];
+								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									$.each(filesjoined, function(index, file) {
 										maxthumb = file.time;
 										vdfilename = file.file;
@@ -137,8 +137,8 @@
 								}
 							} else {
 								vdfilename = videotitle.text();
-								sfilename = $("span:contains('"+vdfilename+"')").data('vsrc').replace(/[0-9]/g, '');
-								if (sfilename != 'cagiva') {
+								sfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
+								if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 										nthumbn = ("00" + thumbn).slice(-3);
@@ -208,11 +208,11 @@
 						vsourcefile = filenarr[0];
 					} else {
 						vfile = videotitle.text()
-						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
+						vsourcefile = $("span:contains('"+vfile+"')").data('vsrc');
 					}
 
 					videoel[0].pause();
-					if (vsourcefile != 'indian03') {
+					if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
 						videoel.css('display', 'none');
 						videoelth.css('display', 'block');
 					}
@@ -224,9 +224,10 @@
 				$(document).mouseup(function(e) {
 					if (timeDrag) {
 						vfile = videotitle.text()
-						vsourcefile = $( "span:contains('"+vfile+"')" ).data('vsrc');
+						// vsourcefile = $("span:contains('"+vfile+"')").data('vsrc');
+						vsourcefile = videotitle.attr('data-vsrc');
 						//videoel[0].pause();
-						if (vsourcefile != 'indian03') {
+						if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
 							videoelth.css('display', 'none');
 							videoel.css('display', 'block');
 						}
@@ -267,7 +268,7 @@
 					if (joinvideos) {
 						filenarr = filesjoined[0].file.split("_");
 						thnsfilename = filenarr[0];
-						if (thnsfilename != 'indian03') {
+						if (thnsfilename.replace(/[0-9]/g, '') != 'cagiva') {
 							var ttime = 0;
 							var thumbnnf;
 							var thnvdfilename;
@@ -285,8 +286,8 @@
 						}
 					} else {
 						vdfilename = videotitle.text();
-						sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-						if (sfilename != 'indian03') {
+						sfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
+						if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
 							uptadevThumb(sfilename, vdfilename, thumbnum);
 						}
 					}
@@ -547,6 +548,7 @@
 							src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 						});
 						videotitle.text(cfilename);
+						videotitle.attr('data-vsrc', cfilevsource);
 						videotitle.css('font-size', '30px');
 						$('.list-group').children().removeClass('active');
 						event.target.parentElement.className += ' active';

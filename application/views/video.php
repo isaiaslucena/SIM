@@ -646,7 +646,7 @@
 					selectchannel(selformdate);
 				});
 
-				$( "#selchannels" ).change(function(event) {
+				$('#selchannels').change(function(event) {
 					selvalue = event.target.value;
 					selvalarr1 = selvalue.split(':');
 					selvalarr2 = selvalarr1[1].split('_');
@@ -822,7 +822,7 @@
 					);
 				}
 
-				function getlistchannel(selglvsource,selgldate,selglchannel,selglstate) {
+				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + selglvsource + '/' + selgldate + '/' + selglchannel + '/' + selglstate},
 						function(data, textStatus, xhr) {
@@ -832,7 +832,7 @@
 							$('.vbutton').css('display', 'none');
 							$('.vbutton').removeClass('paused');
 
-							videoel.removeAttr('loop');
+							// videoel.removeAttr('loop');
 							videoel.attr({
 								poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
 								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/' + vsource + '_' + lastvideo
@@ -868,6 +868,7 @@
 							$('#checkjoincrop').bootstrapToggle('enable');
 
 							videotitle.text(lastvideo);
+							videotitle.attr('data-vsrc', selglvsource);
 							videotitle.css('font-size', '30px');
 							nextvideo.html(null);
 							$.each(data, function(index, val) {

@@ -1,11 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 	<body>
-		<div class="container-">
+		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-10 col-sm-10 col-md-6 col-lg-4 col-lg-4 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
+				<div class="col-sm-10 col-md-6 col-lg-4 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
 						<?php
 							if (isset($message)) { ?>
-								<div class="alert alert-danger text-center" id="success-alert" role="alert" style="display: none; position: absolute; z-index: 999;">
+								<div class="alert alert-danger text-center" id="success-alert" role="alert" style="display: none; position: absolute; z-index: 999; width: 100%">
 									<?php echo $message ?>!
 								</div>
 						<?php } ?>
@@ -13,7 +13,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-10 col-sm-10 col-md-6 col-lg-4 col-lg-4 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
+				<div class="col-sm-10 col-md-6 col-lg-4 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
 					<div class="login-panel panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title text-center">Login</h3>
