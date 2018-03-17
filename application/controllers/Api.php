@@ -21,7 +21,7 @@ class Api extends CI_Controller {
 		}
 		return $ipaddress;
 	}
-	
+
 	public function index() {
 		header('Content-Type: application/json');
 		$message = "Não permitido!";
@@ -47,7 +47,7 @@ class Api extends CI_Controller {
 				$dataveic['id_user'] = $this->db->get_where('user', array('username' => $datalogin['username'] , 'password' => $datalogin['password']))->row()->id_user;
 				$dataveic['tipoveiculo'] = $postdata['tipoveiculo'];
 				$this->pages_model->api_veiculos_get($dataveic);
-				
+
 				header('Content-Type: application/json');
 				print json_encode($veiculos, JSON_PRETTY_PRINT);
 			} else {
@@ -110,7 +110,7 @@ class Api extends CI_Controller {
 						$datasearch['vtype'] = $vtype;
 						$datasearch['tvchannel'] = $postdata['veiculo'];
 					}
-					
+
 					$start = $postdata['pagina'];
 					$datasearch['clientkeywordid'] = '';
 					$datasearch['id_radio'] = '';

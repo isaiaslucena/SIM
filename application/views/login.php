@@ -5,7 +5,7 @@
 				<div class="col-sm-10 col-md-6 col-lg-4 col-lg-4 col-sm-offset-1 col-md-offset-3 col-lg-offset-4">
 						<?php
 							if (isset($message)) { ?>
-								<div class="alert alert-danger text-center" id="success-alert" role="alert" style="display: none; position: absolute; z-index: 999; width: 100%">
+								<div class="alert alert-danger text-center" id="success-alert" role="alert" style="display: none; position: absolute; z-index: 999; width: 94%">
 									<?php echo $message ?>!
 								</div>
 						<?php } ?>
@@ -67,11 +67,11 @@
 
 			$(document).ready(function() {
 				//$(".alert-danger").alert();
-				// window.setTimeout(function(){
-					$(".alert-danger").fadeIn();
-				// }, 200);
 				window.setTimeout(function(){
-					$(".alert-danger").alert('close');
+					$(".alert-danger").fadeIn('slow');
+				}, 500);
+				window.setTimeout(function(){
+					$(".alert-danger").fadeOut('slow');
 				}, 2500);
 			});
 		</script>
