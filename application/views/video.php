@@ -42,17 +42,20 @@
 			}
 
 			.pthvideo {
-				width: 840px;
-				height: 480px;
-				padding-top: 4px;
-				padding-bottom: 4px;
+				/*width: 840px;*/
+				/*height: 480px;*/
+				width: 100%;
+				height: 100%;
+				/*padding-top: 4px;*/
+				/*padding-bottom: 4px;*/
+				box-shadow: 0px 0px 20px #888888;
 			}
 
 			.vbutton {
 				z-index: 2;
 				position: absolute;
-				top: 48%;
-				left: 48%;
+				top: 40%;
+				left: 40%;
 				box-sizing: border-box;
 				width: 0;
 				height: 74px;
@@ -207,11 +210,11 @@
 
 		<div class="container-fluid center-block text-center">
 			<div class="row">
-				<div class="col-lg-7">
+				<div class="col-md-7">
 					<h2 id="vtitle">Nenhuma seleção</h2>
 				</div>
 
-				<div class="col-lg-5">
+				<div class="col-md-5">
 					<div class="btn-toolbar">
 						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
 						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
@@ -229,10 +232,10 @@
 			</div>
 
 			<div class="row">
-				<div id="divvideo" class="col-lg-8">
+				<div id="divvideo" class="col-md-8">
 					<div id="vvideobtn" class='vbutton' style="display: none"></div>
-					<video id="vvideo" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="840" height="480" preload="metadata" autoplay></video>
-					<img id="thvideo" class="pthvideo" width="840" height="480" style="display: none;">
+					<video id="vvideo" class="img-responsive center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
+					<img id="thvideo" class="img-responsive center-block" style="display: none;">
 					<div id="divdrop" class="box">
 						<input id="dropfile" type="file" style="display: none;">
 						<i class="fa fa-download" style="font-size: 10em"></i>
@@ -240,18 +243,18 @@
 					</div>
 				</div>
 
-				<div id="vnextdiv" class="col-lg-4">
+				<div id="vnextdiv" class="col-md-4">
 					<!-- <h4>Vídeos</h4> -->
 					<ul id="vnext" class="list-group" style="overflow-y: auto; height: 480px;"></ul>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-lg-1">
+				<div class="col-sm-1 col-md-1 col-lg-1">
 					<span id="currtime">--:--</span>
 				</div>
 
-				<div class="col-lg-10">
+				<div class="col-sm-10 col-md-10 col-lg-10">
 					<div class="progressBar">
 						<div class="bufferBar"></div>
 						<div class="timeBar"></div>
@@ -259,13 +262,13 @@
 					</div>
 				</div>
 
-				<div class="col-lg-1">
+				<div class="col-sm-1 col-md-1 col-lg-1">
 					<span id="durtime">--:--</span>
 				</div>
 			</div>
 
 			<div class="row">
-				<div id="controls" class="col-lg-12">
+				<div id="controls" class="col-sm-12 col-md-12 col-lg-12">
 					<!-- <div class="btn-toolbar"> -->
 						<div class="btn-group" role="group" aria-label="...">
 							<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
@@ -324,13 +327,13 @@
 					</div> -->
 					<div class="modal-body center-block text-center">
 						<div class="row">
-							<div class="col-lg-9">
+							<div class="col-sm-9 col-md-9 col-lg-9">
 								<div id="progresscrop"></div>
 								<div id="mdivvideo" class="embed-responsive embed-responsive-16by9" style="display: none;">
 									<video id="mvvideo" class="embed-responsive-item" width="840" height="480" controls autoplay></video>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-sm-3 col-md-3 col-lg-3">
 								<div class="form-group">
 									<input id="miprogram" type="text" class="form-control" placeholder="Programa"/>
 								</div>
@@ -402,7 +405,7 @@
 				<div class="modal-content">
 					<div class="modal-body center-block text-center" style="min-height: 500px">
 						<div class="row">
-							<div class="col-lg-12">
+							<div class="col-sm-12 col-md-12 col-lg-12">
 								<div id="progressjcrop"></div>
 								<div id="mcjdivvideo" class="embed-responsive embed-responsive-16by9" style="display: none;">
 									<video id="mcjvvideo" class="embed-responsive-item" width="840" height="480" controls autoplay></video>
