@@ -327,9 +327,10 @@
 							<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 								<div class="panel-heading text-center">
 									<?php if (!empty($keyword)) { ?>
-									<!-- <label class="pull-left" style="font-weight: normal"> -->
-										<!-- <input type="checkbox" id="<?php //echo 'cb'.$divcount;?>"> <?php //echo get_phrase('join');?> -->
-									<!-- </label> -->
+									<label class="pull-left" style="font-weight: normal">
+										<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
+									</label>
+
 									<label>
 										<i class="fa fa-search fa-fw"></i>
 										<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
@@ -408,7 +409,11 @@
 							} ?>
 							<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 								<div class="panel-heading text-center">
-									<label>
+									<label class="pull-left" style="font-weight: normal">
+										<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>"> <?php echo get_phrase('join');?>
+									</label>
+
+									<label class="labeltitle">
 										<i class="fa fa-search fa-fw"></i>
 										<span id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 										&nbsp;&nbsp;&nbsp;&nbsp;
@@ -689,7 +694,7 @@
 					// newdividn = 'div' + newdivid;
 
 					divclone = $('#'+iddiv).clone(true);
-					// console.log(divclone);
+					console.log(divclone);
 
 					divclone.removeClass('panel-default');
 					divclone.addClass('panel-info');

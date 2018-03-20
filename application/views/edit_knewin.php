@@ -88,7 +88,7 @@ if (isset($knewindoc)) {
 				</div>
 			</div>
 
-			<div class="row center-block text-center">
+			<div class="row">
 				<div class="col-lg-8">
 					<audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls></audio>
 				</div>
@@ -105,29 +105,29 @@ if (isset($knewindoc)) {
 
 			<div class="row">
 				<div class="col-lg-12">
-					<form id="cropknewin" action="<?php echo site_url('pages/crop_knewin')?>" method="post" accept-charset="utf-8" style="display: none;">
-						<div id="cropinfo">
-							<input type="text" id="starttime" name="starttime"></input>
-							<input type="text" id="endtime" name="endtime"></input>
-							<input type="text" id="ssource" name="ssource" value="<?php echo $ssource; ?>"></input>
-							<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>"></input>
-							<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>"></input>
-							<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>"></input>
-							<input type="text" id="id_doc" name="id_doc" value="<?php echo $idknewin; ?>"></input>
-							<input type="text" id="id_join_info" name="id_join_info" value="<?php echo $id_join_info; ?>"></input>
-							<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>"></input>
-							<input type="text" id="startdate" name="startdate" value="<?php echo $rstartdate; ?>"></input>
-							<input type="text" id="enddate" name="enddate" value="<?php echo $renddate; ?>"></input>
-							<input type="text" id="mediaurl" name="mediaurl" value="<?php echo $mediaurl; ?>"></input>
-							<textarea id="textseld" name="textseld" style="width: 700px; height: 100px"></textarea>
-						</div>
+					<form id="cropknewin" action="<?php echo site_url('pages/crop_knewin'); ?>" method="post" accept-charset="utf-8" style="display: none;">
+						<input type="text" id="starttime" name="starttime">
+						<input type="text" id="endtime" name="endtime">
+						<input type="text" id="ssource" name="ssource" value="<?php echo $ssource; ?>">
+						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>">
+						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>">
+						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>">
+						<input type="text" id="id_doc" name="id_doc" value="<?php echo $idknewin; ?>">
+						<input type="text" id="id_join_info" name="id_join_info" value="<?php echo isset($id_join_info) ? $id_join_info : '' ?>">
+						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>">
+						<input type="text" id="startdate" name="startdate" value="<?php echo $rstartdate; ?>">
+						<input type="text" id="enddate" name="enddate" value="<?php echo $renddate; ?>">
+						<input type="text" id="mediaurl" name="mediaurl" value="<?php echo $mediaurl; ?>">
+						<textarea id="textseld" name="textseld" style="width: 700px; height: 100px"></textarea>
 					</form>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-lg-12">
-					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px; max-width: 95%"> <?php echo $content; ?></p>
+					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px"> 
+						<?php echo $content; ?>
+					</p>
 				</div>
 			</div>
 
@@ -229,6 +229,7 @@ if (isset($knewindoc)) {
 			});
 
 			$('#btncend').click(function(event) {
+				console.log(croptext);
 				cropendss = audioel[0].currentTime;
 				cropends = (cropendss * 100 / 100).toFixed(3);
 

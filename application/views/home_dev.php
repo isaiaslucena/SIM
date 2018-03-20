@@ -340,9 +340,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							xmlstate = val.state;
 							xmlradio = val.radio;
 							xmlidradio = val.id_radio;
-							xts = new Date(val.timestamp);
+
+							xts = new Date(val.timestamp * 1000);
+							xtsday = xts.getDate();
+							xtsday = ('0' + xtsday).slice(-2);
+							xtsmonth = (xts.getMonth() + 1);
+							xtsmonth = ('0' + xtsmonth).slice(-2);
+							xtsyear = xts.getFullYear();
+							xtshour = xts.getHours();
+							xtshour = ('0'+xtshour).slice(-2);
+							xtsminutes = xts.getMinutes();
+							xtsminutes = ('0'+xtsminutes).slice(-2)
+							xmltimestampf = xtsday+'/'+xtsmonth+'/'+xtsyear+' '+xtshour+':'+xtsminutes;
+
 							xmltimestamp = val.timestamp;
-							xmltimestampf = ('0'+xts.getDay()).slice(-2) + '/' +('0'+(xts.getMonth() + 1)).slice(-2) + '/' + xts.getFullYear() + ' - ' + ('0'+xts.getHours()).slice(-2) + ':' + ('0'+xts.getMinutes()).slice(-2) + ':' + ('0'+xts.getSeconds()).slice(-2);
 							xmlid = val.id_text;
 							xmltext = val.text_content;
 
@@ -438,7 +449,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								totalpanels = $('div.panel.panel-default.collapse.in').length;
 								ptexts = $('.ptext.text-justify');
 								$.each(ptexts, function(index, val) {
-									// console.log(event);
+									console.log(val);
 									cpid = $(val).attr('id');
 									scpid = '#'+cpid;
 									keywfound = '#'+cpid+' > .kwfound';

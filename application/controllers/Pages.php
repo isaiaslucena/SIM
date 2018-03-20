@@ -1222,8 +1222,19 @@ class Pages extends CI_Controller {
 			$data['id_source'] = $this->input->post('id_source');
 			$data['id_client'] = $this->input->post('id_client');
 			$data['id_keyword'] = $this->input->post('id_keyword');
-			$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
-			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			var_dump($data);
+			if (!empty($data['id_client'])) {
+				$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			} else {
+				$data['client_selected'] = '';
+			}
+
+			if (!empty($data['id_keyword'])) {
+				$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			} else {
+				$data['keyword_selected'] = '';
+			}
+
 			$datadoc = $this->pages_model->join_radio_knewin($ids_doc);
 
 			$datajoin['ids_docs'] = $ids_doc;
