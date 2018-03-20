@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<span class="pull-right" id="keywordsquant"></span>
 					<span class="pull-right"><?php echo  get_phrase('with_discard').':'?>&nbsp;</span>
 				</div>
-				
+
 				<div id="timelinebody" class="panel-body">
 					<ul class="timeline" id="client-ul">
 						<?php
@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<?php }
 							else { ?>
 								<div class="timeline-badge"><i class="fa fa-tag"></i></div>
-								<div class="timeline-panel">	
+								<div class="timeline-panel">
 							<?php } ?>
 								<div class="timeline-heading">
 									<h4 class="timeline-title"><?php echo $client['name'];?></h4>
@@ -75,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												} else {
 													$allkeyword_foundc = 0;
 												}
-												
+
 												$ids_file_xml = null;
 												$ic = null;
 												for ($i=0; $i < $keyword_foundc ; $i++) {
@@ -227,7 +227,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					winheight = $(document).height();
 					winheightm = (winheight - 70);
 					winheightn = (winheight - 65);
-					
+
 					mrstyle = $('#mainrow').css('display');
 					if (mrstyle == 'block') {
 						if (winscrollToph == winheight) {
@@ -307,7 +307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			$(document).on('click', '.btn.btn-info.btn-sm, .btn.btn-danger.btn-sm', function(event) {
 				// console.log(event);
 				$('.pull-right.text-muted.pageload').css('display', 'none');
-				
+
 				btnform = $(this).parent('form');
 				cbtnspin = $(this).children('i');
 				clickedbtn = $(this);
@@ -316,7 +316,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 				cbtnspin.css('display', 'inline-block');
 				$('#keywordrow > .col-lg-12 > .panel').detach();
-				
+
 				$.post('<?php echo base_url("pages/home_radio_keyword")?>',
 					btnform.serialize(),
 					function(data, textStatus, xhr) {
@@ -328,10 +328,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						didkeyword = data.id_keyword;
 						dkeywordselected = data.keyword_selected;
 						divcount = 1;
-						
+
 						$('#headerclient').text(dclientselected);
 						$('#headerclient').append('<small id="headerkeyword"> - '+dkeywordselected+'</small>');
-						
+
 						dtexts = data.keyword_texts;
 						$.each(dtexts, function(index, val) {
 							xmlfpath = val.path.replace('/app/application/', '');
@@ -340,18 +340,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							xmlstate = val.state;
 							xmlradio = val.radio;
 							xmlidradio = val.id_radio;
-							xts = new Date(val.timestamp * 1000);
+							xts = new Date(val.timestamp);
 							xmltimestamp = val.timestamp;
 							xmltimestampf = ('0'+xts.getDay()).slice(-2) + '/' +('0'+(xts.getMonth() + 1)).slice(-2) + '/' + xts.getFullYear() + ' - ' + ('0'+xts.getHours()).slice(-2) + ':' + ('0'+xts.getMinutes()).slice(-2) + ':' + ('0'+xts.getSeconds()).slice(-2);
 							xmlid = val.id_text;
 							xmltext = val.text_content;
-							
+
 							audiofpath = xmlfpath;
 							audioidfile = xmlidfile - 1;
 							str = (parseInt(xmlfilename, 16) - 1).toString(16);
 							audiofilename = "0".repeat(3) + str.toUpperCase();
 							audiofpath = xmlfpath;
-							
+
 							divhtml =	'<div id="div'+divcount+'" class="panel panel-default">'+
 											'<div class="panel-heading text-center">'+
 												'<label class="pull-left" style="font-weight: normal">'+
@@ -359,7 +359,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													'data-iddiv="div'+divcount+'" data-idclient="'+didclient+'" data-idkeyword="'+didkeyword+'" '+
 													'data-idradio="'+xmlidradio+'" data-timestamp="'+xmltimestamp+'"> <?php echo get_phrase("join"); ?>'+
 												'</label>'+
-												
+
 												'<label class="labeltitle">'+
 													'<i class="fa fa-search fa-fw"></i>'+
 													'<span class="sqtkwf" id="qtkwfid'+divcount+'"></span>'+
@@ -423,7 +423,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											'</div>'+
 										'</div>'
 							$('#keywordrow > .col-lg-12').append(divhtml);
-							
+
 							divcount += 1;
 						});
 
@@ -434,7 +434,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$('#mainrow').fadeOut(200, function() {
 							$('#keywordrow').fadeIn(300, function() {
 								$('#back-to-home').fadeIn('fast');
-								
+
 								totalpanels = $('div.panel.panel-default.collapse.in').length;
 								ptexts = $('.ptext.text-justify');
 								$.each(ptexts, function(index, val) {
@@ -443,18 +443,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									scpid = '#'+cpid;
 									keywfound = '#'+cpid+' > .kwfound';
 									keyword = dkeywordselected;
-									
+
 									pbodytext = $(val).text();
 									rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
 									pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
 									$(scpid).html(null);
 									$(scpid).html(pbodynewtext);
-									
+
 									qtkwf = $(keywfound).length;
 									$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
 									$(val).scrollTo(keywfound);
 								});
-								
+
 								$('.ptext').css('overflowY', 'hidden');
 								$(window).scrollTop(0);
 							});
@@ -514,7 +514,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				iddivn = Number(iddiv.replace('div', ''));
 				idsource = $(this).attr('data-idsource');
 				startdate = $(this).attr('data-startdate');
-				
+
 				$.get('<?php echo base_url('pages/get_radio/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 					// console.log(data);
 					loadp.children('i').css('display', 'none');
@@ -526,7 +526,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										'<?php echo get_phrase('no_more_files'); ?>'+'!'+
 									'</div>';
 						$('#'+iddiv).after(warnhtml);
-						
+
 						setTimeout(function() {
 							$('div.alert.alert-warning').fadeOut('slow');
 						}, 3000);
@@ -538,7 +538,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						dstartdate = data.response.docs[0].starttime_dt;
 						denddate = data.response.docs[0].endtime_dt;
 						dcontent = data.response.docs[0].content_t[0];
-						
+
 						var sd = new Date(dstartdate);
 						var sday = sd.getDate();
 						var sday = ('0' + sday).slice(-2);
@@ -574,7 +574,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						divclone = $('#'+iddiv).clone(true);
 						// console.log(divclone);
-						
+
 						divclone.removeClass('panel-default');
 						divclone.addClass('panel-info');
 						divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
@@ -629,7 +629,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#btnloadmore').fadeOut('fast');
 				}
 			});
-			
+
 			function hidenokeyword() {
 				clientkeywords = $('.client_keywords');
 				clientkeywords.each( function(element, index) {

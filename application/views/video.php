@@ -38,17 +38,20 @@
 			video { z-index: 1; }
 
 			#vvideo {
-				box-shadow: 0px 0px 20px #888888;
+				/*max-width: 100%;*/
+				width: 840px;
+				height: 480px;
+				/*box-shadow: 0px 0px 20px #888888;*/
 			}
 
-			.pthvideo {
-				/*width: 840px;*/
-				/*height: 480px;*/
-				width: 100%;
-				height: 100%;
+			#thvideo {
+				width: 840px;
+				height: 480px;
+				/*max-width: 100%;*/
+				/*height: 100%;*/
 				/*padding-top: 4px;*/
 				/*padding-bottom: 4px;*/
-				box-shadow: 0px 0px 20px #888888;
+				/*box-shadow: 0px 0px 20px #888888;*/
 			}
 
 			.vbutton {
@@ -233,14 +236,14 @@
 
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-					<div id="vvideobtn" class='vbutton' style="display: none"></div>
-					<video id="vvideo" class="img-responsive center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
-					<img id="thvideo" class="img-responsive center-block" style="display: none;">
-					<div id="divdrop" class="box">
-						<input id="dropfile" type="file" style="display: none;">
-						<i class="fa fa-download" style="font-size: 10em"></i>
-						<h3>Arraste e solte o arquivo aqui!</h3>
-					</div>
+						<div id="vvideobtn" class='vbutton' style="display: none"></div>
+						<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
+						<img id="thvideo" class="center-block" style="display: none;">
+						<div id="divdrop" class="box">
+							<input id="dropfile" type="file" style="display: none;">
+							<i class="fa fa-download" style="font-size: 10em"></i>
+							<h3>Arraste e solte o arquivo aqui!</h3>
+						</div>
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
@@ -659,8 +662,6 @@
 
 					getlistchannel(vsource, selformdate, channel, state);
 
-					setTimeout(scrollnextvideo, 1000);
-
 					$(function() {
 						function refreshlist(rvsource, rdate, rchannel, rstate) {
 							$.post('proxy',
@@ -749,7 +750,7 @@
 						function(data, textStatus, xhr) {
 							tvch.html(null);
 							$.each(data, function(elo, indexo) {
-								if (elo == "indian03") {
+								if (elo.replace(/[0-9]/g, '') == "cagiva") {
 									indexo.forEach(function(ela, indexa) {
 										switch (ela) {
 											case "FUTURA_RJ":
@@ -896,19 +897,21 @@
 									nextvideo.append(html);
 								}
 							});
+
+							$('#vnext').scrollTo('.active');
 						}
 					);
 				}
 
-				function scrollnextvideo() {
-					jQuery.fn.scrollTo = function(elem) {
-						$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-						return this;
-					}
-
-					$('#vnext').scrollTo('.active');
-					// $('#vnextdiv').animate({scrollTop: $('.active').offset().top}, 100);
+				jQuery.fn.scrollTo = function(elem) {
+					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+					return this;
 				}
+
+				// function scrollnextvideo() {
+					// $('#vnext').scrollTo('.active');
+					// $('#vnext').animate({scrollTop: $('.active').offset().top}, 100);
+				// }
 
 				// $('#mbtnvdown').click(function(event) {
 				// 	cropfpr = $('#miprogram').val();
