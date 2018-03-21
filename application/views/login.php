@@ -69,7 +69,7 @@
 				//$(".alert-danger").alert();
 				window.setTimeout(function(){
 					$(".alert-danger").slideDown('fast');
-				}, 200);
+				}, 100);
 				window.setTimeout(function(){
 					$(".alert-danger").slideUp('slow');
 				}, 2500);
