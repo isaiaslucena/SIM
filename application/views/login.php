@@ -68,10 +68,10 @@
 			$(document).ready(function() {
 				//$(".alert-danger").alert();
 				window.setTimeout(function(){
-					$(".alert-danger").fadeIn('slow');
-				}, 500);
+					$(".alert-danger").slideDown('fast');
+				}, 200);
 				window.setTimeout(function(){
-					$(".alert-danger").fadeOut('slow');
+					$(".alert-danger").slideUp('slow');
 				}, 2500);
 			});
 		</script>
