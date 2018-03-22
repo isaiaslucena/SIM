@@ -62,7 +62,7 @@
 			#content {
 				height: 2000px;
 			}
-			
+
 			.kwfound{
 				color: white;
 				background-color: red;
@@ -71,7 +71,7 @@
 
 			audio::-webkit-media-controls-enclosure {overflow:hidden;}
 			audio::-webkit-media-controls-panel {width: calc(100% + 30px);}
-			
+
 			video::-webkit-media-controls-enclosure {overflow:hidden;}
 			video::-webkit-media-controls-panel {width: calc(100% + 30px);}
 
@@ -98,7 +98,7 @@
 			.rrutable {
 				font-size: 10px
 			}
-			
+
 			.spinner {
 				margin: 100px auto 0;
 				width: 70px;
