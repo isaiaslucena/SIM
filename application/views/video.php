@@ -418,7 +418,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<a id="mbtnjcdown" class="btn btn-sm btn-default" href="#" download="tempjcname">
+						<a id="mbtnjcdown" class="btn btn-sm btn-default" href="#" download>
 							<i class="fa fa-download"></i>
 							<?php echo get_phrase('download');?>
 						</a>
