@@ -535,50 +535,50 @@
 				$('.list-group').click(function(event) {
 					cfileid = event.target.id;
 					elclick = event.target.tagName;
-					if (elclick == "SPAN") {
-						clearInterval(loadthumbs);
-						cfilename = event.target.innerText;
-						cfilevsource = event.target.dataset.vsrc;
+					aid = $(event.target).attr('data-aid');
+					disclass = $('#'+aid).hasClass('disabled');
+					if (disclass == false) {
+						if (elclick == "SPAN") {
+							clearInterval(loadthumbs);
+							cfilename = event.target.innerText;
+							cfilevsource = event.target.dataset.vsrc;
 
-						$('.vbutton').css('display', 'none');
-						$('.vbutton').removeClass('paused');
+							$('.vbutton').css('display', 'none');
+							$('.vbutton').removeClass('paused');
 
-						videoel.attr({
-							poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
-							src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
-						});
-						videotitle.text(cfilename);
-						videotitle.attr('data-vsrc', cfilevsource);
-						videotitle.css('font-size', '30px');
-						$('.list-group').children().removeClass('active');
-						event.target.parentElement.className += ' active';
-						joinvideos = false;
-					} else if (elclick == "INPUT") {
-						ccbjoincrop = $('#checkjoincrop').prop('checked');
-						if (ccbjoincrop) {
-							swal({
-								title: 'Escolha somente uma opção!',
-								closeOnClickOutside: false,
-								closeOnEsc: false,
-								buttons: {
-									cancel: false,
-									confirm: true,
-								}
+							videoel.attr({
+								poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+								src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 							});
-							$('#'+cfileid).prop('checked', false);
-							$('#checkjoincrop').bootstrapToggle('off');
-						} else {
-							// console.log(event);
-							// cvbtnid = event.originalEvent.path[2].id;
-							// cvbtnid = event.target.nextElementSibling.parentElement.parentNode.id;
-							cvbtnid = $(this).parent().attr('id');
-							// console.log(cvbtnid);
 
-							cfilenamei = event.target.dataset.vfile;
-							cfilevsourcei = event.target.dataset.vsrc;
-							// vfilenamei = cfilevsourcei+'_'+cfilenamei;
-							vfilenamei = cfilenamei+'.mp4';
-							joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
+							videotitle.text(cfilename);
+							videotitle.attr('data-vsrc', cfilevsource);
+							videotitle.css('font-size', '30px');
+							$('.list-group').children().removeClass('active');
+							event.target.parentElement.className += ' active';
+							joinvideos = false;
+						} else if (elclick == "INPUT") {
+							ccbjoincrop = $('#checkjoincrop').prop('checked');
+							if (ccbjoincrop) {
+								swal({
+									title: 'Escolha somente uma opção!',
+									closeOnClickOutside: false,
+									closeOnEsc: false,
+									buttons: {
+										cancel: false,
+										confirm: true,
+									}
+								});
+								$('#'+cfileid).prop('checked', false);
+								$('#checkjoincrop').bootstrapToggle('off');
+							} else {
+								cvbtnid = $(this).parent().attr('id');
+
+								cfilenamei = event.target.dataset.vfile;
+								cfilevsourcei = event.target.dataset.vsrc;
+								vfilenamei = cfilenamei+'.mp4';
+								joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
+							}
 						}
 					}
 				});

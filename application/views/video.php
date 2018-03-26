@@ -23,9 +23,7 @@
 
 		<style type="text/css">
 			video::-internal-media-controls-download-button { display:none; }
-
 			video::-webkit-media-controls-enclosure { overflow:hidden; }
-
 			video::-webkit-media-controls-panel { width: calc(100% + 30px); }
 
 			body { background-color: #F6F6F6 }
@@ -38,27 +36,23 @@
 			video { z-index: 1; }
 
 			#vvideo {
-				/*max-width: 100%;*/
-				width: 840px;
+				width: 854px;
 				height: 480px;
-				/*box-shadow: 0px 0px 20px #888888;*/
 			}
 
 			#thvideo {
-				width: 840px;
+				width: 854px;
 				height: 480px;
-				/*max-width: 100%;*/
-				/*height: 100%;*/
-				/*padding-top: 4px;*/
-				/*padding-bottom: 4px;*/
-				/*box-shadow: 0px 0px 20px #888888;*/
 			}
 
 			.vbutton {
-				z-index: 2;
+				z-index: 5;
 				position: absolute;
-				top: 40%;
-				left: 40%;
+				margin: auto;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
 				box-sizing: border-box;
 				width: 0;
 				height: 74px;
@@ -72,7 +66,6 @@
 				border-style: double;
 				border-width: 0px 0 0px 60px;
 			}
-
 			.vbutton:hover {
 				border-color: transparent transparent transparent #7F7F7F;
 			}
@@ -198,8 +191,8 @@
 				position: relative;
 				padding-top: 120px;
 				padding-left: 10px;
-				height: 480px;
 				width: 840px;
+				height: 480px;
 				display: none;
 			}
 		</style>
@@ -239,16 +232,10 @@
 						<div id="vvideobtn" class='vbutton' style="display: none"></div>
 						<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
 						<img id="thvideo" class="center-block" style="display: none;">
-						<div id="divdrop" class="box">
-							<input id="dropfile" type="file" style="display: none;">
-							<i class="fa fa-download" style="font-size: 10em"></i>
-							<h3>Arraste e solte o arquivo aqui!</h3>
-						</div>
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<!-- <h4>Vídeos</h4> -->
-					<ul id="vnext" class="list-group" style="overflow-y: auto; height: 480px;"></ul>
+					<div id="vnext" class="list-group" style="overflow-y: auto; max-height: 480px;"></div>
 				</div>
 			</div>
 
@@ -472,51 +459,6 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
-				// $(document).on('dragenter', function(event) {
-				// 	videoel.css('display', 'none');
-				// 	$('#divdrop').css('display', 'block');
-				// });
-
-				// $(document).on('dragexit', '#divdrop', function(event) {
-				// 	$('#divdrop').css('display', 'none');
-				// 	videoel.css('display', 'block');
-				// 	console.log('DRAG EXIT');
-				// });
-
-				// $(document).on('dragleave', '#divdrop', function(event) {
-				// 	// $('#divdrop').css('display', 'none');
-				// 	// videoel.css('display', 'block');
-				// 	$(this).children('h3').text('Arraste o arquivo aqui!');
-				// 	// console.log('DRAG LEAVE');
-				// });
-
-				// $(document).on('dragover', '#divdrop', function(event) {
-				// 	$(this).children('h3').text('Agora solte!');
-				// 	// console.log('DRAG OVER');
-				// });
-
-				// $(document).on('drop', '#divdrop', function(event) {
-				// 	console.log('DROPED');
-				// });
-
-				// $(document).on('dragstart', '#divdrop', function(event) {
-				// 	// videoel.css('display', 'none');
-				// 	// $('#divdrop').css('display', 'block');
-				// 	console.log('DRAG');
-				// });
-
-				// $(document).on('drag', '#divdrop', function(event) {
-				// 	// videoel.css('display', 'none');
-				// 	// $('#divdrop').css('display', 'block');
-				// 	console.log('DRAG');
-				// });
-
-				// $(document).on('dragend', '#divdrop', function(event) {
-				// 	// videoel.css('display', 'none');
-				// 	// $('#divdrop').css('display', 'block');
-				// 	console.log('DRAG END');
-				// });
-
 				function channelname(name) {
 					switch (name) {
 						case "CULTURA-HD":
@@ -634,7 +576,6 @@
 
 				$('.input-group.date').on("changeDate", function() {
 					selecteddate = $('.input-group.date').datepicker('getDate');
-					// selecteddate = $('.input-group.date').datepicker('getUTCDate');
 					sday = selecteddate.getDate();
 					sday = ('0' + sday).slice(-2);
 					smonth = (selecteddate.getMonth() + 1);
@@ -675,14 +616,15 @@
 									lastvarraytm = data[data.length-1].replace(".mp4","");
 
 									if (lastvplaylist != lastvarraytm) {
-										// html = '<a href="#" id="vbtn'+lastvplaylistidn+'" class="list-group-item" data-vsrc="'+vsource+'">'+lastvarraytm+'</a>';
-										html =	'<li id="vbtn'+lastvplaylistidn+'" class="list-group-item">'+
-													'<div class="checkbox checkbox-warning pull-left">'+
-														'<input id="chbx'+lastvplaylistidn+'" type="checkbox">'+
-														'<label for="chbx'+lastvplaylistidn+'">Juntar</label>'+
-													'</div>'+
-													'<span id="vspan'+lastvplaylistidn+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+lastvarraytm+'</span>'+
-												'</li>';
+										$('#'+lastvplaylistid).parent().removeClass('disabled');
+										$('#'+lastvplaylistid).css('cursor', 'pointer');
+										html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+																'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
+														'</a>';
 										nextvideo.append(html);
 									}
 								}
@@ -713,38 +655,35 @@
 							$.each(data, function(index, val) {
 								file = val.replace(".mp4","");
 								if (file == lastvideo) {
-									html =	'<li id="vbtn'+index+'" class="list-group-item active">'+
-												'<div class="checkbox checkbox-warning pull-left">'+
-													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<label for="chbx'+index+'">Juntar</label>'+
-												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
-											'</li>';
-									nextvideo.append(html);
+									html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
+														'<div class="checkbox checkbox-warning pull-left">'+
+															'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+															'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+														'</div>'+
+														'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+													'</a>';
 								} else {
-									html =	'<li id="vbtn'+index+'" class="list-group-item">'+
-												'<div class="checkbox checkbox-warning pull-left">'+
-													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<label for="chbx'+index+'">Juntar</label>'+
-												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
-											'</li>';
-									nextvideo.append(html);
+									html =	'<a id="vbtn'+index+'" class="list-group-item">'+
+														'<div class="checkbox checkbox-warning pull-left">'+
+															'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+															'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+														'</div>'+
+														'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+													'</a>';
 								}
+								nextvideo.append(html);
 							});
 
-							scrollnextvideo();
+							$('#vnext').scrollTo('.active');
 						}
 					);
 				}
 
 				function selectchannel(date) {
-					// tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
-					// tvch.prop('disabled', false)
 					tvch.html(null);
 					tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 					tvch.selectpicker('refresh');
-					// tvch.html(null);
+
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
 						function(data, textStatus, xhr) {
@@ -830,17 +769,34 @@
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + selglvsource + '/' + selgldate + '/' + selglchannel + '/' + selglstate},
 						function(data, textStatus, xhr) {
+							firstvideo = data[0].replace(".mp4", "");
 							lastvideo = data[data.length-2].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
 
+							datetoday = new Date();
+							tday = datetoday.getDate();
+							tday = ('0'+tday).slice(-2);
+							tmonth = (datetoday.getMonth() + 1);
+							tmonth = ('0'+tmonth).slice(-2);
+							tnmonharr = datetoday.toString().split(' ');
+							tnmonth = tnmonharr[1];
+							tyear = datetoday.getFullYear();
+							thour = datetoday.getHours();
+							thour = ('0'+thour).slice(-2);
+							tminutes = datetoday.getMinutes();
+							tminutes = ('0'+tminutes).slice(-2);
+							tseconds = datetoday.getSeconds();
+							tseconds = ('0'+tseconds).slice(-2);
+
+							datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
+							// datasel = new Date(selgldate+'T'+thour+':'+tminutes+':'+tseconds);
+							datasel = new Date(selgldate+'T00:00:00');
+
+							console.log(datetodayf);
+							console.log(datasel);
+
 							$('.vbutton').css('display', 'none');
 							$('.vbutton').removeClass('paused');
-
-							// videoel.removeAttr('loop');
-							videoel.attr({
-								poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
-								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/' + vsource + '_' + lastvideo
-							});
 
 							$('#btnplay').removeClass('disabled');
 							$('#btnstop').removeClass('disabled');
@@ -871,34 +827,81 @@
 							$('#btntran').removeAttr('disabled');
 							$('#checkjoincrop').bootstrapToggle('enable');
 
-							videotitle.text(lastvideo);
-							videotitle.attr('data-vsrc', selglvsource);
-							videotitle.css('font-size', '30px');
-							nextvideo.html(null);
-							$.each(data, function(index, val) {
-								file = val.replace(".mp4","");
-								if (file == lastvideo) {
-									html =	'<li id="vbtn'+index+'" class="list-group-item active">'+
-												'<div class="checkbox checkbox-warning pull-left">'+
-													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<label for="chbx'+index+'">Juntar</label>'+
-												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
-											'</li>';
-									nextvideo.append(html);
-								} else {
-									html =	'<li id="vbtn'+index+'" class="list-group-item">'+
-												'<div class="checkbox checkbox-warning pull-left">'+
-													'<input id="chbx'+index+'" type="checkbox" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<label for="chbx'+index+'">Juntar</label>'+
-												'</div>'+
-												'<span id="vspan'+index+'"  data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
-											'</li>';
-									nextvideo.append(html);
-								}
-							});
+							if (datasel < datetodayf) {
+								console.log('Data selecionada menor que hoje');
+								videoel.attr({
+									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
+									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
+								});
 
-							$('#vnext').scrollTo('.active');
+								videotitle.text(firstvideo);
+								videotitle.attr('data-vsrc', selglvsource);
+								videotitle.css('font-size', '30px');
+								nextvideo.html(null);
+								$.each(data, function(index, val) {
+									file = val.replace(".mp4","");
+									if (file == firstvideo) {
+										html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+														'</a>';
+									} else {
+										html =	'<a id="vbtn'+index+'" class="list-group-item">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+														'</a>';
+									}
+									nextvideo.append(html);
+								});
+								$('#vnext').scrollTo('.active');
+							} else {
+								console.log('Data selecionada foi hoje');
+								videoel.attr({
+									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
+									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
+								});
+
+								videotitle.text(lastvideo);
+								videotitle.attr('data-vsrc', selglvsource);
+								videotitle.css('font-size', '30px');
+								nextvideo.html(null);
+								$.each(data, function(index, val) {
+									file = val.replace(".mp4","");
+									if (file == lastvideo) {
+										html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+														'</a>';
+									} else if (file == lastvarray) {
+										html =	'<a id="vbtn'+index+'" class="list-group-item disabled">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'">'+file+'</span>'+
+														'</a>';
+									} else {
+										html =	'<a id="vbtn'+index+'" class="list-group-item">'+
+															'<div class="checkbox checkbox-warning pull-left">'+
+																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+															'</div>'+
+															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+														'</a>';
+									}
+									nextvideo.append(html);
+								});
+								$('#vnext').scrollTo('.active');
+							}
 						}
 					);
 				}
@@ -907,28 +910,6 @@
 					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 					return this;
 				}
-
-				// function scrollnextvideo() {
-					// $('#vnext').scrollTo('.active');
-					// $('#vnext').animate({scrollTop: $('.active').offset().top}, 100);
-				// }
-
-				// $('#mbtnvdown').click(function(event) {
-				// 	cropfpr = $('#miprogram').val();
-				// 	cropfcl = $('#miclient').val();
-				// 	console.log(cropfpr);
-				// 	console.log(cropfcl);
-				// 	if (cropfpr == '') {
-				// 		alert('Por favor, preencha o nome do programa');
-				// 		$('#miprogram').focus();
-				// 		return false
-				// 	}
-				// 	if (cropfcl == '') {
-				// 		alert('Por favor, preencha o nome do cliente');
-				// 		$('#miclient').focus();
-				// 		return false
-				// 	}
-				// });
 
 				$('#miclient').blur(function(event) {
 					cropfpr = $('#miprogram').val();
