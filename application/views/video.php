@@ -206,11 +206,11 @@
 
 		<div class="container-fluid center-block text-center">
 			<div class="row">
-				<div class="col-md-7">
-					<h2 id="vtitle">Nenhuma seleção</h2>
+				<div class="col-md-8">
+					<h2 id="vtitle" class="center-block">Nenhuma seleção</h2>
 				</div>
 
-				<div class="col-md-5">
+				<div class="col-md-4">
 					<div class="btn-toolbar">
 						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
 						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
@@ -222,7 +222,7 @@
 							</div>
 						</div>
 
-						<select id="selchannels" class="selectpicker" data-size="10" data-width="fit" data-live-search="true" title="Selecione uma data" disabled></select>
+						<select id="selchannels" class="selectpicker" data-size="10" data-width="180" data-live-search="true" title="Selecione uma data" disabled></select>
 					</div>
 				</div>
 			</div>
@@ -235,7 +235,7 @@
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<div id="vnext" class="list-group" style="overflow-y: auto; max-height: 480px;"></div>
+					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px;"></div>
 				</div>
 			</div>
 
