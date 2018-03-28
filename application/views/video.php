@@ -3,7 +3,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Vídeo</title>
+		<title>Edição de vídeo</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link rel="shortcut icon" href="<?php echo base_url('assets/imgs/favicon.ico');?>" type="image/x-icon">
+		<link rel="icon" href="<?php echo base_url('assets/imgs/favicon.ico');?>" type="image/x-icon">
+
 		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-select/js/bootstrap-select.min.js');?>"></script>
@@ -24,7 +29,7 @@
 		<style type="text/css">
 			video::-internal-media-controls-download-button { display:none; }
 			video::-webkit-media-controls-enclosure { overflow:hidden; }
-			video::-webkit-media-controls-panel { width: calc(100% + 30px); }
+			video::-webkit-media-controls-panel { width: calc(100% + 35px); }
 
 			body { background-color: #F6F6F6 }
 
