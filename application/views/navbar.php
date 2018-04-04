@@ -14,9 +14,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="<?php echo base_url();?>">
-					Sistema Integrado de Monitoramento v1.8
-				</a>
+				<a class="navbar-brand" href="<?php echo base_url();?>">S.I.M. v1.8</a>
 			</div>
 
 			<ul class="nav navbar-top-links navbar-right">
@@ -80,7 +78,7 @@
 			</ul>
 
 			<div class="navbar-default sidebar" role="navigation">
-				<div class="sidebar-nav navbar-collapse">
+				<div class="sidebar-nav navbar-collapse" aria-expanded="false" style="height: 1px;">
 					<ul class="nav in" id="side-menu">
 						<li class="sidebar-search">
 							<div class="input-group">
@@ -199,6 +197,11 @@
 				</div>
 			</div>
 
+			<div id="divback-to">
+				<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" style="display: none" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
+				<button href="#" id="back-to-home" class="btn btn-danger btn-circle btn-lg" style="display: none" title="Voltar"><i class="fa fa-arrow-left"></i></button>
+			</div>
+
 			<script type="text/javascript">
 				var idgroup = <?php echo $id_group; ?>;
 
@@ -223,8 +226,12 @@
 				});
 
 				$(document).ready(function() {
-					if (idgroup == 1) {
-						$('nav.navbar-default').css('position', 'absolute');
+					// if (idgroup == 1) {
+						// $('.navbar').css('position', 'relative');
+					// }
+
+					if ($(document).width() <= 375) {
+						$('.sidebar-nav.navbar-collapse').addClass('collapse');
 					}
 
 					if (idgroup == 1 || idgroup == 5 ) {
@@ -332,8 +339,4 @@
 				// }
 			</script>
 		</nav>
-		<div id="page-wrapper" style="min-height: 621px;">
-			<div id="divback-to">
-				<button href="#" id="back-to-top" class="btn btn-danger btn-circle btn-lg" style="display: none" title="<?php echo get_phrase('back_to_top')?>"><i class="fa fa-arrow-up"></i></button>
-				<button href="#" id="back-to-home" class="btn btn-danger btn-circle btn-lg" style="display: none" title="Voltar"><i class="fa fa-arrow-left"></i></button>
-			</div>
+		<div id="page-wrapper" style="min-height: 568px;">
