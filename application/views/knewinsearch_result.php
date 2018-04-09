@@ -48,7 +48,7 @@
 
 		<!-- pagination -->
 		<div id="rowpagination" class="row">
-			<div class="col-lg-6">
+			<div class="col-sm-6 col-md-6 col-lg-6">
 				<br>
 				<span id="searchrstart" class="text-muted"><?php echo get_phrase('search_time').': '.$searchtime ?>ms</span><br>
 				<?php if ($totalfound > 10) { ?>
@@ -57,19 +57,19 @@
 					<span class="text-muted"><?php echo get_phrase('showing').' '.$totalfound.' '.get_phrase('found') ?></span>
 				<?php }?>
 			</div>
-			<div class="col-lg-6">
+			<div class="col-sm-6 col-md-6 col-lg-6">
 				<?php if ($totalfound > 10) { ?>
 					<ul class="pagination pull-right">
 						<?php
 							if ($firstpage == 0) { ?>
-							<li class="disabled">
-								<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
+								<li class="disabled">
+									<a aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
 							<?php } else {
-							$totalpagesstart = $firstpage / 10;
-							$startff = $firstpage;
-							$startf = $startff - 10; ?>
-							<li>
-								<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
+								$totalpagesstart = $firstpage / 10;
+								$startff = $firstpage;
+								$startf = $startff - 10; ?>
+								<li>
+									<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
 							<?php } ?>
 							</li>
 						<?php
@@ -102,15 +102,15 @@
 									<li class="active">
 									<?php break 1;
 								} else {
-								$startff = $page.'0';
-								$startf = $startff - 10;
-								 if ($pageselected == $page) { ?>
-								<li class="active">
-								<a><?php echo $page; ?></a>
-								<?php } else { ?>
-								<li>
-								<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
-								<?php }
+									$startff = $page.'0';
+									$startf = $startff - 10;
+									if ($pageselected == $page) { ?>
+										<li class="active">
+										<a><?php echo $page; ?></a>
+									<?php } else { ?>
+										<li>
+										<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+									<?php }
 								} ?>
 								</li>
 							<?php }
@@ -130,14 +130,14 @@
 							</li>
 						<?php
 						if ($pageselected == $totalpages) { ?>
-						<li class="disabled">
-						<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+							<li class="disabled">
+							<a aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
 						<?php } else {
-						$page = $pageselected + 1;
-						$startff = $firstpage;
-						$startf = $startff + 10; ?>
-						<li>
-						<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+							$page = $pageselected + 1;
+							$startff = $firstpage;
+							$startf = $startff + 10; ?>
+							<li>
+							<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
 						<?php }
 						?>
 						</li>
@@ -148,7 +148,7 @@
 
 		<!-- content -->
 		<div id="rowcontent" class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12 col-md-12 col-lg-12">
 				<?php if (!empty($keyword)) { ?>
 					<div class="panel panel-default">
 				<?php } ?>
@@ -282,12 +282,12 @@
 
 								<div class="panel-body">
 									<div class="row audioel">
-										<div class="col-lg-12">
+										<div class="col-sm-12 col-md-12 col-lg-12">
 											<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls></audio>
 										</div>
 									</div>
 									<div class="row textel">
-										<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
+										<div class="col-sm-12 col-md-12 col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
 											<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
 												<?php echo (string)$stext; ?>
 											</p>
@@ -406,7 +406,14 @@
 
 							if (isset($story->content_t[0])) {
 								$stext = $story->content_t[0];
-							} ?>
+							}
+
+							if (!isset($id_client)) {
+								$id_client = 0;
+							}
+
+							?>
+
 							<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default">
 								<div class="panel-heading text-center">
 									<label class="pull-left" style="font-weight: normal">
@@ -495,7 +502,7 @@
 					}
 				} ?>
 				<?php if (!empty($keyword)) { ?>
-					</div>
+					</div>s
 				<?php } ?>
 				<?php if (!empty($keyword)) { ?>
 					</div>

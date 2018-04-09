@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');?>
 
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12 col-md-12 col-lg-12">
 				<h1 class="page-header"><?php echo get_phrase('search');?></h1>
 			</div>
 		</div>
@@ -47,11 +47,11 @@
 		?>
 
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12 col-md-12 col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<form action="<?php echo base_url('pages/search_result')?>" method="POST" accept-charset="utf-8">
-							<div class="col-lg-6">
+							<div class="col-sm-6 col-md-6 col-lg-6">
 								<div class="form-group">
 									<label><?php echo get_phrase('client');?></label>
 									<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
@@ -63,7 +63,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-lg-6">
+									<div class="col-sm-6 col-md-6 col-lg-6">
 										<div id="radiosel" class="form-group">
 											<label>Tipo de Veículo</label>
 											<div class="radio">
@@ -81,7 +81,7 @@
 										</div>
 									</div>
 
-									<div class="col-lg-6">
+									<div class="col-sm-6 col-md-6 col-lg-6">
 										<div id="radioselsrctype" class="form-group" style="display: none;">
 											<label>Fonte</label>
 											<div class="radio">
@@ -115,7 +115,7 @@
 									<input id="tvchannel" name="tvchannel" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 							</div>
-							<div class="col-lg-6">
+							<div class="col-sm-6 col-md-6 col-lg-6">
 								<div class="form-group">
 									<label><?php echo get_phrase('date');?></label>
 									<div class="input-daterange input-group" id="datepicker">
