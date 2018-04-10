@@ -477,7 +477,9 @@
 				function sectostring(secs) {
 					var sec_num = parseInt(secs, 10);
 					var hours   = Math.floor(sec_num / 3600);
+					// var hours = (sec_num / 3600).toFixed(2);
 					var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+					// var minutes = ((sec_num - (hours * 3600)) / 60).toFixed(2);
 					var seconds = sec_num - (hours * 3600) - (minutes * 60);
 					var mseconds = String(secs);
 					var milliseconds =  mseconds.slice(-3);

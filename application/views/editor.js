@@ -130,6 +130,7 @@
 
 				$('#btncstart').click(function(event) {
 					cropstartss = videoel[0].currentTime;
+					console.log()
 					if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 						swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 						$(this).text(null);
@@ -143,8 +144,8 @@
 						$(this).removeClass('btn-default');
 						$(this).addClass('btn-primary');
 						$(this).append(' '+$('#currtime').text());
-						cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
-						// cropstartss = videoel[0].currentTime;
+						// cropstarts = (videoel[0].currentTime * 100 / 100).toFixed(3);
+						cropstarts = cropstartss.toFixed(3);
 						cropstartms = cropstarts.split(".")
 						// cropstart = '00-'+$('#currtime').text().replace(":", "-")+'.'+cropstartms[1];
 						// cropstart = '00-'+$('#currtime').text().replace(":", "-");
@@ -153,13 +154,12 @@
 						cropstartt = $('#currtime').text();
 						ccrops = true;
 						// console.log('crop starttime: '+cropstartt);
-						// console.log('crop starttime: '+cropstarts);
+						console.log('crop starttime: '+cropstarts);
 					}
 				});
 
 				$('#btncend').click(function(event) {
 					cropendss = videoel[0].currentTime;
-					cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
 					if (ccrops) {
 						if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 							swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
@@ -179,7 +179,8 @@
 							$(this).removeClass('btn-default');
 							$(this).addClass('btn-primary');
 							$(this).append(' '+$('#currtime').text());
-							cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
+							// cropends = (videoel[0].currentTime * 100 / 100).toFixed(3);
+							cropends = cropendss.toFixed(3);
 							cropendms = cropends.split(".");
 							cropendt = '00-'+$('#currtime').text()+'.'+cropendms[1];
 							// cropendt = '00-'+$('#currtime').text();
@@ -188,7 +189,7 @@
 							cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 							cropdur = '00-'+cropdurmm+'-'+cropdurss;
 							ccrope = true;
-							console.log('crop starttime: '+cropstarts);
+							// console.log('crop starttime: '+cropstarts);
 							console.log('crop end: '+cropends);
 							console.log('crop duration: '+cropdurs);
 						}
