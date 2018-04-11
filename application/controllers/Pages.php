@@ -436,12 +436,12 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function get_radio($idsource, $startdate, $position) {
+	public function get_radio($idradio, $timestamp, $position) {
 		if ($this->session->has_userdata('logged_in')) {
-			$radio = $this->pages_model->get_radio_byid_solr($idsource, urldecode($startdate), $position);
+			$data = $this->pages_model->load_file($position, $timestamp, $idradio);
 
 			header('Content-Type: application/json');
-			print $doc;
+			print json_encode($data[0]);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
 		}
