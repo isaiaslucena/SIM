@@ -62,8 +62,8 @@
 				console.log('Desktop Agent!');
 			}
 
-			civersion="<?php echo CI_VERSION; ?>"
-			console.debug("Code Igniter v"+civersion);
+			// civersion="<?php echo CI_VERSION; ?>"
+			// console.debug("Code Igniter v"+civersion);
 
 			$(document).ready(function() {
 				//$(".alert-danger").alert();

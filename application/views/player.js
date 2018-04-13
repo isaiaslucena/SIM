@@ -528,7 +528,7 @@
 				function vfullscreen(videoelt) {
 					vvideoelmt = $('#'+videoelt);
 					if (document.webkitFullscreenElement) {
-						document.webkitExitFullscreen()
+						document.webkitExitFullscreen();
 					} else {
 						vvideoelmt[0].webkitRequestFullscreen();
 					}
@@ -556,6 +556,7 @@
 							videotitle.text(cfilename);
 							videotitle.attr('data-vsrc', cfilevsource);
 							videotitle.css('font-size', '30px');
+							mobileconf();
 							$('.list-group').children().removeClass('active');
 							event.target.parentElement.className += ' active';
 							joinvideos = false;

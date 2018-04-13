@@ -40,7 +40,7 @@
 
 			video { z-index: 1; }
 
-			#vvideo {
+/*			#vvideo {
 				width: 854px;
 				height: 480px;
 			}
@@ -48,7 +48,7 @@
 			#thvideo {
 				width: 854px;
 				height: 480px;
-			}
+			}*/
 
 			.vbutton {
 				z-index: 5;
@@ -146,7 +146,7 @@
 				vertical-align: center;
 				text-align: center;
 				border-radius: 6px;
-				z-index: 1;
+				z-index: 900;
 			}
 			.tooltiptime::after {
 				content: "";
@@ -234,13 +234,15 @@
 
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-						<div id="vvideobtn" class='vbutton' style="display: none"></div>
-						<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
-						<img id="thvideo" class="center-block" style="display: none;">
+						<div class="embed-responsive embed-responsive-16by9">
+							<div id="vvideobtn" class='vbutton' style="display: none"></div>
+							<video id="vvideo" class="center-block embed-responsive-item" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
+							<img id="thvideo" class="center-block embed-responsive-item" style="display: none;">
+						</div>
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px;"></div>
+					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 495px"></div>
 				</div>
 			</div>
 
@@ -426,12 +428,11 @@
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadthumbs;
-				var filestojoin = [];
-				var filesjoined = [];
+				var ccrops = false, ccrope = false, joinvideos = false,
+				joincropvideos = false, nightmode = false, todaydatesel = false;
+				var cropstartss = null, cropendss = null;
+				var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
 				var fileseq = 0;
-				var cropfilestojoin = [];
-				var vbtnjoin = [];
-				var nimage = [];
 				var tvch = $('#selchannels');
 				var tvdate = $('#seldate');
 				var videoel = $('#vvideo');
@@ -448,13 +449,6 @@
 				var vdurtime = $('#durtime');
 				var vtooltiptime = $('.tooltiptime');
 				var timerslider = $('#timeslider');
-				var ccrops = false;
-				var ccrope = false;
-				var joinvideos = false;
-				var joincropvideos = false;
-				var nightmode = false;
-				var cropstartss = null;
-				var cropendss = null;
 
 				var d = new Date();
 				var day = d.getDate();
@@ -608,38 +602,64 @@
 
 					getlistchannel(vsource, selformdate, channel, state);
 
-					$(function() {
-						function refreshlist(rvsource, rdate, rchannel, rstate) {
-							$.post('proxy',
-								{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + rvsource + '/' + rdate + '/' + rchannel + '/' + rstate},
-								function(data, textStatus, xhr) {
-									playlistv = $('.list-group').children();
-									lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
-									lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
-									lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
-									lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
-									lastvarraytm = data[data.length-1].replace(".mp4","");
+					datetoday = new Date();
+					tday = datetoday.getDate();
+					tday = ('0'+tday).slice(-2);
+					tmonth = (datetoday.getMonth() + 1);
+					tmonth = ('0'+tmonth).slice(-2);
+					tnmonharr = datetoday.toString().split(' ');
+					tnmonth = tnmonharr[1];
+					tyear = datetoday.getFullYear();
+					thour = datetoday.getHours();
+					thour = ('0'+thour).slice(-2);
+					tminutes = datetoday.getMinutes();
+					tminutes = ('0'+tminutes).slice(-2);
+					tseconds = datetoday.getSeconds();
+					tseconds = ('0'+tseconds).slice(-2);
+					datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
+					datasel = new Date(selformdate+'T00:00:00');
 
-									if (lastvplaylist != lastvarraytm) {
-										$('#'+lastvplaylistid).parent().removeClass('disabled');
-										$('#'+lastvplaylistid).css('cursor', 'pointer');
-										html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
-																'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
-																'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
-															'</div>'+
-															'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
-														'</a>';
-										nextvideo.append(html);
+					if (datasel < datetodayf) {
+						todaydatesel = false;
+					} else {
+						todaydatesel = true;
+					}
+
+					// console.log(todaydatesel);
+					if (todaydatesel) {
+						$(function() {
+							function refreshlist(rvsource, rdate, rchannel, rstate) {
+								$.post('proxy',
+									{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + rvsource + '/' + rdate + '/' + rchannel + '/' + rstate},
+									function(data, textStatus, xhr) {
+										playlistv = $('.list-group').children();
+										lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
+										lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
+										lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
+										lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
+										lastvarraytm = data[data.length-1].replace(".mp4","");
+
+										if (lastvplaylist != lastvarraytm) {
+											$('#'+lastvplaylistid).parent().removeClass('disabled');
+											$('#'+lastvplaylistid).css('cursor', 'pointer');
+											html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
+																'<div class="checkbox checkbox-warning pull-left">'+
+																	'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+																	'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
+																'</div>'+
+																'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
+															'</a>';
+											nextvideo.append(html);
+										}
 									}
-								}
-							);
-						}
+								);
+							}
 
-						setInterval(function() {
-							refreshlist(vsource, selformdate, channel, state);
-						}, 60000);
-					});
+							setInterval(function() {
+								refreshlist(vsource, selformdate, channel, state);
+							}, 30000);
+						});
+					}
 				});
 
 				function selecteddate(seldddate) {
@@ -778,27 +798,23 @@
 							lastvideo = data[data.length-2].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
 
-							datetoday = new Date();
-							tday = datetoday.getDate();
-							tday = ('0'+tday).slice(-2);
-							tmonth = (datetoday.getMonth() + 1);
-							tmonth = ('0'+tmonth).slice(-2);
-							tnmonharr = datetoday.toString().split(' ');
-							tnmonth = tnmonharr[1];
-							tyear = datetoday.getFullYear();
-							thour = datetoday.getHours();
-							thour = ('0'+thour).slice(-2);
-							tminutes = datetoday.getMinutes();
-							tminutes = ('0'+tminutes).slice(-2);
-							tseconds = datetoday.getSeconds();
-							tseconds = ('0'+tseconds).slice(-2);
+							// datetoday = new Date();
+							// tday = datetoday.getDate();
+							// tday = ('0'+tday).slice(-2);
+							// tmonth = (datetoday.getMonth() + 1);
+							// tmonth = ('0'+tmonth).slice(-2);
+							// tnmonharr = datetoday.toString().split(' ');
+							// tnmonth = tnmonharr[1];
+							// tyear = datetoday.getFullYear();
+							// thour = datetoday.getHours();
+							// thour = ('0'+thour).slice(-2);
+							// tminutes = datetoday.getMinutes();
+							// tminutes = ('0'+tminutes).slice(-2);
+							// tseconds = datetoday.getSeconds();
+							// tseconds = ('0'+tseconds).slice(-2);
 
-							datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
-							// datasel = new Date(selgldate+'T'+thour+':'+tminutes+':'+tseconds);
-							datasel = new Date(selgldate+'T00:00:00');
-
-							console.log(datetodayf);
-							console.log(datasel);
+							// datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
+							// datasel = new Date(selgldate+'T00:00:00');
 
 							$('.vbutton').css('display', 'none');
 							$('.vbutton').removeClass('paused');
@@ -832,8 +848,9 @@
 							$('#btntran').removeAttr('disabled');
 							$('#checkjoincrop').bootstrapToggle('enable');
 
-							if (datasel < datetodayf) {
-								console.log('Data selecionada menor que hoje');
+							if (todaydatesel === false) {
+								// console.log('Data selecionada menor que hoje');
+
 								videoel.attr({
 									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
@@ -864,9 +881,9 @@
 									}
 									nextvideo.append(html);
 								});
-								$('#vnext').scrollTo('.active');
 							} else {
-								console.log('Data selecionada foi hoje');
+								// console.log('Data selecionada foi hoje');
+
 								videoel.attr({
 									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
@@ -905,8 +922,10 @@
 									}
 									nextvideo.append(html);
 								});
-								$('#vnext').scrollTo('.active');
 							}
+
+							mobileconf();
+							$('#vnext').scrollTo('.active')
 						}
 					);
 				}
@@ -915,6 +934,29 @@
 					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 					return this;
 				}
+
+				window.addEventListener("orientationchange", function() {
+					videoplay = $('#vvideo');
+					worientation = window.orientation;
+					if (worientation == 90 || worientation == -90) {
+						// videoplay[0].webkitRequestFullscreen();
+						vfullscreen('vvideo');
+					} else {
+						// document.webkitExitFullscreen();
+						vfullscreen('vvideo');
+					}
+				}, false);
+
+				function mobileconf(){
+					if (isTouchDevice()) {
+						$('#vtitle').css('font-size', '18px');
+						$('#vnext').css('max-height', '150px');
+					}
+				};
+
+				function isTouchDevice() {
+					return true == ("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch);
+				};
 
 				$('#miclient').blur(function(event) {
 					cropfpr = $('#miprogram').val();
