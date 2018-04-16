@@ -330,6 +330,7 @@
 				$('#bigimg').Jcrop(
 					{
 						trueSize: [imageObj.width, imageObj.height],
+						setSelect: [0, 0, 0, 0],
 						boxWidth: timgwidth,
 						boxHeight: timgheight,
 						onSelect: showCoords,

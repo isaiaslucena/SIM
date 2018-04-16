@@ -92,7 +92,7 @@
 						objImage.setAttribute('id', 'uplimg');
 						document.getElementById('wellbigimg').appendChild(objImage);
 
-						setTimeout(function() {console.log('wait 3s')}, 3000);
+						// setTimeout(function() {console.log('wait 3s')}, 3000);
 
 						// console.log(objImage);
 						// insimg = document.getElementById('uplimg');
@@ -122,6 +122,7 @@
 								trueSize: [imgobjctw, imgobjcth],
 								boxWidth: timgwidth,
 								boxHeight: timgheight,
+								setSelect: [0, 0, 0, 0],
 								onSelect: showCoords,
 							},
 							function() {
