@@ -178,14 +178,18 @@ class Pages_model extends CI_Model {
 	}
 
 	public function api_tvc() {
-		$this->db->select('name');
-		$this->db->order_by('name','asc');
-		return $this->db->get('tvsource_info4')->result_array();
+		$this->db->select('*');
+		$this->db->order_by('source','asc');
+		return $this->db->get('knewin_tv')->result_array();
 	}
 
 	public function api_radioc() {
-		$sqlquery = "SELECT name FROM radiosource_info4 WHERE name IN ('Radio CBN - RJ', 'Radio Band News - RJ')";
-		return $this->db->query($sqlquery)->result_array();
+		//$sqlquery = "SELECT name FROM radiosource_info4 WHERE name IN ('Radio CBN - RJ', 'Radio Band News - RJ')";
+		// return $this->db->query($sqlquery)->result_array();
+
+		$this->db->select('*');
+		$this->db->order_by('source','asc');
+		return $this->db->get('knewin_radio')->result_array();
 	}
 
 	//create file with all keywords order by keyword name
@@ -1990,8 +1994,7 @@ class Pages_model extends CI_Model {
 					$datastr = 2;
 				}
 
-				// $path='/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-				$url=$protocol."://".$host.":".$port.$path;
+				$url = $protocol."://".$host.":".$port.$path;
 				$data_string = $datasearch;
 				$header = array(
 					'Content-Type: application/json',

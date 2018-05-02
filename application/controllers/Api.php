@@ -93,18 +93,17 @@ class Api extends CI_Controller {
 					$datasearch['starttime'] = date('H:i:s', $startts);
 					$datasearch['endtime'] = date('H:i:s', $endts);
 					$datasearch['keyword'] = '';
+					$datasearch['vsrctype'] = 'knewin';
 
 					$vtype = $postdata['tipoveiculo'];
 					if ($vtype == 'radio') {
-						$datasearch['vtype'] = 'radioinfo4';
+						$datasearch['vtype'] = 'radio_knewin';
 						if (empty($postdata['veiculo'])) {
-							$datasearch['tvchannel'] = "Radio CBN - RJ,Radio Band News - RJ";
-						} else if (($postdata['veiculo'] == "Radio CBN - RJ") or ($postdata['veiculo'] == "Radio Band News - RJ")) {
-							$datasearch['tvchannel'] = $postdata['veiculo'];
-						} else {
 							header('Content-Type: application/json');
-							print json_encode("Não permitido!", JSON_PRETTY_PRINT);
+							print json_encode("Informe um veiculo!", JSON_PRETTY_PRINT);
 							exit();
+						} else {
+							$datasearch['tvchannel'] = $postdata['veiculo'];
 						}
 					} else if ($vtype == 'tv') {
 						$datasearch['vtype'] = $vtype;
@@ -128,12 +127,11 @@ class Api extends CI_Controller {
 
 					foreach ($searchresult->response->docs as $doc) {
 						$docarray = array(
-							'id' => $doc->id,
-							'tsinicio' => $doc->startdate_l,
-							'tsfim' => $doc->enddate_l,
+							'id' => $doc->id_i,
+							'tsinicio' => $doc->starttime_dt,
+							'tsfim' => $doc->endtime_dt,
 							'veiculo' => $doc->source_s,
-							'editoria' => $doc->name_s,
-							'texto' => $doc->text_t
+							'texto' => $doc->content_t
 						);
 						array_push($result['resultado']['docs'], $docarray);
 					}
