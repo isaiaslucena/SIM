@@ -40,16 +40,6 @@
 
 			video { z-index: 1; }
 
-/*			#vvideo {
-				width: 854px;
-				height: 480px;
-			}
-
-			#thvideo {
-				width: 854px;
-				height: 480px;
-			}*/
-
 			.vbutton {
 				z-index: 5;
 				position: absolute;
@@ -330,8 +320,11 @@
 									<video id="mvvideo" class="embed-responsive-item" width="840" height="480" controls autoplay></video>
 								</div>
 							</div>
-							<div class="col-sm-3 col-md-3 col-lg-3">
+							<div class="col-sm-3 col-md-3 col-lg-3" style="height: 480px">
 								<div class="form-group">
+									<select id="selvinheta" class="selectpicker" data-size="20" data-width="250" data-live-search="true" title="Vinhetas"></select>
+								</div>
+								<!-- <div class="form-group">
 									<input id="miprogram" type="text" class="form-control" placeholder="Programa"/>
 								</div>
 								<div class="form-group">
@@ -345,8 +338,7 @@
 								</div>
 								<div class="form-group">
 									<textarea id="transct" type="text" class="form-control text-justify" rows="10" placeholder="Transcrição"></textarea>
-								</div>
-								<span id="cropvideoload" class="text-muted"></span>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -354,6 +346,7 @@
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> DVD</button> -->
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Web</button> -->
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Baixar</button> -->
+						<span id="cropvideoload" class="text-muted pull-left"></span>
 						<a id="mbtnvdown" class="btn btn-sm btn-default" href="#" download="tempname">
 							<i class="fa fa-download"></i>
 							<?php echo get_phrase('download');?>
@@ -664,7 +657,7 @@
 
 				function selecteddate(seldddate) {
 					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + vsource + '/' + seldddate + '/' + channel + '/' + state},
+						{address: '<?php echo str_replace('sim.','video.', base_url('video/getlist/'))?>' + vsource + '/' + seldddate + '/' + channel + '/' + state},
 						function(data, textStatus, xhr) {
 							lastvideo = data[0].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
@@ -1027,6 +1020,23 @@
 
 					$('.transcmodal').modal('show');
 				});
+
+				function load_vihts() {
+					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
+					$.post('proxy',
+						{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
+						function(data, textStatus, xhr) {
+							$('#selvinheta').html(null);
+							data.map(function(index, elem) {
+								filename = index.replace('.mp4','');
+								html = '<option val="'+filename+'">'+filename+'</option>';
+								$('#selvinheta').append(html);
+							})
+							$('#selvinheta').selectpicker({title: 'Selecione...'}).selectpicker('render');
+							$('#selvinheta').selectpicker('refresh');
+						}
+					);
+				}
 
 				var progresscbar = new ProgressBar.Circle('#progresscrop', {
 					color: '#aaa',

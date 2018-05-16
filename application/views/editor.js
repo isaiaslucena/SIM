@@ -266,6 +266,8 @@
 							}
 						);
 
+						load_vihts();
+
 						if (joinvideos) {
 							$.post('<?php echo base_url("pages/proxy")?>',
 								{address: '<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>' + cfile + '/' + cropstart + '/' + cropdurs},
