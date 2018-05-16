@@ -312,7 +312,7 @@
 														cropfday = datearr[2];
 														cropfch = filenamearr[3];
 														cropfst = filenamearr[4];
-														$('#mbtnvdown').attr({href: videourlmcrop});
+														// $('#mbtnvdown').attr({href: videourlmcrop});
 														croptimeend = new Date();
 														croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
 														$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
@@ -341,11 +341,15 @@
 
 													if (crpercent >= 99) {
 														clearInterval(rprogress);
-														$('#progresscrop').css('display', 'none');
-														$('#mdivvideo').css('display', 'block');
+														// $('#progresscrop').css('display', 'none');
+														// $('#mdivvideo').css('display', 'block');
 
-														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + filecname;
-														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + filecname;
+														$('#progresscrop').fadeOut('fast', function() {
+															$('#mdivvideo').fadeIn('fast');
+														});
+
+														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
+														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
 														$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
 															if (data == "OK") {
 																videomel.attr({src: videourlmcrop});
@@ -366,7 +370,7 @@
 														cropfday = datearr[2];
 														cropfch = filenamearr[3];
 														cropfst = filenamearr[4];
-														$('#mbtnvdown').attr({href: videourlmcrop});
+														// $('#mbtnvdown').attr({href: videourlmcrop});
 														croptimeend = new Date();
 														croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
 														$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
@@ -380,10 +384,31 @@
 					}
 				});
 
+				$('#selvinheta').on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+					vintfile = $(this).val();
+
+					selvinheta = true;
+
+					$('#mbtnv2down').removeClass('disabled');
+					$('#mbtnv2down').removeAttr('disabled');
+				})
+
+				$('#mbtnvdown').click(function(event) {
+					event.preventDefault();
+					// window.location.href = videourlmcrop+'/'+vintfile;
+					window.location.href = videourlmcrop;
+				});
+
+				$('#mbtnv2down').click(function(event) {
+					event.preventDefault();
+					window.location.href = videourlmcrop+'/'+vintfile;
+				});
+
 				$('.cropmodal').on('hide.bs.modal', function(event) {
 					progresscbar.animate(0);
 					videomel[0].pause();
 					videomel.removeAttr('src');
+
 					$('#mdivvideo').css('display', 'none');
 					$('#progresscrop').css('display', 'block');
 					$('#cropvideoload').text(null);
@@ -397,12 +422,18 @@
 					$('#btncstart').append('<i class="fa fa-hourglass-end"></i>');
 					$('#btncstart').removeClass('btn-primary');
 					$('#btncstart').addClass('btn-default');
+
+					$('#mbtnv2down').addClass('disabled');
+					$('#mbtnv2down').attr('disabled', true);
+
 					cropstartss = null;
 					cropendss = null;
 					cropstarts = null;
 					cropends = null;
 					ccrops = false;
 					ccrope = false;
+					selvinheta = false;
+					vintfile = null;
 				});
 
 				$('.jcropmodal').on('hide.bs.modal', function(event) {

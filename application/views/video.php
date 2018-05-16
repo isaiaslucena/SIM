@@ -322,7 +322,7 @@
 							</div>
 							<div class="col-sm-3 col-md-3 col-lg-3" style="height: 480px">
 								<div class="form-group">
-									<select id="selvinheta" class="selectpicker" data-size="20" data-width="250" data-live-search="true" title="Vinhetas"></select>
+									<select id="selvinheta" class="selectpicker" data-size="15" data-width="250" data-live-search="true" title="Vinhetas"></select>
 								</div>
 								<!-- <div class="form-group">
 									<input id="miprogram" type="text" class="form-control" placeholder="Programa"/>
@@ -347,10 +347,19 @@
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Web</button> -->
 						<!-- <button type="button" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Baixar</button> -->
 						<span id="cropvideoload" class="text-muted pull-left"></span>
-						<a id="mbtnvdown" class="btn btn-sm btn-default" href="#" download="tempname">
-							<i class="fa fa-download"></i>
+
+						<button id="mbtnv2down" class="btn btn-sm btn-default">
+							<i id="miconvdown" class="fa fa-download"></i>
+							<i id="mspinvdown" class="fa fa-circle-o-notch fa-spin" style="display: none;"></i>
+							Baixar Teste
+						</button>
+
+						<button id="mbtnvdown" class="btn btn-sm btn-default">
+							<i id="miconvdown" class="fa fa-download"></i>
+							<i id="mspinvdown" class="fa fa-circle-o-notch fa-spin" style="display: none;"></i>
 							<?php echo get_phrase('download');?>
-						</a>
+						</button>
+
 						<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
 						<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Salvar</button>
 					</div>
@@ -419,9 +428,9 @@
 			$(document).ready(function() {
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
-				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl,
+				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadthumbs;
-				var ccrops = false, ccrope = false, joinvideos = false,
+				var ccrops = false, ccrope = false, joinvideos = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false;
 				var cropstartss = null, cropendss = null;
 				var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
@@ -1032,7 +1041,7 @@
 								html = '<option val="'+filename+'">'+filename+'</option>';
 								$('#selvinheta').append(html);
 							})
-							$('#selvinheta').selectpicker({title: 'Selecione...'}).selectpicker('render');
+							$('#selvinheta').selectpicker({title: 'Selecione uma vinheta...'}).selectpicker('render');
 							$('#selvinheta').selectpicker('refresh');
 						}
 					);
