@@ -386,6 +386,7 @@
 
 				$('#selvinheta').on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
 					vintfile = $(this).val();
+					console.log(vintfile);
 
 					selvinheta = true;
 
