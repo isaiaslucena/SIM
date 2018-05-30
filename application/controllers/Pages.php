@@ -2278,17 +2278,17 @@ class Pages extends CI_Controller {
 
 			if (is_null($query)) {
 				$data['search_text'] = $this->input->post('search_text');
-				
+
 				if (is_null($this->input->post('startday'))) {
 					$nowts = strtotime("now");
 					$nowday = date('Y-m-d', $nowts);
 					$nowtime = date('H:i:s', $nowts);
 					$data['startday'] = date('Y-m-d', $nowts);
-        	                        $data['endday'] = date('Y-m-d', $nowts);
-               	        	        #$data['starttime'] = date('H:i:s', $nowts);
-               	        	        $data['starttime'] = '00:00';
-                	                #$data['endtime'] = date('H:i:s', $nowts);
-                	                $data['endtime'] = '23:59';
+					$data['endday'] = date('Y-m-d', $nowts);
+					#$data['starttime'] = date('H:i:s', $nowts);
+					$data['starttime'] = '00:00';
+					#$data['endtime'] = date('H:i:s', $nowts);
+					$data['endtime'] = '23:59';
 				} else {
 					$data['startday'] = $this->input->post('startday');
 					$data['endday'] = $this->input->post('endday');
@@ -2298,7 +2298,7 @@ class Pages extends CI_Controller {
 
 				$data['pageselected'] = $pageselected;
 				$data['start'] = 0;
-				
+
 				$data['search_result'] = $this->pages_model->crawler_search_result($data, $start, $qrows);
 			} else {
 				$searchqjson = base64_decode($query);

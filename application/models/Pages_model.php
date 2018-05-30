@@ -2094,13 +2094,13 @@ class Pages_model extends CI_Model {
 				$order = "asc";
 			} else {
 				$data = array(
-					"query" => "_text_:\"".$searchdata['search_text']."\""
+					"query" => "_text_:".$searchdata['search_text']
 				);
 				$order = "desc";
 			}
 
-                     	$path = '/solr/crawler/query?wt=json&start='.$start.'&rows='.$qrows.'&sort=inserted_dt+'.$order;
-                     	$url = $protocol."://".$host.":".$port.$path;			
+     	$path = '/solr/crawler/query?wt=json&start='.$start.'&rows='.$qrows.'&sort=inserted_dt+'.$order;
+     	$url = $protocol."://".$host.":".$port.$path;
 			$data_string = json_encode($data);
 			$header = array(
 				'Content-Type: application/json',
