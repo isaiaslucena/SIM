@@ -217,7 +217,7 @@
 							</div>
 						</div>
 
-						<select id="selchannels" class="selectpicker" data-size="10" data-width="180" data-live-search="true" title="Selecione uma data" disabled></select>
+						<select id="selchannels" class="selectpicker" data-size="10" data-width="100" data-live-search="true" title="Selecione uma data" disabled></select>
 					</div>
 				</div>
 			</div>
@@ -698,6 +698,31 @@
 														'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 													'</a>';
 								}
+
+								// if (file == lastvideo) {
+								// 	html =	'<div id="vbtn'+index+'" class="list-group-item active">'+
+								// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+								// 						'<p class="list-group-item-text">'+
+								// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+								// 							'<div class="checkbox checkbox-warning pull-left">'+
+								// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+								// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+								// 							'</div>'+
+								// 						'</p>'+
+								// 					'</div>';
+								// } else {
+								// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
+								// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+								// 						'<p class="list-group-item-text">'+
+								// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+								// 							'<div class="checkbox checkbox-warning pull-left">'+
+								// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+								// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+								// 							'</div>'+
+								// 						'</p>'+
+								// 					'</div>';
+								// }
+
 								nextvideo.append(html);
 							});
 
@@ -881,6 +906,30 @@
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									}
+
+									// if (file == lastvideo) {
+									// 	html =	'<div id="vbtn'+index+'" class="list-group-item active">'+
+									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+									// 						'<p class="list-group-item-text">'+
+									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+									// 							'<div class="checkbox checkbox-warning pull-left">'+
+									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+									// 							'</div>'+
+									// 						'</p>'+
+									// 					'</div>';
+									// } else {
+									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
+									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+									// 						'<p class="list-group-item-text">'+
+									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+									// 							'<div class="checkbox checkbox-warning pull-left">'+
+									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+									// 							'</div>'+
+									// 						'</p>'+
+									// 					'</div>';
+									// }
 									nextvideo.append(html);
 								});
 							} else {
@@ -922,6 +971,42 @@
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									}
+
+
+									// if (file == lastvideo) {
+									// 	html =	'<div id="vbtn'+index+'" class="list-group-item disabled">'+
+									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+									// 						'<p class="list-group-item-text">'+
+									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+									// 							'<div class="checkbox checkbox-warning pull-left">'+
+									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+									// 							'</div>'+
+									// 						'</p>'+
+									// 					'</div>';
+									// } else if (file == lastvarray) {
+									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
+									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+									// 						'<p class="list-group-item-text">'+
+									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+									// 							'<div class="checkbox checkbox-warning pull-left">'+
+									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+									// 							'</div>'+
+									// 						'</p>'+
+									// 					'</div>';
+									// } else {
+									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
+									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
+									// 						'<p class="list-group-item-text">'+
+									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
+									// 							'<div class="checkbox checkbox-warning pull-left">'+
+									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+									// 							'</div>'+
+									// 						'</p>'+
+									// 					'</div>';
+									// }
 									nextvideo.append(html);
 								});
 							}

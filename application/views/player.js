@@ -540,7 +540,7 @@
 					aid = $(event.target).attr('data-aid');
 					disclass = $('#'+aid).hasClass('disabled');
 					if (disclass == false) {
-						if (elclick == "SPAN") {
+						if (elclick == "SPAN" || elclick == "H4") {
 							clearInterval(loadthumbs);
 							cfilename = event.target.innerText;
 							cfilevsource = event.target.dataset.vsrc;
