@@ -24,6 +24,10 @@
 		} else {
 			$pageselectedend = $pageselected;
 		}
+
+		if (!isset($id_client)) {
+			$id_client = 0;
+		}
 	?>
 
 		<style type="text/css">
@@ -406,10 +410,6 @@
 
 							if (isset($story->content_t[0])) {
 								$stext = $story->content_t[0];
-							}
-
-							if (!isset($id_client)) {
-								$id_client = 0;
 							}
 
 							?>
