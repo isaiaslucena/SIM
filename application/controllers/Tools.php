@@ -128,4 +128,17 @@ class Tools extends CI_Controller {
 		$this->load->view('home',$data);
 		$this->load->view('footer',$data_navbar);
 	}
+
+	public function mags_links() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$postdata = ($_POST = json_decode(file_get_contents("php://input"), true));
+
+			var_dump($postdata);
+
+			// $magname = $postdata['magname'];
+			// $link = $postdata['link'];
+		} else {
+			header("HTTP/1.1 405 Method Not Allowed");
+		}
+	}
 }
