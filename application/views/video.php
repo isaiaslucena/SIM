@@ -460,6 +460,14 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
+				if (window.Worker) {
+					imgworker = new Worker('/assets/imgworker.js');
+				}
+
+				// imgworker.onmessage = function(event) {
+					// console.log(event.data);
+				// }
+
 				function channelname(name) {
 					switch (name) {
 						case "CULTURA-HD":

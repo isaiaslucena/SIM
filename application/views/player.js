@@ -131,6 +131,12 @@
 											nimage[thumbn] = new Image();
 											imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
 											nimage[thumbn].src = imgsrc;
+
+											// imgworker.postMessage({
+											// 	'file': vdfilename,
+											// 	'thumbn': nthumbn,
+											// 	'imgsrc': imgsrc
+											// });
 										}
 									});
 									clearInterval(loadthumbs);
@@ -145,6 +151,12 @@
 										nimage[thumbn] = new Image();
 										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
 										nimage[thumbn].src = imgsrc;
+
+										// imgworker.postMessage({
+										// 	'file': vdfilename,
+										// 	'thumbn': nthumbn,
+										// 	'imgsrc': imgsrc
+										// });
 									}
 									clearInterval(loadthumbs);
 								}
