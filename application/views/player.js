@@ -169,7 +169,13 @@
 										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
 										nimage[thumbn].src = imgsrc;
 										nimage[thumbn].onload = function(e) {
-											loadedsrc = e.path[0].src;
+											// console.log(e);
+											if (navigator.vendor == 'Google Inc.') {
+												loadedsrc = e.path[0].src;
+											} else {
+												loadedsrc = e.target.src;
+											}
+
 											ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
 											ldtmbn = parseInt(ldtmbnarr[1]);
 											if (ldtmbn === maxthumb) {
@@ -186,7 +192,14 @@
 										};
 
 										nimage[thumbn].onerror = function(e) {
-											loadedsrc = e.path[0].src;
+											// console.log(e);
+
+											if (navigator.vendor == 'Google Inc.') {
+												loadedsrc = e.path[0].src;
+											} else {
+												loadedsrc = e.target.src;
+											}
+
 											ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
 											ldtmbn = parseInt(ldtmbnarr[1]);
 											if (ldtmbn === maxthumb) {
