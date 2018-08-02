@@ -13,7 +13,8 @@
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-select/js/bootstrap-select.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.js');?>"></script>
-		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
+		<!-- <script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script> -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.js"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js');?>"></script>
 		<script src="<?php echo base_url('assets/progressbarjs/dist/progressbar.min.js');?>"></script>
@@ -22,7 +23,8 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-select/css/bootstrap-select.min.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.css');?>">
-		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
+		<!-- <link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>"> -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.css"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
 
@@ -38,7 +40,10 @@
 
 			textarea { resize: none; }
 
-			video { z-index: 1; }
+			video {
+				z-index: 1;
+				object-fit: inherit;
+			}
 
 			.vbutton {
 				z-index: 5;
@@ -190,6 +195,10 @@
 				height: 480px;
 				display: none;
 			}
+
+			.swal2-popup {
+				font-size: 1.6rem !important;
+			}
 		</style>
 	</head>
 	<body>
@@ -224,15 +233,16 @@
 
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-						<div class="embed-responsive embed-responsive-16by9">
+						<!-- <div class="embed-responsive embed-responsive-16by9"> -->
+						<div>
 							<div id="vvideobtn" class='vbutton' style="display: none"></div>
-							<video id="vvideo" class="center-block embed-responsive-item" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay></video>
-							<img id="thvideo" class="center-block embed-responsive-item" style="display: none;">
+							<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="854" height="480" preload="metadata" autoplay="false"></video>
+							<img id="thvideo" class="center-block"  width="854" height="480" style="display: none;">
 						</div>
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 495px"></div>
+					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px"></div>
 				</div>
 			</div>
 
@@ -429,7 +439,7 @@
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
-				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadthumbs;
+				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
 				var ccrops = false, ccrope = false, joinvideos = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false;
 				var cropstartss = null, cropendss = null;
@@ -680,8 +690,8 @@
 							lastvarray = data[data.length-1].replace(".mp4","");
 							videoel.removeAttr('loop');
 							videoel.attr({
-								poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
-								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/' + vsource + '_' + lastvideo
+								poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
+								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
 							});
 
 							videotitle.text(lastvideo);
@@ -887,9 +897,13 @@
 								// console.log('Data selecionada menor que hoje');
 
 								videoel.attr({
-									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
+									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+firstvideo+'/001',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
 								});
+
+								videoel[0].pause();
+
+								loadingthumbs();
 
 								videotitle.text(firstvideo);
 								videotitle.attr('data-vsrc', selglvsource);
@@ -944,9 +958,13 @@
 								// console.log('Data selecionada foi hoje');
 
 								videoel.attr({
-									poster: '<?php echo base_url('assets/imgs/videoloading.gif')?>',
+									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
 								});
+
+								videoel[0].pause();
+
+								loadingthumbs();
 
 								videotitle.text(lastvideo);
 								videotitle.attr('data-vsrc', selglvsource);

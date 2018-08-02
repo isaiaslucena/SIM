@@ -103,7 +103,7 @@
 				});
 
 				videoel.on('loadedmetadata', function() {
-					loadthumbs = setInterval(function() {
+					// loadthumbs = setInterval(function() {
 						vvideosrc = videoel[0].currentSrc;
 						if (vvideosrc.match(vvideosrcsearch) == null) {
 							vduration = videoel[0].duration;
@@ -131,6 +131,23 @@
 											nimage[thumbn] = new Image();
 											imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
 											nimage[thumbn].src = imgsrc;
+											// nimage[thumbn].onload = function(e) {
+											// 	loadedsrc = e.path[0].src;
+											// 	ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
+											// 	ldtmbn = parseInt(ldtmbnarr[1]);
+											// 	if (ldtmbn === maxthumb) {
+											// 		// console.log('last thumb loaded!');
+											// 		// console.log(typeof ldtmbn);
+											// 		// console.log(typeof maxthumb);
+											// 		// console.log('ldtmbn: '+ldtmbn);
+											// 		// console.log('maxthumb: '+maxthumb);
+											// 		// console.log(e);
+
+											// 		closeloadingthumbs();
+
+											// 		videoel[0].play();
+											// 	}
+											// };
 
 											// imgworker.postMessage({
 											// 	'file': vdfilename,
@@ -139,7 +156,7 @@
 											// });
 										}
 									});
-									clearInterval(loadthumbs);
+									// clearInterval(loadthumbs);
 								}
 							} else {
 								vdfilename = videotitle.text();
@@ -151,6 +168,32 @@
 										nimage[thumbn] = new Image();
 										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
 										nimage[thumbn].src = imgsrc;
+										nimage[thumbn].onload = function(e) {
+											loadedsrc = e.path[0].src;
+											ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
+											ldtmbn = parseInt(ldtmbnarr[1]);
+											if (ldtmbn === maxthumb) {
+												// console.log('last thumb loaded!');
+												// console.log(typeof ldtmbn);
+												// console.log(typeof maxthumb);
+												// console.log('ldtmbn: '+ldtmbn);
+												// console.log('maxthumb: '+maxthumb);
+												// console.log(e);
+
+												closeloadingthumbs();
+												videoel[0].play();
+											}
+										};
+
+										nimage[thumbn].onerror = function(e) {
+											loadedsrc = e.path[0].src;
+											ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
+											ldtmbn = parseInt(ldtmbnarr[1]);
+											if (ldtmbn === maxthumb) {
+												closeloadingthumbs();
+												videoel[0].play();
+											}
+										};
 
 										// imgworker.postMessage({
 										// 	'file': vdfilename,
@@ -158,11 +201,11 @@
 										// 	'imgsrc': imgsrc
 										// });
 									}
-									clearInterval(loadthumbs);
+									// clearInterval(loadthumbs);
 								}
 							}
 						}
-					}, 5000);
+					// }, 5000);
 				});
 
 				videoel.on('timeupdate', function() {
@@ -199,7 +242,7 @@
 								nextvideoname = nextvideol.lastChild.innerText;
 								nextvideosrc = nextvideol.lastChild.dataset.vsrc;
 								videoel.attr({
-									poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+nextvideosrc+'_'+nextvideoname+'/001',
 									src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + nextvideosrc + '_' + nextvideoname
 								});
 								videotitle.text(nextvideoname);
@@ -553,7 +596,8 @@
 					disclass = $('#'+aid).hasClass('disabled');
 					if (disclass == false) {
 						if (elclick == "SPAN" || elclick == "H4") {
-							clearInterval(loadthumbs);
+							// clearInterval(loadthumbs);
+
 							cfilename = event.target.innerText;
 							cfilevsource = event.target.dataset.vsrc;
 
@@ -561,9 +605,13 @@
 							$('.vbutton').removeClass('paused');
 
 							videoel.attr({
-								poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+								poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+cfilevsource+'_'+cfilename+'/001',
 								src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 							});
+
+							videoel[0].pause();
+
+							loadingthumbs();
 
 							videotitle.text(cfilename);
 							videotitle.attr('data-vsrc', cfilevsource);
@@ -572,6 +620,7 @@
 							$('.list-group').children().removeClass('active');
 							event.target.parentElement.className += ' active';
 							joinvideos = false;
+
 						} else if (elclick == "INPUT") {
 							ccbjoincrop = $('#checkjoincrop').prop('checked');
 							if (ccbjoincrop) {
@@ -597,6 +646,28 @@
 						}
 					}
 				});
+
+				function loadingthumbs() {
+					$('body').css('cursor', 'progress');
+
+					swal({
+						onOpen: () => {
+							swal.showLoading()
+						},
+						title: "Carregando...",
+						animation: false,
+						allowEscapeKey: false,
+						allowOutsideClick: false,
+						showCancelButton: false,
+						showConfirmButton: false,
+					});
+				}
+
+				function closeloadingthumbs() {
+					$('body').css('cursor', 'default');
+
+					swal.close();
+				}
 
 				$('#checkjoincrop').change(function() {
 					joinchkbx = $('.list-group input:checked').length > 0;
