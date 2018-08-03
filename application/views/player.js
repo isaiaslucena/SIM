@@ -622,9 +622,13 @@
 								src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 							});
 
-							videoel[0].pause();
+							if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
+								videoel[0].pause();
 
-							loadingthumbs();
+								loadingthumbs();
+							} else {
+								videoel[0].play();
+							}
 
 							videotitle.text(cfilename);
 							videotitle.attr('data-vsrc', cfilevsource);
