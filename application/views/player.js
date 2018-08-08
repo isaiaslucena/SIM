@@ -176,7 +176,9 @@
 												loadedsrc = e.target.src;
 											}
 
-											ldtmbnarr = loadedsrc.replace('http://video.intranet.dataclip/video/getthumb/', '').split('/');
+											urlload = window.location.origin;
+											urlload = urlload.replace('sim.', 'video.');
+											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 											ldtmbn = parseInt(ldtmbnarr[1]);
 											if (ldtmbn === maxthumb) {
 												// console.log('last thumb loaded!');
