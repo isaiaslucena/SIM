@@ -73,13 +73,13 @@
 								$startff = $firstpage;
 								$startf = $startff - 10; ?>
 								<li>
-									<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
+									<a href="<?php echo base_url('pages/search_result/radio_novo/'.$totalpagesstart.'/'.$query.'/'.$startf)?>" aria-label="Previous"><span aria-hidden="true"><?php echo get_phrase('previous')?></span></a>
 							<?php } ?>
 							</li>
 						<?php
 						if ($pageselected == $totalpages) { ?>
 							<li>
-								<a href="<?php echo base_url('pages/search_result/radio_knewin/1/'.$query.'/0')?>">1</a>
+								<a href="<?php echo base_url('pages/search_result/radio_novo/1/'.$query.'/0')?>">1</a>
 							</li>
 							<li class="disabled">
 								<a>...<span class="sr-only"></span></a>
@@ -95,7 +95,7 @@
 									<a><?php echo $page; ?></a>
 								<?php } else { ?>
 								<li>
-									<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+									<a href="<?php echo base_url('pages/search_result/radio_novo/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
 								<?php } ?>
 								</li>
 							<?php }
@@ -113,7 +113,7 @@
 										<a><?php echo $page; ?></a>
 									<?php } else { ?>
 										<li>
-										<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
+										<a href="<?php echo base_url('pages/search_result/radio_novo/'.$page.'/'.$query.'/'.$startf)?>"><?php echo $page; ?></a>
 									<?php }
 								} ?>
 								</li>
@@ -129,7 +129,7 @@
 								<a>...<span class="sr-only"></span></a>
 							</li>
 							<li>
-							<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
+							<a href="<?php echo base_url('pages/search_result/radio_novo/'.$totalpages.'/'.$query.'/'.$totalpagesend)?>"><?php echo $totalpages?><span class="sr-only"></span></a>
 							<?php } ?>
 							</li>
 						<?php
@@ -141,7 +141,7 @@
 							$startff = $firstpage;
 							$startf = $startff + 10; ?>
 							<li>
-							<a href="<?php echo base_url('pages/search_result/radio_knewin/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
+							<a href="<?php echo base_url('pages/search_result/radio_novo/'.$page.'/'.$query.'/'.$startf)?>" aria-label="Next"><span aria-hidden="true"><?php echo get_phrase('next')?></i></span></a>
 						<?php }
 						?>
 						</li>
@@ -271,7 +271,7 @@
 										</button>
 
 										<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
-										<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+										<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
 											<input type="hidden" name="sid" value="<?php echo $sid;?>">
 											<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 											<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -441,7 +441,7 @@
 										</button>
 
 										<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
-										<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+										<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
 											<input type="hidden" name="sid" value="<?php echo $sid;?>">
 											<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 											<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -518,7 +518,7 @@
 			<small id="fileslist"></small>
 		</div>
 		<button id="joinbtn" class="btn btn-default btn-block btn-sm disabled" disabled><?php echo get_phrase('join')?></button>
-		<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_knewin');?>" target="_blank" method="POST">
+		<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_novo');?>" target="_blank" method="POST">
 			<input type="hidden" id="jids_doc" name="ids_doc">
 			<input type="hidden" id="jid_client" name="id_client">
 			<input type="hidden" id="jid_keyword" name="id_keyword">
@@ -542,7 +542,7 @@
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-startdate');
 
-			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;
@@ -643,7 +643,7 @@
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-enddate');
 
-			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
+			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;

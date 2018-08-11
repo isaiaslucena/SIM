@@ -57,10 +57,10 @@
 					</div>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-4">
 				<div class="panel panel-default">
-					<div class="panel-heading text-center">Radio Knewin</div>
+					<div class="panel-heading text-center">Radio novo</div>
 					<div class="panel-body">
 						<div class="table-responsive">
 							<table class="table table-hover" id="<?php echo $datatablename;?>">
@@ -72,7 +72,7 @@
 								</thead>
 								<tbody>
 									<?php
-										$todaydiscardinfo = $this->pages_model->report_users('discard_radio_knewin', $startdate, $enddate);
+										$todaydiscardinfo = $this->pages_model->report_users('discard_radio_novo', $startdate, $enddate);
 										foreach ($todaydiscardinfo as $tdinfo) { ?>
 											<tr>
 												<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
@@ -82,14 +82,14 @@
 								</tbody>
 							</table>
 						</div>
-						<div id="rknewindchart" class="donutchart" style="height: 250px;"></div>
+						<div id="rnovodchart" class="donutchart" style="height: 250px;"></div>
 					</div>
 				</div>
 			</div>
-			<!-- TV Knewin -->
+			<!-- TV novo -->
 			<div class="col-lg-4">
 				<div class="panel panel-default">
-					<div class="panel-heading text-center">TV Knewin</div>
+					<div class="panel-heading text-center">TV novo</div>
 					<div class="panel-body">
 						<div class="table-responsive">
 							<table class="table table-hover" id="<?php echo $datatablename;?>">
@@ -101,7 +101,7 @@
 								</thead>
 								<tbody>
 									<?php
-										$todaydiscardinfo = $this->pages_model->report_users('discard_tv_knewin', $startdate, $enddate);
+										$todaydiscardinfo = $this->pages_model->report_users('discard_tv_novo', $startdate, $enddate);
 										foreach ($todaydiscardinfo as $tdinfo) { ?>
 											<tr>
 												<td class="text-center"><a href="<?php echo base_url('pages/report_user/discard/'.$tdinfo['id_user'].'/'.$startdate.'/'.$enddate)?>"><?php echo $tdinfo['username']; ?></a></td>
@@ -111,7 +111,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div id="tknewindchart" class="donutchart" style="height: 250px;"></div>
+						<div id="tnovodchart" class="donutchart" style="height: 250px;"></div>
 					</div>
 				</div>
 			</div>

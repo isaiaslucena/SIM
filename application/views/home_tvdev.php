@@ -66,15 +66,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
 
-													$discardeddocs = $this->pages_model->discarded_docs_knewin_tv($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_tv_knewin($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+													$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
 													$keyword_foundc = count($keyword_found->response->docs);
 													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
 
 													$ic = null;
 													if ($allkeyword_foundc != 0) { ?>
-														<form style="all: unset;" action="<?php echo base_url('pages/tv_knewin_home_keyword');?>" method="post">
+														<form style="all: unset;" action="<?php echo base_url('pages/tv_novo_home_keyword');?>" method="post">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 															<input type="hidden" name="startdate" value="<?php echo $startdate;?>">

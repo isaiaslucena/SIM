@@ -89,7 +89,7 @@
 							</button>
 
 							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
-							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -153,7 +153,7 @@
 				idsource = $(this).attr('data-idsource');
 				startdate = $(this).attr('data-startdate');
 				
-				$.get('<?php echo base_url('pages/get_tv_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+				$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 					// console.log(data);
 					loadp.children('i').css('display', 'none');
 					numfound = data.response.numFound;
@@ -251,7 +251,7 @@
 				idsource = $(this).attr('data-idsource');
 				startdate = $(this).attr('data-enddate');
 				
-				$.get('<?php echo base_url('pages/get_tv_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
+				$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
 					// console.log(data);
 					loadp.children('i').css('display', 'none');
 					numfound = data.response.numFound;
@@ -428,7 +428,7 @@
 				idclient = discardbtn.attr('data-idclient');
 				iduser = '<?php echo $this->session->userdata("id_user");?>';
 				
-				$.post('<?php echo base_url("pages/discard_doc_tv_knewin")?>',
+				$.post('<?php echo base_url("pages/discard_doc_tv_novo")?>',
 					{
 						'iddoc': iddoc,
 						'idkeyword': idkeyword,

@@ -156,7 +156,7 @@ class Pages_model extends CI_Model {
 		return $this->db->get('radio')->result_array();
 	}
 
-	public function radios_knewin() {
+	public function radios_novo() {
 		$this->db->order_by('source','asc');
 		return $this->db->get('knewin_radio')->result_array();
 	}
@@ -167,7 +167,7 @@ class Pages_model extends CI_Model {
 		return $this->db->get('tvsource_info4')->result_array();
 	}
 
-	public function tvc_knewin() {
+	public function tvc_novo() {
 		$this->db->order_by('source','asc');
 		return $this->db->get('knewin_tv')->result_array();
 	}
@@ -436,14 +436,14 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
-	public function discarded_docs_knewin_radio($data_discarded) {
+	public function discarded_docs_novo_radio($data_discarded) {
 		$sqlquery =	"SELECT id_doc FROM discard_keyword_radio_knewin
 								WHERE id_client = ".$data_discarded['id_client']." AND id_keyword = ".$data_discarded['id_keyword']." AND
 								timestamp >= '".$data_discarded['startdate']."' AND timestamp <= '".$data_discarded['enddate']."'";
 		return $this->db->query($sqlquery)->result_array();
 	}
 
-	public function discarded_docs_knewin_tv($data_discarded) {
+	public function discarded_docs_novo_tv($data_discarded) {
 		$sqlquery =	'SELECT id_doc FROM discard_keyword_tv_knewin
 						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
 		return $this->db->query($sqlquery)->result_array();
@@ -503,7 +503,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio_knewin($ids_doc, $keyword, $startdate, $enddate) {
+	public function docs_byid_radio_novo($ids_doc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -555,7 +555,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_tv_knewin($ids_doc, $keyword, $startdate, $enddate) {
+	public function docs_byid_tv_novo($ids_doc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -1016,7 +1016,7 @@ class Pages_model extends CI_Model {
 		$this->db->insert('discard_keyword', $data_insert_discard);
 	}
 
-	public function discard_doc_radio_knewin($data_discard) {
+	public function discard_doc_radio_novo($data_discard) {
 		$data_insert_discard = array(
 			'id_doc' => $data_discard['id_doc'],
 			'id_client' => $data_discard['id_client'],
@@ -1027,7 +1027,7 @@ class Pages_model extends CI_Model {
 		$this->db->insert('discard_keyword_radio_knewin', $data_insert_discard);
 	}
 
-	public function discard_doc_tv_knewin($data_discard) {
+	public function discard_doc_tv_novo($data_discard) {
 		$data_insert_discard = array(
 			'id_doc' => $data_discard['id_doc'],
 			'id_client' => $data_discard['id_client'],
@@ -1077,7 +1077,7 @@ class Pages_model extends CI_Model {
 		return $finaltempurl;
 	}
 
-	public function crop_knewin($starttime, $endtime, $urlmp3) {
+	public function crop_novo($starttime, $endtime, $urlmp3) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
@@ -1129,7 +1129,7 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function crop_info_radio_knewin($data) {
+	public function crop_info_radio_novo($data) {
 		$data_insert_info = array(
 			'id_doc' => $data['id_doc'],
 			'id_join_info' => $data['id_join_info'],
@@ -1157,13 +1157,13 @@ class Pages_model extends CI_Model {
 		$this->db->update('crop_info_edit_audio');
 	}
 
-	public function crop_info_radio_knewin_download($cropid) {
+	public function crop_info_radio_novo_download($cropid) {
 		$this->db->set('download_timestamp', strtotime("now"));
 		$this->db->where('id_crop_info', $cropid);
 		$this->db->update('crop_info_radio_knewin');
 	}
 
-	public function crop_info_tv_knewin($data) {
+	public function crop_info_tv_novo($data) {
 		$data_insert_info = array(
 			'id_doc' => $data['id_doc'],
 			'id_user' => $data['id_user'],
@@ -1262,7 +1262,7 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function join_radio_knewin($idsdocs) {
+	public function join_radio_novo($idsdocs) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
@@ -1299,7 +1299,7 @@ class Pages_model extends CI_Model {
 		return $datadoc;
 	}
 
-	public function join_info_radio_knewin($data) {
+	public function join_info_radio_novo($data) {
 		$data_insert_info = array(
 			'ids_docs' => json_encode($data['ids_docs']),
 			'id_user' => $data['id_user'],

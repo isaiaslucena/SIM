@@ -86,7 +86,7 @@
 							</button>
 
 							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
-							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_knewin');?>" target="_blank" method="POST">
+							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -123,7 +123,7 @@
 				<small id="fileslist"></small>
 			</div>
 			<button id="joinbtn" class="btn btn-default btn-block btn-sm disabled" disabled><?php echo get_phrase('join')?></button>
-			<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_knewin');?>" target="_blank" method="POST">
+			<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_novo');?>" target="_blank" method="POST">
 				<input type="hidden" id="jids_doc" name="ids_doc">
 				<input type="hidden" id="jid_client" name="id_client">
 				<input type="hidden" id="jid_keyword" name="id_keyword">
@@ -166,7 +166,7 @@
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-startdate');
 
-			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;
@@ -267,7 +267,7 @@
 			idsource = $(this).attr('data-idsource');
 			startdate = $(this).attr('data-enddate');
 
-			$.get('<?php echo base_url('pages/get_radio_knewin/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
+			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
 				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;
@@ -443,7 +443,7 @@
 			idclient = discardbtn.attr('data-idclient');
 			iduser = '<?php echo $this->session->userdata("id_user");?>';
 
-			$.post('<?php echo base_url("pages/discard_doc_radio_knewin")?>',
+			$.post('<?php echo base_url("pages/discard_doc_radio_novo")?>',
 				{
 					'iddoc': iddoc,
 					'idkeyword': idkeyword,
@@ -460,7 +460,7 @@
 
 					if (totalpanelsd == totalpanels) {
 						console.log('no more panels!');
-						window.location = '<?php echo base_url("pages/index_radio_knewin")?>';
+						window.location = '<?php echo base_url("pages/index_radio_novo")?>';
 					}
 				}
 			);

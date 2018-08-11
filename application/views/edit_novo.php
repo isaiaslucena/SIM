@@ -1,22 +1,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-if (isset($knewindoc)) {
+if (isset($novodoc)) {
 	$timezone = new DateTimeZone('UTC');
-	$sd = new Datetime($knewindoc->response->docs[0]->starttime_dt);
-	$ed = new Datetime($knewindoc->response->docs[0]->endtime_dt);
+	$sd = new Datetime($novodoc->response->docs[0]->starttime_dt);
+	$ed = new Datetime($novodoc->response->docs[0]->endtime_dt);
 	$newtimezone = new DateTimeZone('America/Sao_Paulo');
 	$sd->setTimezone($newtimezone);
 	$ed->setTimezone($newtimezone);
 	$sstartdate = $sd->format('d/m/Y H:i:s');
 	$senddate = $ed->format('d/m/Y H:i:s');
 
-	$idknewin = $knewindoc->response->docs[0]->id_i;
-	$rstartdate = $knewindoc->response->docs[0]->starttime_dt;
-	$renddate = $knewindoc->response->docs[0]->endtime_dt;
-	$ssource = $knewindoc->response->docs[0]->source_s;
-	$mediaurl = $knewindoc->response->docs[0]->mediaurl_s;
-	$content = $knewindoc->response->docs[0]->content_t[0];
+	$idnovo = $novodoc->response->docs[0]->id_i;
+	$rstartdate = $novodoc->response->docs[0]->starttime_dt;
+	$renddate = $novodoc->response->docs[0]->endtime_dt;
+	$ssource = $novodoc->response->docs[0]->source_s;
+	$mediaurl = $novodoc->response->docs[0]->mediaurl_s;
+	$content = $novodoc->response->docs[0]->content_t[0];
 } else {
 	$timezone = new DateTimeZone('UTC');
 	$sd = new Datetime($starttime_dt);
@@ -27,10 +27,10 @@ if (isset($knewindoc)) {
 	$sstartdate = $sd->format('d/m/Y H:i:s');
 	$senddate = $ed->format('d/m/Y H:i:s');
 
-	if (isset($idknewin)) {
-		$idknewin = $id_i;
+	if (isset($idnovo)) {
+		$idnovo = $id_i;
 	} else {
-		$idknewin = 0;
+		$idnovo = 0;
 	}
 	$rstartdate = $starttime_dt;
 	$renddate = $endtime_dt;
@@ -98,21 +98,21 @@ if (isset($knewindoc)) {
 						<a id="btnpbrate" type="button" class="btn btn-default" title="Aumentar velocidade"><i class="fa fa-angle-double-right"></i></a>
 						<a id="btncstart" type="button" class="btn btn-default" title="Marcar início"><i class="fa fa-hourglass-start"></i></a>
 						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
-						<button id="btncrop" type="submit" form="cropknewin" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></button>
+						<button id="btncrop" type="submit" form="cropnovo" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></button>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-lg-12">
-					<form id="cropknewin" action="<?php echo site_url('pages/crop_knewin'); ?>" method="post" accept-charset="utf-8" style="display: none;">
+					<form id="cropnovo" action="<?php echo site_url('pages/crop_novo'); ?>" method="post" accept-charset="utf-8" style="display: none;">
 						<input type="text" id="starttime" name="starttime">
 						<input type="text" id="endtime" name="endtime">
 						<input type="text" id="ssource" name="ssource" value="<?php echo $ssource; ?>">
 						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>">
 						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>">
 						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>">
-						<input type="text" id="id_doc" name="id_doc" value="<?php echo $idknewin; ?>">
+						<input type="text" id="id_doc" name="id_doc" value="<?php echo $idnovo; ?>">
 						<input type="text" id="id_join_info" name="id_join_info" value="<?php echo isset($id_join_info) ? $id_join_info : '' ?>">
 						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>">
 						<input type="text" id="startdate" name="startdate" value="<?php echo $rstartdate; ?>">

@@ -18,9 +18,9 @@ class Pages extends CI_Controller {
 					'last_page' => base_url('pages/index')
 				);
 				$this->session->set_userdata($sessiondata);
-				$data_navbar['vtype'] = 'radio_knewin';
-				$data_navbar['selected_page'] = 'home_radio_knewin';
-				$data['page'] = 'pages/home_radio_knewin';
+				$data_navbar['vtype'] = 'radio_novo';
+				$data_navbar['selected_page'] = 'home_radio_novo';
+				$data['page'] = 'pages/home_radio_novo';
 			} else if ($id_group == 4) {
 				$sessiondata = array(
 					'view' => 'index',
@@ -72,7 +72,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function index_radio_knewin() {
+	public function index_radio_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$id_user = $this->session->userdata('id_user');
 			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
@@ -81,15 +81,15 @@ class Pages extends CI_Controller {
 
 			if ($id_group == 1 or $id_group == 5) {
 				$sessiondata = array(
-					'view' => 'index_radio_knewin',
+					'view' => 'index_radio_novo',
 					'last_page' => base_url('pages/index')
 				);
 				$this->session->set_userdata($sessiondata);
-				$data['page'] = 'pages/home_radio_knewin';
+				$data['page'] = 'pages/home_radio_novo';
 				$data['selected_date'] = 'today';
-				$data_navbar['selected_page'] = 'home_radio_knewin';
+				$data_navbar['selected_page'] = 'home_radio_novo';
 				$data_navbar['selected_date'] = 'today';
-				$data_navbar['vtype'] = 'radio_knewin';
+				$data_navbar['vtype'] = 'radio_novo';
 
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);
@@ -99,7 +99,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -294,8 +294,8 @@ class Pages extends CI_Controller {
 				case 'radio':
 					$this->home_radio($selecteddate, $limit, $offset);
 					break;
-				case 'radio_knewin':
-					$this->home_radio_knewin($selecteddate, $limit, $offset);
+				case 'radio_novo':
+					$this->home_radio_novo($selecteddate, $limit, $offset);
 					break;
 				case 'tv':
 					$this->home_tv($selecteddate, $limit, $offset);
@@ -333,8 +333,8 @@ class Pages extends CI_Controller {
 				case 'radio':
 					$data_navbar['selected_page'] = 'home_radio';
 					break;
-				case 'radio_knewin':
-					$data_navbar['selected_page'] = 'home_radio_knewin';
+				case 'radio_novo':
+					$data_navbar['selected_page'] = 'home_radio_novo';
 					break;
 				case 'tv':
 					$data_navbar['selected_page'] = 'home_tv';
@@ -396,14 +396,14 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function home_radio_knewin($selecteddate = null, $limit = null, $offset = null) {
+	public function home_radio_novo($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'home',
-				'last_page' => base_url('pages/home_radio_knewin')
+				'last_page' => base_url('pages/home_radio_novo')
 			);
 			$this->session->set_userdata($sessiondata);
-			$data_navbar['selected_page'] = 'home_radio_knewin';
+			$data_navbar['selected_page'] = 'home_radio_novo';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'radio'));
 			$data['clientsmp'] = ($clientsc / 5);
@@ -427,12 +427,12 @@ class Pages extends CI_Controller {
 			}
 
 			if ($limit == 0) {
-				$this->load->view('home_radiodev_knewin', $data);
+				$this->load->view('home_radiodev_novo', $data);
 			} else {
-				$this->load->view('home_radioload_knewin', $data);
+				$this->load->view('home_radioload_novo', $data);
 			}
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -443,29 +443,29 @@ class Pages extends CI_Controller {
 			header('Content-Type: application/json');
 			print json_encode($data[0]);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
-	public function get_radio_knewin($idsource, $startdate, $position) {
+	public function get_radio_novo($idsource, $startdate, $position) {
 		if ($this->session->has_userdata('logged_in')) {
 			$doc = $this->pages_model->get_radio_byid_solr($idsource, urldecode($startdate), $position);
 
 			header('Content-Type: application/json');
 			print $doc;
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
-	public function get_tv_knewin($idsource, $startdate, $position) {
+	public function get_tv_novo($idsource, $startdate, $position) {
 		if ($this->session->has_userdata('logged_in')) {
 			$doc = $this->pages_model->get_tv_bysd_solr($idsource, urldecode($startdate), $position);
 
 			header('Content-Type: application/json');
 			print $doc;
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -632,8 +632,8 @@ class Pages extends CI_Controller {
 
 				$data['connected_users'] = $this->pages_model->connected_users();
 				$data['total_radios'] = $this->pages_model->rradios();
-				$data['knewin_radios'] = $this->pages_model->knewin_radios();
-				$data['knewin_tvcns'] = $this->pages_model->knewin_tvcns();
+				$data['novo_radios'] = $this->pages_model->novo_radios();
+				$data['novo_tvcns'] = $this->pages_model->novo_tvcns();
 
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);
@@ -708,16 +708,16 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function radio_knewin_home_keyword() {
+	public function radio_novo_home_keyword() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'tv_home_keyword',
-				'last_page' => base_url('pages/radio_knewin_home_keyword')
+				'last_page' => base_url('pages/radio_novo_home_keyword')
 			);
 			$this->session->set_userdata($sessiondata);
 
-			$data_navbar['selected_page'] = 'home_radio_knewin';
-			$data_navbar['vtype'] = 'radio_knewin';
+			$data_navbar['selected_page'] = 'home_radio_novo';
+			$data_navbar['vtype'] = 'radio_novo';
 			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
 
 			$data['id_keyword'] = $this->input->post('id_keyword');
@@ -742,22 +742,22 @@ class Pages extends CI_Controller {
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 
-			$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
+			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
 
 			$this->load->view('head');
 			$this->load->view('navbar', $data_navbar);
-			$this->load->view('radio_knewin_home_keyword', $data);
+			$this->load->view('radio_novo_home_keyword', $data);
 			$this->load->view('footer');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
-	public function tv_knewin_home_keyword() {
+	public function tv_novo_home_keyword() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'tv_home_keyword',
@@ -781,8 +781,8 @@ class Pages extends CI_Controller {
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
-			$discardeddocs = $this->pages_model->discarded_docs_knewin_tv($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_knewin($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -917,25 +917,25 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function discard_doc_radio_knewin() {
+	public function discard_doc_radio_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
 			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
 			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
-			$this->pages_model->discard_doc_radio_knewin($data_discard);
+			$this->pages_model->discard_doc_radio_novo($data_discard);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
-	public function discard_doc_tv_knewin() {
+	public function discard_doc_tv_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
 			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
 			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
-			$this->pages_model->discard_doc_tv_knewin($data_discard);
+			$this->pages_model->discard_doc_tv_novo($data_discard);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
@@ -1019,7 +1019,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function edit_knewin() {
+	public function edit_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1027,19 +1027,19 @@ class Pages extends CI_Controller {
 			$start = $time;
 
 			$sessiondata = array(
-				'view' => 'edit_knewin',
-				'last_page' => base_url('pages/edit_knewin')
+				'view' => 'edit_novo',
+				'last_page' => base_url('pages/edit_novo')
 			);
 			$this->session->set_userdata($sessiondata);
 
-			$data_navbar['selected_page'] = 'edit_knewin';
+			$data_navbar['selected_page'] = 'edit_novo';
 			$data['sid'] = $this->input->post('sid');
 			$data['id_keyword'] = $this->input->post('id_keyword');
 			$data['id_client'] = $this->input->post('id_client');
 			$data['id_file'] = $this->input->post('id_file');
 			$data['id_text'] = $this->input->post('id_text');
 			$data['client_selected'] = $this->input->post('client_selected');
-			$data['knewindoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+			$data['novodoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
 			if (empty($this->input->post('client_selected'))) {
 				$data['keyword_selected'] = $this->input->post('keyword');
 			} else {
@@ -1055,9 +1055,9 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('edit_knewin', $data);
+			$this->load->view('edit_novo', $data);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -1204,7 +1204,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function join_radio_knewin() {
+	public function join_radio_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1212,11 +1212,11 @@ class Pages extends CI_Controller {
 			$start = $time;
 
 			$sessiondata = array(
-				'view' => 'join_radio_knewin',
-				'last_page' => base_url('pages/join_radio_knewin')
+				'view' => 'join_radio_novo',
+				'last_page' => base_url('pages/join_radio_novo')
 			);
 			$this->session->set_userdata($sessiondata);
-			$data_navbar['selected_page'] = 'join_radio_knewin';
+			$data_navbar['selected_page'] = 'join_radio_novo';
 
 			$ids_doc = explode(',', $this->input->post('ids_doc'));
 			$data['id_source'] = $this->input->post('id_source');
@@ -1235,13 +1235,13 @@ class Pages extends CI_Controller {
 				$data['keyword_selected'] = '';
 			}
 
-			$datadoc = $this->pages_model->join_radio_knewin($ids_doc);
+			$datadoc = $this->pages_model->join_radio_novo($ids_doc);
 
 			$datajoin['ids_docs'] = $ids_doc;
 			$datajoin['id_client'] = $data['id_client'];
 			$datajoin['id_keyword'] = $data['id_keyword'];
 			$datajoin['id_user'] = $this->session->userdata('id_user');
-			$data['id_join_info'] = $this->pages_model->join_info_radio_knewin($datajoin);
+			$data['id_join_info'] = $this->pages_model->join_info_radio_novo($datajoin);
 
 			$data['source_s'] = $datadoc['source_s'];
 			$data['content_t'] = $datadoc['content_t'];
@@ -1255,9 +1255,9 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('edit_knewin', $data);
+			$this->load->view('edit_novo', $data);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -1357,7 +1357,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function crop_knewin() {
+	public function crop_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1365,8 +1365,8 @@ class Pages extends CI_Controller {
 			$start = $time;
 
 			$sessiondata = array(
-				'view' => 'crop_knewin',
-				'last_page' => base_url('pages/crop_knewin')
+				'view' => 'crop_novo',
+				'last_page' => base_url('pages/crop_novo')
 			);
 			$this->session->set_userdata($sessiondata);
 
@@ -1390,8 +1390,8 @@ class Pages extends CI_Controller {
 			$data_crop_info['endtime'] = $data['endtime'];
 			$data_crop_info['content'] = $this->input->post('textseld');
 
-			$data['crop_inserted_id'] = $this->pages_model->crop_info_radio_knewin($data_crop_info);
-			$data['finalfile'] = $this->pages_model->crop_knewin($data['starttime'], $data['endtime'], $data['urlmp3']);
+			$data['crop_inserted_id'] = $this->pages_model->crop_info_radio_novo($data_crop_info);
+			$data['finalfile'] = $this->pages_model->crop_novo($data['starttime'], $data['endtime'], $data['urlmp3']);
 
 			$time = microtime();
 			$time = explode(' ', $time);
@@ -1399,9 +1399,9 @@ class Pages extends CI_Controller {
 			$finish = $time;
 			$data['total_time'] = round(($finish - $start), 4);
 
-			$this->load->view('crop_knewin', $data);
+			$this->load->view('crop_novo', $data);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -1412,18 +1412,18 @@ class Pages extends CI_Controller {
 			header('Content-Type: application/json');
 			print json_encode('Download!');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
-	public function crop_info_radio_knewin_down($cropid) {
+	public function crop_info_radio_novo_down($cropid) {
 		if ($this->session->has_userdata('logged_in')) {
-			$this->pages_model->crop_info_radio_knewin_download($cropid);
+			$this->pages_model->crop_info_radio_novo_download($cropid);
 
 			header('Content-Type: application/json');
 			print json_encode('Download!');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -1434,7 +1434,7 @@ class Pages extends CI_Controller {
 			header('Content-Type: application/json');
 			print json_encode('Download!');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_knewin'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
 	}
 
@@ -1617,8 +1617,8 @@ class Pages extends CI_Controller {
 
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
-			$data['allradios_knewin'] = $this->pages_model->radios_knewin();
-			$data['alltvc'] = $this->pages_model->tvc_knewin();
+			$data['allradios_novo'] = $this->pages_model->radios_novo();
+			$data['alltvc'] = $this->pages_model->tvc_novo();
 			$data['vsr'] = 'false';
 			// $data['alltvp'] = = $this->pages_model->tvp();
 
@@ -1642,8 +1642,8 @@ class Pages extends CI_Controller {
 			$data_navbar['selected_page'] = 'search';
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
-			$data['allradios_knewin'] = $this->pages_model->radios_knewin();
-			$data['alltvc'] = $this->pages_model->tvc_knewin();
+			$data['allradios_novo'] = $this->pages_model->radios_novo();
+			$data['alltvc'] = $this->pages_model->tvc_novo();
 			if (empty($pageselected)) {
 				$data_sresult['pageselected'] = 1;
 			} else {
@@ -1656,7 +1656,7 @@ class Pages extends CI_Controller {
 				$data_search['vtype'] = $this->input->post('optionsRadios');
 				$data_search['vsrctype'] = $this->input->post('optionssrcadios');
 				$data_search['id_radio'] = $this->input->post('radioid');
-				$data_search['id_radio_knewin'] = $this->input->post('kneradioid');
+				$data_search['id_radio_novo'] = $this->input->post('kneradioid');
 				$data_search['tvchannel'] = $this->input->post('tvchannel');
 				$data_search['startdate'] = $this->input->post('startdate');
 				$data_search['enddate'] = $this->input->post('enddate');
@@ -1669,7 +1669,7 @@ class Pages extends CI_Controller {
 				$data['vtype'] = $data_search['vtype'];
 				$data['vsrctype'] = $data_search['vsrctype'];
 				$data['id_radio'] = $data_search['id_radio'];
-				$data['id_radio_knewin'] = $data_search['id_radio_knewin'];
+				$data['id_radio_novo'] = $data_search['id_radio_novo'];
 				$data['tvchannel'] = $data_search['tvchannel'];
 				$data['startdate'] = $data_search['startdate'];
 				$data['enddate'] = $data_search['enddate'];
@@ -1686,9 +1686,9 @@ class Pages extends CI_Controller {
 				if ($vtype == 'radio') {
 					$data['vsrctype'] = 'audimus';
 					$data_sresult['vsrctype'] = 'audimus';
-				} else if ($vtype == 'radio_knewin'){
-					$data_sresult['vsrctype'] = 'knewin';
-					$data['vsrctype'] = 'knewin';
+				} else if ($vtype == 'radio_novo'){
+					$data_sresult['vsrctype'] = 'novo';
+					$data['vsrctype'] = 'novo';
 				}
 			}
 
@@ -1703,8 +1703,8 @@ class Pages extends CI_Controller {
 
 			if ($vtype == 'radio') {
 				$this->load->view('search_result', $data_sresult);
-			} else if ($vtype == 'radio_knewin') {
-				$this->load->view('knewinsearch_result', $data_sresult);
+			} else if ($vtype == 'radio_novo') {
+				$this->load->view('novosearch_result', $data_sresult);
 			}else if ($vtype == 'tv') {
 				$this->load->view('tvsearch_result', $data_sresult);
 			}

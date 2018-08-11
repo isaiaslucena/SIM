@@ -70,7 +70,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Knewin Radios -->
+			<!-- novo Radios -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -82,10 +82,10 @@ $enddate = strtotime('today 23:59:59');
 							<div class="col-xs-9 text-right">
 								<div class="huge">
 									<?php
-										echo count($knewin_radios);
+										echo count($novo_radios);
 									?>
 								</div>
-								<div>Rádios Knewin</div>
+								<div>Rádios novo</div>
 							</div>
 						</div>
 					</div>
@@ -98,7 +98,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Knewin TV Channels -->
+			<!-- novo TV Channels -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -110,10 +110,10 @@ $enddate = strtotime('today 23:59:59');
 							<div class="col-xs-9 text-right">
 								<div class="huge">
 									<?php
-										echo count($knewin_tvcns);
+										echo count($novo_tvcns);
 									?>
 								</div>
-								<div>TV Knewin</div>
+								<div>TV novo</div>
 							</div>
 						</div>
 					</div>
@@ -162,7 +162,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -174,14 +174,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$discardsum = array();
-									$todaydiscardinfo = $this->pages_model->report_users('discard_radio_knewin',$startdate,$enddate);
+									$todaydiscardinfo = $this->pages_model->report_users('discard_radio_novo',$startdate,$enddate);
 									foreach ($todaydiscardinfo as $dinfo) {
 										array_push($discardsum, (int)$dinfo['discard_count']);
 									}
 									echo array_sum($discardsum);
 									?>
 								</div>
-								<div>Radio Knewin</div>
+								<div>Radio novo</div>
 							</div>
 						</div>
 					</div>
@@ -194,7 +194,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -206,14 +206,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$discardsum = array();
-									$todaydiscardinfo = $this->pages_model->report_users('discard_tv_knewin',$startdate,$enddate);
+									$todaydiscardinfo = $this->pages_model->report_users('discard_tv_novo',$startdate,$enddate);
 									foreach ($todaydiscardinfo as $dinfo) {
 										array_push($discardsum, (int)$dinfo['discard_count']);
 									}
 									echo array_sum($discardsum);
 									?>
 								</div>
-								<div>TV Knewin</div>
+								<div>TV novo</div>
 							</div>
 						</div>
 					</div>
@@ -262,7 +262,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -274,14 +274,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('join_radio_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('join_radio_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['join_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>Rádio Knewin</div>
+								<div>Rádio novo</div>
 							</div>
 						</div>
 					</div>
@@ -294,7 +294,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- TV Knewin -->
+			<!-- TV novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -306,14 +306,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('join_tv_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('join_tv_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['join_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>TV Knewin</div>
+								<div>TV novo</div>
 							</div>
 						</div>
 					</div>
@@ -362,7 +362,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -374,14 +374,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_radio_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_radio_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>Rádio Knewin</div>
+								<div>Rádio novo</div>
 							</div>
 						</div>
 					</div>
@@ -394,7 +394,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- TV Knewin -->
+			<!-- TV novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -406,14 +406,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_tv_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_tv_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>TV Knewin</div>
+								<div>TV novo</div>
 							</div>
 						</div>
 					</div>
@@ -462,7 +462,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- Radio Knewin -->
+			<!-- Radio novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -474,14 +474,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_down_radio_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_down_radio_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>Rádio Knewin</div>
+								<div>Rádio novo</div>
 							</div>
 						</div>
 					</div>
@@ -494,7 +494,7 @@ $enddate = strtotime('today 23:59:59');
 					</a>
 				</div>
 			</div>
-			<!-- TV Knewin -->
+			<!-- TV novo -->
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -506,14 +506,14 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_down_tv_knewin', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_down_tv_novo', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
 									echo array_sum($cropsum);
 									?>
 								</div>
-								<div>TV Knewin</div>
+								<div>TV novo</div>
 							</div>
 						</div>
 					</div>

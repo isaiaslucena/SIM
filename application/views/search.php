@@ -92,8 +92,8 @@
 											</div>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionssrcadios" id="optradiotype2" value="knewin" <?php if (isset($vsrctype) and $vsrctype == 'knewin') {echo "checked";} ?> required>
-													Knewin
+													<input type="radio" name="optionssrcadios" id="optradiotype2" value="novo" <?php if (isset($vsrctype) and $vsrctype == 'novo') {echo "checked";} ?> required>
+													novo
 												</label>
 											</div>
 										</div>
@@ -177,17 +177,17 @@
 				}
 			}
 
-			$knewinradioslinevar = null;
-			$rcountarr = count($allradios_knewin);
+			$novoradioslinevar = null;
+			$rcountarr = count($allradios_novo);
 			$rcount = 0;
-			foreach ($allradios_knewin as $radio) {
+			foreach ($allradios_novo as $radio) {
 				$rcount++;
 				if ($rcount == $rcountarr) {
-					$knewinradioslinevar .= "{'id':".$radio['id_source'].",";
-					$knewinradioslinevar .= "'name':"."'".$radio['source']."'}";
+					$novoradioslinevar .= "{'id':".$radio['id_source'].",";
+					$novoradioslinevar .= "'name':"."'".$radio['source']."'}";
 				} else {
-					$knewinradioslinevar .= "{'id':".$radio['id_source'].",";
-					$knewinradioslinevar .= "'name':"."'".$radio['source']."'},";
+					$novoradioslinevar .= "{'id':".$radio['id_source'].",";
+					$novoradioslinevar .= "'name':"."'".$radio['source']."'},";
 				}
 			}
 
@@ -240,7 +240,7 @@
 						if (rsrcchecked == 'audimus') {
 							$('#radioidsel').show('fast');
 						} else {
-							$('#optradio').val('radio_knewin');
+							$('#optradio').val('radio_novo');
 							$('#kneradioidsel').show('fast');
 						}
 					});
@@ -358,8 +358,8 @@
 				}
 			});
 
-			//radios knewin typeahead and tagsinput
-			var radios = [<?php echo $knewinradioslinevar; ?>];
+			//radios novo typeahead and tagsinput
+			var radios = [<?php echo $novoradioslinevar; ?>];
 			var radiosblood = new Bloodhound({
 				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
 				queryTokenizer: Bloodhound.tokenizers.whitespace,

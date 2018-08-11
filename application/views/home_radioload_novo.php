@@ -46,15 +46,15 @@
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
 
-													$discardeddocs = $this->pages_model->discarded_docs_knewin_radio($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_radio_knewin($discardeddocs, $keyword['keyword'], $startdate, $enddate);
+													$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $keyword['keyword'], $startdate, $enddate);
 													$keyword_foundc = count($keyword_found->response->docs);
 													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate,$enddate,$keyword['keyword']);
 													$allkeyword_foundc = count($allkeyword_found->response->docs);
 
 													$ic = null;
 													if ($keyword_foundc != 0) { ?>
-														<form style="all: unset;" action="<?php echo base_url('pages/radio_knewin_home_keyword');?>" method="post">
+														<form style="all: unset;" action="<?php echo base_url('pages/radio_novo_home_keyword');?>" method="post">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 															<input type="hidden" name="startdate" value="<?php echo $startdate;?>">
