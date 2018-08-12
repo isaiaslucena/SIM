@@ -1705,7 +1705,7 @@ class Pages extends CI_Controller {
 				$this->load->view('search_result', $data_sresult);
 			} else if ($vtype == 'radio_novo') {
 				$this->load->view('novosearch_result', $data_sresult);
-			}else if ($vtype == 'tv') {
+			} else if ($vtype == 'tv') {
 				$this->load->view('tvsearch_result', $data_sresult);
 			}
 

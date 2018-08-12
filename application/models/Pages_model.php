@@ -1543,7 +1543,7 @@ class Pages_model extends CI_Model {
 				// 					AND t.text_content REGEXP '[[:<:]]".$keyword."[[:>:]]'";
 				// 	return $this->db->query($sqlquery)->result_array();
 				// }
-			} else if ($datasearch['vtype'] == 'radio_knewin' and $datasearch['vsrctype'] == 'knewin') {
+			} else if ($datasearch['vtype'] == 'radio_novo' and $datasearch['vsrctype'] == 'novo') {
 				$ds = new DateTime(date('Y-m-d H:i:s', $startdate));
 				$de = new DateTime(date('Y-m-d H:i:s', $enddate));
 				$startdatem = $ds->format('Y-m-d\TH:i:s\Z');
