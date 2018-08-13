@@ -1985,7 +1985,7 @@ class Pages_model extends CI_Model {
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
 				return json_decode(curl_exec($ch));
-			} else if ($vtype == 'radio_knewin') {
+			} else if ($vtype == 'radio_novo') {
 				if (preg_match('/starttime_dt/', $datasearch) == 0) {
 					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
 					$datastr = 1;
