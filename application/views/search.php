@@ -93,7 +93,7 @@
 											<div class="radio">
 												<label>
 													<input type="radio" name="optionssrcadios" id="optradiotype2" value="novo" <?php if (isset($vsrctype) and $vsrctype == 'novo') {echo "checked";} ?> required>
-													novo
+													Novo
 												</label>
 											</div>
 										</div>

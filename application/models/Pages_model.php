@@ -1552,7 +1552,7 @@ class Pages_model extends CI_Model {
 				$url = $protocol."://".$host.":".$port.$path;
 
 				//search with startdate and enddate
-				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_knewin']) and empty($keyword)) {
+				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_novo']) and empty($keyword)) {
 					$data = array(
 						"query"  => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
 					);
@@ -1571,7 +1571,7 @@ class Pages_model extends CI_Model {
 					return json_decode(curl_exec($ch));
 				}
 				//search with keyword, startdate and endate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_knewin']) and !empty($keyword)) {
+				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_novo']) and !empty($keyword)) {
 					$data = array(
 						"query" => 'content_t:"'.$keyword.'"',
 						"filter" => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
@@ -1592,9 +1592,9 @@ class Pages_model extends CI_Model {
 					return json_decode(curl_exec($ch));
 				}
 				//search with radio channel, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_knewin']) and empty($keyword)) {
+				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_novo']) and empty($keyword)) {
 					$channelsline = null;
-					$channels = explode(",", $datasearch['id_radio_knewin']);
+					$channels = explode(",", $datasearch['id_radio_novo']);
 					$channelscarr = count($channels);
 					$channelsc = 0;
 					foreach ($channels as $channel) {
@@ -1625,9 +1625,9 @@ class Pages_model extends CI_Model {
 					return json_decode(curl_exec($ch));
 				}
 				//search with tv channel, keyword, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_knewin']) and !empty($keyword)) {
+				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_novo']) and !empty($keyword)) {
 					$channelsline = null;
-					$channels = explode(",", $datasearch['id_radio_knewin']);
+					$channels = explode(",", $datasearch['id_radio_novo']);
 					$channelscarr = count($channels);
 					$channelsc = 0;
 					foreach ($channels as $channel) {
