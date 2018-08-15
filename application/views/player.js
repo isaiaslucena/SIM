@@ -118,7 +118,7 @@
 							vdurtime.text(sectostring(vduration));
 
 							nimage = [];
-							if (joinvideos) {
+							if (joinvideosclk) {
 								vdfilename = videotitle.text();
 								srcarr = vdfilename.split("_");
 								srcfilename = srcarr[0];
@@ -608,6 +608,7 @@
 					disclass = $('#'+aid).hasClass('disabled');
 					if (disclass == false) {
 						if (elclick == "SPAN" || elclick == "H4") {
+							joinvideosclk - false;
 							cfilename = event.target.innerText;
 							cfilevsource = event.target.dataset.vsrc;
 
@@ -654,8 +655,8 @@
 								cfilevsourcei = event.target.dataset.vsrc;
 								vfilenamei = cfilenamei+'.mp4';
 
-								console.log(joinvideos);
 								joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
+								console.log(joinvideos);
 							}
 						}
 					}

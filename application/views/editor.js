@@ -1,7 +1,6 @@
 				//EDITOR
 				$('#btnjoin').click(function(event) {
 					videoel[0].pause();
-					// $('.joinmodal').modal('show');
 
 					if (joincropvideos) {
 						$('.jcropmodal').modal('show');
@@ -46,6 +45,7 @@
 													joinctimeend = new Date();
 													joinctimedifference = ((joinctimeend.getTime() - joinctimestart.getTime()) / 1200).toFixed(3);
 													$('#joincropvideoload').text("Tempo da junção: "+ joinctimedifference + "s");
+													joinvideosclk = false;
 												}
 											}
 										);
@@ -94,10 +94,15 @@
 													vsrcarr = data.joinfilename.split('_');
 													videotitle.attr('data-vsrc', vsrcarr[0]);
 													videotitle.css('font-size', '18px');
+
+													firstfile = filesjoined[0].file;
+													firstfilename = firstfile.replace(jvsource+'_', '');
 													videoel.attr({
-														poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+														poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001',
 														src: videourlmjoin
 													});
+
+													videoel[0].pause();
 
 													$('input').prop("checked", false);
 													$('.list-group').children().removeClass('active');
@@ -106,9 +111,12 @@
 														$('span:contains('+nval+')').parent().addClass('active');
 													});
 
+													loadingthumbs();
+
 													filestojoin = [];
 													vbtnjoin = [];
 													joinvideos = true;
+													joinvideosclk = true;
 
 													jointimeend = new Date();
 													croptimedifference = ((jointimeend.getTime() - jointimestart.getTime()) / 1200).toFixed(3);
@@ -370,7 +378,6 @@
 														cropfday = datearr[2];
 														cropfch = filenamearr[3];
 														cropfst = filenamearr[4];
-														// $('#mbtnvdown').attr({href: videourlmcrop});
 														croptimeend = new Date();
 														croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
 														$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");

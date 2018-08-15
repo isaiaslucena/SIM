@@ -440,7 +440,7 @@
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
-				var ccrops = false, ccrope = false, joinvideos = false, selvinheta = false;
+				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false;
 				var cropstartss = null, cropendss = null;
 				var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
@@ -843,24 +843,6 @@
 							lastvideo = data[data.length-2].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
 
-							// datetoday = new Date();
-							// tday = datetoday.getDate();
-							// tday = ('0'+tday).slice(-2);
-							// tmonth = (datetoday.getMonth() + 1);
-							// tmonth = ('0'+tmonth).slice(-2);
-							// tnmonharr = datetoday.toString().split(' ');
-							// tnmonth = tnmonharr[1];
-							// tyear = datetoday.getFullYear();
-							// thour = datetoday.getHours();
-							// thour = ('0'+thour).slice(-2);
-							// tminutes = datetoday.getMinutes();
-							// tminutes = ('0'+tminutes).slice(-2);
-							// tseconds = datetoday.getSeconds();
-							// tseconds = ('0'+tseconds).slice(-2);
-
-							// datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
-							// datasel = new Date(selgldate+'T00:00:00');
-
 							$('.vbutton').css('display', 'none');
 							$('.vbutton').removeClass('paused');
 
@@ -959,8 +941,6 @@
 									nextvideo.append(html);
 								});
 							} else {
-								// console.log('Data selecionada foi hoje');
-
 								videoel.attr({
 									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
@@ -1006,41 +986,6 @@
 														'</a>';
 									}
 
-
-									// if (file == lastvideo) {
-									// 	html =	'<div id="vbtn'+index+'" class="list-group-item disabled">'+
-									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-									// 						'<p class="list-group-item-text">'+
-									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-									// 							'<div class="checkbox checkbox-warning pull-left">'+
-									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-									// 							'</div>'+
-									// 						'</p>'+
-									// 					'</div>';
-									// } else if (file == lastvarray) {
-									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
-									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-									// 						'<p class="list-group-item-text">'+
-									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-									// 							'<div class="checkbox checkbox-warning pull-left">'+
-									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-									// 							'</div>'+
-									// 						'</p>'+
-									// 					'</div>';
-									// } else {
-									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
-									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-									// 						'<p class="list-group-item-text">'+
-									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-									// 							'<div class="checkbox checkbox-warning pull-left">'+
-									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-									// 							'</div>'+
-									// 						'</p>'+
-									// 					'</div>';
-									// }
 									nextvideo.append(html);
 								});
 							}
