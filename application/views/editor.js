@@ -468,7 +468,7 @@
 						filestojoin.splice(fileindex, 1);
 						vbntindex = vbtnjoin.indexOf(jvbtn);
 						vbtnjoin.splice(vbntindex, 1);
-						if (filestojoin.length < 2) {
+						if (filestojoin.length <= 2) {
 							$('#btnjoin').addClass('disabled');
 							$('#btnjoin').attr('disabled', true);
 							joinvideos = false;

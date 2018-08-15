@@ -470,9 +470,9 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
-				if (window.Worker) {
-					imgworker = new Worker('/assets/imgworker.js');
-				}
+				// if (window.Worker) {
+				// 	imgworker = new Worker('/assets/imgworker.js');
+				// }
 
 				// imgworker.onmessage = function(event) {
 					// console.log(event.data);
