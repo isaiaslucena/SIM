@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-lg-3">
 				<label class="btn btn-default">
@@ -43,7 +43,7 @@
 			ccrops = false, ccrope = false, joinfiles = false, fileerr = false, lastfile,
 			audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
 			audiofilestojoin = [], uploadaudiofiles = [];
-			
+
 			$('#btnupload').change(function(event) {
 				audiofilestojoin = [];
 				uploadaudiofiles = [];
@@ -75,7 +75,7 @@
 							return false;
 						} else {
 							audiofilestojoin.push(filename);
-							
+
 							filereader = new FileReader();
 							filereader.readAsDataURL(val);
 							filereader.onload = function(e) {
@@ -93,7 +93,7 @@
 							}
 						}
 					});
-					
+
 					if (fileerr) {
 						$('#waitimg').css('display', 'none');
 						$('#iconimg').css('display', 'block');
@@ -130,11 +130,11 @@
 					}
 				}
 			});
-			
+
 			$('#btnpbrate').click(function(event) {
 				count+=1;
 				ratep = 0.65;
-				
+
 				switch (count) {
 					case 1:
 						audioel[0].playbackRate+=ratep;
@@ -187,7 +187,7 @@
 			$('#btncstart').click(function(event) {
 				cropstartss = audioel[0].currentTime;
 				cropstarts = (cropstartss * 100 / 100).toFixed(3);
-				
+
 				if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
 					$(this).text(null);
@@ -206,12 +206,12 @@
 					$(this).removeClass('btn-default');
 					$(this).addClass('btn-success');
 					$(this).append(' '+cropstartt);
-					
+
 					$('#btncend').removeClass('disabled');
 					$('#btncend').removeAttr('disabled');
 
 					console.log('crop starttime (string): '+cropstartt);
-					console.log('crop starttime (seconds): '+cropstarts);	
+					console.log('crop starttime (seconds): '+cropstarts);
 				}
 			});
 
@@ -244,7 +244,7 @@
 						cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
 						cropdur = '00-'+cropdurmm+'-'+cropdurss;
 						ccrope = true;
-						
+
 						$(this).text(null);
 						$(this).append('<i class="fa fa-hourglass-end"></i>');
 						$(this).removeClass('btn-default');
@@ -256,12 +256,12 @@
 
 						console.log('crop endtime (string): '+cropendt);
 						console.log('crop endtime (seconds): '+cropends);
-					}		
+					}
 				} else {
 					swal("Atenção!", "Você deve marcar primeiro o tempo inicial.", "error");
 				}
 			});
-			
+
 			$('#btncrop').click(function(event) {
 				playpauseaudio('audiofile');
 				audioel.css('display', 'none');
@@ -325,7 +325,7 @@
 
 			function join_files(jaudiofilestojoin) {
 				$('#waitmsg').text('Aguarde, juntando arquivos...');
-				
+
 				$.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: jaudiofilestojoin},
 					function(data, textStatus, xhr) {
 						// console.log(data);
@@ -341,7 +341,7 @@
 			function enable_editor(audiodata) {
 				audioel.attr('src', audiodata);
 				audioel.css('display', 'block');
-				
+
 				$('#btncstart').text(null);
 				$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');
 				$('#btncstart').removeClass('btn-success');
@@ -360,17 +360,17 @@
 				cropendss = null;
 				cropstarts = null;
 				cropends = null;
-				
+
 				$('#btnpbrate').removeClass('disabled');
 				$('#btnpbrate').removeAttr('disabled');
 				$('#btncstart').removeClass('disabled');
 				$('#btncstart').removeAttr('disabled');
 				$('#btndown').addClass('disabled');
 				$('#btndown').attr('disabled', true);
-				
+
 				$('#waitimg').css('display', 'none');
 			}
-			
+
 			function disable_editor() {
 				$('#btncstart').text(null);
 				$('#btncstart').append('<i class="fa fa-hourglass-start"></i> Início');

@@ -1237,6 +1237,7 @@ class Pages_model extends CI_Model {
 		$filesline = null;
 		$countfarr = count($audiofiles);
 		$countf = 0;
+		asort($audiofiles, SORT_STRING | SORT_FLAG_CASE);
 		foreach ($audiofiles as $audiofile) {
 			if ($countf == $countfarr) {
 				$filesline .= $temppath.$audiofile;

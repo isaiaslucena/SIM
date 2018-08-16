@@ -107,13 +107,6 @@
 						vvideosrc = videoel[0].currentSrc;
 						if (vvideosrc.match(vvideosrcsearch) == null) {
 							vduration = videoel[0].duration;
-							// durationh = ('0' + Math.floor(vduration / 3600)).slice(-2);
-							// // durationm = ('0' + Math.floor(vduration / 60)).slice(-2);
-							// durationm = ('0' + Math.floor((vduration - ( durationh / 60))).slice(-2);
-							// durations = ('0' + Math.floor((vduration - durationm * 60))).slice(-2);
-							// durationmss = (vduration * 100 / 100).toFixed(3);
-							// durationms = durationmss.split(".");
-							// vdurtime.text(durationh+':'+durationm+':'+durations+'.'+durationms[1]);
 
 							vdurtime.text(sectostring(vduration));
 
@@ -122,6 +115,7 @@
 								vdfilename = videotitle.text();
 								srcarr = vdfilename.split("_");
 								srcfilename = srcarr[0];
+								console.log(srcfilename);
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									fjoinedquant = filesjoined.length;
 									fjoinedcount = 0;

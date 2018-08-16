@@ -111,7 +111,11 @@
 														$('span:contains('+nval+')').parent().addClass('active');
 													});
 
-													loadingthumbs();
+													if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
+														loadingthumbs();
+													} else {
+														videoel[0].play();
+													}
 
 													filestojoin = [];
 													vbtnjoin = [];
@@ -399,7 +403,7 @@
 
 					$('#mbtnv2down').removeClass('disabled');
 					$('#mbtnv2down').removeAttr('disabled');
-				})
+				});
 
 				$('#mbtnvdown').click(function(event) {
 					event.preventDefault();

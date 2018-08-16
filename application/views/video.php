@@ -559,7 +559,7 @@
 							chlname = name;
 					}
 					return chlname;
-				}
+				};
 
 				videoel.bind('contextmenu', function() { return false; });
 				videomel.bind('contextmenu', function() { return false; });
@@ -747,7 +747,7 @@
 							$('#vnext').scrollTo('.active');
 						}
 					);
-				}
+				};
 
 				function selectchannel(date) {
 					tvch.html(null);
@@ -833,7 +833,7 @@
 							tvch.selectpicker('refresh');
 						}
 					);
-				}
+				};
 
 				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 					$.post('proxy',
@@ -994,12 +994,12 @@
 							$('#vnext').scrollTo('.active')
 						}
 					);
-				}
+				};
 
 				jQuery.fn.scrollTo = function(elem) {
 					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 					return this;
-				}
+				};
 
 				window.addEventListener("orientationchange", function() {
 					videoplay = $('#vvideo');
@@ -1013,7 +1013,7 @@
 					}
 				}, false);
 
-				function mobileconf(){
+				function mobileconf() {
 					if (isTouchDevice()) {
 						$('#vtitle').css('font-size', '18px');
 						$('#vnext').css('max-height', '150px');
