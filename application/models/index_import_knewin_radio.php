@@ -36,8 +36,8 @@ $host='172.17.0.3';
 //Get start and endtime
 $sstart = strtotime("-10 minutes");
 $send = strtotime("now");
-// $sstart = strtotime('2018-07-27 00:00:00');
-// $send = strtotime('2018-07-27 14:08:00');
+// $sstart = strtotime('2018-09-03 00:00:00');
+// $send = strtotime('2018-09-03 12:00:00');
 $start = date('Y-m-d\TH:i:s', $sstart);
 $end = date('Y-m-d\TH:i:s', $send);
 
