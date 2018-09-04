@@ -88,8 +88,6 @@
 													$('.vbutton').css('display', 'none');
 													$('.vbutton').removeClass('paused');
 
-													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
-
 													videotitle.text(data.joinfilename);
 													vsrcarr = data.joinfilename.split('_');
 													videotitle.attr('data-vsrc', vsrcarr[0]);
@@ -97,12 +95,22 @@
 
 													firstfile = filesjoined[0].file;
 													firstfilename = firstfile.replace(jvsource+'_', '');
-													videoel.attr({
-														poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001',
-														src: videourlmjoin
-													});
+													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/'+data.joinfilename;
 
-													videoel[0].pause();
+													var waitf = setTimeout(function() {
+														videoel.attr({
+															poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001',
+															src: videourlmjoin
+														});
+
+														videoel[0].pause();
+													}, 5000);
+
+													if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
+														loadingthumbs();
+													} else {
+														videoel[0].play();
+													}
 
 													$('input').prop("checked", false);
 													$('.list-group').children().removeClass('active');
@@ -110,12 +118,6 @@
 														var nval = val.replace('.mp4', '');
 														$('span:contains('+nval+')').parent().addClass('active');
 													});
-
-													if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
-														loadingthumbs();
-													} else {
-														videoel[0].play();
-													}
 
 													filestojoin = [];
 													vbtnjoin = [];
