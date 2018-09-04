@@ -38,7 +38,7 @@
 		</div>
 
 		<script type="text/javascript">
-			var count = 0, fcount, ratec = 1,
+			var filename, count = 0, fcount, ratec = 1,
 			audioel = $('#audiofile'),
 			ccrops = false, ccrope = false, joinfiles = false, fileerr = false, lastfile,
 			audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
@@ -63,7 +63,7 @@
 					$.each(audiofiles, function(index, val) {
 						// console.log(val);
 						var filelastmod = val.lastModified;
-						var filename = val.name;
+						filename = val.name;
 						var filesize = val.size;
 						var filetype = val.type;
 						var fileb64;
@@ -263,7 +263,8 @@
 			});
 
 			$('#btncrop').click(function(event) {
-				playpauseaudio('audiofile');
+				// playpauseaudio('audiofile');
+				audioel[0].pause();
 				audioel.css('display', 'none');
 				cjoinid = $(this).attr('data-joinid');
 				$('#waitmsg').text('Carregando...');

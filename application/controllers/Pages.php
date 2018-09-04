@@ -1343,7 +1343,7 @@ class Pages extends CI_Controller {
 
 			$message['cropfileurl'] = $this->pages_model->crop_edit_audio($starttime, $endtime, $audiofile, $join);
 
-			$data_crop_info['filename'] = $audiofile;
+			$data_crop_info['filename'] = 'single_file';
 			$data_crop_info['id_join_info'] = $joinid;
 			$data_crop_info['id_user'] = $this->session->userdata('id_user');
 			$data_crop_info['starttime'] = $starttime;
