@@ -54,6 +54,8 @@
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$dstartdate = $sd->format('Y-m-d_H-i-s');
+				$denddate = $ed->format('Y-m-d_H-i-s');
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
@@ -105,7 +107,8 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" data-loaded="0" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
 								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
@@ -491,6 +494,27 @@
 				});
 
 				$('.ptext').css('overflowY', 'hidden');
+
+				$(window).scroll(function(event) {
+					var windowh = $(window).height() - 200;
+					console.log('Window Height:')
+					console.log(windowh);
+					var documenth = $(document).height();
+
+					var videoel = $('video[data-loaded="0"]');
+					// var videoel = document.querySelector('video[data-loaded="0"]');
+					console.log('Video elements:');
+					console.log(videoel.length);
+					console.log(' ');
+					var videoelo = $(videoel[0]).offset().top;
+					if (videoelo < windowh) {
+						$(videoel[0]).attr('data-loaded', '1');
+						$(videoel[0]).attr('preload', 'metadata');
+						$(videoel[0]).removeAttr('poster');
+						videoel = $('video[data-loaded="0"]');
+						// console.log('video nao carregado apareceu!');
+					}
+				});
 			});
 		</script>
 	</div>
