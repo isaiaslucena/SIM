@@ -843,15 +843,16 @@
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + selglvsource + '/' + selgldate + '/' + selglchannel + '/' + selglstate},
 						function(data, textStatus, xhr) {
-							// if (data.length == 1) {
-							// 	firstvideo = data[0].replace(".mp4", "");
-							// 	lastvideo = firstvideo;
-							// 	lastvarray = lastvarray;
-							// } else {
+							console.log(data.length);
+							if (data.length == 1) {
+								firstvideo = data[0].replace(".mp4", "");
+								lastvideo = firstvideo;
+								lastvarray = lastvarray;
+							} else {
 								firstvideo = data[0].replace(".mp4", "");
 								lastvideo = data[data.length-2].replace(".mp4", "");
 								lastvarray = data[data.length-1].replace(".mp4","");
-							// }
+							}
 
 							$('.vbutton').css('display', 'none');
 							$('.vbutton').removeClass('paused');

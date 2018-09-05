@@ -174,7 +174,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$discardsum = array();
-									$todaydiscardinfo = $this->pages_model->report_users('discard_radio_novo',$startdate,$enddate);
+									$todaydiscardinfo = $this->pages_model->report_users('discard_radio_knewin',$startdate,$enddate);
 									foreach ($todaydiscardinfo as $dinfo) {
 										array_push($discardsum, (int)$dinfo['discard_count']);
 									}
@@ -206,7 +206,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$discardsum = array();
-									$todaydiscardinfo = $this->pages_model->report_users('discard_tv_novo',$startdate,$enddate);
+									$todaydiscardinfo = $this->pages_model->report_users('discard_tv_knewin',$startdate,$enddate);
 									foreach ($todaydiscardinfo as $dinfo) {
 										array_push($discardsum, (int)$dinfo['discard_count']);
 									}
@@ -274,7 +274,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('join_radio_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('join_radio_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['join_count']);
 									}
@@ -306,7 +306,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('join_tv_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('join_tv_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['join_count']);
 									}
@@ -374,7 +374,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_radio_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_radio_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
@@ -406,7 +406,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_tv_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_tv_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
@@ -474,7 +474,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_down_radio_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_down_radio_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}
@@ -506,7 +506,7 @@ $enddate = strtotime('today 23:59:59');
 								<div class="huge">
 									<?php
 									$cropsum = array();
-									$todaycropinfo = $this->pages_model->report_users('crop_down_tv_novo', $startdate, $enddate);
+									$todaycropinfo = $this->pages_model->report_users('crop_down_tv_knewin', $startdate, $enddate);
 									foreach ($todaycropinfo as $cinfo) {
 										array_push($cropsum, (int)$cinfo['crop_count']);
 									}

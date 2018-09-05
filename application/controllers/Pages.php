@@ -632,8 +632,8 @@ class Pages extends CI_Controller {
 
 				$data['connected_users'] = $this->pages_model->connected_users();
 				$data['total_radios'] = $this->pages_model->rradios();
-				$data['novo_radios'] = $this->pages_model->novo_radios();
-				$data['novo_tvcns'] = $this->pages_model->novo_tvcns();
+				$data['novo_radios'] = $this->pages_model->knewin_radios();
+				$data['novo_tvcns'] = $this->pages_model->knewin_tvcns();
 
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);

@@ -102,7 +102,7 @@
 					<div class="panel-body">
 						<div class="row audioel">
 							<div class="col-lg-12">
-								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls></audio>
+								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="none"></audio>
 							</div>
 						</div>
 						<div class="row textel">
