@@ -102,7 +102,7 @@
 					<div class="panel-body">
 						<div class="row audioel">
 							<div class="col-lg-12">
-								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="none"></audio>
+								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio>
 							</div>
 						</div>
 						<div class="row textel">
@@ -115,6 +115,9 @@
 					</div>
 				</div>
 			<?php } ?>
+			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
+				<i class="fa fa-refresh fa-spin"></i> Carregando...
+			</span>
 		</div>
 
 		<div class="well well-sm" id="joindiv">
@@ -134,6 +137,38 @@
 	<script type="text/javascript">
 		var newdivid = 0, cksource = 0, totalpanels, totalpanelsd = 0,
 		joinfiles = false, filestojoin = [];
+
+		$(document).ready(function() {
+			totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+			jQuery.fn.scrollTo = function(elem) {
+				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+				return this;
+			}
+
+			ptexts = $('.ptext.text-justify');
+			$.each(ptexts, function(index, val) {
+				// console.log(event);
+				cpid = $(val).attr('id');
+				scpid = '#'+cpid;
+				keywfound = '#'+cpid+' > .kwfound';
+				keyword = '<?php echo $keyword_selected; ?>';
+				// idkeyword = event.target.dataset.idkeyword;
+				// idpbodyt = event.target.dataset.pbodyt;
+
+				pbodytext = $(val).text();
+				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+				$(scpid).html(null);
+				$(scpid).html(pbodynewtext);
+
+				qtkwf = $(keywfound).length;
+				$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+				$(val).scrollTo(keywfound);
+			});
+
+			$('.ptext').css('overflowY', 'hidden');
+		});
 
 		$('audio').bind('contextmenu', function() { return false; });
 
@@ -476,35 +511,17 @@
 			$(this).css('overflowY', 'hidden');
 		});
 
-		$(document).ready(function() {
-			totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-			jQuery.fn.scrollTo = function(elem) {
-				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-				return this;
+		$(window).scroll(function() {
+			winscrollToph = ($(window).scrollTop() + $(window).height());
+			winheight = $(document).height();
+			if (winscrollToph == winheight) {
+				console.log('reached end page');
+				$('#loadmore').animate({
+					'opacity': 100,
+				},
+					'fast', function() {
+					console.log('finish opacity');
+				});
 			}
-
-			ptexts = $('.ptext.text-justify');
-			$.each(ptexts, function(index, val) {
-				// console.log(event);
-				cpid = $(val).attr('id');
-				scpid = '#'+cpid;
-				keywfound = '#'+cpid+' > .kwfound';
-				keyword = '<?php echo $keyword_selected; ?>';
-				// idkeyword = event.target.dataset.idkeyword;
-				// idpbodyt = event.target.dataset.pbodyt;
-
-				pbodytext = $(val).text();
-				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-				$(scpid).html(null);
-				$(scpid).html(pbodynewtext);
-
-				qtkwf = $(keywfound).length;
-				$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
-				$(val).scrollTo(keywfound);
-			});
-
-			$('.ptext').css('overflowY', 'hidden');
 		});
 	</script>

@@ -500,25 +500,36 @@
 				$(fvideo[0]).removeClass('noloaded');
 				$(fvideo[0]).removeAttr('poster');
 
-				$(this).scroll(function(event) {
-					var windowh = $(window).height() - 200;
-					// console.log('Window Height:')
-					// console.log(windowh);
+				// $(this).scroll(function(event) {
+				// 	var windowh = $(window).height() - 200;
+				// 	// console.log('Window Height:')
+				// 	// console.log(windowh);
 
-					// videoels = document.querySelectorAll('video[preload="none"]');
-					videoels = document.querySelectorAll('.noloaded');
-					// console.log('Video elements:');
-					console.log($(videoels[0])[0]);
-					console.log(videoels.length);
-					console.log('');
-					videoelo = $(videoels[0])[0].offset().top;
-					if (videoelo <= windowh) {
-						$(videoels[0])[0].attr('preload', 'metadata');
-						$(videoels[0])[0].removeAttr('poster');
-						$(videoels[0])[0].removeClass('noloaded');
-						// videoels = '';
-					}
-				});
+				// 	// videoels = document.querySelectorAll('video[preload="none"]');
+				// 	// videoels = document.querySelectorAll('.noloaded');
+				// 	// videoels = $('.noloaded');
+				// 	videoels = $('video[preload="none"]');
+				// 	videoel = $(videoels[0]);
+
+				// 	// console.log('Video elements:');
+				// 	// console.log(videoels);
+				// 	// console.log(videoels.length);
+				// 	videoelo = videoel.offset().top;
+				// 	// console.log('Video element 0 offset top:');
+				// 	// console.log(videoelo);
+				// 	// console.log('');
+				// 	if (videoelo <= windowh) {
+				// 		videoel.attr('preload', 'metadata');
+				// 		videoel.removeAttr('poster');
+				// 		videoel.removeClass('noloaded');
+
+				// 		// videoel.setAttribute('preload', 'metadata');
+				// 		// videoel.removeAttribute('poster');
+				// 		// videoel.classList.remove('noloaded');
+
+				// 		// videoels = $('.noloaded');
+				// 	}
+				// });
 			});
 		</script>
 	</div>

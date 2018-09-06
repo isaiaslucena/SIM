@@ -743,7 +743,8 @@ class Pages extends CI_Controller {
 
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
+			// $data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], 0, 10);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');

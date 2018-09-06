@@ -88,14 +88,14 @@
 			</script>
 		<?php } else { ?>
 			<script type="text/javascript">
-				var bpage = '<?php echo $page; ?>';
-				var pagejoin = '<?php echo base_url("pages/join"); ?>';
+				var bpage = '<?php echo $page;?>';
+				var pagejoin = '<?php echo base_url("pages/join");?>';
 				var sallkeywordquant, skeywordquant;
 				var changepassword = <?php echo $changepass; ?>;
 				var plimit = 0;
 				var poffset = 5;
-				var selected_date = '<?php echo $selected_date; ?>';
-				var page = '<?php echo $spage; ?>';
+				var selected_date = '<?php echo $selected_date;?>';
+				var page = '<?php echo $spage;?>';
 
 				starttime = new Date();
 				if (page == pagejoin) {

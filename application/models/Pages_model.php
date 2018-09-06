@@ -507,7 +507,59 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+desc';
+		$path='/solr/knewin_radio/query?rows=10000&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if (!is_null($idsline)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idsline.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_radio_novo_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/knewin_radio/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$idsline = null;
