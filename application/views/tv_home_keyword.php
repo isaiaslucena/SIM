@@ -32,7 +32,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-lg-12">
+		<div id="divcolc" class="col-lg-12">
 			<?php
 			$divcount = 0;
 			$icount=0;
@@ -107,7 +107,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" data-loaded="0" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
@@ -123,7 +123,7 @@
 
 		<script type="text/javascript">
 			var newdivid = 0, cksource = 0, totalpanels, totalpanelsd = 0,
-			joinfiles = false, filestojoin = [];
+			videoels, joinfiles = false, filestojoin = [];
 
 			$('video').bind('contextmenu', function() { return false; });
 
@@ -495,24 +495,28 @@
 
 				$('.ptext').css('overflowY', 'hidden');
 
-				$(window).scroll(function(event) {
-					var windowh = $(window).height() - 200;
-					console.log('Window Height:')
-					console.log(windowh);
-					var documenth = $(document).height();
+				fvideo = $('video[preload="none"]');
+				$(fvideo[0]).attr('preload', 'metadata');
+				$(fvideo[0]).removeClass('noloaded');
+				$(fvideo[0]).removeAttr('poster');
 
-					var videoel = $('video[data-loaded="0"]');
-					// var videoel = document.querySelector('video[data-loaded="0"]');
-					console.log('Video elements:');
-					console.log(videoel.length);
-					console.log(' ');
-					var videoelo = $(videoel[0]).offset().top;
-					if (videoelo < windowh) {
-						$(videoel[0]).attr('data-loaded', '1');
-						$(videoel[0]).attr('preload', 'metadata');
-						$(videoel[0]).removeAttr('poster');
-						videoel = $('video[data-loaded="0"]');
-						// console.log('video nao carregado apareceu!');
+				$(this).scroll(function(event) {
+					var windowh = $(window).height() - 200;
+					// console.log('Window Height:')
+					// console.log(windowh);
+
+					// videoels = document.querySelectorAll('video[preload="none"]');
+					videoels = document.querySelectorAll('.noloaded');
+					// console.log('Video elements:');
+					console.log($(videoels[0])[0]);
+					console.log(videoels.length);
+					console.log('');
+					videoelo = $(videoels[0])[0].offset().top;
+					if (videoelo <= windowh) {
+						$(videoels[0])[0].attr('preload', 'metadata');
+						$(videoels[0])[0].removeAttr('poster');
+						$(videoels[0])[0].removeClass('noloaded');
+						// videoels = '';
 					}
 				});
 			});
