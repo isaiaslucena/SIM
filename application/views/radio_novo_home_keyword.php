@@ -32,8 +32,9 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<?php
+
 			$divcount = 0;
-			$icount=0;
+			$icount = 0;
 			foreach ($keyword_texts->response->docs as $found) {
 				$divcount++;
 				$icount++;
@@ -57,7 +58,12 @@
 				<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
 					<div class="panel-heading text-center">
 						<label class="pull-left" style="font-weight: normal">
-							<input type="checkbox" class="cbjoinfiles" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>"> <?php echo get_phrase('join');?>
+							<input type="checkbox" class="cbjoinfiles"
+							id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>"
+							data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>"
+							data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>"
+							data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>">
+							 <?php echo get_phrase('join');?>
 						</label>
 
 						<label class="labeltitle">
@@ -115,6 +121,7 @@
 					</div>
 				</div>
 			<?php } ?>
+
 			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
 				<i class="fa fa-refresh fa-spin"></i> Carregando...
 			</span>
@@ -135,16 +142,16 @@
 	</div>
 
 	<script type="text/javascript">
-		var newdivid = 0, cksource = 0, totalpanels, totalpanelsd = 0,
-		joinfiles = false, filestojoin = [];
+		var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
+		totalpanelsd = 0, joinfiles = false, filestojoin = [];
+
+		jQuery.fn.scrollTo = function(elem) {
+			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+			return this;
+		}
 
 		$(document).ready(function() {
 			totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-			jQuery.fn.scrollTo = function(elem) {
-				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-				return this;
-			}
 
 			ptexts = $('.ptext.text-justify');
 			$.each(ptexts, function(index, val) {
@@ -511,17 +518,58 @@
 			$(this).css('overflowY', 'hidden');
 		});
 
+		pstart = <?php echo $start;?>;
+		pcstart = <?php echo $rows;?>;
+		pfound = <?php echo $keyword_texts->response->numFound;?>;
 		$(window).scroll(function() {
 			winscrollToph = ($(window).scrollTop() + $(window).height());
 			winheight = $(document).height();
 			if (winscrollToph == winheight) {
-				console.log('reached end page');
-				$('#loadmore').animate({
-					'opacity': 100,
-				},
-					'fast', function() {
-					console.log('finish opacity');
-				});
+				pstart = pstart + pcstart;
+				if (pstart <= pfound) {
+					$('#loadmore').animate({'opacity': 100}, 500);
+					$.post('get_radio_novo_keyword_texts',
+						{
+							'id_keyword': <?php echo $id_keyword;?>,
+							'id_client': <?php echo $id_client;?>,
+							'keyword_selected': '<?php echo $keyword_selected;?>',
+							'client_selected': '<?php echo $client_selected;?>',
+							'startdate': '<?php echo $startdate;?>',
+							'enddate': '<?php echo $enddate;?>',
+							'start': pstart,
+							'rows': <?php echo $rows;?>
+						},
+						function(data, textStatus, xhr) {
+							$('#loadmore').before(data);
+
+							totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+							ptexts = $('.ptext.text-justify');
+							$.each(ptexts, function(index, val) {
+								// console.log(event);
+								cpid = $(val).attr('id');
+								scpid = '#'+cpid;
+								keywfound = '#'+cpid+' > .kwfound';
+								keyword = '<?php echo $keyword_selected; ?>';
+								// idkeyword = event.target.dataset.idkeyword;
+								// idpbodyt = event.target.dataset.pbodyt;
+
+								pbodytext = $(val).text();
+								rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+								pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+								$(scpid).html(null);
+								$(scpid).html(pbodynewtext);
+
+								qtkwf = $(keywfound).length;
+								$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+								$(val).scrollTo(keywfound);
+							});
+
+							$('.ptext').css('overflowY', 'hidden');
+
+							$('#loadmore').animate({'opacity': 0}, 500);
+					});
+				}
 			}
 		});
 	</script>

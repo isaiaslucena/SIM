@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
-						<?php 
+						<?php
 						$timezone = new DateTimeZone('UTC');
 						$sd = new Datetime($startdate, $timezone);
 						$newtimezone = new DateTimeZone('America/Sao_Paulo');
@@ -247,7 +247,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					$('#btnloadmore').fadeOut('fast');
 				}
 			});
-			
+
 			function hidenokeyword() {
 				clientkeywords = $('.client_keywords');
 				clientkeywords.each( function(element, index) {

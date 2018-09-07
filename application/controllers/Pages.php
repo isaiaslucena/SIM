@@ -726,7 +726,8 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
-
+			$data['start'] = 0;
+			$data['rows'] = 10;
 
 			$timezone = new DateTimeZone('UTC');
 			$sd = new Datetime($data['startdate'], $timezone);
@@ -741,10 +742,9 @@ class Pages extends CI_Controller {
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
-
 			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 			// $data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], 0, 10);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -756,6 +756,43 @@ class Pages extends CI_Controller {
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
+	}
+
+	public function get_radio_novo_keyword_texts() {
+		$data_navbar['selected_page'] = 'home_radio_novo';
+		$data_navbar['vtype'] = 'radio_novo';
+		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
+
+		$data['id_keyword'] = $this->input->post('id_keyword');
+		$data['id_client'] = $this->input->post('id_client');
+		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		$data['startdate'] = $this->input->post('startdate');
+		$data['enddate'] = $this->input->post('enddate');
+		$data['start'] = $this->input->post('start');
+		$data['rows'] = $this->input->post('rows');
+
+		$timezone = new DateTimeZone('UTC');
+		$sd = new Datetime($data['startdate'], $timezone);
+		$ed = new Datetime($data['enddate'], $timezone);
+		$newtimezone = new DateTimeZone('America/Sao_Paulo');
+		$sd->setTimezone($newtimezone);
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		$data_discard['startdate'] = $epochstartdate;
+		$data_discard['enddate'] = $epochenddate;
+		$data_discard['id_client'] = $data['id_client'];
+		$data_discard['id_keyword'] = $data['id_keyword'];
+
+		$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
+		// $data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
+		$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+
+		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		$data['id_user'] = $this->session->userdata('id_user');
+
+		$this->load->view('get_radio_novo_keyword_texts', $data);
 	}
 
 	public function tv_novo_home_keyword() {
@@ -775,7 +812,8 @@ class Pages extends CI_Controller {
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
-
+			$data['start'] = 0;
+			$data['rows'] = 10;
 
 			$data_discard['startdate'] = $data['startdate'];
 			$data_discard['enddate'] = $data['enddate'];
@@ -783,7 +821,8 @@ class Pages extends CI_Controller {
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			// $data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate'], $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -795,6 +834,35 @@ class Pages extends CI_Controller {
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
+	}
+
+	public function get_tv_novo_keyword_texts() {
+		$data_navbar['selected_page'] = 'home_tv';
+		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
+		$data_navbar['vtype'] = 'tv';
+
+		$data['id_keyword'] = $this->input->post('id_keyword');
+		$data['id_client'] = $this->input->post('id_client');
+		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		$data['startdate'] = $this->input->post('startdate');
+		$data['enddate'] = $this->input->post('enddate');
+		$data['start'] =$this->input->post('start');
+		$data['rows'] = $this->input->post('rows');
+
+		$data_discard['startdate'] = $data['startdate'];
+		$data_discard['enddate'] = $data['enddate'];
+		$data_discard['id_client'] = $data['id_client'];
+		$data_discard['id_keyword'] = $data['id_keyword'];
+
+		$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
+		// $data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
+		$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate'], $data['start'], $data['rows']);
+
+		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		$data['id_user'] = $this->session->userdata('id_user');
+
+		$this->load->view('get_tv_novo_keyword_texts', $data);
 	}
 
 	public function load_file() {

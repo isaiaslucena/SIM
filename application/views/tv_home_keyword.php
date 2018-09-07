@@ -35,7 +35,7 @@
 		<div id="divcolc" class="col-lg-12">
 			<?php
 			$divcount = 0;
-			$icount=0;
+			$icount = 0;
 			foreach ($keyword_texts->response->docs as $found) {
 				$divcount++;
 				$icount++;
@@ -62,7 +62,11 @@
 				<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
 					<div class="panel-heading text-center">
 						<label class="pull-left disabled" style="font-weight: normal">
-							<input type="checkbox" class="cbjoinfiles disabled" id="<?php echo 'cb'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>" data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>" data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>" data-idkeyword="<?php echo $id_keyword;?>" disabled> <?php echo get_phrase('join');?>
+							<input type="checkbox" class="cbjoinfiles disabled" id="<?php echo 'cb'.$divcount;?>"
+							 data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>"
+							  data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>"
+							   data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>"
+							    data-idkeyword="<?php echo $id_keyword;?>" disabled> <?php echo get_phrase('join');?>
 						</label>
 
 						<label class="labeltitle">
@@ -74,23 +78,30 @@
 						</label>
 
 						<div class="btn-toolbar pull-right">
-							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
+							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>"
+							 data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
+							  data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('previous');
 								$icount++; ?>
 							</button>
 
-							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>" data-position="next">
+							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>"
+							 data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
+							  data-enddate="<?php echo $found->endtime_dt?>" data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
 
-							<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>" data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
+							<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>"
+							 data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>"
+							  data-idclient="<?php echo $id_client;?>" data-toggle="collapse"
+							   data-target="<?php echo '#div'.$divcount;?>">
 								<i style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('discard');?>
 							</button>
 
-							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
+							<button disabled type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right disabled"><?php echo get_phrase('edit');?></button>
 							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
@@ -107,7 +118,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
@@ -119,11 +130,138 @@
 					</div>
 				</div>
 			<?php } ?>
+
+			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
+				<i class="fa fa-refresh fa-spin"></i> Carregando...
+			</span>
 		</div>
 
 		<script type="text/javascript">
-			var newdivid = 0, cksource = 0, totalpanels, totalpanelsd = 0,
-			videoels, joinfiles = false, filestojoin = [];
+			var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
+			totalpanelsd = 0, videoels, joinfiles = false, filestojoin = [];
+
+			jQuery.fn.scrollTo = function(elem) {
+				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+				return this;
+			}
+
+			$(document).ready(function() {
+				totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+				ptexts = $('.ptext.text-justify');
+				$.each(ptexts, function(index, val) {
+					// console.log(event);
+					cpid = $(val).attr('id');
+					scpid = '#'+cpid;
+					keywfound = '#'+cpid+' > .kwfound';
+					keyword = '<?php echo $keyword_selected; ?>';
+					// idkeyword = event.target.dataset.idkeyword;
+					// idpbodyt = event.target.dataset.pbodyt;
+
+					pbodytext = $(val).text();
+					rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+					pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+					$(scpid).html(null);
+					$(scpid).html(pbodynewtext);
+
+					qtkwf = $(keywfound).length;
+					$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+					$(val).scrollTo(keywfound);
+				});
+
+				$('.ptext').css('overflowY', 'hidden');
+
+				pstart = <?php echo $start;?>;
+				pcstart = <?php echo $rows;?>;
+				pfound = <?php echo $keyword_texts->response->numFound;?>;
+				$(window).scroll(function() {
+					winscrollToph = ($(window).scrollTop() + $(window).height());
+					winheight = $(document).height();
+					if (winscrollToph == winheight) {
+						pstart = pstart + pcstart;
+						if (pstart <= pfound) {
+							$('#loadmore').animate({'opacity': 100}, 500);
+							$.post('get_tv_novo_keyword_texts',
+								{
+									'id_keyword': <?php echo $id_keyword;?>,
+									'id_client': <?php echo $id_client;?>,
+									'keyword_selected': '<?php echo $keyword_selected;?>',
+									'client_selected': '<?php echo $client_selected;?>',
+									'startdate': '<?php echo $startdate;?>',
+									'enddate': '<?php echo $enddate;?>',
+									'start': pstart,
+									'rows': <?php echo $rows;?>
+								},
+								function(data, textStatus, xhr) {
+									$('#loadmore').before(data);
+
+									totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+									ptexts = $('.ptext.text-justify');
+									$.each(ptexts, function(index, val) {
+										// console.log(event);
+										cpid = $(val).attr('id');
+										scpid = '#'+cpid;
+										keywfound = '#'+cpid+' > .kwfound';
+										keyword = '<?php echo $keyword_selected; ?>';
+										// idkeyword = event.target.dataset.idkeyword;
+										// idpbodyt = event.target.dataset.pbodyt;
+
+										pbodytext = $(val).text();
+										rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+										pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+										$(scpid).html(null);
+										$(scpid).html(pbodynewtext);
+
+										qtkwf = $(keywfound).length;
+										$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+										$(val).scrollTo(keywfound);
+									});
+
+									$('.ptext').css('overflowY', 'hidden');
+
+									$('#loadmore').animate({'opacity': 0}, 500);
+							});
+						}
+					}
+				});
+
+				// fvideo = $('video[preload="none"]');
+				// $(fvideo[0]).attr('preload', 'metadata');
+				// $(fvideo[0]).removeClass('noloaded');
+				// $(fvideo[0]).removeAttr('poster');
+
+				// $(this).scroll(function(event) {
+				// 	var windowh = $(window).height() - 200;
+				// 	// console.log('Window Height:')
+				// 	// console.log(windowh);
+
+				// 	// videoels = document.querySelectorAll('video[preload="none"]');
+				// 	// videoels = document.querySelectorAll('.noloaded');
+				// 	// videoels = $('.noloaded');
+				// 	videoels = $('video[preload="none"]');
+				// 	videoel = $(videoels[0]);
+
+				// 	// console.log('Video elements:');
+				// 	// console.log(videoels);
+				// 	// console.log(videoels.length);
+				// 	videoelo = videoel.offset().top;
+				// 	// console.log('Video element 0 offset top:');
+				// 	// console.log(videoelo);
+				// 	// console.log('');
+				// 	if (videoelo <= windowh) {
+				// 		videoel.attr('preload', 'metadata');
+				// 		videoel.removeAttr('poster');
+				// 		videoel.removeClass('noloaded');
+
+				// 		// videoel.setAttribute('preload', 'metadata');
+				// 		// videoel.removeAttribute('poster');
+				// 		// videoel.classList.remove('noloaded');
+
+				// 		// videoels = $('.noloaded');
+				// 	}
+				// });
+			});
 
 			$('video').bind('contextmenu', function() { return false; });
 
@@ -462,74 +600,6 @@
 				/*do nothing*/
 			}, function() {
 				$(this).css('overflowY', 'hidden');
-			});
-
-			$(document).ready(function() {
-				totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-				jQuery.fn.scrollTo = function(elem) {
-					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-					return this;
-				}
-
-				ptexts = $('.ptext.text-justify');
-				$.each(ptexts, function(index, val) {
-					// console.log(event);
-					cpid = $(val).attr('id');
-					scpid = '#'+cpid;
-					keywfound = '#'+cpid+' > .kwfound';
-					keyword = '<?php echo $keyword_selected; ?>';
-					// idkeyword = event.target.dataset.idkeyword;
-					// idpbodyt = event.target.dataset.pbodyt;
-
-					pbodytext = $(val).text();
-					rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-					pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-					$(scpid).html(null);
-					$(scpid).html(pbodynewtext);
-
-					qtkwf = $(keywfound).length;
-					$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
-					$(val).scrollTo(keywfound);
-				});
-
-				$('.ptext').css('overflowY', 'hidden');
-
-				fvideo = $('video[preload="none"]');
-				$(fvideo[0]).attr('preload', 'metadata');
-				$(fvideo[0]).removeClass('noloaded');
-				$(fvideo[0]).removeAttr('poster');
-
-				// $(this).scroll(function(event) {
-				// 	var windowh = $(window).height() - 200;
-				// 	// console.log('Window Height:')
-				// 	// console.log(windowh);
-
-				// 	// videoels = document.querySelectorAll('video[preload="none"]');
-				// 	// videoels = document.querySelectorAll('.noloaded');
-				// 	// videoels = $('.noloaded');
-				// 	videoels = $('video[preload="none"]');
-				// 	videoel = $(videoels[0]);
-
-				// 	// console.log('Video elements:');
-				// 	// console.log(videoels);
-				// 	// console.log(videoels.length);
-				// 	videoelo = videoel.offset().top;
-				// 	// console.log('Video element 0 offset top:');
-				// 	// console.log(videoelo);
-				// 	// console.log('');
-				// 	if (videoelo <= windowh) {
-				// 		videoel.attr('preload', 'metadata');
-				// 		videoel.removeAttr('poster');
-				// 		videoel.removeClass('noloaded');
-
-				// 		// videoel.setAttribute('preload', 'metadata');
-				// 		// videoel.removeAttribute('poster');
-				// 		// videoel.classList.remove('noloaded');
-
-				// 		// videoels = $('.noloaded');
-				// 	}
-				// });
 			});
 		</script>
 	</div>
