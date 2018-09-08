@@ -118,7 +118,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
