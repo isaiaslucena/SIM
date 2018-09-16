@@ -507,7 +507,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_radio/query?rows=10000&wt=json&sort=starttime_dt+desc';
+		$path='/solr/knewin_radio/query?wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$idsline = null;
@@ -857,7 +857,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_radio/query?rows=500&wt=json&sort=starttime_dt+desc';
+		$path='/solr/knewin_radio/query?wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$data = array(

@@ -1130,6 +1130,48 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function edit_novo_temp() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'edit_novo',
+				'last_page' => base_url('pages/edit_novo_temp')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data_navbar['selected_page'] = 'edit_novo';
+			$data['sid'] = $this->input->post('sid');
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['id_file'] = $this->input->post('id_file');
+			$data['id_text'] = $this->input->post('id_text');
+			$data['client_selected'] = $this->input->post('client_selected');
+			$data['novodoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+			if (empty($this->input->post('client_selected'))) {
+				$data['keyword_selected'] = $this->input->post('keyword');
+			} else {
+				$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			}
+			$data['state'] = $this->input->post('state');
+			$data['radio'] = $this->input->post('radio');
+			$data['timestamp'] = $this->input->post('timestamp');
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('edit_novo_temp', $data);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
 	public function join() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();

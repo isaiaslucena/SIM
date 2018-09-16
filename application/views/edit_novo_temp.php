@@ -17,7 +17,7 @@ if (isset($novodoc)) {
 	$ssource = $novodoc->response->docs[0]->source_s;
 	$mediaurl = $novodoc->response->docs[0]->mediaurl_s;
 	$content = $novodoc->response->docs[0]->content_t[0];
-	$times = $novodoc->response->docs[0]->times_t[0];
+	$times = str_replace('\u0000', '', $novodoc->response->docs[0]->times_t[0]);
 } else {
 	$timezone = new DateTimeZone('UTC');
 	$sd = new Datetime($starttime_dt);
@@ -38,9 +38,7 @@ if (isset($novodoc)) {
 	$ssource = $source_s;
 	$mediaurl = $mediaurl_s;
 	$content = $content_t;
-	if (isset($times_t)) {
-		$times = $times_t;
-	}
+	$times = str_replace('\u0000', '', $times_t);
 }
 ?>
 
@@ -61,6 +59,7 @@ if (isset($novodoc)) {
 		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
+		<script src="<?php echo base_url('assets/readalong/readalong.js');?>"></script>
 
 		<style type="text/css">
 			audio::-internal-media-controls-download-button { display:none; }
@@ -73,27 +72,47 @@ if (isset($novodoc)) {
 
 			.kword{
 				color: white;
+				/* font-weight: bold; */
 				background-color: red;
-				font-size: 110%;
+				border: solid;
+				border-color: red;
+				border-width: 2px;
+				border-radius: 8px;
+				padding: 1px;
+				z-index: 100;
 			}
 
 			.selectedt{
 				color: white;
-				background-color: darkblue;
+				background-color: blue;
+				z-index: 10;
 			}
 
 			span[data-begin]:focus,
 			span[data-begin]:hover {
-				color: black;
-				background-color: #FFFF00;
-				box-shadow: 0px 0px 4px #FFFFCA;
+				background-color: yellow;
+				/*border: solid;*/
+				/*border-color: yellow;*/
+				/*border-width: 2px;*/
+				border-radius: 8px;
+				/*padding: 0.5px;*/
 			}
 			span[data-begin].speaking {
 				background-color: yellow;
-				box-shadow: 0px 0px 4px yellow;
+				/*border: solid;*/
+				/*border-color: yellow;*/
+				/*border-width: 2px;*/
+				border-radius: 8px;
+				/*padding: 1px;*/
+				z-index: 900;
 			}
 			span[data-begin] {
 				cursor: pointer;
+				/*border: solid;*/
+				/*border-color: transparent;*/
+				/*border-width: 2px;*/
+				/*border-radius: 8px;*/
+				/*padding: 1px;*/
 			}
 		</style>
 	</head>
@@ -108,7 +127,7 @@ if (isset($novodoc)) {
 
 			<div class="row">
 				<div class="col-lg-8">
-					<audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls></audio>
+					<p><audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls preload="metadata"></audio></p>
 				</div>
 
 				<div class="col-lg-4">
@@ -123,7 +142,8 @@ if (isset($novodoc)) {
 
 			<div class="row">
 				<div class="col-lg-12">
-					<form id="cropnovo" action="<?php echo site_url('pages/crop_novo'); ?>" method="post" accept-charset="utf-8" style="display: none;">
+					<form id="cropnovo" action="<?php echo site_url('pages/crop_novo'); ?>" method="post" accept-charset="utf-8">
+						<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked>
 						<input type="text" id="starttime" name="starttime">
 						<input type="text" id="endtime" name="endtime">
 						<input type="text" id="ssource" name="ssource" value="<?php echo $ssource; ?>">
@@ -143,9 +163,7 @@ if (isset($novodoc)) {
 
 			<div class="row">
 				<div class="col-lg-12">
-					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px">
-						<?php echo (string)$content?>
-					</p>
+					<p id="passage-text" class="text-justify" style="overflow-y: auto; max-height: 400px"></p>
 				</div>
 			</div>
 
@@ -164,6 +182,7 @@ if (isset($novodoc)) {
 			var audioel = $('#passage-audio');
 			var count = 0;
 			var ratec = 1;
+			var times = JSON.parse('<?php echo $times; ?>');
 
 			$('audio').bind('contextmenu', function() { return false; });
 
@@ -241,13 +260,13 @@ if (isset($novodoc)) {
 
 					$('#starttime').val(cropstarts);
 
-					console.log('crop starttime (string): '+cropstartt);
-					console.log('crop starttime (seconds): '+cropstarts);
+					// console.log('crop starttime (string): '+cropstartt);
+					// console.log('crop starttime (seconds): '+cropstarts);
 				}
 			});
 
 			$('#btncend').click(function(event) {
-				console.log(croptext);
+				// console.log(croptext);
 				cropendss = audioel[0].currentTime;
 				cropends = (cropendss * 100 / 100).toFixed(3);
 
@@ -285,8 +304,8 @@ if (isset($novodoc)) {
 
 						$('#endtime').val(cropends);
 
-						console.log('crop endtime (string): '+cropendt);
-						console.log('crop endtime (seconds): '+cropends);
+						// console.log('crop endtime (string): '+cropendt);
+						// console.log('crop endtime (seconds): '+cropends);
 					}
 
 					if (croptext) {
@@ -299,24 +318,39 @@ if (isset($novodoc)) {
 			});
 
 			$('#passage-text').mouseup(function(e) {
+				selection = window.getSelection().getRangeAt(0);
+
+				if (selection.startContainer.data == " ") {
+					startspan = $(selection.startContainer.nextSibling);
+					startspanindex = parseInt(startspan.attr('data-index'));
+				} else {
+					startspan = $(selection.startContainer.parentNode);
+					startspanindex = parseInt(startspan.attr('data-index'));
+				}
+				startspantime = startspan.attr('data-begin');
+
+				if (selection.endContainer.data == " ") {
+					endspan = $(selection.endContainer.previousSibling);
+					endspanindex = parseInt(endspan.attr('data-index'));
+				} else {
+					endspan = $(selection.endContainer.parentNode);
+					endspanindex = parseInt(endspan.attr('data-index'));
+				}
+				endspantime = endspan.attr('data-begin');
+
 				$(this).children().removeClass('selectedt');
-
-				var selection = window.getSelection().getRangeAt(0);
-				var selectedText = selection.extractContents();
-				console.log(selectedText);
-				var span = $('<span class="selectedt">'+selectedText.textContent+'</span>');
-				selection.insertNode(span[0]);
-
-				var txt = $('#passage-text').html();
-				$('#passage-text').html(txt.replace(/<\/span>(?:\s)*<span class="selectedt">/g, ''));
-
-				if (document.selection) {
-					document.selection.empty();
-				} else if (window.getSelection) {
-					window.getSelection().removeAllRanges();
+				for (var i = startspanindex; i <= endspanindex; i++) {
+					$('span[data-index="'+i+'"').addClass('selectedt');
 				}
 
-				$('#textseld').val(selectedText.textContent);
+				text = "";
+				if (window.getSelection) {
+					text = window.getSelection().toString();
+				} else if (document.selection && document.selection.type != "Control") {
+					text = document.selection.createRange().text;
+				}
+
+				$('#textseld').val(text);
 
 				croptext = true;
 
@@ -326,8 +360,12 @@ if (isset($novodoc)) {
 				}
 			});
 
-			$('btncrop').click(function(event) {
-				swal("Aguarde", "Carregando...", "warn");
+			$('#btncrop').click(function(event) {
+				swal("Aguarde", "Aguarde...", "warn");
+
+				// $('#cropnovo').submit(function(event) {
+				// 	console.log(event);
+				// });
 			});
 
 			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
@@ -357,12 +395,47 @@ if (isset($novodoc)) {
 
 			$(document).ready(function() {
 				keyword = '<?php echo $keyword_selected; ?>';
+				keywordarr = keyword.split(" ");
+				keywcount = keywordarr.length - 1;
+				rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
 
-				pbodytext = $('#passage-text').text();
-				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-				pbodynewtext = pbodytext.replace(rgx, '<strong class="kword">'+keyword+'</strong>');
-				$('#passage-text').html(null);
-				$('#passage-text').html(pbodynewtext);
+				$.each(times, function(index, valt) {
+					$.each(valt.words, function(index, valw) {
+						wdur = String(valw.end - valw.begin).slice(0,4);
+						$('#passage-text').append('<span data-dur="'+wdur+'" data-begin="'+valw.begin+'">'+valw.word+'</span> ');
+					});
+				});
+
+				keywordxarr = [];
+				kc = 0;
+				$.each(keywordarr, function(index, val) {
+					str = '<span[^>]+>'+val+'<\/span> ';
+					keywordxarr.push(str);
+					kc++;
+				});
+				keywordrgx = keywordxarr.join('');
+				rgxkw = new RegExp(keywordrgx, "ig");
+
+				pbodyhtml = $('#passage-text').html();
+				found = pbodyhtml.match(rgxkw);
+				cfound = found.length;
+				$.each(found, function(index, val) {
+					strreplace = val.replace(/<span /g, '<span class="kword" ');
+					pbodyhtml = pbodyhtml.replace(val, strreplace);
+				});
+				$('#passage-text').html(pbodyhtml);
+
+				window.addEventListener('load', function (e) {
+					var args = {
+						text_element: document.getElementById('passage-text'),
+						audio_element: document.getElementById('passage-audio'),
+						autofocus_current_word: document.getElementById('autofocus-current-word').checked
+					};
+
+					ReadAlong.init(args);
+
+					document.querySelector('.autofocus-current-word').hidden = false;
+				}, false);
 			});
 		</script>
 	</body>

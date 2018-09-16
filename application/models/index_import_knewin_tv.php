@@ -34,10 +34,11 @@ $port='8983';
 $host='172.17.0.3';
 
 //Get start and endtime
+// $sstart = strtotime(date('Y-m-d').' 00:00:00');
+// $sstart = strtotime('2018-09-12 16:50:00');
+// $send = strtotime('2018-09-03 12:00:00');
 $sstart = strtotime("-10 minutes");
 $send = strtotime("now");
-//$sstart = strtotime('2018-09-03 07:00:00');
-//$send = strtotime('2018-09-03 12:00:00');
 $start = date('Y-m-d\TH:i:s', $sstart);
 $end = date('Y-m-d\TH:i:s', $send);
 
@@ -58,7 +59,7 @@ curl_setopt_array($curl, array(
 	CURLOPT_TIMEOUT => 30,
 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": 0,"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","sort": {"field": "startTime","order": "asc"}}',
+	CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": 0,"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
 	CURLOPT_HTTPHEADER => array(
 		"cache-control: no-cache",
 		"content-type: application/json",
@@ -99,13 +100,13 @@ if ($datafound > 10) {
 		$ctime = explode(' ', $ctime);
 		$ctime = $ctime[1] + $ctime[0];
 		$cstart = $ctime;
-		
+
 		$now = date('Y-m-d H:i:s');
 		echo $now."  Current page: ".$page."\r\n";
 		echo $now."  Start ".$datastart."\r\n";
 		// echo $now."  Current exibition: ".$datacount."\r\n";
 		echo "\r\n";
-		
+
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
 			CURLOPT_URL => "http://data.knewin.com/tv",
@@ -115,7 +116,7 @@ if ($datafound > 10) {
 			CURLOPT_TIMEOUT => 30,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": '.$datastart.',"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","sort": {"field": "startTime","order": "asc"}}',
+			CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": '.$datastart.',"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
 			CURLOPT_HTTPHEADER => array(
 				"cache-control: no-cache",
 				"content-type: application/json",
@@ -149,6 +150,7 @@ if ($datafound > 10) {
 			$dduration = $data->duration;
 			$dmurl = $data->mediaUrl;
 			$dcontent = replace_chars($data->content);
+			$dtimes = json_encode($data->times);
 			$snow = strtotime("now");
 			$dnow = date('Y-m-d\TH:i:s', $snow);
 
@@ -184,10 +186,10 @@ if ($datafound > 10) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 			$resultselect = json_decode(curl_exec($ch));
-			
+
 			$idfound = (int)$resultselect->response->numFound;
 			if ($idfound == 0) {
-				// echo "Not found!\r\n";	
+				// echo "Not found!\r\n";
 				// INSERT
 				$path='/solr/knewin_tv';
 				$url=$protocol."://".$host.":".$port.$path."/update?wt=json";
@@ -204,7 +206,8 @@ if ($datafound > 10) {
 							"inserted_dt" => $dnow,
 							"duration_i" => $dduration,
 							"mediaurl_s" => $dmurl,
-							"content_t" => $dcontent
+							"content_t" => $dcontent,
+							"times_t" => $dtimes
 						),
 					"commitWithin" => 1000,
 					),
@@ -233,7 +236,7 @@ if ($datafound > 10) {
 		}
 
 		$datastart = $datastart + 10;
-		$dstart = $datastart + 1;		
+		$dstart = $datastart + 1;
 	}
 } else {
 	$now = date('Y-m-d H:i:s');
@@ -288,10 +291,10 @@ if ($datafound > 10) {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		$resultselect = json_decode(curl_exec($ch));
-		
+
 		$idfound = (int)$resultselect->response->numFound;
 		if ($idfound == 0) {
-			// echo "Not found!\r\n";	
+			// echo "Not found!\r\n";
 			// INSERT
 			$path='/solr/knewin_tv';
 			$url=$protocol."://".$host.":".$port.$path."/update?wt=json";
@@ -308,7 +311,8 @@ if ($datafound > 10) {
 						"inserted_dt" => $dnow,
 						"duration_i" => $dduration,
 						"mediaurl_s" => $dmurl,
-						"content_t" => $dcontent
+						"content_t" => $dcontent,
+						"times_t" => $dtimes
 					),
 				"commitWithin" => 1000,
 				),

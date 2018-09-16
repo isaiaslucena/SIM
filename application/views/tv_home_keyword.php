@@ -118,11 +118,11 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="none" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
+								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: hidden">
 									<?php echo (string)$stext; ?>
 								</p>
 							</div>
@@ -130,7 +130,6 @@
 					</div>
 				</div>
 			<?php } ?>
-
 			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
 				<i class="fa fa-refresh fa-spin"></i> Carregando...
 			</span>
@@ -145,18 +144,14 @@
 				return this;
 			}
 
-			$(document).ready(function() {
-				totalpanels = $('div.panel.panel-default.collapse.in').length;
-
+			function scrolltokeyword() {
 				ptexts = $('.ptext.text-justify');
+				ptextsl = ptexts.length;
 				$.each(ptexts, function(index, val) {
-					// console.log(event);
 					cpid = $(val).attr('id');
 					scpid = '#'+cpid;
 					keywfound = '#'+cpid+' > .kwfound';
 					keyword = '<?php echo $keyword_selected; ?>';
-					// idkeyword = event.target.dataset.idkeyword;
-					// idpbodyt = event.target.dataset.pbodyt;
 
 					pbodytext = $(val).text();
 					rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
@@ -168,8 +163,12 @@
 					$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
 					$(val).scrollTo(keywfound);
 				});
+			}
 
-				$('.ptext').css('overflowY', 'hidden');
+			$(document).ready(function() {
+				totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+				scrolltokeyword();
 
 				pstart = <?php echo $start;?>;
 				pcstart = <?php echo $rows;?>;
@@ -194,32 +193,8 @@
 								},
 								function(data, textStatus, xhr) {
 									$('#loadmore').before(data);
-
 									totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-									ptexts = $('.ptext.text-justify');
-									$.each(ptexts, function(index, val) {
-										// console.log(event);
-										cpid = $(val).attr('id');
-										scpid = '#'+cpid;
-										keywfound = '#'+cpid+' > .kwfound';
-										keyword = '<?php echo $keyword_selected; ?>';
-										// idkeyword = event.target.dataset.idkeyword;
-										// idpbodyt = event.target.dataset.pbodyt;
-
-										pbodytext = $(val).text();
-										rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-										pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-										$(scpid).html(null);
-										$(scpid).html(pbodynewtext);
-
-										qtkwf = $(keywfound).length;
-										$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
-										$(val).scrollTo(keywfound);
-									});
-
-									$('.ptext').css('overflowY', 'hidden');
-
+									scrolltokeyword();
 									$('#loadmore').animate({'opacity': 0}, 500);
 							});
 						}
@@ -285,7 +260,7 @@
 				})
 			}
 
-			$('.loadprevious').click(function(event) {
+			$(document).on('click', '.loadprevious', function(event) {
 				loadp = $(this);
 				loadp.children('i').css('display', 'inline-block');
 
@@ -383,7 +358,7 @@
 				});
 			});
 
-			$('.loadnext').click(function(event) {
+			$(document).on('click', '.loadnext', function(event) {
 				loadp = $(this);
 				loadp.children('i').css('display', 'inline-block');
 
@@ -481,7 +456,7 @@
 				});
 			});
 
-			$('.cbjoinfiles').click(function(event) {
+			$(document).on('click', '.cbjoinfiles', function(event) {
 				ciddoc = $(this).attr('data-iddoc');
 				cidsource = $(this).attr('data-idsource');
 				csource = $(this).attr('data-source');
@@ -559,7 +534,7 @@
 				}
 			});
 
-			$('.discarddoc').click(function(event) {
+			$(document).on('click', '.discarddoc', function(event) {
 				discardbtn = $(this);
 				discardbtn.children('i').css('display', 'inline-block');
 
@@ -592,13 +567,11 @@
 				);
 			});
 
-			$('.ptext').click(function() {
+			$(document).on('click', '.ptext', function() {
 				$(this).css('overflowY', 'auto');
 			})
 
-			$('.ptext').hover(function() {
-				/*do nothing*/
-			}, function() {
+			$(document).on('mouseleave' ,'.ptext', function() {
 				$(this).css('overflowY', 'hidden');
 			});
 		</script>

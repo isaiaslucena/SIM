@@ -471,7 +471,10 @@
 					if (verify) {
 						filestojoin.push(jfilename);
 						vbtnjoin.push(jvbtn);
-						if (filestojoin.length >= 2) {
+						if (filestojoin.length == 1) {
+							$('#btndownimgs').removeClass('disabled');
+							$('#btndownimgs').removeAttr('disabled');
+						} else if (filestojoin.length >= 2) {
 							$('#btnjoin').removeClass('disabled');
 							$('#btnjoin').removeAttr('disabled');
 							joinvideos = true;
@@ -481,7 +484,10 @@
 						filestojoin.splice(fileindex, 1);
 						vbntindex = vbtnjoin.indexOf(jvbtn);
 						vbtnjoin.splice(vbntindex, 1);
-						if (filestojoin.length <= 2) {
+						if (filestojoin.length == 0) {
+							$('#btndownimgs').addClass('disabled');
+							$('#btndownimgs').attr('disabled');
+						} else if (filestojoin.length <= 2) {
 							$('#btnjoin').addClass('disabled');
 							$('#btnjoin').attr('disabled', true);
 							joinvideos = false;

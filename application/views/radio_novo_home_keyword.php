@@ -13,10 +13,42 @@
 			height: 2000px;
 		}
 
-		.kwfound{
+		.fkword,.kword{
 			color: white;
+			/* font-weight: bold; */
 			background-color: red;
-			font-size: 110%;
+			border: solid;
+			border-color: red;
+			border-width: 2px;
+			border-radius: 8px;
+			padding: 1px;
+		}
+
+		span[data-begin]:focus,
+		span[data-begin]:hover {
+			background-color: yellow;
+			/*border: solid;*/
+			/*border-color: yellow;*/
+			/*border-width: 2px;*/
+			border-radius: 8px;
+			/*padding: 0.5px;*/
+		}
+		span[data-begin].speaking {
+			background-color: yellow;
+			/*border: solid;*/
+			/*border-color: yellow;*/
+			/*border-width: 2px;*/
+			border-radius: 8px;
+			/*padding: 1px;*/
+			z-index: 900;
+		}
+		span[data-begin] {
+			cursor: pointer;
+			/*border: solid;*/
+			/*border-color: transparent;*/
+			/*border-width: 2px;*/
+			/*border-radius: 8px;*/
+			/*padding: 1px;*/
 		}
 	</style>
 
@@ -41,6 +73,9 @@
 				$sid = $found->id_i;
 				$sidsource = $found->id_source_i;
 				$smediaurl = $found->mediaurl_s;
+				if (isset($found->times_t)) {
+					$stimes = json_decode(str_replace('\u0000', '', $found->times_t[0]), true);
+				}
 
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
@@ -68,6 +103,7 @@
 
 						<label class="labeltitle">
 							<i class="fa fa-search fa-fw"></i>
+							<span id="<?php echo 'tkeyfound'.$divcount;?>"></span>
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
@@ -102,26 +138,49 @@
 								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
 								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
 							</form>
+
+							<button type="submit" form="<?php echo 'form_temp'.$divcount;?>" class="btn btn-default btn-xs pull-right">Editar_Temp</button>
+							<form id="<?php echo 'form_temp'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo_temp');?>" target="_blank" method="POST">
+								<input type="hidden" name="sid" value="<?php echo $sid;?>">
+								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
+								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
+								<input type="hidden" name="sstartdate" value="<?php echo $sstartdate;?>">
+								<input type="hidden" name="senddate" value="<?php echo $senddate;?>">
+								<input type="hidden" name="id_keyword" value="<?php echo $id_keyword;?>">
+								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
+								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
+							</form>
 						</div>
 					</div>
 
 					<div class="panel-body">
-						<div class="row audioel">
-							<div class="col-lg-12">
-								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio>
-							</div>
-						</div>
-						<div class="row textel">
-							<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
-									<?php echo (string)$stext; ?>
-								</p>
-							</div>
+						<div class="col-lg-12">
+							<p class="paudio"><audio id="<?php echo 'paudio'.$divcount;?>" class="pfaudio" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio></p>
+							<p id="<?php echo 'ptext'.$divcount;?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+								<?php
+								if (isset($found->times_t)) {
+									foreach ($stimes as $stime) {
+										if (isset($stime['words'])) {
+											foreach ($stime['words'] as $word) {
+												$wbegin = (float)$word['begin'];
+												$wend = (float)$word['end'];
+												$wdur = substr((string)($wend - $wbegin), 0, 5);
+												$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+												echo $wspan;
+											}
+										}
+									}
+								} else {
+									echo (string)$stext;
+								}
+								?>
+							</p>
 						</div>
 					</div>
+
 				</div>
 			<?php } ?>
-
+			<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked style="display: none;">
 			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
 				<i class="fa fa-refresh fa-spin"></i> Carregando...
 			</span>
@@ -141,41 +200,70 @@
 		<div>
 	</div>
 
+	<script src="<?php echo base_url('assets/readalong/readalong.js');?>"></script>
 	<script type="text/javascript">
 		var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
-		totalpanelsd = 0, joinfiles = false, filestojoin = [];
+		totalpanelsd = 0, joinfiles = false, filestojoin = [],
+		keyword = '<?php echo $keyword_selected; ?>';
+		keywordarr = keyword.split(" ");
+		keywcount = keywordarr.length - 1;
+		rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
 
 		jQuery.fn.scrollTo = function(elem) {
 			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 			return this;
 		}
 
-		$(document).ready(function() {
-			totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-			ptexts = $('.ptext.text-justify');
+		function scrolltokeyword() {
+			ptexts = $('.ptext.text-justify.noscrolled');
+			ptextsl = ptexts.length;
 			$.each(ptexts, function(index, val) {
-				// console.log(event);
 				cpid = $(val).attr('id');
 				scpid = '#'+cpid;
-				keywfound = '#'+cpid+' > .kwfound';
-				keyword = '<?php echo $keyword_selected; ?>';
-				// idkeyword = event.target.dataset.idkeyword;
-				// idpbodyt = event.target.dataset.pbodyt;
 
-				pbodytext = $(val).text();
-				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-				$(scpid).html(null);
-				$(scpid).html(pbodynewtext);
+				keywordxarr = [];
+				kc = 0;
+				$.each(keywordarr, function(index, valk) {
+					str = '<span[^>]+>'+valk+'<\/span> ';
+					keywordxarr.push(str);
+					kc++;
+				});
+				keywordrgx = keywordxarr.join('');
+				rgxkw = new RegExp(keywordrgx, "ig");
 
+				pbodyhtml = $(val).html();
+				found = pbodyhtml.match(rgxkw);
+				cfound = found.length;
+				$.each(found, function(index, val) {
+					strreplace = val.replace(/<span /, '<span class="fkword" ');
+
+					strreplace = strreplace.replace(/<span data-dur/g, '<span class="kword" data-dur');
+					pbodyhtml = pbodyhtml.replace(val, strreplace);
+				});
+				$(val).html(pbodyhtml);
+
+				keywfound = '#'+cpid+' > .fkword';
 				qtkwf = $(keywfound).length;
-				$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+				idnumb = cpid.replace(/[a-zA-Z]/g, '');
+				$('#tkeyfound'+idnumb).text(qtkwf);
 				$(val).scrollTo(keywfound);
+				$(val).removeClass('noscrolled');
 			});
+		};
 
-			$('.ptext').css('overflowY', 'hidden');
-		});
+		function startread(idpaudio, idptext) {
+			var args = {
+				text_element: document.getElementById(idptext),
+				audio_element: document.getElementById(idpaudio),
+				autofocus_current_word: document.getElementById('autofocus-current-word').checked
+			};
+
+			console.log(args);
+
+			ReadAlong.init(args);
+
+			document.querySelector('.autofocus-current-word').hidden = false;
+		};
 
 		$('audio').bind('contextmenu', function() { return false; });
 
@@ -199,7 +287,7 @@
 			})
 		}
 
-		$('.loadprevious').click(function(event) {
+		$(document).on('click', '.loadprevious', function(event) {
 			loadp = $(this);
 			loadp.children('i').css('display', 'inline-block');
 
@@ -209,7 +297,6 @@
 			startdate = $(this).attr('data-startdate');
 
 			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
-				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;
 				if (numfound == 0) {
@@ -261,12 +348,10 @@
 					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
 					newdivid += 1;
-					// newdivid = iddivn + 1;
 					newdividn = iddiv + '-' + newdivid;
-					// newdividn = 'div' + newdivid;
 
 					divclone = $('#'+iddiv).clone(true);
-					// console.log(divclone);
+					console.log(divclone);
 
 					divclone.removeClass('panel-default');
 					divclone.addClass('panel-info');
@@ -292,15 +377,15 @@
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
 					divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-					divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
-					divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+					divclone.children('.panel-body').children('.col-lg-12').children('p.paudio').children('audio').attr('src', dmediaurl);
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').text(dcontent);
 
 					$('#'+iddiv).after(divclone);
 				}
 			});
 		});
 
-		$('.loadnext').click(function(event) {
+		$(document).on('click', '.loadnext', function(event) {
 			loadp = $(this);
 			loadp.children('i').css('display', 'inline-block');
 
@@ -310,7 +395,6 @@
 			startdate = $(this).attr('data-enddate');
 
 			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
-				// console.log(data);
 				loadp.children('i').css('display', 'none');
 				numfound = data.response.numFound;
 				if (numfound == 0) {
@@ -362,12 +446,9 @@
 					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
 					newdivid += 1;
-					// newdivid = iddivn + 1;
 					newdividn = iddiv + '-' + newdivid;
-					// newdividn = 'div' + newdivid;
 
 					divclone = $('#'+iddiv).clone(true);
-					// console.log(divclone);
 
 					divclone.removeClass('panel-default');
 					divclone.addClass('panel-info');
@@ -392,16 +473,16 @@
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-					divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-					divclone[0].children[1].children[0].children[0].children[0].src = dmediaurl;
-					divclone[0].children[1].children[1].children[0].children[0].innerText = dcontent;
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+					divclone.children('.panel-body').children('.col-lg-12').children('p.paudio').children('audio').attr('src', dmediaurl);
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').text(dcontent);
 
 					$('#'+iddiv).before(divclone);
 				}
 			});
 		});
 
-		$('.cbjoinfiles').click(function(event) {
+		$(document).on('click', '.cbjoinfiles', function(event) {
 			ciddoc = $(this).attr('data-iddoc');
 			cidsource = $(this).attr('data-idsource');
 			csource = $(this).attr('data-source');
@@ -451,7 +532,7 @@
 			}
 		});
 
-		$('#joinbtn').click(function(event) {
+		$(document).on('click', '#joinbtn', function(event) {
 			jbtn = $(this);
 			jidclient = jbtn.attr('data-idclient');
 			jidkeyword = jbtn.attr('data-idkeyword');
@@ -475,7 +556,7 @@
 			}
 		});
 
-		$('.discarddoc').click(function(event) {
+		$(document).on('click', '.discarddoc', function(event) {
 			discardbtn = $(this);
 			discardbtn.children('i').css('display', 'inline-block');
 
@@ -508,68 +589,61 @@
 			);
 		});
 
-		$('.ptext').click(function() {
+		$(document).on('click', '.ptext', function() {
 			$(this).css('overflowY', 'auto');
 		})
 
-		$('.ptext').hover(function() {
-			/*do nothing*/
-		}, function() {
+		$(document).on('mouseleave', '.ptext', function() {
 			$(this).css('overflowY', 'hidden');
 		});
 
-		pstart = <?php echo $start;?>;
-		pcstart = <?php echo $rows;?>;
-		pfound = <?php echo $keyword_texts->response->numFound;?>;
-		$(window).scroll(function() {
-			winscrollToph = ($(window).scrollTop() + $(window).height());
-			winheight = $(document).height();
-			if (winscrollToph == winheight) {
-				pstart = pstart + pcstart;
-				if (pstart <= pfound) {
-					$('#loadmore').animate({'opacity': 100}, 500);
-					$.post('get_radio_novo_keyword_texts',
-						{
-							'id_keyword': <?php echo $id_keyword;?>,
-							'id_client': <?php echo $id_client;?>,
-							'keyword_selected': '<?php echo $keyword_selected;?>',
-							'client_selected': '<?php echo $client_selected;?>',
-							'startdate': '<?php echo $startdate;?>',
-							'enddate': '<?php echo $enddate;?>',
-							'start': pstart,
-							'rows': <?php echo $rows;?>
-						},
-						function(data, textStatus, xhr) {
-							$('#loadmore').before(data);
-
-							totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-							ptexts = $('.ptext.text-justify');
-							$.each(ptexts, function(index, val) {
-								// console.log(event);
-								cpid = $(val).attr('id');
-								scpid = '#'+cpid;
-								keywfound = '#'+cpid+' > .kwfound';
-								keyword = '<?php echo $keyword_selected; ?>';
-								// idkeyword = event.target.dataset.idkeyword;
-								// idpbodyt = event.target.dataset.pbodyt;
-
-								pbodytext = $(val).text();
-								rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-								pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-								$(scpid).html(null);
-								$(scpid).html(pbodynewtext);
-
-								qtkwf = $(keywfound).length;
-								$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
-								$(val).scrollTo(keywfound);
-							});
-
-							$('.ptext').css('overflowY', 'hidden');
-
-							$('#loadmore').animate({'opacity': 0}, 500);
-					});
-				}
+		$(document).on('click', 'audio', function(event) {
+			// console.log($(this));
+			audioid = $(this).attr('id');
+			idn = audioid.replace(/[a-zA-Z]/g, '');
+			textid = 'ptext'+idn;
+			if ($(this)[0].paused) {
+				// console.log('audio playing!');
+				startread(audioid, textid);
+			} else {
+				// console.log('audio paused!');
 			}
+		});
+
+		$(document).ready(function() {
+			totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+			scrolltokeyword();
+
+			pstart = <?php echo $start;?>;
+			pcstart = <?php echo $rows;?>;
+			pfound = <?php echo $keyword_texts->response->numFound;?>;
+			$(window).scroll(function() {
+				winscrollToph = ($(window).scrollTop() + $(window).height());
+				winheight = $(document).height();
+				if (winscrollToph == winheight) {
+					pstart = pstart + pcstart;
+					if (pstart <= pfound) {
+						$('#loadmore').animate({'opacity': 100}, 500);
+						$.post('get_radio_novo_keyword_texts',
+							{
+								'id_keyword': <?php echo $id_keyword;?>,
+								'id_client': <?php echo $id_client;?>,
+								'keyword_selected': '<?php echo $keyword_selected;?>',
+								'client_selected': '<?php echo $client_selected;?>',
+								'startdate': '<?php echo $startdate;?>',
+								'enddate': '<?php echo $enddate;?>',
+								'start': pstart,
+								'rows': <?php echo $rows;?>
+							},
+							function(data, textStatus, xhr) {
+								$('#loadmore').before(data);
+								totalpanels = $('div.panel.panel-default.collapse.in').length;
+								scrolltokeyword();
+								$('#loadmore').animate({'opacity': 0}, 500);
+						});
+					}
+				}
+			});
 		});
 	</script>

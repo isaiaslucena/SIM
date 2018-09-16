@@ -295,6 +295,8 @@
 
 						<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
 
+						<a id="btndownimgs" type="button" class="btn btn-default disabled" title="Baixar imagens" disabled><i class="fa fa-download"></i></a>
+
 						<a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a>
 
 						<div class="btn-group" role="group" aria-label="...">
@@ -717,34 +719,8 @@
 													'</a>';
 								}
 
-								// if (file == lastvideo) {
-								// 	html =	'<div id="vbtn'+index+'" class="list-group-item active">'+
-								// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-								// 						'<p class="list-group-item-text">'+
-								// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-								// 							'<div class="checkbox checkbox-warning pull-left">'+
-								// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-								// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-								// 							'</div>'+
-								// 						'</p>'+
-								// 					'</div>';
-								// } else {
-								// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
-								// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-								// 						'<p class="list-group-item-text">'+
-								// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-								// 							'<div class="checkbox checkbox-warning pull-left">'+
-								// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-								// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-								// 							'</div>'+
-								// 						'</p>'+
-								// 					'</div>';
-								// }
-
 								nextvideo.append(html);
 							});
-
-							$('#vnext').scrollTo('.active');
 						}
 					);
 				};
@@ -843,7 +819,6 @@
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + selglvsource + '/' + selgldate + '/' + selglchannel + '/' + selglstate},
 						function(data, textStatus, xhr) {
-							console.log(data.length);
 							if (data.length == 1) {
 								firstvideo = data[0].replace(".mp4", "");
 								lastvideo = firstvideo;
@@ -925,30 +900,6 @@
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									}
-
-									// if (file == lastvideo) {
-									// 	html =	'<div id="vbtn'+index+'" class="list-group-item active">'+
-									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-									// 						'<p class="list-group-item-text">'+
-									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-									// 							'<div class="checkbox checkbox-warning pull-left">'+
-									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-									// 							'</div>'+
-									// 						'</p>'+
-									// 					'</div>';
-									// } else {
-									// 	html =	'<div id="vbtn'+index+'" class="list-group-item">'+
-									// 						'<h4 id="vspan'+index+'" class="list-group-item-heading" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</h4>'+
-									// 						'<p class="list-group-item-text">'+
-									// 							'<img src="<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource +'_'+file+'/001" width="100">'+
-									// 							'<div class="checkbox checkbox-warning pull-left">'+
-									// 								'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-									// 								'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-									// 							'</div>'+
-									// 						'</p>'+
-									// 					'</div>';
-									// }
 									nextvideo.append(html);
 								});
 							} else {
@@ -1002,7 +953,6 @@
 							}
 
 							mobileconf();
-							$('#vnext').scrollTo('.active')
 						}
 					);
 				};
@@ -1105,6 +1055,47 @@
 					$('.transcmodal').modal('show');
 				});
 
+				$('#btndownimgs').click(function(event) {
+					swal({
+						onOpen: () => {
+							swal.showLoading()
+						},
+						title: "Aguarde...",
+						animation: false,
+						allowEscapeKey: false,
+						allowOutsideClick: false,
+						showCancelButton: false,
+						showConfirmButton: false,
+					});
+
+					createzip = {
+						"source": jvsource,
+						"files": filestojoin
+					}
+
+					$psettings = {
+						url: "<?php echo str_replace('sim.','video.', base_url('video/createzip'))?>",
+						type: "POST",
+						data: createzip
+					}
+					$.ajax($psettings)
+					.done(function(data) {
+						downf = document.createElement('a');
+						downf.href = "<?php echo str_replace('sim.','video.', base_url('video/downloadzip'))?>"+"/"+data.zipfile;
+						document.body.appendChild(downf);
+						downf.click();
+
+						swal.close();
+					})
+					.fail(function() {
+						// console.log("error");
+						swal.close();
+					})
+					.always(function() {
+						// console.log("complete");
+					});
+				});
+
 				function load_vihts() {
 					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
 					$.post('proxy',
@@ -1120,7 +1111,7 @@
 							$('#selvinheta').selectpicker('refresh');
 						}
 					);
-				}
+				};
 
 				var progresscbar = new ProgressBar.Circle('#progresscrop', {
 					color: '#aaa',

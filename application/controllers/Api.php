@@ -157,5 +157,15 @@ class Api extends CI_Controller {
 			print json_encode($message, JSON_PRETTY_PRINT);
 		}
 	}
+
+	public function save_trans() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+
+			var_dump($postdata);
+		} else {
+			header("HTTP/1.1 403 Forbidden");
+		}
+	}
 }
 ?>

@@ -17,7 +17,13 @@
 					<div class="panel-body">
 
 						<div class="row">
-							<p class="loading"><em><img src="<?php echo base_url('assets/imgs/loader.gif');?>" alt="<?php echo get_phrase('initializing_audio');?>"><?php echo get_phrase('initializing_audio');?></em></p>
+							<p class="loading">
+								<em>
+									<img src="<?php echo base_url('assets/imgs/loader.gif');?>"
+									alt="<?php echo get_phrase('initializing_audio');?>">
+									<?php echo get_phrase('initializing_audio');?>
+								</em>
+							</p>
 							<p class="passage-audio" hidden>
 								<audio style="width: 100%;" id="passage-audio" src="<?php echo $mp3pathfilename;?>" autobuffer controls>
 									<em class="error"><strong>Error:</strong> Your browser doesn't appear to support HTML5 Audio.</em>
@@ -181,20 +187,20 @@
 								foreach ($xmldata->StorySegment as $storyseg) {
 									foreach ($storyseg->TranscriptSegment as $transcseg) {
 										$frstwordstart	= $transcseg->TranscriptWordList->Word[0]['start']-1;
-										$guid 			= (string)$transcseg->TranscriptGUID;
-										$type 			= $transcseg->AudioType;
-										$typestr 		= $type[0];
-										$typestartms 	= $type['start'];
-										$typestarts 	= $typestartms/100;
-										$typeendms 	= $type['end'];
-										$typeends 		= $typeendms/100;
+										$guid = (string)$transcseg->TranscriptGUID;
+										$type = $transcseg->AudioType;
+										$typestr = $type[0];
+										$typestartms = $type['start'];
+										$typestarts = $typestartms/100;
+										$typeendms  $type['end'];
+										$typeends = $typeendms/100;
 
-										$typeends2	= $frstwordstart/100;
-										$typeduration 	= number_format($typeends-$typestarts,3,"."," ");
+										$typeends2  $frstwordstart/100;
+										$typeduration = number_format($typeends-$typestarts,3,"."," ");
 										$typeduration2 = number_format($typeends2-$typestarts,3,"."," ");
 
-										$speaker		= $transcseg->Speaker;
-										$speakerg		= $speaker['name'];
+										$speaker = $transcseg->Speaker;
+										$speakerg = $speaker['name'];
 
 										if (!isset($transcseg->TranscriptWordList->Word)){
 											echo '<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";

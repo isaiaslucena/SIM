@@ -676,6 +676,8 @@
 					$('body').css('cursor', 'default');
 
 					swal.close();
+
+					$('#vnext').scrollTo('.active');
 				}
 
 				$('#checkjoincrop').change(function() {

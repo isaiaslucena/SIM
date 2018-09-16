@@ -48,9 +48,9 @@
 
 													$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 													$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $keyword['keyword'], $startdate, $enddate);
-													$keyword_foundc = count($keyword_found->response->docs);
+													$keyword_foundc = $keyword_found->response->numFound;
 													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate,$enddate,$keyword['keyword']);
-													$allkeyword_foundc = count($allkeyword_found->response->docs);
+													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;
 													if ($keyword_foundc != 0) { ?>

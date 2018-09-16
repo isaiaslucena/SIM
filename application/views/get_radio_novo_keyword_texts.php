@@ -7,6 +7,9 @@
 				$sid = $found->id_i;
 				$sidsource = $found->id_source_i;
 				$smediaurl = $found->mediaurl_s;
+				if (isset($found->times_t)) {
+					$stimes = json_decode(str_replace('\u0000', '', $found->times_t[0]), true);
+				}
 
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
@@ -34,6 +37,7 @@
 
 						<label class="labeltitle">
 							<i class="fa fa-search fa-fw"></i>
+							<span id="<?php echo 'tkeyfound'.$divcount;?>"></span>
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
@@ -72,17 +76,27 @@
 					</div>
 
 					<div class="panel-body">
-						<div class="row audioel">
-							<div class="col-lg-12">
-								<audio class="center-block" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio>
-							</div>
-						</div>
-						<div class="row textel">
-							<div class="col-lg-12 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: auto">
-									<?php echo (string)$stext; ?>
-								</p>
-							</div>
+						<div class="col-lg-12">
+							<p class="paudio"><audio id="<?php echo 'paudio'.$divcount;?>" class="pfaudio" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio></p>
+							<p id="<?php echo 'ptext'.$divcount;?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+								<?php
+								if (isset($found->times_t)) {
+									foreach ($stimes as $stime) {
+										if (isset($stime['words'])) {
+											foreach ($stime['words'] as $word) {
+												$wbegin = (float)$word['begin'];
+												$wend = (float)$word['end'];
+												$wdur = substr((string)($wend - $wbegin), 0, 5);
+												$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+												echo $wspan;
+											}
+										}
+									}
+								} else {
+									echo (string)$stext;
+								}
+								?>
+							</p>
 						</div>
 					</div>
 				</div>
