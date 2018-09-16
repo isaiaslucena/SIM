@@ -184,7 +184,7 @@ if (isset($novodoc)) {
 			var ratec = 1;
 			var times = JSON.parse('<?php echo $times; ?>');
 
-			$('audio').bind('contextmenu', function() { return false; });
+			$('audio').bind('contextmenu', function() {return false});
 
 			$('#playback-rate').change(function(event) {
 				this.nextElementSibling.textContent = String(Math.round(this.valueAsNumber * 10) / 10) + "\u00D7";
@@ -232,30 +232,32 @@ if (isset($novodoc)) {
 				}
 			});
 
-			$('#btncstart').click(function(event) {
-				cropstartss = audioel[0].currentTime;
+			function btncstart(sectime, btnid) {
+				console.log(sectime);
+				// cropstartss = audioel[0].currentTime;
+				cropstartss = sectime;
 				cropstarts = (cropstartss * 100 / 100).toFixed(3);
 
 				if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
-					$(this).text(null);
-					$(this).append('<i class="fa fa-hourglass-start"></i>');
-					$(this).removeClass('btn-success');
-					$(this).addClass('btn-default');
-					ccrope = false;
+					$(btnid).text(null);
+					$(btnid).append('<i class="fa fa-hourglass-start"></i>');
+					$(btnid).removeClass('btn-success');
+					$(btnid).addClass('btn-default');
+					ccrops = false;
 				} else {
 					cropstartms = cropstarts.split(".")
 					cropstartt = sectostring(cropstartss);
 					cropstart = cropstartt.replace(":", "-");
 					ccrops = true;
 
-					$(this).text(null);
-					$(this).append('<i class="fa fa-hourglass-start"></i>');
-					$(this).removeClass('btn-default');
-					$(this).addClass('btn-success');
-					$(this).append(' '+cropstartt);
+					$(btnid).text(null);
+					$(btnid).append('<i class="fa fa-hourglass-start"></i>');
+					$(btnid).removeClass('btn-default');
+					$(btnid).addClass('btn-success');
+					$(btnid).append(' '+cropstartt);
 
-					$('#btncend').removeClass('disabled');
+					$(btnid).removeClass('disabled');
 					$('#btncend').removeAttr('disabled');
 
 					$('#starttime').val(cropstarts);
@@ -263,27 +265,29 @@ if (isset($novodoc)) {
 					// console.log('crop starttime (string): '+cropstartt);
 					// console.log('crop starttime (seconds): '+cropstarts);
 				}
-			});
+			};
 
-			$('#btncend').click(function(event) {
+			function btncend(sectime, btnid) {
+				console.log(sectime);
 				// console.log(croptext);
-				cropendss = audioel[0].currentTime;
+				// cropendss = audioel[0].currentTime;
+				sectime = cropendss;
 				cropends = (cropendss * 100 / 100).toFixed(3);
 
 				if (ccrops) {
 					if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
 						swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
-						$(this).text(null);
-						$(this).append('<i class="fa fa-hourglass-end"></i>');
-						$(this).removeClass('btn-success');
-						$(this).addClass('btn-default');
+						$(btnid).text(null);
+						$(btnid).append('<i class="fa fa-hourglass-end"></i>');
+						$(btnid).removeClass('btn-success');
+						$(btnid).addClass('btn-default');
 						ccrope = false;
 					} else {
-						time = $(this).text();
+						time = $(btnid).text();
 
 						if (time != '') {
-							$(this).text(null);
-							$(this).append('<i class="fa fa-hourglass-end"></i>');
+							$(btnid).text(null);
+							$(btnid).append('<i class="fa fa-hourglass-end"></i>');
 						}
 
 						cropendms = cropends.split(".");
@@ -296,11 +300,11 @@ if (isset($novodoc)) {
 						cropdur = '00-'+cropdurmm+'-'+cropdurss;
 						ccrope = true;
 
-						$(this).text(null);
-						$(this).append('<i class="fa fa-hourglass-end"></i>');
-						$(this).removeClass('btn-default');
-						$(this).addClass('btn-success');
-						$(this).append(' '+cropendt);
+						$(btnid).text(null);
+						$(btnid).append('<i class="fa fa-hourglass-end"></i>');
+						$(btnid).removeClass('btn-default');
+						$(btnid).addClass('btn-success');
+						$(btnid).append(' '+cropendt);
 
 						$('#endtime').val(cropends);
 
@@ -315,48 +319,72 @@ if (isset($novodoc)) {
 				} else {
 					swal("Atenção!", "Você deve marcar primeiro o tempo inicial.", "error");
 				}
-			});
+			}
 
-			$('#passage-text').mouseup(function(e) {
-				selection = window.getSelection().getRangeAt(0);
+			function btncclear() {
+				$('#btncstart, #btncend').text(null);
+				$('#btncstart, #btncend').append('<i class="fa fa-hourglass-start"></i>');
+				$('#btncstart, #btncend').removeClass('btn-success');
+				$('#btncstart, #btncend').addClass('btn-default');
+				ccrops = false;
+				ccrope = false;
+			}
 
-				if (selection.startContainer.data == " ") {
-					startspan = $(selection.startContainer.nextSibling);
-					startspanindex = parseInt(startspan.attr('data-index'));
-				} else {
-					startspan = $(selection.startContainer.parentNode);
-					startspanindex = parseInt(startspan.attr('data-index'));
+			$(document).on('click', 'span', function(e) {
+				console.log(e);
+				function dragtext() {
+					selection = window.getSelection().getRangeAt(0);
+
+					if (selection.startContainer.data == " ") {
+						startspan = $(selection.startContainer.nextSibling);
+						startspanindex = parseInt(startspan.attr('data-index'));
+					} else {
+						startspan = $(selection.startContainer.parentNode);
+						startspanindex = parseInt(startspan.attr('data-index'));
+					}
+					startspantime = startspan.attr('data-begin');
+
+					if (selection.endContainer.data == " ") {
+						endspan = $(selection.endContainer.previousSibling);
+						endspanindex = parseInt(endspan.attr('data-index'));
+					} else {
+						endspan = $(selection.endContainer.parentNode);
+						endspanindex = parseInt(endspan.attr('data-index'));
+					}
+					endspantime = endspan.attr('data-begin');
+
+					$(this).children().removeClass('selectedt');
+					for (var i = startspanindex; i <= endspanindex; i++) {
+						$('span[data-index="'+i+'"').addClass('selectedt');
+					}
+
+					text = "";
+					if (window.getSelection) {
+						text = window.getSelection().toString();
+					} else if (document.selection && document.selection.type != "Control") {
+						text = document.selection.createRange().text;
+					}
+
+					$('#textseld').val(text);
+
+					croptext = true;
+
+					if (ccrope) {
+						$('#btncrop').removeClass('disabled');
+						$('#btncrop').removeAttr('disabled');
+					}
 				}
-				startspantime = startspan.attr('data-begin');
 
-				if (selection.endContainer.data == " ") {
-					endspan = $(selection.endContainer.previousSibling);
-					endspanindex = parseInt(endspan.attr('data-index'));
-				} else {
-					endspan = $(selection.endContainer.parentNode);
-					endspanindex = parseInt(endspan.attr('data-index'));
-				}
-				endspantime = endspan.attr('data-begin');
+				startwtime = $(this).attr('data-begin');
+				endwtime = $(this).attr('data-begin') + $(this).attr('data-dur');
 
-				$(this).children().removeClass('selectedt');
-				for (var i = startspanindex; i <= endspanindex; i++) {
-					$('span[data-index="'+i+'"').addClass('selectedt');
-				}
-
-				text = "";
-				if (window.getSelection) {
-					text = window.getSelection().toString();
-				} else if (document.selection && document.selection.type != "Control") {
-					text = document.selection.createRange().text;
-				}
-
-				$('#textseld').val(text);
-
-				croptext = true;
-
-				if (ccrope) {
-					$('#btncrop').removeClass('disabled');
-					$('#btncrop').removeAttr('disabled');
+				if (ccrops == false && ccrope == false) {
+					btncstart(startwtime, '#btncstart');
+				} else if (ccrops == true && ccrope == false) {
+					btncend(endwtime, '#btncend');
+				} else if (ccrops == true && ccrope == true) {
+					btncclear();
+					btncstart();
 				}
 			});
 

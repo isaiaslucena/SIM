@@ -1,7 +1,7 @@
 var ReadAlong = {
 	text_element: null,
 	audio_element: null,
-	autofocus_current_word: true,
+	autofocus_current_word: false,
 
 	words: [],
 
@@ -140,24 +140,24 @@ var ReadAlong = {
 			var i = e.target.dataset.index;
 			that.audio_element.currentTime = that.words[i].begin + 0.01;
 		}
-		that.text_element.addEventListener('click', on_select_word_el, false);
-		that.text_element.addEventListener('keypress', function (e) {
-			if ( (e.charCode || e.keyCode) === 13) {
-				on_select_word_el.call(this, e);
-			}
-		}, false);
+		// that.text_element.addEventListener('click', on_select_word_el, false);
+		// that.text_element.addEventListener('keypress', function (e) {
+		// 	if ( (e.charCode || e.keyCode) === 13) {
+		// 		on_select_word_el.call(this, e);
+		// 	}
+		// }, false);
 
-		document.addEventListener('keypress', function (e) {
-			if ( (e.charCode || e.keyCode) === 32) {
-				e.preventDefault();
-				if (that.audio_element.paused) {
-					that.audio_element.play();
-				}
-				else {
-					that.audio_element.pause();
-				}
-			}
-		}, false);
+		// document.addEventListener('keypress', function (e) {
+		// 	if ( (e.charCode || e.keyCode) === 32) {
+		// 		e.preventDefault();
+		// 		if (that.audio_element.paused) {
+		// 			that.audio_element.play();
+		// 		}
+		// 		else {
+		// 			that.audio_element.pause();
+		// 		}
+		// 	}
+		// }, false);
 
 		that.text_element.addEventListener('dblclick', function (e) {
 			e.preventDefault();
