@@ -69,8 +69,8 @@ var ReadAlong = {
 		if (!current_word.element.classList.contains('speaking')) {
 			this.removeWordSelection();
 			if (current_word.element.classList.contains('speaking')) {
+				current_word.element.classList.remove('fkword');
 				current_word.element.classList.remove('kword');
-				current_word.element.classList.remove('wkword');
 			}
 			current_word.element.classList.add('speaking');
 			if (this.autofocus_current_word) {
@@ -137,15 +137,18 @@ var ReadAlong = {
 			}
 			e.preventDefault();
 
+			console.log(e);
+
 			var i = e.target.dataset.index;
 			that.audio_element.currentTime = that.words[i].begin + 0.01;
 		}
-		// that.text_element.addEventListener('click', on_select_word_el, false);
-		// that.text_element.addEventListener('keypress', function (e) {
-		// 	if ( (e.charCode || e.keyCode) === 13) {
-		// 		on_select_word_el.call(this, e);
-		// 	}
-		// }, false);
+
+		that.text_element.addEventListener('click', on_select_word_el, false);
+		that.text_element.addEventListener('keypress', function (e) {
+			if ( (e.charCode || e.keyCode) === 13) {
+				on_select_word_el.call(this, e);
+			}
+		}, false);
 
 		// document.addEventListener('keypress', function (e) {
 		// 	if ( (e.charCode || e.keyCode) === 32) {

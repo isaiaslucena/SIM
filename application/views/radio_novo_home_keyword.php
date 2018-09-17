@@ -242,16 +242,22 @@
 				});
 				$(val).html(pbodyhtml);
 
-				keywfound = '#'+cpid+' > .fkword';
-				qtkwf = $(keywfound).length;
+				keywfound = $(scpid+' > .fkword');
+				qtkwf = keywfound.length;
 				idnumb = cpid.replace(/[a-zA-Z]/g, '');
 				$('#tkeyfound'+idnumb).text(qtkwf);
 				$(val).scrollTo(keywfound);
 				$(val).removeClass('noscrolled');
+
+				fkeywfound = keywfound[0];
+				fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin'));
+				$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime - 0.5;
 			});
 		};
 
-		function startread(idpaudio, idptext) {
+		function startread(idpaudio, idptext, audiotime = 0) {
+			$('#'+idpaudio)[0].currentTime = audiotime;
+
 			var args = {
 				text_element: document.getElementById(idptext),
 				audio_element: document.getElementById(idpaudio),
@@ -261,8 +267,6 @@
 			console.log(args);
 
 			ReadAlong.init(args);
-
-			document.querySelector('.autofocus-current-word').hidden = false;
 		};
 
 		$('audio').bind('contextmenu', function() { return false; });
@@ -589,26 +593,36 @@
 			);
 		});
 
-		$(document).on('click', '.ptext', function() {
+		$(document).on('click', '.desativado', function() {
 			$(this).css('overflowY', 'auto');
 		})
+
+		// $(document).on('click', 'span', function(){
+		// 	ptextid = $(this).parent('.ptext').attr('id');
+		// 	paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+		// 	spantime = $(this).attr('data-begin');
+
+		// 	//$('#'+paudioid)[0].play();
+		// 	startread(paudioid, ptextid, spantime);
+		// 	// on_select_word_el();
+		// });
 
 		$(document).on('mouseleave', '.ptext', function() {
 			$(this).css('overflowY', 'hidden');
 		});
 
-		$(document).on('click', 'audio', function(event) {
-			// console.log($(this));
-			audioid = $(this).attr('id');
-			idn = audioid.replace(/[a-zA-Z]/g, '');
-			textid = 'ptext'+idn;
-			if ($(this)[0].paused) {
-				// console.log('audio playing!');
-				startread(audioid, textid);
-			} else {
-				// console.log('audio paused!');
-			}
-		});
+		// $(document).on('click', 'audio', function(event) {
+		// 	// console.log($(this));
+		// 	audioid = $(this).attr('id');
+		// 	idn = audioid.replace(/[a-zA-Z]/g, '');
+		// 	textid = 'ptext'+idn;
+		// 	if ($(this)[0].paused) {
+		// 		// console.log('audio playing!');
+		// 		startread(audioid, textid);
+		// 	} else {
+		// 		// console.log('audio paused!');
+		// 	}
+		// });
 
 		$(document).ready(function() {
 			totalpanels = $('div.panel.panel-default.collapse.in').length;

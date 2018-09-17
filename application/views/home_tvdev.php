@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$sd->setTimezone($newtimezone);
 						$sstartdate = $sd->format('d/m/Y H:i:s');
 
-						echo get_phrase('kewords_found').' '.get_phrase('since').' '.$sstartdate; ?>
+						echo get_phrase('kewords_found').' '.get_phrase('since').' '.str_replace('T', ' ', $startdate); ?>
 
 						<span class="pull-right" id="allkeywordsquant"></span>
 						<span class="pull-right"><?php echo  get_phrase('all').':'?>&nbsp;</span>
@@ -68,9 +68,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 													$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
 													$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
-													$keyword_foundc = count($keyword_found->response->docs);
+													$keyword_foundc = $keyword_found->response->numFound;
 													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
-													$allkeyword_foundc = count($allkeyword_found->response->docs);
+													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;
 													if ($allkeyword_foundc != 0) { ?>
