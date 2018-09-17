@@ -250,8 +250,10 @@
 				$(val).removeClass('noscrolled');
 
 				fkeywfound = keywfound[0];
-				fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin'));
-				$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime - 0.5;
+				fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
+				$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime;
+
+				// startread('ptext'+idnumb,'paudio'+idnumb, fkeywfoundtime);
 			});
 		};
 
@@ -264,7 +266,7 @@
 				autofocus_current_word: document.getElementById('autofocus-current-word').checked
 			};
 
-			console.log(args);
+			// console.log(args);
 
 			ReadAlong.init(args);
 		};
@@ -289,7 +291,7 @@
 				e.preventDefault();
 				$('html,body').animate({scrollTop: 0}, 700);
 			})
-		}
+		};
 
 		$(document).on('click', '.loadprevious', function(event) {
 			loadp = $(this);
@@ -597,18 +599,23 @@
 			$(this).css('overflowY', 'auto');
 		})
 
-		// $(document).on('click', 'span', function(){
-		// 	ptextid = $(this).parent('.ptext').attr('id');
-		// 	paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
-		// 	spantime = $(this).attr('data-begin');
+		$(document).on('click', 'span', function(){
+			ptextid = $(this).parent('.ptext').attr('id');
+			paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+			spantime = $(this).attr('data-begin');
 
-		// 	//$('#'+paudioid)[0].play();
-		// 	startread(paudioid, ptextid, spantime);
-		// 	// on_select_word_el();
-		// });
+			startread(paudioid, ptextid, spantime);
+			$('#'+paudioid)[0].play();
+			// $('#'+ptextid).css('overflowY', 'auto');
+		});
 
 		$(document).on('mouseleave', '.ptext', function() {
-			$(this).css('overflowY', 'hidden');
+			// $(this).css('overflowY', 'hidden');
+
+			ptextid = $(this).attr('id');
+			paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+			// $('#'+ptextid).css('overflowY', 'hidden');
+			$('#'+paudioid)[0].pause();
 		});
 
 		// $(document).on('click', 'audio', function(event) {
