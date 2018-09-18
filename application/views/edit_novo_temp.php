@@ -72,7 +72,6 @@ if (isset($novodoc)) {
 
 			.kword{
 				color: white;
-				/* font-weight: bold; */
 				background-color: red;
 				border: solid;
 				border-color: red;
@@ -91,28 +90,15 @@ if (isset($novodoc)) {
 			span[data-begin]:focus,
 			span[data-begin]:hover {
 				background-color: yellow;
-				/*border: solid;*/
-				/*border-color: yellow;*/
-				/*border-width: 2px;*/
 				border-radius: 8px;
-				/*padding: 0.5px;*/
 			}
 			span[data-begin].speaking {
 				background-color: yellow;
-				/*border: solid;*/
-				/*border-color: yellow;*/
-				/*border-width: 2px;*/
 				border-radius: 8px;
-				/*padding: 1px;*/
 				z-index: 900;
 			}
 			span[data-begin] {
 				cursor: pointer;
-				/*border: solid;*/
-				/*border-color: transparent;*/
-				/*border-width: 2px;*/
-				/*border-radius: 8px;*/
-				/*padding: 1px;*/
 			}
 		</style>
 	</head>
@@ -133,8 +119,8 @@ if (isset($novodoc)) {
 				<div class="col-lg-4">
 					<div class="btn-group" role="group" aria-label="...">
 						<a id="btnpbrate" type="button" class="btn btn-default" title="Aumentar velocidade"><i class="fa fa-angle-double-right"></i></a>
-						<a id="btncstart" type="button" class="btn btn-default" title="Marcar início"><i class="fa fa-hourglass-start"></i></a>
-						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
+						<a id="btncstart" type="button" class="btn btn-default" title="Início"><i class="fa fa-hourglass-start"></i></a>
+						<a id="btncend" type="button" class="btn btn-default" title="Fim"><i class="fa fa-hourglass-end"></i></a>
 						<button id="btncrop" type="submit" form="cropnovo" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></button>
 					</div>
 				</div>
@@ -233,8 +219,6 @@ if (isset($novodoc)) {
 			});
 
 			function btncstart(sectime, btnid) {
-				console.log(sectime);
-				// cropstartss = audioel[0].currentTime;
 				cropstartss = sectime;
 				cropstarts = (cropstartss * 100 / 100).toFixed(3);
 
@@ -247,7 +231,7 @@ if (isset($novodoc)) {
 					ccrops = false;
 				} else {
 					cropstartms = cropstarts.split(".")
-					cropstartt = sectostring(cropstartss);
+					cropstartt = sectostring(cropstarts);
 					cropstart = cropstartt.replace(":", "-");
 					ccrops = true;
 
@@ -257,21 +241,18 @@ if (isset($novodoc)) {
 					$(btnid).addClass('btn-success');
 					$(btnid).append(' '+cropstartt);
 
-					$(btnid).removeClass('disabled');
-					$('#btncend').removeAttr('disabled');
+					// $(btnid).removeClass('disabled');
+					// $(btnid).removeAttr('disabled');
 
 					$('#starttime').val(cropstarts);
 
-					// console.log('crop starttime (string): '+cropstartt);
-					// console.log('crop starttime (seconds): '+cropstarts);
+					console.log('crop starttime (seconds): '+cropstarts);
+					console.log('crop starttime (string): '+cropstartt);
 				}
 			};
 
 			function btncend(sectime, btnid) {
-				console.log(sectime);
-				// console.log(croptext);
-				// cropendss = audioel[0].currentTime;
-				sectime = cropendss;
+				cropendss = sectime;
 				cropends = (cropendss * 100 / 100).toFixed(3);
 
 				if (ccrops) {
@@ -289,9 +270,8 @@ if (isset($novodoc)) {
 							$(btnid).text(null);
 							$(btnid).append('<i class="fa fa-hourglass-end"></i>');
 						}
-
 						cropendms = cropends.split(".");
-						cropendt = sectostring(cropendss);
+						cropendt = sectostring(cropends);
 						cropend = cropendt.replace(":", "-");
 
 						cropdurs = (cropends - cropstarts).toFixed(3);
@@ -306,10 +286,13 @@ if (isset($novodoc)) {
 						$(btnid).addClass('btn-success');
 						$(btnid).append(' '+cropendt);
 
+						// $(btnid).removeClass('disabled');
+						// $(btnid).removeAttr('disabled');
+
 						$('#endtime').val(cropends);
 
-						// console.log('crop endtime (string): '+cropendt);
-						// console.log('crop endtime (seconds): '+cropends);
+						console.log('crop endtime (string): '+cropendt);
+						console.log('crop endtime (seconds): '+cropends);
 					}
 
 					if (croptext) {
@@ -326,12 +309,9 @@ if (isset($novodoc)) {
 				$('#btncstart, #btncend').append('<i class="fa fa-hourglass-start"></i>');
 				$('#btncstart, #btncend').removeClass('btn-success');
 				$('#btncstart, #btncend').addClass('btn-default');
-				ccrops = false;
-				ccrope = false;
 			}
 
 			$(document).on('click', 'span', function(e) {
-				console.log(e);
 				function dragtext() {
 					selection = window.getSelection().getRangeAt(0);
 
@@ -375,17 +355,25 @@ if (isset($novodoc)) {
 					}
 				}
 
-				startwtime = $(this).attr('data-begin');
-				endwtime = $(this).attr('data-begin') + $(this).attr('data-dur');
+				startwtime = parseFloat($(this).attr('data-begin'));
 
 				if (ccrops == false && ccrope == false) {
 					btncstart(startwtime, '#btncstart');
 				} else if (ccrops == true && ccrope == false) {
+					endwtime = startwtime + parseFloat($(this).attr('data-dur'));
 					btncend(endwtime, '#btncend');
 				} else if (ccrops == true && ccrope == true) {
 					btncclear();
-					btncstart();
+
+					cropendss = '';
+
+					ccrops = false;
+					ccrope = false;
+
+					btncstart(startwtime, '#btncstart');
 				}
+
+				audioel[0].currentTime = startwtime;
 			});
 
 			$('#btncrop').click(function(event) {
@@ -461,8 +449,6 @@ if (isset($novodoc)) {
 					};
 
 					ReadAlong.init(args);
-
-					document.querySelector('.autofocus-current-word').hidden = false;
 				}, false);
 			});
 		</script>

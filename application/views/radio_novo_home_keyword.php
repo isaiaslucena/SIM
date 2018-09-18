@@ -15,7 +15,6 @@
 
 		.fkword,.kword{
 			color: white;
-			/* font-weight: bold; */
 			background-color: red;
 			border: solid;
 			border-color: red;
@@ -27,28 +26,15 @@
 		span[data-begin]:focus,
 		span[data-begin]:hover {
 			background-color: yellow;
-			/*border: solid;*/
-			/*border-color: yellow;*/
-			/*border-width: 2px;*/
 			border-radius: 8px;
-			/*padding: 0.5px;*/
 		}
 		span[data-begin].speaking {
 			background-color: yellow;
-			/*border: solid;*/
-			/*border-color: yellow;*/
-			/*border-width: 2px;*/
 			border-radius: 8px;
-			/*padding: 1px;*/
 			z-index: 900;
 		}
 		span[data-begin] {
 			cursor: pointer;
-			/*border: solid;*/
-			/*border-color: transparent;*/
-			/*border-width: 2px;*/
-			/*border-radius: 8px;*/
-			/*padding: 1px;*/
 		}
 	</style>
 
@@ -212,7 +198,131 @@
 		jQuery.fn.scrollTo = function(elem) {
 			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 			return this;
-		}
+		};
+
+		function loadpn(flow, clbtn) {
+			loadp = $(clbtn);
+			loadp.children('i').css('display', 'inline-block');
+
+			iddiv = loadp.attr('data-iddiv');
+			iddivn = Number(iddiv.replace('div', ''));
+			idsource = loadp.attr('data-idsource');
+
+			if (flow == 'previous') {
+				position = 'after';
+				startdate = loadp.attr('data-startdate');
+			} else if (flow == 'next'){
+				position = 'before';
+				startdate = loadp.attr('data-enddate');
+			}
+
+			$.get('<?php echo base_url('pages/get_radio_novo/')?>'+idsource+'/'+encodeURI(startdate)+'/'+flow, function(data) {
+				loadp.children('i').css('display', 'none');
+				numfound = data.response.numFound;
+				if (numfound == 0) {
+					warnhtml =	'<div class="alert alert-warning" role="alert">'+
+												'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+												'<span class="sr-only">Error:</span>'+
+												'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+											'</div>';
+					eval('$("#'+iddiv+'")'+'.'+position+'(warnhtml)');
+
+					setTimeout(function() {
+						$('div.alert.alert-warning').fadeOut('slow');
+					}, 3000);
+				} else {
+					did = data.response.docs[0].id_i;
+					dsourceid = data.response.docs[0].source_id_i;
+					dsource = data.response.docs[0].source_s;
+					dmediaurl = data.response.docs[0].mediaurl_s;
+					dstartdate = data.response.docs[0].starttime_dt;
+					denddate = data.response.docs[0].endtime_dt;
+					dcontent = data.response.docs[0].content_t[0];
+					dtimes = JSON.parse(data.response.docs[0].times_t[0]);
+					// console.log(dtimes);
+
+					var sd = new Date(dstartdate);
+					var sday = sd.getDate();
+					var sday = ('0' + sday).slice(-2);
+					var smonth = (sd.getMonth() + 1);
+					var smonth = ('0' + smonth).slice(-2);
+					var syear = sd.getFullYear();
+					var shour = sd.getHours();
+					var shour = ('0' + shour).slice(-2);
+					var sminute = sd.getMinutes();
+					var sminute = ('0' + sminute).slice(-2);
+					var ssecond = sd.getSeconds();
+					var ssecond = ('0' + ssecond).slice(-2);
+					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+
+					var ed = new Date(denddate);
+					var eday = ed.getDate();
+					var eday = ('0' + eday).slice(-2);
+					var emonth = (ed.getMonth() + 1);
+					var emonth = ('0' + emonth).slice(-2);
+					var eyear = ed.getFullYear();
+					var ehour = ed.getHours();
+					var ehour = ('0' + ehour).slice(-2);
+					var eminute = ed.getMinutes();
+					var eminute = ('0' + eminute).slice(-2);
+					var esecond = ed.getSeconds();
+					var esecond = ('0' + esecond).slice(-2);
+					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+
+					newdivid += 1;
+					newdividn = iddiv+'-'+newdivid;
+
+					divclone = $('#'+iddiv).clone(true);
+
+					divclone.removeClass('panel-default');
+					divclone.addClass('panel-info');
+					divclone.attr('id', newdividn);
+					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+					// divclone.children('.panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+					divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
+					divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
+
+					eval('$("#'+iddiv+'")'+'.'+position+'(divclone)');
+
+					addtimes('#'+iddiv.replace('div', 'ptext')+'-'+newdivid, dtimes);
+
+					scrolltokeyword();
+				}
+			});
+		};
+
+		function addtimes(idptext, times) {
+			$.each(times, function(index, val1) {
+				$.each(val1.words, function(index, val2) {
+					wbegin = parseFloat(val2.begin);
+					wend = parseFloat(val2.end);
+					wdur = String(wend - wbegin).slice(0, 5);
+					wspan = '<span data-dur="'+wdur+'" data-begin="'+val2.begin+'">'+val2.word+'</span> ';
+					$(idptext).append(wspan);
+				});
+			});
+		};
 
 		function scrolltokeyword() {
 			ptexts = $('.ptext.text-justify.noscrolled');
@@ -233,27 +343,28 @@
 
 				pbodyhtml = $(val).html();
 				found = pbodyhtml.match(rgxkw);
-				cfound = found.length;
-				$.each(found, function(index, val) {
-					strreplace = val.replace(/<span /, '<span class="fkword" ');
 
-					strreplace = strreplace.replace(/<span data-dur/g, '<span class="kword" data-dur');
-					pbodyhtml = pbodyhtml.replace(val, strreplace);
-				});
-				$(val).html(pbodyhtml);
+				if (found != null) {
+					cfound = found.length;
+					$.each(found, function(index, val) {
+						strreplace = val.replace(/<span /, '<span class="fkword" ');
 
-				keywfound = $(scpid+' > .fkword');
-				qtkwf = keywfound.length;
-				idnumb = cpid.replace(/[a-zA-Z]/g, '');
-				$('#tkeyfound'+idnumb).text(qtkwf);
-				$(val).scrollTo(keywfound);
-				$(val).removeClass('noscrolled');
+						strreplace = strreplace.replace(/<span data-dur/g, '<span class="kword" data-dur');
+						pbodyhtml = pbodyhtml.replace(val, strreplace);
+					});
+					$(val).html(pbodyhtml);
 
-				fkeywfound = keywfound[0];
-				fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
-				$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime;
+					keywfound = $(scpid+' > .fkword');
+					qtkwf = keywfound.length;
+					idnumb = cpid.replace(/[a-zA-Z]/g, '');
+					$('#tkeyfound'+idnumb).text(qtkwf);
+					$(val).scrollTo(keywfound);
+					$(val).removeClass('noscrolled');
 
-				// startread('ptext'+idnumb,'paudio'+idnumb, fkeywfoundtime);
+					fkeywfound = keywfound[0];
+					fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
+					$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime;
+				}
 			});
 		};
 
@@ -294,198 +405,218 @@
 		};
 
 		$(document).on('click', '.loadprevious', function(event) {
-			loadp = $(this);
-			loadp.children('i').css('display', 'inline-block');
+			loadpn('previous', $(this));
 
-			iddiv = $(this).attr('data-iddiv');
-			iddivn = Number(iddiv.replace('div', ''));
-			idsource = $(this).attr('data-idsource');
-			startdate = $(this).attr('data-startdate');
+			// loadp = $(this);
+			// loadp.children('i').css('display', 'inline-block');
 
-			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
-				loadp.children('i').css('display', 'none');
-				numfound = data.response.numFound;
-				if (numfound == 0) {
-					warnhtml =	'<div class="alert alert-warning" role="alert">'+
-									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
-									'<span class="sr-only">Error:</span>'+
-									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
-								'</div>';
-					$('#'+iddiv).after(warnhtml);
+			// iddiv = $(this).attr('data-iddiv');
+			// iddivn = Number(iddiv.replace('div', ''));
+			// idsource = $(this).attr('data-idsource');
+			// startdate = $(this).attr('data-startdate');
 
-					setTimeout(function() {
-						$('div.alert.alert-warning').fadeOut('slow');
-					}, 3000);
-				} else {
-					did = data.response.docs[0].id_i;
-					dsourceid = data.response.docs[0].source_id_i;
-					dsource = data.response.docs[0].source_s;
-					dmediaurl = data.response.docs[0].mediaurl_s;
-					dstartdate = data.response.docs[0].starttime_dt;
-					denddate = data.response.docs[0].endtime_dt;
-					dcontent = data.response.docs[0].content_t[0];
+			// $.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+			// 	loadp.children('i').css('display', 'none');
+			// 	numfound = data.response.numFound;
+			// 	if (numfound == 0) {
+			// 		warnhtml =	'<div class="alert alert-warning" role="alert">'+
+			// 						'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+			// 						'<span class="sr-only">Error:</span>'+
+			// 						'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+			// 					'</div>';
+			// 		$('#'+iddiv).after(warnhtml);
 
-					var sd = new Date(dstartdate);
-					var sday = sd.getDate();
-					var sday = ('0' + sday).slice(-2);
-					var smonth = (sd.getMonth() + 1);
-					var smonth = ('0' + smonth).slice(-2);
-					var syear = sd.getFullYear();
-					var shour = sd.getHours();
-					var shour = ('0' + shour).slice(-2);
-					var sminute = sd.getMinutes();
-					var sminute = ('0' + sminute).slice(-2);
-					var ssecond = sd.getSeconds();
-					var ssecond = ('0' + ssecond).slice(-2);
-					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+			// 		setTimeout(function() {
+			// 			$('div.alert.alert-warning').fadeOut('slow');
+			// 		}, 3000);
+			// 	} else {
+			// 		did = data.response.docs[0].id_i;
+			// 		dsourceid = data.response.docs[0].source_id_i;
+			// 		dsource = data.response.docs[0].source_s;
+			// 		dmediaurl = data.response.docs[0].mediaurl_s;
+			// 		dstartdate = data.response.docs[0].starttime_dt;
+			// 		denddate = data.response.docs[0].endtime_dt;
+			// 		dcontent = data.response.docs[0].content_t[0];
+			// 		dtimes = JSON.parse(data.response.docs[0].times_t[0]);
+			// 		console.log(dtimes);
 
-					var ed = new Date(denddate);
-					var eday = ed.getDate();
-					var eday = ('0' + eday).slice(-2);
-					var emonth = (ed.getMonth() + 1);
-					var emonth = ('0' + emonth).slice(-2);
-					var eyear = ed.getFullYear();
-					var ehour = ed.getHours();
-					var ehour = ('0' + ehour).slice(-2);
-					var eminute = ed.getMinutes();
-					var eminute = ('0' + eminute).slice(-2);
-					var esecond = ed.getSeconds();
-					var esecond = ('0' + esecond).slice(-2);
-					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+			// 		var sd = new Date(dstartdate);
+			// 		var sday = sd.getDate();
+			// 		var sday = ('0' + sday).slice(-2);
+			// 		var smonth = (sd.getMonth() + 1);
+			// 		var smonth = ('0' + smonth).slice(-2);
+			// 		var syear = sd.getFullYear();
+			// 		var shour = sd.getHours();
+			// 		var shour = ('0' + shour).slice(-2);
+			// 		var sminute = sd.getMinutes();
+			// 		var sminute = ('0' + sminute).slice(-2);
+			// 		var ssecond = sd.getSeconds();
+			// 		var ssecond = ('0' + ssecond).slice(-2);
+			// 		var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-					newdivid += 1;
-					newdividn = iddiv + '-' + newdivid;
+			// 		var ed = new Date(denddate);
+			// 		var eday = ed.getDate();
+			// 		var eday = ('0' + eday).slice(-2);
+			// 		var emonth = (ed.getMonth() + 1);
+			// 		var emonth = ('0' + emonth).slice(-2);
+			// 		var eyear = ed.getFullYear();
+			// 		var ehour = ed.getHours();
+			// 		var ehour = ('0' + ehour).slice(-2);
+			// 		var eminute = ed.getMinutes();
+			// 		var eminute = ('0' + eminute).slice(-2);
+			// 		var esecond = ed.getSeconds();
+			// 		var esecond = ('0' + esecond).slice(-2);
+			// 		var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
-					divclone = $('#'+iddiv).clone(true);
-					console.log(divclone);
+			// 		newdivid += 1;
+			// 		newdividn = iddiv+'-'+newdivid;
+			// 		console.log(newdividn);
 
-					divclone.removeClass('panel-default');
-					divclone.addClass('panel-info');
-					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
-					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
-					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
-					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
-					divclone.attr('id', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-					divclone.children('.panel-body').children('.textel').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-					divclone.children('.panel-body').children('.col-lg-12').children('p.paudio').children('audio').attr('src', dmediaurl);
-					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').text(dcontent);
+			// 		divclone = $('#'+iddiv).clone(true);
+			// 		console.log(divclone);
 
-					$('#'+iddiv).after(divclone);
-				}
-			});
+			// 		divclone.removeClass('panel-default');
+			// 		divclone.addClass('panel-info');
+			// 		divclone.attr('id', newdividn);
+			// 		divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+			// 		divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+			// 		divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+			// 		divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
+
+			// 		$('#'+iddiv).after(divclone);
+
+			// 		addtimes('#'+iddiv.replace('div', 'ptext')+'-'+newdivid, dtimes);
+
+			// 		scrolltokeyword();
+			// 	}
+			// });
 		});
 
 		$(document).on('click', '.loadnext', function(event) {
-			loadp = $(this);
-			loadp.children('i').css('display', 'inline-block');
+			loadpn('next', $(this));
 
-			iddiv = $(this).attr('data-iddiv');
-			iddivn = Number(iddiv.replace('div', ''));
-			idsource = $(this).attr('data-idsource');
-			startdate = $(this).attr('data-enddate');
+			// loadp = $(this);
+			// loadp.children('i').css('display', 'inline-block');
 
-			$.get('<?php echo base_url('pages/get_radio_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
-				loadp.children('i').css('display', 'none');
-				numfound = data.response.numFound;
-				if (numfound == 0) {
-					warnhtml =	'<div class="alert alert-warning" role="alert">'+
-									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
-									'<span class="sr-only">Error:</span>'+
-									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
-								'</div>';
-					$('#'+iddiv).before(warnhtml);
+			// iddiv = $(this).attr('data-iddiv');
+			// iddivn = Number(iddiv.replace('div', ''));
+			// idsource = $(this).attr('data-idsource');
+			// startdate = $(this).attr('data-enddate');
 
-					setTimeout(function() {
-						$('div.alert.alert-warning').fadeOut('slow');
-					}, 3000);
-				} else {
-					did = data.response.docs[0].id_i;
-					dsourceid = data.response.docs[0].source_id_i;
-					dsource = data.response.docs[0].source_s;
-					dmediaurl = data.response.docs[0].mediaurl_s;
-					dstartdate = data.response.docs[0].starttime_dt;
-					denddate = data.response.docs[0].endtime_dt;
-					dcontent = data.response.docs[0].content_t[0];
+			// $.get('<?php echo base_url('pages/get_radio_novo/')?>'+idsource+'/'+encodeURI(startdate)+'/next', function(data) {
+			// 	loadp.children('i').css('display', 'none');
+			// 	numfound = data.response.numFound;
+			// 	if (numfound == 0) {
+			// 		warnhtml =	'<div class="alert alert-warning" role="alert">'+
+			// 						'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+			// 						'<span class="sr-only">Error:</span>'+
+			// 						'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+			// 					'</div>';
+			// 		$('#'+iddiv).before(warnhtml);
 
-					var sd = new Date(dstartdate);
-					var sday = sd.getDate();
-					var sday = ('0' + sday).slice(-2);
-					var smonth = (sd.getMonth() + 1);
-					var smonth = ('0' + smonth).slice(-2);
-					var syear = sd.getFullYear();
-					var shour = sd.getHours();
-					var shour = ('0' + shour).slice(-2);
-					var sminute = sd.getMinutes();
-					var sminute = ('0' + sminute).slice(-2);
-					var ssecond = sd.getSeconds();
-					var ssecond = ('0' + ssecond).slice(-2);
-					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+			// 		setTimeout(function() {
+			// 			$('div.alert.alert-warning').fadeOut('slow');
+			// 		}, 3000);
+			// 	} else {
+			// 		did = data.response.docs[0].id_i;
+			// 		dsourceid = data.response.docs[0].source_id_i;
+			// 		dsource = data.response.docs[0].source_s;
+			// 		dmediaurl = data.response.docs[0].mediaurl_s;
+			// 		dstartdate = data.response.docs[0].starttime_dt;
+			// 		denddate = data.response.docs[0].endtime_dt;
+			// 		dcontent = data.response.docs[0].content_t[0];
+			// 		dtimes = JSON.parse(data.response.docs[0].times_t[0]);
 
-					var ed = new Date(denddate);
-					var eday = ed.getDate();
-					var eday = ('0' + eday).slice(-2);
-					var emonth = (ed.getMonth() + 1);
-					var emonth = ('0' + emonth).slice(-2);
-					var eyear = ed.getFullYear();
-					var ehour = ed.getHours();
-					var ehour = ('0' + ehour).slice(-2);
-					var eminute = ed.getMinutes();
-					var eminute = ('0' + eminute).slice(-2);
-					var esecond = ed.getSeconds();
-					var esecond = ('0' + esecond).slice(-2);
-					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+			// 		var sd = new Date(dstartdate);
+			// 		var sday = sd.getDate();
+			// 		var sday = ('0' + sday).slice(-2);
+			// 		var smonth = (sd.getMonth() + 1);
+			// 		var smonth = ('0' + smonth).slice(-2);
+			// 		var syear = sd.getFullYear();
+			// 		var shour = sd.getHours();
+			// 		var shour = ('0' + shour).slice(-2);
+			// 		var sminute = sd.getMinutes();
+			// 		var sminute = ('0' + sminute).slice(-2);
+			// 		var ssecond = sd.getSeconds();
+			// 		var ssecond = ('0' + ssecond).slice(-2);
+			// 		var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-					newdivid += 1;
-					newdividn = iddiv + '-' + newdivid;
+			// 		var ed = new Date(denddate);
+			// 		var eday = ed.getDate();
+			// 		var eday = ('0' + eday).slice(-2);
+			// 		var emonth = (ed.getMonth() + 1);
+			// 		var emonth = ('0' + emonth).slice(-2);
+			// 		var eyear = ed.getFullYear();
+			// 		var ehour = ed.getHours();
+			// 		var ehour = ('0' + ehour).slice(-2);
+			// 		var eminute = ed.getMinutes();
+			// 		var eminute = ('0' + eminute).slice(-2);
+			// 		var esecond = ed.getSeconds();
+			// 		var esecond = ('0' + esecond).slice(-2);
+			// 		var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
-					divclone = $('#'+iddiv).clone(true);
+			// 		newdivid += 1;
+			// 		newdividn = iddiv+'-'+newdivid;
 
-					divclone.removeClass('panel-default');
-					divclone.addClass('panel-info');
-					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
-					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
-					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
-					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
-					divclone.attr('id', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
-					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
-					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-					divclone.children('.panel-body').children('.col-lg-12').children('p.paudio').children('audio').attr('src', dmediaurl);
-					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').text(dcontent);
+			// 		divclone = $('#'+iddiv).clone(true);
 
-					$('#'+iddiv).before(divclone);
-				}
-			});
+			// 		divclone.removeClass('panel-default');
+			// 		divclone.addClass('panel-info');
+			// 		divclone.attr('id', newdividn);
+			// 		divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+			// 		divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+			// 		divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+			// 		divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+			// 		divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+			// 		divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+			// 		divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
+
+			// 		$('#'+iddiv).before(divclone);
+
+			// 		addtimes('#'+iddiv.replace('div', 'ptext')+'-'+newdivid, dtimes);
+
+			// 		scrolltokeyword();
+			// 	}
+			// });
 		});
 
 		$(document).on('click', '.cbjoinfiles', function(event) {
