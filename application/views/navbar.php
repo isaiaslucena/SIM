@@ -54,7 +54,22 @@
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
-					<ul id="alertlist" class="dropdown-menu dropdown-alerts">
+					<ul id="alerttvlist" class="dropdown-menu dropdown-alerts" style="height: auto; max-height: 600px; overflow-x: hidden;">
+						<li>
+							<a class="text-center" href="#">
+								<strong>Nenhum alerta!</strong>
+							</a>
+						</li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						<sup><span id="alertbnum" class="badge-notification" style="display: none"></span></sup>
+						<i class="fa fa-bell"></i>
+						<!-- <i class="fa fa-caret-down"></i> -->
+					</a>
+					<ul id="alertradiolist" class="dropdown-menu dropdown-alerts" style="height: auto; max-height: 600px; overflow-x: hidden;">
 						<li>
 							<a class="text-center" href="#">
 								<strong>Nenhum alerta!</strong>
@@ -235,6 +250,7 @@
 					}
 
 					if (idgroup == 1 || idgroup == 5 ) {
+						getradios();
 						var gtrd = setInterval(getradios(), 60000);
 					}
 				});
@@ -244,8 +260,9 @@
 						function(data, textStatus, xhr) {
 						// console.log(data);
 						radiocount = 0;
-						$('#msglist').html(null);
+						$('#alertradiolist').html(null);
 						datac = (data.length - 1);
+
 						$.each(data, function(index, val) {
 							// console.log(val);
 							radionamekey = Object.keys(val)[0];
@@ -261,19 +278,21 @@
 											'<div class="rruname">'+ffmpeglastmsg+'</div>'+
 										'</a>'+
 									'</li>';
-							$('#msglist').append(html);
+							$('#alertradiolist').append(html);
 							if (radiocount < datac) {
-								$('#msglist').append('<li class="divider"></li>');
+								$('#alertradiolist').append('<li class="divider"></li>');
 							}
 							radiocount += 1;
 						});
+
 						fhtml = '<li>'+
 											'<a class="text-center" href="#">'+
 												'<strong>Ver todas as mensagens </strong>'+
 												'<i class="fa fa-angle-right"></i>'+
 											'</a>'+
 										'</li>';
-						// $('#msglist').append(fhtml);
+						// $('#alertradiolist').append(fhtml);
+
 						if (radiocount > 0) {
 							$('#msgbnum').text(radiocount);
 							$('#msgbnum').fadeIn('fast');
@@ -281,11 +300,11 @@
 							$('#msgbnum').fadeOut('fast');
 							$('#msgbnum').text(radiocount);
 							fhtml = '<li>'+
-										'<a class="text-center" href="#">'+
-											'<strong>Nenhuma mensagem! </strong>'+
-										'</a>'+
-									'</li>';
-							$('#msglist').append(fhtml);
+												'<a class="text-center" href="#">'+
+													'<strong>Nenhuma mensagem! </strong>'+
+												'</a>'+
+											'</li>';
+							$('#alertradiolist').append(fhtml);
 						}
 					});
 				}
