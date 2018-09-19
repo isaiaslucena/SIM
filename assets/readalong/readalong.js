@@ -121,10 +121,10 @@ var ReadAlong = {
 	addEventListeners: function () {
 		var that = this;
 
-		that.audio_element.addEventListener('play', function (e) {
-			that.selectCurrentWord();
-			that.text_element.classList.add('speaking');
-		}, false);
+		// that.audio_element.addEventListener('play', function (e) {
+		// 	that.selectCurrentWord();
+		// 	that.text_element.classList.add('speaking');
+		// }, false);
 
 		that.audio_element.addEventListener('pause', function (e) {
 			that.selectCurrentWord();

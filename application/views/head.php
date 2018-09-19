@@ -43,6 +43,12 @@
 		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
 
 		<style type="text/css">
+			audio::-webkit-media-controls-enclosure {overflow:hidden;}
+			audio::-webkit-media-controls-panel {width: calc(100% + 30px);}
+
+			video::-webkit-media-controls-enclosure {overflow:hidden;}
+			video::-webkit-media-controls-panel {width: calc(100% + 30px);}
+
 			#divback-to {
 				position: fixed;
 				bottom: 20px;
@@ -69,11 +75,17 @@
 				font-size: 110%;
 			}
 
-			audio::-webkit-media-controls-enclosure {overflow:hidden;}
-			audio::-webkit-media-controls-panel {width: calc(100% + 30px);}
+			.navnotem{
+				font-size: 10px;
+			}
 
-			video::-webkit-media-controls-enclosure {overflow:hidden;}
-			video::-webkit-media-controls-panel {width: calc(100% + 30px);}
+			.navnotstrg{
+				font-size: 11px;
+			}
+
+			.rruname{
+				font-size: 12px;
+			}
 
 			#scrollable-dropdown-menu .tt-menu {
 				max-height: 200px;

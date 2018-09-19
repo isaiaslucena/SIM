@@ -369,8 +369,10 @@
 			});
 		};
 
-		function startread(idpaudio, idptext, audiotime = 0) {
-			$('#'+idpaudio)[0].currentTime = audiotime;
+		function startread(idpaudio, idptext, starttime = 0, audiotime = false) {
+			if (audiotime) {
+				$('#'+idpaudio)[0].currentTime = starttime;
+			}
 
 			var args = {
 				text_element: document.getElementById(idptext),
@@ -495,6 +497,9 @@
 			idclient = discardbtn.attr('data-idclient');
 			iduser = '<?php echo $this->session->userdata("id_user");?>';
 
+			audioid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
+			$('#'+audioid)[0].pause();
+
 			$.post('<?php echo base_url("pages/discard_doc_radio_novo")?>',
 				{
 					'iddoc': iddoc,
@@ -506,6 +511,7 @@
 					discardbtn.children('i').css('display', 'none');
 					$('#'+iddiv).removeClass('panel-default');
 					$('#'+iddiv).addClass('panel-danger');
+
 					totalpanelsd += 1;
 					if (totalpanelsd == totalpanels) {
 						console.log('no more panels!');
@@ -524,11 +530,22 @@
 			paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
 			spantime = $(this).attr('data-begin');
 
-			startread(paudioid, ptextid, spantime);
+			startread(paudioid, ptextid, spantime, true);
 			$('#'+paudioid)[0].play();
 		});
 
-		$(document).on('mouseleave', '.ptext', function() {
+		$(document).on('play', 'audio', function(){
+			paudioid = $(this).attr('id');
+			ptextid = 'ptext'+paudioid.replace(/[a-zA-Z]/g, '');
+
+			ptextspans = $('#'+ptextid).children('span.fkword');
+			spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
+
+			startread(paudioid, ptextid, spantime, true);
+			$('#'+paudioid)[0].play();
+		});
+
+		$(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
 			ptextid = $(this).attr('id');
 			paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
 

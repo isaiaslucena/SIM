@@ -50,7 +50,7 @@
 
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="alertbnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="alerttvbnum" class="badge-notification" style="display: none"></span></sup>
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -65,7 +65,7 @@
 
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="alertbnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="alertradiobnum" class="badge-notification" style="display: none"></span></sup>
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -250,21 +250,19 @@
 					}
 
 					if (idgroup == 1 || idgroup == 5 ) {
-						getradios();
-						var gtrd = setInterval(getradios(), 60000);
+						setInterval(getradios(), 10000);
+						setInterval(getchannels(), 10000);
 					}
 				});
 
 				function getradios() {
 					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','radio.', base_url('index.php/radio/getstopradios'))?>'},
 						function(data, textStatus, xhr) {
-						// console.log(data);
 						radiocount = 0;
 						$('#alertradiolist').html(null);
 						datac = (data.length - 1);
 
 						$.each(data, function(index, val) {
-							// console.log(val);
 							radionamekey = Object.keys(val)[0];
 							radioname = radionamekey.replace("_", " - ");
 							ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
@@ -272,8 +270,8 @@
 							html = 	'<li>'+
 										'<a href="#">'+
 											'<div>'+
-												'<strong>'+radioname+'</strong>'+
-													'<span class="pull-right text-muted"><em>'+ffmpegpid+'</em></span>'+
+												'<strong class="navnotstrg">'+radioname+'</strong>'+
+													'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
 												'</div>'+
 											'<div class="rruname">'+ffmpeglastmsg+'</div>'+
 										'</a>'+
@@ -287,24 +285,76 @@
 
 						fhtml = '<li>'+
 											'<a class="text-center" href="#">'+
-												'<strong>Ver todas as mensagens </strong>'+
+												'<strong>Ver todos os alertas </strong>'+
 												'<i class="fa fa-angle-right"></i>'+
 											'</a>'+
 										'</li>';
 						// $('#alertradiolist').append(fhtml);
 
 						if (radiocount > 0) {
-							$('#msgbnum').text(radiocount);
-							$('#msgbnum').fadeIn('fast');
+							$('#alertradiobnum').text(radiocount);
+							$('#alertradiobnum').fadeIn('fast');
 						} else {
-							$('#msgbnum').fadeOut('fast');
-							$('#msgbnum').text(radiocount);
+							$('#alertradiobnum').fadeOut('fast');
+							$('#alertradiobnum').text(radiocount);
 							fhtml = '<li>'+
 												'<a class="text-center" href="#">'+
-													'<strong>Nenhuma mensagem! </strong>'+
+													'<strong>Nenhum alerta de rádio! </strong>'+
 												'</a>'+
 											'</li>';
 							$('#alertradiolist').append(fhtml);
+						}
+					});
+				}
+
+				function getchannels() {
+					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>'},
+						function(data, textStatus, xhr) {
+						radiocount = 0;
+						$('#alerttvlist').html(null);
+						datac = (data.length - 1);
+
+						$.each(data, function(index, val) {
+							radionamekey = Object.keys(val)[0];
+							radioname = radionamekey.replace("_", " - ");
+							ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
+							ffmpegpid = val[radionamekey].ffmpeg_PID
+							html = 	'<li>'+
+										'<a href="#">'+
+											'<div>'+
+												'<strong class="navnotstrg">'+radioname+'</strong>'+
+													'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
+												'</div>'+
+											'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+										'</a>'+
+									'</li>';
+							$('#alerttvlist').append(html);
+							if (radiocount < datac) {
+								$('#alerttvlist').append('<li class="divider"></li>');
+							}
+							radiocount += 1;
+						});
+
+						fhtml = '<li>'+
+											'<a class="text-center" href="#">'+
+												'<strong>Ver todos os alertas </strong>'+
+												'<i class="fa fa-angle-right"></i>'+
+											'</a>'+
+										'</li>';
+						// $('#alerttvlist').append(fhtml);
+
+						if (radiocount > 0) {
+							$('#alerttvbnum').text(radiocount);
+							$('#alerttvbnum').fadeIn('fast');
+						} else {
+							$('#alerttvbnum').fadeOut('fast');
+							$('#alerttvbnum').text(radiocount);
+							fhtml = '<li>'+
+												'<a class="text-center" href="#">'+
+													'<strong>Nenhum alerta de tv! </strong>'+
+												'</a>'+
+											'</li>';
+							$('#alerttvlist').append(fhtml);
 						}
 					});
 				}
