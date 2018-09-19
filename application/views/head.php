@@ -83,6 +83,24 @@
 				font-size: 11px;
 			}
 
+			.navnotification {
+				display: inline-block;
+				min-width: 10px;
+				padding: 3.2px 3.2px;
+				font-size: 10px;
+				font-weight: bold;
+				line-height: 1;
+				color: #fff;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: middle;
+				background-color: red;
+				border-radius: 10px;
+				position: absolute;
+				margin-left: 15px;
+				z-index: 800;
+			}
+
 			.rruname{
 				font-size: 12px;
 			}

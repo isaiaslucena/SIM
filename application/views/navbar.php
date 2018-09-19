@@ -20,7 +20,7 @@
 			<ul class="nav navbar-top-links navbar-right">
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="msgbnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="msgbnum" class="navnotification" style="display: none"></span></sup>
 						<i class="fa fa-envelope fa-fw"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -35,7 +35,7 @@
 
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="taskbnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="taskbnum" class="navnotification" style="display: none"></span></sup>
 						<i class="fa fa-tasks fa-fw"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -50,7 +50,7 @@
 
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="alerttvbnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>
@@ -65,7 +65,7 @@
 
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<sup><span id="alertradiobnum" class="badge-notification" style="display: none"></span></sup>
+						<sup><span id="alertradiobnum" class="navnotification" style="display: none"></span></sup>
 						<i class="fa fa-bell"></i>
 						<!-- <i class="fa fa-caret-down"></i> -->
 					</a>

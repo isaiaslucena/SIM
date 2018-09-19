@@ -58,32 +58,44 @@
 							$trid = 0;
 							$trgid = 0;
 							$rrestados = array();
-							foreach ($rec_radios->ESTADO as $estado) {
-								$estadoname = key($estado);
+
+							foreach ($rec_radios as $estado => $st) {
+								$estadoname = $estado;
 								array_push($rrestados, $estadoname);
-								foreach ($estado as $radios) {
-									foreach ($radios as $radio) {
-										$radioname = $radio->radio;
+								foreach ($st as $radio) {
+										$radioname = $radio->name;
+										$radiouf = $radio->state;
 										$urlstream = $radio->stream;
-										$trid++;?>
+										$disk = $radio->disk;
+										$transcmachine = $radio->transc_machine;
+										$transc = $radio->transc;
+										$until = $radio->until;
+										$trid++; ?>
 										<tr id="<?php echo 'tr'.$trid; ?>">
 											<td><?php echo $estadoname; ?></td>
 											<td id="<?php echo 'trname'.$trid; ?>" class="text-center rrntable"><?php echo $radioname;?></td>
 											<td id="<?php echo 'trurl'.$trid; ?>" class="rrutable"><?php echo $urlstream;?></td>
 											<td class="text-center">
-												<button id="<?php echo 'trbtn'.$trid; ?>" class="btn btn-default btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-idname="<?php echo 'trname'.$trid; ?>" data-name="<?php echo $radioname;?>" data-idurl="<?php echo 'trurl'.$trid; ?>" data-url="<?php echo $urlstream;?>" data-toggle="modal" data-target=".edit_modal">
+												<button id="<?php echo 'trbtn'.$trid; ?>" class="btn btn-default btn-xs"
+													data-trid="<?php echo 'tr'.$trid; ?>" data-idname="<?php echo 'trname'.$trid; ?>"
+													data-name="<?php echo $radioname;?>" data-idurl="<?php echo 'trurl'.$trid; ?>"
+													data-url="<?php echo $urlstream;?>" data-uf="<?php echo $radiouf;?>" data-disk="<?php echo $disk;?>"
+													data-transcmachine="<?php echo $transcmachine;?>" data-transc="<?php echo $transc;?>"
+													data-until="<?php echo $until;?>"
+													data-toggle="modal" data-target=".edit_modal">
 													<i class="fa fa-edit"></i>
 													<?php echo get_phrase('edit');?>
 												</button>
-												<button class="btn btn-danger btn-xs" data-trid="<?php echo 'tr'.$trid; ?>" data-toggle="modal" data-target=".delete_modal">
+												<button class="btn btn-danger btn-xs" data-trid="<?php echo 'tr'.$trid; ?>"
+													data-toggle="modal" data-target=".delete_modal">
 													<i class="fa fa-times"></i>
 													<?php echo get_phrase('delete');?>
 												</button>
 											</td>
 										</tr>
-									<?php }
-								}
-							} ?>
+								<?php }
+							}
+							?>
 						</tbody>
 					</table>
 				</div>
@@ -196,7 +208,7 @@
 				} else {
 					return false;
 				}
-			}
+			};
 
 			$('#add_modal').on('shown.bs.modal', function() {
 				$('#name_add_modal').val(null);
