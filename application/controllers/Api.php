@@ -287,9 +287,6 @@ class Api extends CI_Controller {
 				);
 				$data_string = json_encode($data);
 
-				// print($data_string);
-				// exit();
-
 				$header = array(
 					'Content-Type: application/json',
 					'Content-Length: '.strlen($data_string),
@@ -301,8 +298,15 @@ class Api extends CI_Controller {
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 				$resultcurl = curl_exec($ch);
-			}
 
+				header('Content-Type: application/json');
+				$message = "File created succesfuly with id ".$did;
+				print json_encode($message);
+			} else {
+				header('Content-Type: application/json');
+				$message = "File already on database!";
+				print json_encode($message);
+			}
 		} else {
 			header("HTTP/1.1 403 Forbidden");
 		}
