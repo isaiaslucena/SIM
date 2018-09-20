@@ -156,6 +156,19 @@ class Pages_model extends CI_Model {
 		return $this->db->get('radio')->result_array();
 	}
 
+	public function get_radio($data) {
+		return $this->db->get_where('radio', $data)->result_array();
+	}
+
+	public function add_radio($data) {
+		$data_insert = array(
+			'name' => $data['name'],
+			'state' => $data['state']
+		);
+		$this->db->insert('radio', $data_insert);
+		return $this->db->insert_id();
+	}
+
 	public function radios_novo() {
 		$this->db->order_by('source','asc');
 		return $this->db->get('knewin_radio')->result_array();
@@ -267,7 +280,7 @@ class Pages_model extends CI_Model {
 		return $result;
 	}
 
-	public function create_temptable_ksearch($tablename){
+	public function create_temptable_ksearch($tablename) {
 		$query = $this->db->query("SHOW TABLES LIKE '$tablename'");
 		$resultquery = $query->num_rows();
 		if ($resultquery == 0) {

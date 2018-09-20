@@ -22,6 +22,14 @@ class Api extends CI_Controller {
 		return $ipaddress;
 	}
 
+	function replace_chars($string) {
+		// $pattern = "/\n|\\u0000/";
+		$pattern = '/[\x00-\x1F\x7F]/u';
+		$replacement = ' ';
+		$result = preg_replace($pattern, $replacement, $string);
+		return $result;
+	}
+
 	public function index() {
 		header('Content-Type: application/json');
 		$message = "Não permitido!";
@@ -162,7 +170,139 @@ class Api extends CI_Controller {
 		if ($this->input->method(TRUE) == 'POST') {
 			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 
-			var_dump($postdata);
+			// var_dump($postdata);
+
+			$protocol = 'http';
+			$port = '8983';
+			$host = '172.17.0.3';
+			if ($postdata['type'] == 'radio') {
+				$path = '/solr/radio';
+			} else {
+				$path = '/solr/tv';
+			}
+			$url = $protocol."://".$host.":".$port.$path."/select?wt=json";
+
+			$namehash = sha1($postdata['filename']);
+
+			$data = array(
+				"query" => "hash_s:".$namehash
+			);
+			$data_string = json_encode($data);
+			$header = array(
+				'Content-Type: application/json',
+				'Content-Length: '.strlen($data_string),
+				'charset=UTF-8'
+			);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+			$resultselect = json_decode(curl_exec($ch));
+
+			$idfound = (int)$resultselect->response->numFound;
+			if ($idfound == 0) {
+				$url = $protocol."://".$host.":".$port.$path."/select?sort=inserted_dt+descwt=json";
+				$data = array(
+					"query" => "*:*"
+				);
+				$data_string = json_encode($data);
+				$header = array(
+					'Content-Type: application/json',
+					'Content-Length: '.strlen($data_string),
+					'charset=UTF-8'
+				);
+				$ch = curl_init($url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+				$resultidselect = json_decode(curl_exec($ch));
+
+				if (isset($resultidselect->response->doc[0]->id_i)) {
+					$idresult = $resultidselect->response->doc[0]->id_i;
+				} else {
+					$idresult = 0;
+				}
+
+				$filearr = explode("_", $postdata['filename']);
+				$radiodisk = $filearr[0];
+				$radioname = $filearr[3];
+				$radiostate = $filearr[4];
+				$radiostartd = $filearr[1];
+				$radiostartt = str_replace("-", ":", $filearr[2]);
+				$radiostarttime = $radiostartd.'T'.$radiostartt.'Z';
+
+				$radiodata = array(
+					'name' => $radioname,
+					'state' => $radiostate
+				);
+
+				$radioiddb = $this->pages_model->get_radio($radiodata);
+
+				if (count($radioiddb) == 0) {
+					$radiosourceid = $this->pages_model->add_radio($radiodata);
+				} else {
+					$radiosourceid = $radioiddb[0]['id_radio'];
+				}
+
+				$secdur = substr($postdata['duration'], 0, 3);
+				$duration = new DateInterval('PT'.$secdur.'S');
+				$st = new DateTime($radiostarttime);
+				$et = $st->add($duration)->format('Y-m-d\TH:i:s\Z');
+
+				$did = $idresult + 1;
+				$didsource = $radiosourceid;
+				$dsource = $radioname.'_'.$radiostate;
+				$dstarttime = $radiostarttime;
+				$dendtime = $et;
+				$dcrawled = $radiostarttime;
+				$dduration = (int)$secdur;
+				$dmurl = $postdata['filename'];
+				$dcontent = $this->replace_chars($postdata['text']);
+				$dtimes = json_encode($postdata['parts']);
+				$snow = strtotime("now");
+				$dnow = date('Y-m-d\TH:i:s\Z', $snow);
+
+				$url = $protocol."://".$host.":".$port.$path."/update?wt=json";
+				//insert into Solr
+				$data = array(
+					"add" => array(
+						"doc" => array(
+							"hash_s" => $namehash,
+							"id_i" => $did,
+							"id_source_i" => (int)$didsource,
+							"source_s" => $dsource,
+							"starttime_dt" => $dstarttime,
+							"endtime_dt" => $dendtime,
+							"crawled_dt" => $dcrawled,
+							"inserted_dt" => $dnow,
+							"duration_i" => $dduration,
+							"mediaurl_s" => $dmurl,
+							"content_t" => $dcontent,
+							"times_t" => $dtimes
+						),
+					"commitWithin" => 1000,
+					),
+				);
+				$data_string = json_encode($data);
+
+				// print($data_string);
+				// exit();
+
+				$header = array(
+					'Content-Type: application/json',
+					'Content-Length: '.strlen($data_string),
+					'charset=UTF-8'
+				);
+				$ch = curl_init($url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+				$resultcurl = curl_exec($ch);
+			}
+
 		} else {
 			header("HTTP/1.1 403 Forbidden");
 		}
