@@ -210,23 +210,41 @@
 
 		<div class="container-fluid center-block text-center">
 			<div class="row">
-				<div class="col-md-8">
+				<div class="col-md-7">
 					<h2 id="vtitle" class="center-block">Nenhuma seleção</h2>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-5" style="margin-top: 10px">
 					<div class="btn-toolbar">
-						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger pull-right" title="Sair"><i class="fa fa-sign-out"></i></a>
-						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default pull-right" title="Voltar"><i class="fa fa-arrow-left"></i></a>
-
-						<div class="input-group date" style="width: 32%">
+						<div class="input-group date" style="width: 26%">
 							<input id="seldate" type="text" class="form-control">
 							<div class="input-group-addon">
 								<span class="fa fa-calendar"></span>
 							</div>
 						</div>
 
-						<select id="selchannels" class="selectpicker" data-size="10" data-width="100" data-live-search="true" title="Selecione uma data" disabled></select>
+						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" title="Selecione uma data" disabled></select>
+
+
+						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+							<i class="fa fa-bell"></i>
+						</a> -->
+
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							 <i class="fa fa-bell"></i>
+							</button>
+							<ul id="" class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
+								<li><a href="#">Action</a></li>
+								<li><a href="#">Another action</a></li>
+								<li><a href="#">Something else here</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#">Separated link</a></li>
+							</ul>
+						</div>
+						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
 					</div>
 				</div>
 			</div>
@@ -822,7 +840,7 @@
 							if (data.length == 1) {
 								firstvideo = data[0].replace(".mp4", "");
 								lastvideo = firstvideo;
-								lastvarray = lastvarray;
+								lastvarray = data[0].replace(".mp4","");
 							} else {
 								firstvideo = data[0].replace(".mp4", "");
 								lastvideo = data[data.length-2].replace(".mp4", "");

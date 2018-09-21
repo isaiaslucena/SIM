@@ -220,6 +220,10 @@
 			<script type="text/javascript">
 				var idgroup = <?php echo $id_group; ?>;
 
+				if ($(document).width() <= 375) {
+					$('.sidebar-nav.navbar-collapse').addClass('collapse');
+				}
+
 				$('#datepicker_static').datepicker({
 					format: "dd/mm/yyyy",
 					language: 'pt-BR',
@@ -242,16 +246,12 @@
 
 				$(document).ready(function() {
 					// if (idgroup == 1) {
-						// $('.navbar').css('position', 'relative');
+					// 	$('.navbar').css('position', 'relative');
 					// }
 
-					if ($(document).width() <= 375) {
-						$('.sidebar-nav.navbar-collapse').addClass('collapse');
-					}
-
 					if (idgroup == 1 || idgroup == 5 ) {
-						setInterval(getradios(), 10000);
-						setInterval(getchannels(), 10000);
+						var rradio = setInterval(getradios(), 30000);
+						var ttv = setInterval(getchannels(), 30000);
 					}
 				});
 

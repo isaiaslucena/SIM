@@ -253,32 +253,32 @@
 						hwordtimes = new Date(cfiletstampst)
 						hwordtimee = new Date(cfiletstampet)
 
-						$('#transct').val(null);
-						$.post('/pages/get_tvwords',
-							{
-								source: cfilesource,
-								ststartdate: cfiletimestampt,
-								stenddate: cfiletstamp,
-								wstartdate: cfiletstampst,
-								wenddate: cfiletstampet
-							},
-							function(data, textStatus, xhr) {
-								var textw = "";
-								var wordbefore = "";
-								$.each(data, function(index, val) {
-									$.each(val.response.docs, function(indexd, vald) {
-										starttimew = vald.starttime_l;
-										endtimew = vald.endtime_l;
-										if (vald.word_s != wordbefore) {
-											textw += vald.word_s;
-											textw += " ";
-										}
-										wordbefore = vald.word_s;
-									});
-								});
-								$('#transct').val(textw);
-							}
-						);
+						// $('#transct').val(null);
+						// $.post('/pages/get_tvwords',
+						// 	{
+						// 		source: cfilesource,
+						// 		ststartdate: cfiletimestampt,
+						// 		stenddate: cfiletstamp,
+						// 		wstartdate: cfiletstampst,
+						// 		wenddate: cfiletstampet
+						// 	},
+						// 	function(data, textStatus, xhr) {
+						// 		var textw = "";
+						// 		var wordbefore = "";
+						// 		$.each(data, function(index, val) {
+						// 			$.each(val.response.docs, function(indexd, vald) {
+						// 				starttimew = vald.starttime_l;
+						// 				endtimew = vald.endtime_l;
+						// 				if (vald.word_s != wordbefore) {
+						// 					textw += vald.word_s;
+						// 					textw += " ";
+						// 				}
+						// 				wordbefore = vald.word_s;
+						// 			});
+						// 		});
+						// 		$('#transct').val(textw);
+						// 	}
+						// );
 
 						load_vihts();
 
