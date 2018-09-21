@@ -225,12 +225,6 @@
 
 						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" title="Selecione uma data" disabled></select>
 
-
-						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-							<i class="fa fa-bell"></i>
-						</a> -->
-
 						<div class="btn-group">
 							<button type="button" class="btn btn-default dropdown-toggle"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -240,7 +234,7 @@
 							<ul id="alerttvlist" class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
 								<li>
 									<a class="text-center" href="#">
-										<strong>Nenhum alerta de tv!</strong>
+										<strong>Nenhum alerta de rádio!</strong>
 									</a>
 								</li>
 
@@ -262,7 +256,7 @@
 						<!-- <div class="embed-responsive embed-responsive-16by9"> -->
 						<div>
 							<div id="vvideobtn" class='vbutton' style="display: none"></div>
-							<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="854" height="480" preload="metadata" autoplay="false"></video>
+							<audio id="aaudio" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" preload="metadata" autoplay="false"></audio>
 							<img id="thvideo" class="center-block"  width="854" height="480" style="display: none;">
 						</div>
 				</div>
@@ -475,11 +469,10 @@
 				var fileseq = 0;
 				var tvch = $('#selchannels');
 				var tvdate = $('#seldate');
-				var videoel = $('#vvideo');
+				var audioel = $('#aaudio');
 				var videomel = $('#mvvideo');
-				var videoelth = $('#thvideo');
 				var videojcmel = $('#mcjvvideo');
-				var vvideosrc = videoel[0].currentSrc;
+				var vvideosrc = audioel[0].currentSrc;
 				var vvideosrcsearch = "colorbarstatic";
 				var videotitle = $('#vtitle');
 				var nextvideo = $('#vnext');
@@ -498,156 +491,7 @@
 				var year = d.getFullYear();
 				var todaydate = year+'-'+month+'-'+day;
 
-				// if (window.Worker) {
-				// 	imgworker = new Worker('/assets/imgworker.js');
-				// }
-
-				// imgworker.onmessage = function(event) {
-					// console.log(event.data);
-				// }
-
-				getchannels();
-				var tvalerts = setInterval(function() {
-					getchannels();
-				}, 60000);
-
-				function getchannels() {
-					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>'},
-						function(data, textStatus, xhr) {
-						radiocount = 0;
-						$('#alerttvlist').html(null);
-						datac = (data.length - 1);
-
-						$.each(data, function(index, val) {
-							radionamekey = Object.keys(val)[0];
-							radioname = radionamekey.replace("_", " - ");
-							ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
-							ffmpegpid = val[radionamekey].ffmpeg_PID
-							html = 	'<li>'+
-										'<a href="#">'+
-											'<div>'+
-												'<strong class="navnotstrg">'+radioname+'</strong>'+
-													'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
-												'</div>'+
-											'<div class="rruname">'+ffmpeglastmsg+'</div>'+
-										'</a>'+
-									'</li>';
-							$('#alerttvlist').append(html);
-							if (radiocount < datac) {
-								$('#alerttvlist').append('<li class="divider"></li>');
-							}
-							radiocount += 1;
-						});
-
-						fhtml = '<li>'+
-											'<a class="text-center" href="#">'+
-												'<strong>Ver todos os alertas </strong>'+
-												'<i class="fa fa-angle-right"></i>'+
-											'</a>'+
-										'</li>';
-						// $('#alerttvlist').append(fhtml);
-
-						if (radiocount > 0) {
-							$('#alerttvbnum').text(radiocount);
-							$('#alerttvbnum').fadeIn('fast');
-						} else {
-							$('#alerttvbnum').fadeOut('fast');
-							$('#alerttvbnum').text(radiocount);
-							fhtml = '<li>'+
-												'<a class="text-center" href="#">'+
-													'<strong>Nenhum alerta de tv! </strong>'+
-												'</a>'+
-											'</li>';
-							$('#alerttvlist').append(fhtml);
-						}
-					});
-				}
-
-				function channelname(name) {
-					switch (name) {
-						case "CULTURA-HD":
-							chlname = "TV Cultura";
-							break;
-						case "ESPN-BRASIL":
-							chlname = "ESPN Brasil";
-							break;
-						case "GLOBONEWS":
-							chlname = "Globo News";
-							break;
-						case "GLOBONEWS-HD":
-							chlname = "Globo News";
-							break;
-						case "RECORDNEWS":
-							chlname = "Record News";
-							break;
-						case "REDETV":
-							chlname = "Rede TV";
-							break;
-						case "SBT-HD":
-							chlname = "SBT";
-							break;
-						case "SPORTV":
-							chlname = "Sportv";
-							break;
-						case "TVALERJ":
-							chlname = "TV ALERJ";
-							break;
-						case "BANDNEWS":
-							chlname = "TV Band News";
-							break;
-						case "BAND":
-							chlname = "TV Bandeirantes";
-							break;
-						case "BAND-HD":
-							chlname = "TV Bandeirantes";
-							break;
-						case "TVBRASIL":
-							chlname = "TV Brasil";
-							break;
-						case "TV-BRASIL":
-							chlname = "TV Brasil";
-							break;
-						case "TV-CAMARA":
-							chlname = "TV Camara";
-							break;
-						case "CULTURA":
-							chlname = "TV Cultura";
-							break;
-						case "FORSPORTS":
-							chlname = "TV Fox Sports";
-							break;
-						case "FUTURA":
-							chlname = "TV Futura";
-							break;
-						case "TVGAZETA":
-							chlname = "TV Gazeta";
-							break;
-						case "GLOBO":
-							chlname = "TV Globo";
-							break;
-						case "GLOBO-HD":
-							chlname = "TV Globo";
-							break;
-						case "TVJUSTICA":
-							chlname = "TV Justica";
-							break;
-						case "NBR":
-							chlname = "TV NBR";
-							break;
-						case "RECORD":
-							chlname = "TV Record";
-							break;
-						case "TV-SENADO":
-							chlname = "TV Senado";
-							break;
-						default:
-							chlname = name;
-					}
-					return chlname;
-				};
-
-				videoel.bind('contextmenu', function() { return false; });
-				videomel.bind('contextmenu', function() { return false; });
+				audioel.bind('contextmenu', function() {return false;});
 
 				$('#btnnight').click(function(event) {
 					if (nightmode) {
@@ -773,8 +617,8 @@
 						function(data, textStatus, xhr) {
 							lastvideo = data[0].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
-							videoel.removeAttr('loop');
-							videoel.attr({
+							audioel.removeAttr('loop');
+							audioel.attr({
 								poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
 								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
 							});
@@ -947,17 +791,17 @@
 							if (todaydatesel === false) {
 								// console.log('Data selecionada menor que hoje');
 
-								videoel.attr({
+								audioel.attr({
 									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+firstvideo+'/001',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
 								});
 
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
+									audioel[0].pause();
 
 									loadingthumbs();
 								} else {
-									videoel[0].play();
+									audioel[0].play();
 								}
 
 								videotitle.text(firstvideo);
@@ -986,17 +830,17 @@
 									nextvideo.append(html);
 								});
 							} else {
-								videoel.attr({
+								audioel.attr({
 									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
 								});
 
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
+									audioel[0].pause();
 
 									loadingthumbs();
 								} else {
-									videoel[0].play();
+									audioel[0].play();
 								}
 
 								videotitle.text(lastvideo);
@@ -1138,64 +982,6 @@
 					$('.transcmodal').modal('show');
 				});
 
-				$('#btndownimgs').click(function(event) {
-					swal({
-						onOpen: () => {
-							swal.showLoading()
-						},
-						title: "Aguarde...",
-						animation: false,
-						allowEscapeKey: false,
-						allowOutsideClick: false,
-						showCancelButton: false,
-						showConfirmButton: false,
-					});
-
-					createzip = {
-						"source": jvsource,
-						"files": filestojoin
-					}
-
-					$psettings = {
-						url: "<?php echo str_replace('sim.','video.', base_url('video/createzip'))?>",
-						type: "POST",
-						data: createzip
-					}
-					$.ajax($psettings)
-					.done(function(data) {
-						downf = document.createElement('a');
-						downf.href = "<?php echo str_replace('sim.','video.', base_url('video/downloadzip'))?>"+"/"+data.zipfile;
-						document.body.appendChild(downf);
-						downf.click();
-
-						swal.close();
-					})
-					.fail(function() {
-						// console.log("error");
-						swal.close();
-					})
-					.always(function() {
-						// console.log("complete");
-					});
-				});
-
-				function load_vihts() {
-					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
-						function(data, textStatus, xhr) {
-							$('#selvinheta').html(null);
-							data.map(function(index, elem) {
-								filename = index.replace('.mp4','');
-								html = '<option val="'+filename+'">'+filename+'</option>';
-								$('#selvinheta').append(html);
-							})
-							$('#selvinheta').selectpicker({title: 'Selecione uma vinheta...'}).selectpicker('render');
-							$('#selvinheta').selectpicker('refresh');
-						}
-					);
-				};
-
 				var progresscbar = new ProgressBar.Circle('#progresscrop', {
 					color: '#aaa',
 					// This has to be the same size as the maximum width to
@@ -1276,3 +1062,7 @@
 				});
 				progressjcbar.text.style.fontFamily = 'Helvetica';
 				progressjcbar.text.style.fontSize = '4rem';
+			});
+		</script>
+	</body>
+</html>

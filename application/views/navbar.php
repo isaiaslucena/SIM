@@ -57,7 +57,7 @@
 					<ul id="alerttvlist" class="dropdown-menu dropdown-alerts" style="height: auto; max-height: 600px; overflow-x: hidden;">
 						<li>
 							<a class="text-center" href="#">
-								<strong>Nenhum alerta!</strong>
+								<strong>Nenhum alerta de tv!</strong>
 							</a>
 						</li>
 					</ul>
@@ -72,7 +72,7 @@
 					<ul id="alertradiolist" class="dropdown-menu dropdown-alerts" style="height: auto; max-height: 600px; overflow-x: hidden;">
 						<li>
 							<a class="text-center" href="#">
-								<strong>Nenhum alerta!</strong>
+								<strong>Nenhum alerta de rádio!</strong>
 							</a>
 						</li>
 					</ul>
@@ -250,8 +250,10 @@
 					// }
 
 					if (idgroup == 1 || idgroup == 5 ) {
-						var rradio = setInterval(getradios(), 30000);
-						var ttv = setInterval(getchannels(), 30000);
+						getradios();
+						getchannels();
+						var rradio = setInterval(function(){getradios()}, 60000);
+						var ttv = setInterval(function(){getchannels()}, 60000);
 					}
 				});
 

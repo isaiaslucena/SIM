@@ -2351,6 +2351,26 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function radio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/video')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			// var_dump(current_url());
+
+			// $data['tvchannels'] = $this->pages_model->tvc();
+			$this->load->view('radio');
+			// $this->load->view('player.js');
+			// $this->load->view('editor.js');
+			// $this->load->view('video-footer');
+		} else {
+			redirect('login?rdt='.urlencode('pages/radio'),'refresh');
+		}
+	}
+
 	public function live() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(

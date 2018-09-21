@@ -202,7 +202,7 @@ class Api extends CI_Controller {
 
 			$idfound = (int)$resultselect->response->numFound;
 			if ($idfound == 0) {
-				$url = $protocol."://".$host.":".$port.$path."/select?sort=inserted_dt+descwt=json";
+				$url = $protocol."://".$host.":".$port.$path."/select?rows=1&sort=id_i+desc&wt=json";
 				$data = array(
 					"query" => "*:*"
 				);
@@ -219,8 +219,8 @@ class Api extends CI_Controller {
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 				$resultidselect = json_decode(curl_exec($ch));
 
-				if (isset($resultidselect->response->doc[0]->id_i)) {
-					$idresult = $resultidselect->response->doc[0]->id_i;
+				if (isset($resultidselect->response->docs[0]->id_i)) {
+					$idresult = $resultidselect->response->docs[0]->id_i;
 				} else {
 					$idresult = 0;
 				}
@@ -257,6 +257,8 @@ class Api extends CI_Controller {
 				$dstarttime = $radiostarttime;
 				$dendtime = $et;
 				$dcrawled = $radiostarttime;
+				$dtimestart = $postdata['timestart'];
+				$dtimeend = $postdata['timeend'];
 				$dduration = (int)$secdur;
 				$dmurl = $postdata['filename'];
 				$dcontent = $this->replace_chars($postdata['text']);
@@ -275,6 +277,8 @@ class Api extends CI_Controller {
 							"source_s" => $dsource,
 							"starttime_dt" => $dstarttime,
 							"endtime_dt" => $dendtime,
+							"transcstart_dt" => $dtimestart,
+							"transcend_dt" => $dtimeend,
 							"crawled_dt" => $dcrawled,
 							"inserted_dt" => $dnow,
 							"duration_i" => $dduration,
@@ -300,7 +304,7 @@ class Api extends CI_Controller {
 				$resultcurl = curl_exec($ch);
 
 				header('Content-Type: application/json');
-				$message = "File created succesfuly with id ".$did;
+				$message = "File created with id ".$did;
 				print json_encode($message);
 			} else {
 				header('Content-Type: application/json');
