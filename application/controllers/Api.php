@@ -170,8 +170,6 @@ class Api extends CI_Controller {
 		if ($this->input->method(TRUE) == 'POST') {
 			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 
-			// var_dump($postdata);
-
 			$protocol = 'http';
 			$port = '8983';
 			$host = '172.17.0.3';
@@ -286,7 +284,7 @@ class Api extends CI_Controller {
 							"content_t" => $dcontent,
 							"times_t" => $dtimes
 						),
-					"commitWithin" => 1000,
+					"commitWithin" => 200,
 					),
 				);
 				$data_string = json_encode($data);
@@ -310,6 +308,50 @@ class Api extends CI_Controller {
 				header('Content-Type: application/json');
 				$message = "File already on database!";
 				print json_encode($message);
+			}
+		} else {
+			header("HTTP/1.1 403 Forbidden");
+		}
+	}
+
+	public function check_trans() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+
+			$protocol = 'http';
+			$port = '8983';
+			$host = '172.17.0.3';
+			if ($postdata['type'] == 'radio') {
+				$path = '/solr/radio';
+			} else {
+				$path = '/solr/tv';
+			}
+			$url = $protocol."://".$host.":".$port.$path."/select?wt=json";
+
+			$namehash = sha1($postdata['filename']);
+
+			$data = array(
+				"query" => "hash_s:".$namehash
+			);
+			$data_string = json_encode($data);
+			$header = array(
+				'Content-Type: application/json',
+				'Content-Length: '.strlen($data_string),
+				'charset=UTF-8'
+			);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+			$resultselect = json_decode(curl_exec($ch));
+
+			header('Content-Type: application/json');
+			$idfound = (int)$resultselect->response->numFound;
+			if ($idfound == 0) {
+				print json_encode($message["file_exist"] = false);
+			} else {
+				print json_encode($message["file_exist"] = true);
 			}
 		} else {
 			header("HTTP/1.1 403 Forbidden");
