@@ -2351,23 +2351,49 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function radio() {
+	public function audio() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
-				'last_page' => base_url('pages/video')
+				'last_page' => base_url('pages/audio')
 			);
 			$this->session->set_userdata($sessiondata);
 
 			// var_dump(current_url());
 
 			// $data['tvchannels'] = $this->pages_model->tvc();
-			$this->load->view('radio');
+			$this->load->view('audio');
 			// $this->load->view('player.js');
 			// $this->load->view('editor.js');
 			// $this->load->view('video-footer');
 		} else {
-			redirect('login?rdt='.urlencode('pages/radio'),'refresh');
+			redirect('login?rdt='.urlencode('pages/audio'),'refresh');
+		}
+	}
+
+	public function audioplayerfunctions() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/audioplayerfunctions')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('audio-player-functions.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/audioplayerfunctions'),'refresh');
+		}
+	}
+
+	public function audioplayerlisteners() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/audioplayerlisteners')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('audio-player-listeners.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/audioplayerlisteners'),'refresh');
 		}
 	}
 

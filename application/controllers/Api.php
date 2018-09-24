@@ -315,8 +315,11 @@ class Api extends CI_Controller {
 	}
 
 	public function check_trans() {
-		if ($this->input->method(TRUE) == 'POST') {
+		// if ($this->input->method(TRUE) == 'POST') {
 			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+
+			$postdata['type'] = $this->input->get('type');
+			$postdata['filename'] = $this->input->get('filename');
 
 			$protocol = 'http';
 			$port = '8983';
@@ -353,9 +356,9 @@ class Api extends CI_Controller {
 			} else {
 				print json_encode($message["file_exist"] = true);
 			}
-		} else {
-			header("HTTP/1.1 403 Forbidden");
-		}
+		// } else {
+			// header("HTTP/1.1 403 Forbidden");
+		// }
 	}
 }
 ?>

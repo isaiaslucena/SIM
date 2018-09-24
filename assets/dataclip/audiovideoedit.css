@@ -1,0 +1,196 @@
+video::-internal-media-controls-download-button { display:none; }
+video::-webkit-media-controls-enclosure { overflow:hidden; }
+video::-webkit-media-controls-panel { width: calc(100% + 35px); }
+
+body { background-color: #F6F6F6 }
+
+.modal-lg-crop { width: 1200px; }
+.modal-md-join { height: 800px; }
+
+textarea { resize: none; }
+
+video {
+	z-index: 1;
+	object-fit: inherit;
+}
+
+.vbutton {
+	z-index: 5;
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	box-sizing: border-box;
+	width: 0;
+	height: 74px;
+	border-color: transparent transparent transparent #FEFEFE;
+	transition: 100ms all ease;
+	cursor: pointer;
+	border-style: solid;
+	border-width: 37px 0 37px 60px;
+}
+.vbutton.paused {
+	border-style: double;
+	border-width: 0px 0 0px 60px;
+}
+.vbutton:hover {
+	border-color: transparent transparent transparent #7F7F7F;
+}
+
+.progressBar {
+	position: relative;
+	width: 100%;
+	height: 40px;
+	background-color: rgba(0, 0, 0, 1);
+}
+.timeBar {
+	position: absolute;
+	/* top: auto; */
+	/* left: auto; */
+	width: 0%;
+	height: 100%;
+	background-color: rgba(200, 0, 0, 1);
+}
+.bufferBar {
+	position: absolute;
+	/* top: 0; */
+	/* left: 0; */
+	width: 0%;
+	height: 100%;
+	background-color: rgba(50, 50, 50, 0.8);
+}
+.cropBar {
+	position: absolute;
+	/* top: auto; */
+	/* left: auto; */
+	margin-left: 0%;
+	width: 0%;
+	height: 100%;
+	background-color: rgba(0, 0, 200, 1);
+}
+.tooltipthumb {
+	position: absolute;
+	/* padding: 10px 10px 10px 10px; */
+	width: 210px;
+	height: 150px;
+	display: none;
+	/* font-size: 12px; */
+	color: #FFFFFF;
+	background-color: #555;
+	/* text-align: center; */
+	vertical-align: center;
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 6px;
+	z-index: 2;
+}
+.tooltipthumb::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
+.tooltiptime {
+	position: absolute;
+	/* padding: 10px 10px 10px 10px; */
+	width: 100px;
+	height: 22px;
+	display: none;
+	/* font-size: 12px; */
+	color: #FFFFFF;
+	background-color: #555;
+	/* text-align: center; */
+	vertical-align: center;
+	text-align: center;
+	border-radius: 6px;
+	z-index: 900;
+}
+.tooltiptime::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
+
+#progresscrop {
+	width: 250px;
+	height: 250px;
+	position: relative;
+	vertical-align: center;
+	margin: auto;
+	top: 120px;
+}
+#progressjoin {
+	width: 250px;
+	height: 250px;
+	position: relative;
+	vertical-align: center;
+	margin: auto;
+	top: 60px;
+}
+#progressjcrop {
+	width: 250px;
+	height: 250px;
+	position: relative;
+	vertical-align: center;
+	margin: auto;
+	top: 80px;
+}
+
+.box {
+	outline: 2px dashed #92b0b3;
+	outline-color: rgb(146, 176, 179);
+	outline-style: dashed;
+	outline-width: 2px;
+	outline-offset: -10px;
+	-webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+	transition: outline-offset .15s ease-in-out, background-color .15s linear;
+	background-color: #c8dadf;
+	position: relative;
+	padding-top: 120px;
+	padding-left: 10px;
+	width: 840px;
+	height: 480px;
+	display: none;
+}
+
+.swal2-popup {
+	font-size: 1.6rem !important;
+}
+
+.navnotem{
+	font-size: 10px;
+}
+
+.navnotstrg{
+	font-size: 11px;
+}
+
+.navnotification {
+	display: inline-block;
+	min-width: 10px;
+	padding: 3.2px 3.2px;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	background-color: red;
+	border-radius: 10px;
+	position: absolute;
+	margin-left: 15px;
+	z-index: 800;
+}
