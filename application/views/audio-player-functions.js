@@ -237,17 +237,19 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 					if (file == firstvideo) {
 						html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
 											'<div class="checkbox checkbox-warning pull-left">'+
-												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+												'<input id="chbx'+index+'" name="checkbxx" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 												'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 											'</div>'+
+											'<button class="btn btn-sm btn-default"><i class="fa fa-book"></i></button>'+
 											'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 										'</a>';
 					} else {
 						html =	'<a id="vbtn'+index+'" class="list-group-item">'+
 											'<div class="checkbox checkbox-warning pull-left">'+
-												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+												'<input id="chbx'+index+'" name="checkbxx" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 												'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 											'</div>'+
+											'<button class="btn btn-sm btn-default"><i class="fa fa-book"></i></button>'+
 											'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 										'</a>';
 					}
@@ -255,17 +257,10 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 				});
 			} else {
 				audioel.attr({
-					poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
-					src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
+					src: '<?php echo str_replace("sim.","radio.",base_url())?>index.php/radio/getmp3?source='+vsource+'&file='+lastvideo
 				});
 
-				if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-					audioel[0].pause();
-
-					loadingthumbs();
-				} else {
-					audioel[0].play();
-				}
+				audioel[0].play();
 
 				videotitle.text(lastvideo);
 				videotitle.attr('data-vsrc', selglvsource);
@@ -279,6 +274,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 												'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 											'</div>'+
+											'<button class="btn btn-sm btn-default"><i class="fa fa-book"></i></button>'+
 											'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 										'</a>';
 					} else if (file == lastvarray) {
@@ -287,6 +283,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 												'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 											'</div>'+
+											'<button class="btn btn-sm btn-default"><i class="fa fa-book"></i></button>'+
 											'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'">'+file+'</span>'+
 										'</a>';
 					} else {
@@ -295,10 +292,10 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 												'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 											'</div>'+
+											'<button class="btn btn-sm btn-default"><i class="fa fa-book"></i></button>'+
 											'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 										'</a>';
 					}
-
 					nextvideo.append(html);
 				});
 			}
@@ -483,10 +480,20 @@ function playpausevideo(videoelt) {
 
 function vfullscreen(videoelt) {
 	vvideoelmt = $('#'+videoelt);
-	if (document.webkitFullscreenElement) {
-		document.webkitExitFullscreen();
+	if (document.webkitFullscreenEnabled) {
+		if (document.webkitFullscreenElement) {
+			document.webkitExitFullscreen();
+		} else {
+			vvideoelmt[0].webkitRequestFullscreen();
+		}
 	} else {
-		vvideoelmt[0].webkitRequestFullscreen();
+		if (!document.fullscreenElement) {
+			document.documentElement.requestFullscreen();
+		} else {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			}
+		}
 	}
 }
 

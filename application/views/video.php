@@ -27,179 +27,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.css"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
-
-		<style type="text/css">
-			video::-internal-media-controls-download-button { display:none; }
-			video::-webkit-media-controls-enclosure { overflow:hidden; }
-			video::-webkit-media-controls-panel { width: calc(100% + 35px); }
-
-			body { background-color: #F6F6F6 }
-
-			.modal-lg-crop { width: 1200px; }
-			.modal-md-join { height: 800px; }
-
-			textarea { resize: none; }
-
-			video {
-				z-index: 1;
-				object-fit: inherit;
-			}
-
-			.vbutton {
-				z-index: 5;
-				position: absolute;
-				margin: auto;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				box-sizing: border-box;
-				width: 0;
-				height: 74px;
-				border-color: transparent transparent transparent #FEFEFE;
-				transition: 100ms all ease;
-				cursor: pointer;
-				border-style: solid;
-				border-width: 37px 0 37px 60px;
-			}
-			.vbutton.paused {
-				border-style: double;
-				border-width: 0px 0 0px 60px;
-			}
-			.vbutton:hover {
-				border-color: transparent transparent transparent #7F7F7F;
-			}
-
-			.progressBar {
-				position: relative;
-				width: 100%;
-				height: 40px;
-				background-color: rgba(0, 0, 0, 1);
-			}
-			.timeBar {
-				position: absolute;
-				/* top: auto; */
-				/* left: auto; */
-				width: 0%;
-				height: 100%;
-				background-color: rgba(200, 0, 0, 1);
-			}
-			.bufferBar {
-				position: absolute;
-				/* top: 0; */
-				/* left: 0; */
-				width: 0%;
-				height: 100%;
-				background-color: rgba(50, 50, 50, 0.8);
-			}
-			.cropBar {
-				position: absolute;
-				/* top: auto; */
-				/* left: auto; */
-				margin-left: 0%;
-				width: 0%;
-				height: 100%;
-				background-color: rgba(0, 0, 200, 1);
-			}
-			.tooltipthumb {
-				position: absolute;
-				/* padding: 10px 10px 10px 10px; */
-				width: 210px;
-				height: 150px;
-				display: none;
-				/* font-size: 12px; */
-				color: #FFFFFF;
-				background-color: #555;
-				/* text-align: center; */
-				vertical-align: center;
-				text-align: center;
-				padding-top: 5px;
-				padding-bottom: 5px;
-				border-radius: 6px;
-				z-index: 2;
-			}
-			.tooltipthumb::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -5px;
-				border-width: 5px;
-				border-style: solid;
-				border-color: #555 transparent transparent transparent;
-			}
-			.tooltiptime {
-				position: absolute;
-				/* padding: 10px 10px 10px 10px; */
-				width: 100px;
-				height: 22px;
-				display: none;
-				/* font-size: 12px; */
-				color: #FFFFFF;
-				background-color: #555;
-				/* text-align: center; */
-				vertical-align: center;
-				text-align: center;
-				border-radius: 6px;
-				z-index: 900;
-			}
-			.tooltiptime::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -5px;
-				border-width: 5px;
-				border-style: solid;
-				border-color: #555 transparent transparent transparent;
-			}
-
-			#progresscrop {
-				width: 250px;
-				height: 250px;
-				position: relative;
-				vertical-align: center;
-				margin: auto;
-				top: 120px;
-			}
-			#progressjoin {
-				width: 250px;
-				height: 250px;
-				position: relative;
-				vertical-align: center;
-				margin: auto;
-				top: 60px;
-			}
-			#progressjcrop {
-				width: 250px;
-				height: 250px;
-				position: relative;
-				vertical-align: center;
-				margin: auto;
-				top: 80px;
-			}
-
-			.box {
-				outline: 2px dashed #92b0b3;
-				outline-color: rgb(146, 176, 179);
-				outline-style: dashed;
-				outline-width: 2px;
-				outline-offset: -10px;
-				-webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
-				transition: outline-offset .15s ease-in-out, background-color .15s linear;
-				background-color: #c8dadf;
-				position: relative;
-				padding-top: 120px;
-				padding-left: 10px;
-				width: 840px;
-				height: 480px;
-				display: none;
-			}
-
-			.swal2-popup {
-				font-size: 1.6rem !important;
-			}
-		</style>
+		<link rel="stylesheet" href="<?php echo base_url('assets/dataclip/audiovideoedit.css')?>"/>
 	</head>
 	<body>
 		<span class="tooltipthumb">
@@ -210,50 +38,14 @@
 
 		<div class="container-fluid center-block text-center">
 			<div class="row">
-				<div class="col-md-7">
-					<h2 id="vtitle" class="center-block">Nenhuma seleção</h2>
+				<div class="col-md-10">
+					<h2 id="vtitle" class="center-block">Nenhuma Seleção</h2>
 				</div>
 
-				<div class="col-md-5" style="margin-top: 10px">
-					<div class="btn-toolbar">
-						<div class="input-group date" style="width: 26%">
-							<input id="seldate" type="text" class="form-control">
-							<div class="input-group-addon">
-								<span class="fa fa-calendar"></span>
-							</div>
-						</div>
-
-						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" title="Selecione uma data" disabled></select>
-
-
-						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-							<i class="fa fa-bell"></i>
-						</a> -->
-
-						<div class="btn-group">
-							<button type="button" class="btn btn-default dropdown-toggle"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-								<i class="fa fa-bell"></i>
-							</button>
-							<ul id="alerttvlist" class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
-								<li>
-									<a class="text-center" href="#">
-										<strong>Nenhum alerta de tv!</strong>
-									</a>
-								</li>
-
-								<!-- <li><a href="#">Action</a></li>
-								<li><a href="#">Another action</a></li>
-								<li><a href="#">Something else here</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="#">Separated link</a></li> -->
-							</ul>
-						</div>
-						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
-						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
-					</div>
+				<div class="col-md-2">
+					<h2 class="pull-right">
+					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+					</h2>
 				</div>
 			</div>
 
@@ -268,7 +60,15 @@
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px"></div>
+					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px">
+						<?php for ($i = 0; $i < 12; $i++) {
+							if ($i == 5) {
+								echo '<a class="list-group-item">Nenhuma seleção</a>';
+							} else {
+								echo '<a class="list-group-item" style="color: white">Nenhuma seleção</a>';
+							} ?>
+						<?php } ?>
+					</div>
 				</div>
 			</div>
 
@@ -291,7 +91,8 @@
 			</div>
 
 			<div class="row">
-				<div id="controls" class="col-sm-12 col-md-12 col-lg-12">
+				<div id="controls" class="col-md-7">
+					<p>
 					<!-- <div class="btn-toolbar"> -->
 						<div class="btn-group" role="group" aria-label="...">
 							<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
@@ -323,7 +124,7 @@
 
 						<a id="btndownimgs" type="button" class="btn btn-default disabled" title="Baixar imagens" disabled><i class="fa fa-download"></i></a>
 
-						<a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a>
+						<!-- <a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a> -->
 
 						<div class="btn-group" role="group" aria-label="...">
 							<a id="btnvol" type="button" class="btn btn-default disabled" title="Mudo" disabled><i class="fa fa-volume-off"></i></a>
@@ -335,11 +136,50 @@
 							<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
 						</div>
 
-						<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
-
 						<!-- <a id="btnnight" type="button" class="btn btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a> -->
 					<!-- </div> -->
+					</p>
 				</div>
+
+				<div class="col-md-5">
+					<p>
+					<div class="btn-toolbar">
+						<div class="input-group date" style="width: 26%">
+							<input id="seldate" type="text" class="form-control">
+							<div class="input-group-addon">
+								<span class="fa fa-calendar"></span>
+							</div>
+						</div>
+
+						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" title="Selecione uma data" disabled></select>
+
+						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+							<i class="fa fa-bell"></i>
+						</a> -->
+
+						<div class="btn-group">
+							<div class="dropup">
+								<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+									<i class="fa fa-bell"></i>
+								</button>
+								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 200px; overflow-y: auto;">
+									<li>
+										<a class="text-center" href="#">
+											<strong>Nenhum alerta de tv!</strong>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
+					</div>
+					</p>
+				</div>
+
 			</div>
 		</div>
 

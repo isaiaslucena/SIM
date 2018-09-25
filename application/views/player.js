@@ -587,11 +587,33 @@
 				}
 
 				function vfullscreen(videoelt) {
-					vvideoelmt = $('#'+videoelt);
-					if (document.webkitFullscreenElement) {
-						document.webkitExitFullscreen();
-					} else {
-						vvideoelmt[0].webkitRequestFullscreen();
+					// vvideoelmt = $('#'+videoelt);
+					// if (document.webkitFullscreenEnabled) {
+					// 	if (document.webkitFullscreenElement) {
+					// 		document.webkitExitFullscreen();
+					// 	} else {
+					// 		vvideoelmt[0].webkitRequestFullscreen();
+					// 	}
+					// } else {
+					// 	if (!document.fullscreenElement) {
+					// 		document.documentElement.requestFullscreen();
+					// 	} else {
+					// 		if (document.exitFullscreen) {
+					// 			document.exitFullscreen();
+					// 		}
+					// 	}
+					// }
+
+					var elem = document.getElementById(videoelt);
+					// var elem = document.querySelector(videoelt);
+					if (elem.requestFullscreen) {
+						elem.requestFullscreen();
+					} else if (elem.msRequestFullscreen) {
+						elem.msRequestFullscreen();
+					} else if (elem.mozRequestFullScreen) {
+						elem.mozRequestFullScreen();
+					} else if (elem.webkitRequestFullscreen) {
+						elem.webkitRequestFullscreen();
 					}
 				}
 
@@ -674,10 +696,9 @@
 
 				function closeloadingthumbs() {
 					$('body').css('cursor', 'default');
+					$('#vnext').scrollTo('.active');
 
 					swal.close();
-
-					$('#vnext').scrollTo('.active');
 				}
 
 				$('#checkjoincrop').change(function() {

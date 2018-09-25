@@ -27,9 +27,6 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/dataclip/audiovideoedit.css')?>"/>
-
-		<style type="text/css">
-		</style>
 	</head>
 	<body>
 		<span class="tooltipthumb">
@@ -127,18 +124,28 @@
 								</li>
 							</ul>
 						</div>
-						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						<a href="<?php echo base_url('pages/index_radio_novo')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
 						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
 					</div>
 				</div>
 			</p>
 			</div>
 
-			<div class="row">
-				<div class="col-md-offset-3"></div>
+			<div class="row" style="padding-top: 10px">
+				<div class="col-md-6">
+					<pre></pre>
+				</div>
 
 				<div id="vnextdiv" class="col-md-6">
-					<p><div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px"></div></p>
+					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px;">
+						<?php for ($i = 0; $i < 12; $i++) {
+							if ($i == 5) {
+								echo '<a class="list-group-item">Nenhuma seleção</a>';
+							} else {
+								echo '<a class="list-group-item" style="color: white">Nenhuma seleção</a>';
+							} ?>
+						<?php } ?>
+					</div>
 				</div>
 			</div>
 		</div>

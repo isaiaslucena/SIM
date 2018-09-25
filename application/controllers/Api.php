@@ -352,9 +352,9 @@ class Api extends CI_Controller {
 			header('Content-Type: application/json');
 			$idfound = (int)$resultselect->response->numFound;
 			if ($idfound == 0) {
-				print json_encode($message["file_exist"] = false);
+				print json_encode($message["file_exist"] = 0);
 			} else {
-				print json_encode($message["file_exist"] = true);
+				print json_encode($message["file_exist"] = 1);
 			}
 		// } else {
 			// header("HTTP/1.1 403 Forbidden");
