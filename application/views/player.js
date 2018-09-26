@@ -25,7 +25,7 @@
 
 				videoel.dblclick(function(event) {
 					videoelid = event.target.id;
-					videofulls = document.webkitFullscreenEnabled;
+					// videofulls = document.webkitFullscreenEnabled;
 					// videofullsel = document.webkitFullscreenElement;
 					vvideosrc = event.target.src;
 					if (vvideosrc.length != 0) {
@@ -35,7 +35,7 @@
 
 				videomel.dblclick(function(event) {
 					videoelid = event.target.id;
-					videofulls = document.webkitFullscreenEnabled;
+					// videofulls = document.webkitFullscreenEnabled;
 					vvideosrc = event.target.src;
 					if (vvideosrc.length != 0) {
 						vfullscreen(videoelid);
@@ -44,7 +44,7 @@
 
 				videojcmel.dblclick(function(event) {
 					videoelid = event.target.id;
-					videofulls = document.webkitFullscreenEnabled;
+					// videofulls = document.webkitFullscreenEnabled;
 					vvideosrc = event.target.src;
 					if (vvideosrc.length != 0) {
 						vfullscreen(videoelid);
@@ -587,23 +587,6 @@
 				}
 
 				function vfullscreen(videoelt) {
-					// vvideoelmt = $('#'+videoelt);
-					// if (document.webkitFullscreenEnabled) {
-					// 	if (document.webkitFullscreenElement) {
-					// 		document.webkitExitFullscreen();
-					// 	} else {
-					// 		vvideoelmt[0].webkitRequestFullscreen();
-					// 	}
-					// } else {
-					// 	if (!document.fullscreenElement) {
-					// 		document.documentElement.requestFullscreen();
-					// 	} else {
-					// 		if (document.exitFullscreen) {
-					// 			document.exitFullscreen();
-					// 		}
-					// 	}
-					// }
-
 					var elem = document.getElementById(videoelt);
 					// var elem = document.querySelector(videoelt);
 					if (elem.requestFullscreen) {
@@ -611,9 +594,17 @@
 					} else if (elem.msRequestFullscreen) {
 						elem.msRequestFullscreen();
 					} else if (elem.mozRequestFullScreen) {
-						elem.mozRequestFullScreen();
+						if (document.fullscreenElement) {
+							elem.exitFullscreen();
+						} else {
+							elem.mozRequestFullScreen();
+						}
 					} else if (elem.webkitRequestFullscreen) {
-						elem.webkitRequestFullscreen();
+						if (document.webkitFullscreenElement) {
+							document.webkitExitFullscreen();
+						} else {
+							elem.webkitRequestFullscreen();
+						}
 					}
 				}
 

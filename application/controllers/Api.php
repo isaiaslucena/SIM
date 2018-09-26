@@ -244,7 +244,8 @@ class Api extends CI_Controller {
 					$radiosourceid = $radioiddb[0]['id_radio'];
 				}
 
-				$secdur = substr($postdata['duration'], 0, 3);
+				$secarr = explode(".", $postdata['duration']);
+				$secdur = substr($secarr[0], 0, 3);
 				$duration = new DateInterval('PT'.$secdur.'S');
 				$st = new DateTime($radiostarttime);
 				$et = $st->add($duration)->format('Y-m-d\TH:i:s\Z');
