@@ -260,7 +260,12 @@ class Api extends CI_Controller {
 				$dtimeend = $postdata['timeend'];
 				$dduration = (int)$secdur;
 				$dmurl = $postdata['filename'];
-				$dcontent = $this->replace_chars($postdata['text']);
+				if (isset($postdata['text'])) {
+					$dcontent = $this->replace_chars($postdata['text']);
+				} else {
+					$dcontent = '';
+				}
+
 				$dtimes = json_encode($postdata['parts']);
 				$snow = strtotime("now");
 				$dnow = date('Y-m-d\TH:i:s\Z', $snow);

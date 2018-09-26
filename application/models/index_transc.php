@@ -1,6 +1,6 @@
 <?php
 
-require_once('/app/trans/index.php');
+require_once('/app/trans/Transcript.php');
 
 $Transcript = new Transcript;
 print_r($Transcript->init());

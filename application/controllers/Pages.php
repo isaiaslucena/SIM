@@ -41,7 +41,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function index_radio() {
+	public function index_radio_old() {
 		if ($this->session->has_userdata('logged_in')) {
 			$id_user = $this->session->userdata('id_user');
 			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
@@ -59,6 +59,37 @@ class Pages extends CI_Controller {
 				$data_navbar['selected_page'] = 'home_radio';
 				$data_navbar['selected_date'] = 'today';
 				$data_navbar['vtype'] = 'radio';
+
+				$this->load->view('head');
+				$this->load->view('navbar',$data_navbar);
+				$this->load->view('loading', $data);
+				$this->load->view('footer', $data_navbar);
+			} else {
+				redirect(base_url(),'refresh');
+			}
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
+	public function index_radio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
+			$data['changepass_id'] = $id_user;
+
+			if ($id_group == 1 or $id_group == 5) {
+				$sessiondata = array(
+					'view' => 'index_radio',
+					'last_page' => base_url('pages/index_radio')
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['page'] = 'pages/home_radio';
+				$data['selected_date'] = 'today';
+				$data_navbar['selected_page'] = 'home_radio';
+				$data_navbar['selected_date'] = 'today';
+				$data_navbar['vtype'] = 'radio_novo';
 
 				$this->load->view('head');
 				$this->load->view('navbar',$data_navbar);
@@ -355,7 +386,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function home_radio($selecteddate = null, $limit = null, $offset = null) {
+	public function home_radio_old($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'home_radio',
@@ -390,6 +421,45 @@ class Pages extends CI_Controller {
 				$this->load->view('home_dev',$data);
 			} else {
 				$this->load->view('home_load',$data);
+			}
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
+	public function home_radio($selecteddate = null, $limit = null, $offset = null) {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'home',
+				'last_page' => base_url('pages/home_radio')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'home_radio';
+			$data_navbar['selected_date'] = $selecteddate;
+			$clientsc = count($this->pages_model->clients(null, null, 'radio'));
+			$data['clientsmp'] = ($clientsc / 5);
+
+			if (!is_null($limit)) {
+				$data['clients'] = $this->pages_model->clients($limit, $offset, 'radio');
+			} else {
+				$data['clients'] = $this->pages_model->clients();
+			}
+
+			$data['keywords'] = $this->pages_model->keywords();
+			$data['selected_date'] = $selecteddate;
+
+			if (is_null($selecteddate)  or $selecteddate == 'today') {
+				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime('today 00:00:00'));
+				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime('today 23:59:59'));
+			} else {
+				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 00:00:00'));
+				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 23:59:59'));
+			}
+
+			if ($limit == 0) {
+				$this->load->view('home_radiodev', $data);
+			} else {
+				$this->load->view('home_radioload', $data);
 			}
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
@@ -436,7 +506,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function get_radio($idradio, $timestamp, $position) {
+	public function get_radio_old($idradio, $timestamp, $position) {
 		if ($this->session->has_userdata('logged_in')) {
 			$data = $this->pages_model->load_file($position, $timestamp, $idradio);
 
@@ -444,6 +514,17 @@ class Pages extends CI_Controller {
 			print json_encode($data[0]);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
+	public function get_radio($idsource, $startdate, $position) {
+		if ($this->session->has_userdata('logged_in')) {
+			$doc = $this->pages_model->get_radiol_byid_solr($idsource, urldecode($startdate), $position);
+
+			header('Content-Type: application/json');
+			print $doc;
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 
@@ -708,6 +789,56 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function radio_home_keyword() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'tv_home_keyword',
+				'last_page' => base_url('pages/radio_home_keyword')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data_navbar['selected_page'] = 'home_radio';
+			$data_navbar['vtype'] = 'radio_novo';
+			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
+
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+			$data['startdate'] = $this->input->post('startdate');
+			$data['enddate'] = $this->input->post('enddate');
+			$data['start'] = 0;
+			$data['rows'] = 10;
+
+			// $timezone = new DateTimeZone('UTC');
+			$timezone = new DateTimeZone('America/Sao_Paulo');
+			$sd = new Datetime($data['startdate'], $timezone);
+			$ed = new Datetime($data['enddate'], $timezone);
+			// $sd->setTimezone($newtimezone);
+			$epochstartdate = $sd->format('U');
+			$epochenddate = $ed->format('U');
+
+			$data_discard['startdate'] = $epochstartdate;
+			$data_discard['enddate'] = $epochenddate;
+			$data_discard['id_client'] = $data['id_client'];
+			$data_discard['id_keyword'] = $data['id_keyword'];
+
+			$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
+			// $data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+			$data['id_user'] = $this->session->userdata('id_user');
+
+			$this->load->view('head');
+			$this->load->view('navbar', $data_navbar);
+			$this->load->view('radio_home_keyword', $data);
+			$this->load->view('footer');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
 	public function radio_novo_home_keyword() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
@@ -756,6 +887,42 @@ class Pages extends CI_Controller {
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
 		}
+	}
+
+	public function get_radio_keyword_texts() {
+		$data_navbar['selected_page'] = 'home_radio_novo';
+		$data_navbar['vtype'] = 'radio_novo';
+		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
+
+		$data['id_keyword'] = $this->input->post('id_keyword');
+		$data['id_client'] = $this->input->post('id_client');
+		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		$data['startdate'] = $this->input->post('startdate');
+		$data['enddate'] = $this->input->post('enddate');
+		$data['start'] = $this->input->post('start');
+		$data['rows'] = $this->input->post('rows');
+
+		// $timezone = new DateTimeZone('UTC');
+		$timezone = new DateTimeZone('America/Sao_Paulo');
+		$sd = new Datetime($data['startdate'], $timezone);
+		$ed = new Datetime($data['enddate'], $timezone);
+		// $sd->setTimezone($newtimezone);
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		$data_discard['startdate'] = $epochstartdate;
+		$data_discard['enddate'] = $epochenddate;
+		$data_discard['id_client'] = $data['id_client'];
+		$data_discard['id_keyword'] = $data['id_keyword'];
+
+		$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
+		$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+
+		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		$data['id_user'] = $this->session->userdata('id_user');
+
+		$this->load->view('get_radio_keyword_texts', $data);
 	}
 
 	public function get_radio_novo_keyword_texts() {

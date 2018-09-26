@@ -449,6 +449,13 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function discarded_docs_radio($data_discarded) {
+		$sqlquery =	"SELECT id_doc FROM discard_keyword_radio
+								WHERE id_client = ".$data_discarded['id_client']." AND id_keyword = ".$data_discarded['id_keyword']." AND
+								timestamp >= '".$data_discarded['startdate']."' AND timestamp <= '".$data_discarded['enddate']."'";
+		return $this->db->query($sqlquery)->result_array();
+	}
+
 	public function discarded_docs_novo_radio($data_discarded) {
 		$sqlquery =	"SELECT id_doc FROM discard_keyword_radio_knewin
 								WHERE id_client = ".$data_discarded['id_client']." AND id_keyword = ".$data_discarded['id_keyword']." AND
@@ -500,6 +507,110 @@ class Pages_model extends CI_Model {
 			);
 		}
 
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_radio($ids_doc, $keyword, $startdate, $enddate) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/radio/query?rows=1&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if (!is_null($idsline)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idsline.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_radio_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/radio/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if (!is_null($idsline)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idsline.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
 
 		$data_string = json_encode($data);
 		$header = array(
@@ -870,6 +981,34 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
+		$path='/solr/radio/query?wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'content_t:"'.$keyword.'"',
+			"filter" => "starttime_dt:[".$startdate."Z TO ".$enddate."Z]"
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function radio_knewin_text_keyword_solr($startdate, $enddate, $keyword){
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
 		$path='/solr/knewin_radio/query?wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -918,6 +1057,42 @@ class Pages_model extends CI_Model {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
 		return json_decode(curl_exec($ch));
+	}
+
+	public function get_radiol_byid_solr($idsource, $startdate, $position) {
+		//Solr Connection
+		$protocol = 'http';
+		$port = '8983';
+		$host = '172.17.0.3';
+		if ($position == 'previous') {
+			$path='/solr/radio/query?wt=json&rows=1&sort=starttime_dt+desc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'endtime_dt:[* TO "'.$startdate.'"]'
+			);
+		} else if ($position == 'next') {
+			$path = '/solr/radio/query?wt=json&rows=1&sort=starttime_dt+asc';
+			$data = array(
+				'query' => 'id_source_i:'.$idsource,
+				'filter' => 'starttime_dt:["'.$startdate.'" TO *]'
+			);
+		}
+
+		$url = $protocol."://".$host.":".$port.$path;
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		// return json_decode(curl_exec($ch));
+		return curl_exec($ch);
 	}
 
 	public function get_radio_byid_solr($idsource, $startdate, $position) {
