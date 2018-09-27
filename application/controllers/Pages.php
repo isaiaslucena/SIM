@@ -1153,6 +1153,18 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function discard_doc_radio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
+			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
+			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
+			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
+			$this->pages_model->discard_doc_radio($data_discard);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
 	public function discard_doc_radio_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
@@ -1188,7 +1200,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function edit() {
+	public function edit_old() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'edit',
@@ -1250,6 +1262,48 @@ class Pages extends CI_Controller {
 			$data['total_time'] = round(($finish - $start), 4);
 
 			$this->load->view('edit_temp', $data);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
+	public function edit() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'edit_novo',
+				'last_page' => base_url('pages/edit')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data_navbar['selected_page'] = 'edit_novo';
+			$data['sid'] = $this->input->post('sid');
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['id_file'] = $this->input->post('id_file');
+			$data['id_text'] = $this->input->post('id_text');
+			$data['client_selected'] = $this->input->post('client_selected');
+			$data['novodoc'] = $this->pages_model->radiol_text_byid_solr($data['sid']);
+			if (empty($this->input->post('client_selected'))) {
+				$data['keyword_selected'] = $this->input->post('keyword');
+			} else {
+				$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			}
+			$data['state'] = $this->input->post('state');
+			$data['radio'] = $this->input->post('radio');
+			$data['timestamp'] = $this->input->post('timestamp');
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('edit', $data);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
@@ -1539,7 +1593,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function crop() {
+	public function crop_old() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'crop',
@@ -1635,6 +1689,54 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function crop() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'crop',
+				'last_page' => base_url('pages/crop')
+			);
+			$this->session->set_userdata($sessiondata);
+
+			$data['starttime'] = $this->input->post('starttime');
+			$data['endtime'] = $this->input->post('endtime');
+			$data['ssource'] = $this->input->post('ssource');
+			$data['client_selected'] = $this->input->post('client_selected');
+			$data['keyword_selected'] = $this->input->post('keyword_selected');
+			$data['text_crop'] = $this->input->post('textseld');
+			$data['urlmp3'] = $this->input->post('mediaurl');
+			$data['startdate'] = $this->input->post('startdate');
+			$data['enddate'] = $this->input->post('enddate');
+
+			$data_crop_info['id_doc'] = $this->input->post('id_doc');
+			$data_crop_info['id_join_info'] = $this->input->post('id_join_info');
+			$data_crop_info['id_user'] = $this->session->userdata('id_user');
+			$data_crop_info['id_client'] = $this->input->post('id_client');
+			$data_crop_info['id_keyword'] = $this->input->post('id_keyword');
+			$data_crop_info['id_text'] = $this->input->post('id_text');
+			$data_crop_info['starttime'] = $data['starttime'];
+			$data_crop_info['endtime'] = $data['endtime'];
+			$data_crop_info['content'] = $this->input->post('textseld');
+
+			$data['crop_inserted_id'] = $this->pages_model->crop_info_radio($data_crop_info);
+			$data['finalfile'] = $this->pages_model->crop($data['starttime'], $data['endtime'], $data['urlmp3']);
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('crop', $data);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
 	public function crop_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();
@@ -1691,6 +1793,17 @@ class Pages extends CI_Controller {
 			print json_encode('Download!');
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
+	public function crop_info_radio_down($cropid) {
+		if ($this->session->has_userdata('logged_in')) {
+			$this->pages_model->crop_info_radio_download($cropid);
+
+			header('Content-Type: application/json');
+			print json_encode('Download!');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
 		}
 	}
 

@@ -1,254 +1,366 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<body>
-	<div id="page-wrapper" style="height: 100%; min-height: 400px;">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header"><?php echo get_phrase('edit');?></h1>
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+if (isset($novodoc)) {
+	$sd = new Datetime($novodoc->response->docs[0]->starttime_dt);
+	$ed = new Datetime($novodoc->response->docs[0]->endtime_dt);
+	$sstartdate = $sd->format('d/m/Y H:i:s');
+	$senddate = $ed->format('d/m/Y H:i:s');
+
+	$idnovo = $novodoc->response->docs[0]->id_i;
+	$rstartdate = $novodoc->response->docs[0]->starttime_dt;
+	$renddate = $novodoc->response->docs[0]->endtime_dt;
+	$ssource = $novodoc->response->docs[0]->source_s;
+	// $mediaurl = $novodoc->response->docs[0]->mediaurl_s;
+
+	$smuarr = explode("_", $novodoc->response->docs[0]->mediaurl_s);
+	$mediaurl = str_replace("sim", "radio", base_url())."index.php/radio/getmp3?source=".$smuarr[0]."&file=".str_replace($smuarr[0]."_", "", $novodoc->response->docs[0]->mediaurl_s);
+
+	$content = $novodoc->response->docs[0]->content_t[0];
+	$times = $novodoc->response->docs[0]->times_t[0];
+} else {
+	$sd = new Datetime($starttime_dt);
+	$ed = new Datetime($endtime_dt);
+	$sstartdate = $sd->format('d/m/Y H:i:s');
+	$senddate = $ed->format('d/m/Y H:i:s');
+
+	if (isset($idnovo)) {
+		$idnovo = $id_i;
+	} else {
+		$idnovo = 0;
+	}
+	$rstartdate = $starttime_dt;
+	$renddate = $endtime_dt;
+	$ssource = $source_s;
+	$smuarr = explode("_", $mediaurl_s);
+	$mediaurl = str_replace("sim", "radio", base_url())."index.php/radio/getmp3?source=".$smuarr[0]."&file=".str_replace($smuarr[0]."_", "", $mediaurl_s);
+	$content = $content_t;
+	if (isset($times_t)) {
+		$times = $times_t;
+	}
+}
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Transcrição do Áudio</title>
+
+		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/material-design/material-icons.css');?>">
+		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
+		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap-theme.css');?>"/>
+
+		<script src="<?php echo base_url('assets/jquery/jquery-3.2.1.min.js');?>"></script>
+		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
+		<script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script>
+
+		<style type="text/css">
+			audio::-internal-media-controls-download-button { display:none; }
+			audio::-webkit-media-controls-enclosure { overflow:hidden; }
+			audio::-webkit-media-controls-panel { width: calc(100% + 30px); }
+
+			body {
+				background-color: #FEFEFE;
+			}
+
+			.kword{
+				color: white;
+				background-color: red;
+				font-size: 110%;
+			}
+
+			.selectedt{
+				color: white;
+				background-color: darkblue;
+			}
+
+			span[data-begin]:focus,
+			span[data-begin]:hover {
+				color: black;
+				background-color: #FFFF00;
+				box-shadow: 0px 0px 4px #FFFFCA;
+			}
+			span[data-begin].speaking {
+				background-color: yellow;
+				box-shadow: 0px 0px 4px yellow;
+			}
+			span[data-begin] {
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row text-center">
+				<div class="page-header">
+					<h1><?php echo $client_selected; ?><small> - <?php echo $keyword_selected; ?></small></h1>
+					<h3><?php echo $ssource?> | <?php echo $sstartdate." - ".$senddate;?></h3>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-8">
+					<audio id="passage-audio" src="<?php echo $mediaurl; ?>" style="width: 100%" controls preload="auto"></audio>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="btn-group" role="group" aria-label="...">
+						<a id="btnpbrate" type="button" class="btn btn-default" title="Aumentar velocidade"><i class="fa fa-angle-double-right"></i></a>
+						<a id="btncstart" type="button" class="btn btn-default" title="Marcar início"><i class="fa fa-hourglass-start"></i></a>
+						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
+						<button id="btncrop" type="submit" form="cropnovo" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<form id="cropnovo" action="<?php echo site_url('pages/crop'); ?>" method="post" accept-charset="utf-8" style="display: none;">
+						<input type="text" id="starttime" name="starttime">
+						<input type="text" id="endtime" name="endtime">
+						<input type="text" id="ssource" name="ssource" value="<?php echo $ssource; ?>">
+						<input type="text" id="client_selected" name="client_selected" value="<?php echo $client_selected; ?>">
+						<input type="text" id="id_keyword" name="id_keyword" value="<?php echo $id_keyword; ?>">
+						<input type="text" id="id_client" name="id_client" value="<?php echo $id_client; ?>">
+						<input type="text" id="id_doc" name="id_doc" value="<?php echo $idnovo; ?>">
+						<input type="text" id="id_join_info" name="id_join_info" value="<?php echo isset($id_join_info) ? $id_join_info : '' ?>">
+						<input type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected; ?>">
+						<input type="text" id="startdate" name="startdate" value="<?php echo $rstartdate; ?>">
+						<input type="text" id="enddate" name="enddate" value="<?php echo $renddate; ?>">
+						<input type="text" id="mediaurl" name="mediaurl" value="<?php echo $mediaurl; ?>">
+						<textarea id="textseld" name="textseld" style="width: 700px; height: 100px"></textarea>
+					</form>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<p id="passage-text" class="text-justify center-block" style="overflow-y: auto; max-height: 400px">
+						<?php echo (string)$content?>
+					</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<small id="pageload" class="text-muted pull-right"></small>
+				</div>
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-heading text-center">
-						<p class="pull-left"><i class="fa fa-key fa-fw"></i> <?php echo $keyword_selected;?></p>
-						<p><i class="fa fa-cut fa-fw"></i> <?php echo $state." - ".$radio." - ".date("d/m/Y - H:i:s",$timestamp);?></p>
-					</div>
-					<div class="panel-body">
+		<script type="text/javascript">
+			var starttimev, endtimev, indexstartv, indexendv, spantex, cropstart,
+			cropend, cropstartss, cropendss, cropstarts, cropends, fulltext;
+			var ccrops = false, ccrope = false, croptext = false;
+			var result = $('#result');
+			var audioel = $('#passage-audio');
+			var count = 0;
+			var ratec = 1;
 
-						<div class="row">
-							<p class="loading">
-								<em>
-									<img src="<?php echo base_url('assets/imgs/loader.gif');?>"
-									alt="<?php echo get_phrase('initializing_audio');?>">
-									<?php echo get_phrase('initializing_audio');?>
-								</em>
-							</p>
-							<p class="passage-audio" hidden>
-								<audio style="width: 100%;" id="passage-audio" src="<?php echo $mp3pathfilename;?>" autobuffer controls>
-									<em class="error"><strong>Error:</strong> Your browser doesn't appear to support HTML5 Audio.</em>
-								</audio>
-							</p>
-							<div class="col-lg-12">
-								<div class="row">
-									<div class="col-lg-4">
-										<p class="passage-audio-unavailable" hidden>
-											<em class="error">
-												<strong>Error:</strong>
-												You will not be able to do the read-along audio because your browser is not able to play MP3 audio formats.
-											</em>
-										</p>
-										<p class="playback-rate" hidden title="Note: that increaseing the reading rate will decrease accuracy of word highlights">
-											<label for="playback-rate"><?php echo get_phrase('reading-rate');?>:</label>
-											<input style="width: 30%;" id="playback-rate" type="range" min="0.5" max="2.0" value="1.0" step="0.1" onchange='this.nextElementSibling.textContent = String(Math.round(this.valueAsNumber * 10) / 10) + "\u00D7";'>
-											<output>1&times;</output>
-										</p>
-										<p class="playback-rate-unavailable" hidden>
-											<em>(It seems your browser does not support
-											<code>HTMLMediaElement.playbackRate</code>,
-											so you will not be able to change the speech rate.)
-											</em>
-										</p>
-										<p lass="autofocus-current-word" hidden>
-											<input type="checkbox" id="autofocus-current-word">
-											<label for="autofocus-current-word"><?php echo get_phrase('auto-scroll');?></label>
-										</p>
-										<noscript>
-											<p class="error">
-												<em><strong>Notice:</strong> You must have JavaScript enabled/available to try this HTML5 Audio read along.</em>
-											</p>
-										</noscript>
-									</div>
-									<div class="col-lg-8">
-										<form class="form-horizontal" action="<?php echo site_url('pages/crop')?>" method="post">
-											<div class="form-group form-group-sm" id="startselect">
-												<label class="col-sm-2 control-label" for="starttime"><?php echo get_phrase('start');?>: </label>
-												<div class="col-sm-4">
-													<input class="form-control input-sm" type="text" value="<?php echo get_phrase('click_to_select');?>" id="starttime" name="starttime"></input>
-												</div>
-												<div class="col-sm-2">
-													<input class="form-control input-sm" type="text" id="indexstart" name="indexstart"></input>
-												</div>
-												<div class="col-sm-2">
-													<input class="form-control input-sm" type="text" id="mp3pathfilename" name="mp3pathfilename" value="<?php echo $mp3pathfilename;?>"></input>
-												</div>
-											</div>
-											<div class="form-group form-group-sm" id="endselect">
-												<label class="col-sm-2 control-label" for="endtime"><?php echo get_phrase('end');?>: </label>
-												<div class="col-sm-4">
-													<input class="form-control input-sm" type="text" value="<?php echo get_phrase('click_to_select');?>" id="endtime" name="endtime"></input>													</div>
-												<div class="col-sm-2">
-													<input class="form-control input-sm" type="text" id="indexend" name="indexend"></input>
-												</div>
-												<div class="col-sm-2">
-													<input class="form-control input-sm" type="text" id="keyword_selected" name="keyword_selected" value="<?php echo $keyword_selected;?>"></input>
-												</div>
-												<div class="col-sm-2">
-													<input class="form-control input-sm" type="text" id="radio" name="radio" value="<?php echo $radio;?>"></input>
-													<input class="form-control input-sm" type="text" id="state" name="state" value="<?php echo $state;?>"></input>
-													<input class="form-control input-sm" type="text" id="timestamp" name="timestamp" value="<?php echo $timestamp;?>"></input>
-												</div>
-											</div>
-											<div class="form-group form-group-sm">
-												<div class="col-sm-offset-2 col-sm-2">
-													<button class="btn btn-primary btn-sm" type="submit" ><?php echo get_phrase('crop');?></button>
-												</div>
-											</div>
-											<div><textarea id="result" name="result"></textarea></div>
-										</form>
-										<script>
-											$(document).ready(function () {
-												var elementsToTrack = $('span');
-												var attributes = [];
-												var values01 = [];
-												var spantext = null;
+			$('audio').bind('contextmenu', function() { return false; });
 
-												for (var i = 0; i != elementsToTrack.length; i++){
-													var currentAttr = elementsToTrack[i].attributes;
-													var currentValue = elementsToTrack[i];
-													attributes.push(currentAttr);
-													values01.push(currentValue);
-												}
+			$('#playback-rate').change(function(event) {
+				this.nextElementSibling.textContent = String(Math.round(this.valueAsNumber * 10) / 10) + "\u00D7";
+				audioel[0].playbackRate = event.target.value;
+			});
 
-												// console.log(attributes);
-												// console.log(values01);
+			$('#btnpbrate').click(function(event) {
+				count+=1;
+				ratep = 0.65;
 
-												$("#starttime").focus(function() {
-													var timeid01;
-													var indexid01;
-													$(this).attr('value', '<?php echo get_phrase('select_the_start_word');?>...');
-													window.timeid01 = 'starttime';
-													window.indexid01 = 'indexstart';
-												});
+				switch (count) {
+					case 1:
+						audioel[0].playbackRate+=ratep;
+						$(this).text((ratec+=ratep) + 'x ');
+						$(this).removeClass('btn-default');
+						$(this).addClass('btn-danger');
+						break;
+					case 2:
+						audioel[0].playbackRate+=ratep;
+						$(this).text((ratec+=ratep) + 'x ');
+						$(this).removeClass('btn-default');
+						$(this).addClass('btn-danger');
+						break;
+					case 3:
+						audioel[0].playbackRate+=ratep;
+						$(this).text((ratec+=ratep).toFixed(2) + 'x ');
+						$(this).removeClass('btn-default');
+						$(this).addClass('btn-danger');
+						break;
+					case 4:
+						audioel[0].playbackRate=1;
+						// $(this).text(1 + 'x ');
+						$(this).html('<i class="fa fa-angle-double-right">');
+						$(this).removeClass('btn-danger');
+						$(this).addClass('btn-default');
+						count = 0;
+						ratec = 1;
+						break;
+				}
+			});
 
-												$("#endtime").focus(function() {
-													var timeid01;
-													var indexid01;
-													$(this).attr('value', '<?php echo get_phrase('select_the_end_word');?>...');
-													window.timeid01 = 'endtime';
-													window.indexid01 = 'indexend';
-												});
+			$(document).keypress(function(event) {
+				if (event.which == 32) {
+					playpauseaudio('passage-audio');
+				}
+			});
 
-												$(document).on('click','span',function() {
-													var timeid02 = window.timeid01;
-													var indexid02 = window.indexid01;
-													var datatime = $(this).attr('data-begin');
-													var dataduration = $(this).attr('data-dur');
-													var dataindex = $(this).attr('data-index');
-													if (timeid02 == 'endtime') {
-														var datatime02 = +datatime + +dataduration;
-													} else {
-														var datatime02 = datatime;
-													}
-													if (timeid02 != null) {
-														document.getElementById(timeid02).value = datatime02;
-														document.getElementById(indexid02).value = dataindex;
-														if (timeid02 == 'endtime') {
-															document.getElementById('indexend').focus();
-														}
-													}
-												});
+			$('#btncstart').click(function(event) {
+				cropstartss = audioel[0].currentTime;
+				cropstarts = (cropstartss * 100 / 100).toFixed(3);
 
-												$("#indexend").focus(function() {
-													var starttimev = document.getElementById('starttime').value;
-													var endtimev = document.getElementById('endtime').value;
-													var indexstartv = document.getElementById('indexstart').value;
-													var indexendv = document.getElementById('indexend').value;
+				if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
+					swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
+					$(this).text(null);
+					$(this).append('<i class="fa fa-hourglass-start"></i>');
+					$(this).removeClass('btn-success');
+					$(this).addClass('btn-default');
+					ccrope = false;
+				} else {
+					cropstartms = cropstarts.split(".")
+					cropstartt = sectostring(cropstartss);
+					cropstart = cropstartt.replace(":", "-");
+					ccrops = true;
 
-													if (endtimev != null || endtimev != "") {
-														if (starttimev > endtimev) {
-															alert("O tempo inicial não pode ser maior que o final!");
-															document.getElementById('starttime').value = null;
-															document.getElementById('starttime').focus();
-														}
-													}
+					$(this).text(null);
+					$(this).append('<i class="fa fa-hourglass-start"></i>');
+					$(this).removeClass('btn-default');
+					$(this).addClass('btn-success');
+					$(this).append(' '+cropstartt);
 
-													var result = document.getElementById('result');
-													for (var i = +indexstartv; i <= +indexendv; i++){
-														var spantext = values01[i].innerText;
-														result.innerHTML += spantext + ' ';
-														// console.log(spantext);
-													}
-												});
-											});
-										</script>
-									</div>
-								</div>
-							</div>
-						</div> <!-- div row -->
-						<div class="col-lg-12 text-justify" id="passage-text">
-							<p>
-							<?php
-								$xmlpathfilenamephp = mb_substr($xmlpathfilename, 39);
-								$xmldata = simplexml_load_file($xmlpathfilenamephp);
-								//$keyword_selected_array = explode(" ", $keyword_selected);
-								//$text_array = array();
-								$wid  = 0;
-								foreach ($xmldata->StorySegment as $storyseg) {
-									foreach ($storyseg->TranscriptSegment as $transcseg) {
-										$frstwordstart	= $transcseg->TranscriptWordList->Word[0]['start']-1;
-										$guid = (string)$transcseg->TranscriptGUID;
-										$type = $transcseg->AudioType;
-										$typestr = $type[0];
-										$typestartms = $type['start'];
-										$typestarts = $typestartms/100;
-										$typeendms  $type['end'];
-										$typeends = $typeendms/100;
+					$('#btncend').removeClass('disabled');
+					$('#btncend').removeAttr('disabled');
 
-										$typeends2  $frstwordstart/100;
-										$typeduration = number_format($typeends-$typestarts,3,"."," ");
-										$typeduration2 = number_format($typeends2-$typestarts,3,"."," ");
+					$('#starttime').val(cropstarts);
 
-										$speaker = $transcseg->Speaker;
-										$speakerg = $speaker['name'];
+					console.log('crop starttime (string): '+cropstartt);
+					console.log('crop starttime (seconds): '+cropstarts);
+				}
+			});
 
-										if (!isset($transcseg->TranscriptWordList->Word)){
-											echo '<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-											//array_push($text_array,'<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'" data-index="'.$wid.'">|'.$typestr.'|</span>');
-											// array_push($text_array,'<span data-dur="'.$typeduration.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>');
-										}
-										else if (isset($transcseg->TranscriptWordList->Word)) {
-											echo '<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>'."\r\n";
-											//array_push($text_array,'<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'" data-index="'.$wid.'">|'.$typestr.'|</span>');
-											// array_push($text_array,'<span data-dur="'.$typeduration2.'" data-begin="'.$typestarts.'">|'.$typestr.'|</span>');
-											foreach ($transcseg->TranscriptWordList->Word as $transcword) {
-												if (empty($transcword['norm'])) {
-													$word = $transcword;
-												}
-												else {
-													$word = $transcword['norm'];
-												}
-												$wordstartms	= $transcword['start'];
-												$wordstarts	= $wordstartms/100;
-												$wordendms	= $transcword['end'];
-												$wordends		= $wordendms/100;
-												$wordduration	= number_format($wordends-$wordstarts,3,"."," ");
-												$wordpunct	= $transcword['punct'];
-												$wid++;
-												if (strcasecmp($key,$word) == 0) {
-													echo '<span style="color: white; background-color: red; font-size: 110%; font-weight: bold;" data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-												} else {
-													echo '<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>'."\r\n";
-												}
-												//array_push($text_array,'<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'" data-index="'.$wid.'">'.$word.$wordpunct.'</span>');
-												//array_push($text_array,'<span data-dur="'.$wordduration.'" data-begin="'.$wordstarts.'">'.$word.$wordpunct.'</span>');
-												$wid++;
-											}
-										}
-									}
-								}
-								//var_dump($keyword_selected_array)."<br>";
-								// foreach ($text_array as $row) {
-								// 	echo $row."\r\n";
-								// }
-							?>
-							</p>
-						</div> <!-- div id passage-text -->
-						</div> <!-- div row (inside panel-body) -->
-					</div> <!-- div panel-body -->
-				</div> <!-- div panel-default -->
-			</div> <!-- div col-lg-12 -->
-		</div> <!-- div row -->
+			$('#btncend').click(function(event) {
+				console.log(croptext);
+				cropendss = audioel[0].currentTime;
+				cropends = (cropendss * 100 / 100).toFixed(3);
 
+				if (ccrops) {
+					if (parseInt(cropendss) < parseInt(cropstartss) || parseInt(cropendss) == parseInt(cropstartss)) {
+						swal("Atenção!", "O tempo final deve ser maior que o inicial.", "error");
+						$(this).text(null);
+						$(this).append('<i class="fa fa-hourglass-end"></i>');
+						$(this).removeClass('btn-success');
+						$(this).addClass('btn-default');
+						ccrope = false;
+					} else {
+						time = $(this).text();
 
+						if (time != '') {
+							$(this).text(null);
+							$(this).append('<i class="fa fa-hourglass-end"></i>');
+						}
 
+						cropendms = cropends.split(".");
+						cropendt = sectostring(cropendss);
+						cropend = cropendt.replace(":", "-");
+
+						cropdurs = (cropends - cropstarts).toFixed(3);
+						cropdurmm = ('0' + Math.floor(cropdurs / 60)).slice(-2);
+						cropdurss = ('0' + Math.floor(cropdurs - cropdurmm * 60)).slice(-2);
+						cropdur = '00-'+cropdurmm+'-'+cropdurss;
+						ccrope = true;
+
+						$(this).text(null);
+						$(this).append('<i class="fa fa-hourglass-end"></i>');
+						$(this).removeClass('btn-default');
+						$(this).addClass('btn-success');
+						$(this).append(' '+cropendt);
+
+						$('#endtime').val(cropends);
+
+						console.log('crop endtime (string): '+cropendt);
+						console.log('crop endtime (seconds): '+cropends);
+					}
+
+					if (croptext) {
+						$('#btncrop').removeClass('disabled');
+						$('#btncrop').removeAttr('disabled');
+					}
+				} else {
+					swal("Atenção!", "Você deve marcar primeiro o tempo inicial.", "error");
+				}
+			});
+
+			$('#passage-text').mouseup(function(e) {
+				$(this).children().removeClass('selectedt');
+
+				var selection = window.getSelection().getRangeAt(0);
+				var selectedText = selection.extractContents();
+				console.log(selectedText);
+				var span = $('<span class="selectedt">'+selectedText.textContent+'</span>');
+				selection.insertNode(span[0]);
+
+				var txt = $('#passage-text').html();
+				$('#passage-text').html(txt.replace(/<\/span>(?:\s)*<span class="selectedt">/g, ''));
+
+				if (document.selection) {
+					document.selection.empty();
+				} else if (window.getSelection) {
+					window.getSelection().removeAllRanges();
+				}
+
+				$('#textseld').val(selectedText.textContent);
+
+				croptext = true;
+
+				if (ccrope) {
+					$('#btncrop').removeClass('disabled');
+					$('#btncrop').removeAttr('disabled');
+				}
+			});
+
+			$('btncrop').click(function(event) {
+				swal("Aguarde", "Carregando...", "warn");
+			});
+
+			$('#pageload').text("<?php echo get_phrase('page_generated_in').' '.$total_time.'s';?>");
+
+			function sectostring(secs) {
+				var sec_num = parseInt(secs, 10);
+				var hours   = Math.floor(sec_num / 3600);
+				var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+				var seconds = sec_num - (hours * 3600) - (minutes * 60);
+				var mseconds = String(secs);
+				var milliseconds =  mseconds.slice(-3);
+
+				if (hours  < 10) {hours = "0" + hours;}
+				if (minutes < 10) {minutes = "0" + minutes;}
+				if (seconds < 10) {seconds = "0" + seconds;}
+				return hours+':'+minutes+':'+seconds+'.'+milliseconds;
+			};
+
+			function playpauseaudio(audioelt) {
+				aaudioelmt = $('#'+audioelt);
+				if (aaudioelmt[0].paused) {
+					aaudioelmt[0].play();
+				} else {
+					aaudioelmt[0].pause();
+				}
+			};
+
+			$(document).ready(function() {
+				keyword = '<?php echo $keyword_selected; ?>';
+
+				pbodytext = $('#passage-text').text();
+				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+				pbodynewtext = pbodytext.replace(rgx, '<strong class="kword">'+keyword+'</strong>');
+				$('#passage-text').html(null);
+				$('#passage-text').html(pbodynewtext);
+			});
+		</script>
+	</body>
+</html>

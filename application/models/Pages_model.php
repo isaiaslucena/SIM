@@ -1032,6 +1032,33 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
+	public function radiol_text_byid_solr($docid) {
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/radio/query?wt=json';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'id_i:'.$docid
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
 	public function radio_text_byid_solr($docid) {
 		//Solr Connection
 		$protocol='http';
@@ -1308,6 +1335,17 @@ class Pages_model extends CI_Model {
 		$this->db->insert('discard_keyword', $data_insert_discard);
 	}
 
+	public function discard_doc_radio($data_discard) {
+		$data_insert_discard = array(
+			'id_doc' => $data_discard['id_doc'],
+			'id_client' => $data_discard['id_client'],
+			'id_keyword' => $data_discard['id_keyword'],
+			'timestamp' => strtotime("now"),
+			'id_user' => $data_discard['id_user']
+		);
+		$this->db->insert('discard_keyword_radio', $data_insert_discard);
+	}
+
 	public function discard_doc_radio_novo($data_discard) {
 		$data_insert_discard = array(
 			'id_doc' => $data_discard['id_doc'],
@@ -1343,7 +1381,7 @@ class Pages_model extends CI_Model {
 	}
 
 	//crop the audio and send do download
-	public function crop($starttime, $endtime, $mp3pathfilename) {
+	public function crop_old($starttime, $endtime, $mp3pathfilename) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
 		$temppath = '/app/assets/temp/';
@@ -1366,6 +1404,23 @@ class Pages_model extends CI_Model {
 		} else {
 			$finaltempurl = $temppathurl."crop_".$filename.".mp3";
 		}
+		return $finaltempurl;
+	}
+
+	public function crop($starttime, $endtime, $urlmp3) {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+		$duration = $endtime - $starttime;
+
+		$dfilename = "download_".strtotime("now").".mp3";
+		$cropfilename = "download_".strtotime("now")."_crop.mp3";
+		file_put_contents($temppath.$dfilename, fopen($urlmp3, 'r'));
+
+		exec($soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration);
+		// echo $soxpath." ".$temppath.$dfilename." ".$temppath.$cropfilename." trim ".$starttime." ".$duration;
+
+		$finaltempurl = $temppathurl.$cropfilename;
 		return $finaltempurl;
 	}
 
@@ -1421,6 +1476,22 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	public function crop_info_radio($data) {
+		$data_insert_info = array(
+			'id_doc' => $data['id_doc'],
+			'id_join_info' => $data['id_join_info'],
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'starttime' => $data['starttime'],
+			'endtime' => $data['endtime'],
+			'content' => $data['content'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('crop_info_radio', $data_insert_info);
+		return $this->db->insert_id();
+	}
+
 	public function crop_info_radio_novo($data) {
 		$data_insert_info = array(
 			'id_doc' => $data['id_doc'],
@@ -1447,6 +1518,12 @@ class Pages_model extends CI_Model {
 		$this->db->set('download_timestamp', strtotime("now"));
 		$this->db->where('id_crop_info', $cropid);
 		$this->db->update('crop_info_edit_audio');
+	}
+
+	public function crop_info_radio_download($cropid) {
+		$this->db->set('download_timestamp', strtotime("now"));
+		$this->db->where('id_crop_info', $cropid);
+		$this->db->update('crop_info_radio');
 	}
 
 	public function crop_info_radio_novo_download($cropid) {

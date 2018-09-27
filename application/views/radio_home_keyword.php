@@ -71,6 +71,9 @@
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 
+				$dtstarttime = substr_replace($found->starttime_dt, '00', 17, 2);
+				$dtendtime = substr_replace($found->starttime_dt, '00', 17, 2);
+
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
 				<div id="<?php echo 'div'.$divcount;?>" class="panel panel-default collapse in">
@@ -94,13 +97,17 @@
 						</label>
 
 						<div class="btn-toolbar pull-right">
-							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
+							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>"
+								data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $dtstarttime;?>"
+								data-enddate="<?php echo $dtendtime;?>" data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('previous');
 								$icount++; ?>
 							</button>
 
-							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>" data-position="next">
+							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>"
+								data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $dtstarttime;?>"
+								data-enddate="<?php echo $dtendtime;?>" data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
@@ -111,7 +118,7 @@
 							</button>
 
 							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
-							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
+							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -232,7 +239,9 @@
 					did = data.response.docs[0].id_i;
 					dsourceid = data.response.docs[0].source_id_i;
 					dsource = data.response.docs[0].source_s;
-					dmediaurl = data.response.docs[0].mediaurl_s;
+					dmuarr = data.response.docs[0].mediaurl_s.split('_');
+					dmedia = data.response.docs[0].mediaurl_s;
+					dmediaurl = window.location.origin.replace('sim.', 'radio.')+'/index.php/radio/getmp3?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
 					dstartdate = data.response.docs[0].starttime_dt;
 					denddate = data.response.docs[0].endtime_dt;
 					dcontent = data.response.docs[0].content_t[0];
@@ -498,7 +507,7 @@
 			audioid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
 			$('#'+audioid)[0].pause();
 
-			$.post('<?php echo base_url("pages/discard_doc_radio_novo")?>',
+			$.post('<?php echo base_url("pages/discard_doc_radio")?>',
 				{
 					'iddoc': iddoc,
 					'idkeyword': idkeyword,
@@ -513,7 +522,7 @@
 					totalpanelsd += 1;
 					if (totalpanelsd == totalpanels) {
 						console.log('no more panels!');
-						window.location = '<?php echo base_url("pages/index_radio_novo")?>';
+						window.location = '<?php echo base_url("pages/index_radio")?>';
 					}
 				}
 			);
