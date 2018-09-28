@@ -1,26 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-	<style type="text/css">
-		#joindiv {
-			position: fixed;
-			bottom: 0px;
-			left: 260px;
-			z-index: 9999;
-			display: none;
-		}
-		#joindiv.show {
-			/* opacity: 1; */
-			display: block;
-		}
-		#content {
-			height: 2000px;
-		}
-
-		.kwfound{
-			color: white;
-			background-color: red;
-			font-size: 110%;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
 
 	<div class="row">
 		<div class="col-lg-12">
@@ -134,445 +113,445 @@
 				<i class="fa fa-refresh fa-spin"></i> Carregando...
 			</span>
 		</div>
+	</div>
 
-		<script type="text/javascript">
-			var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
-			totalpanelsd = 0, videoels, joinfiles = false, filestojoin = [];
+	<script type="text/javascript">
+		var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
+		totalpanelsd = 0, videoels, joinfiles = false, filestojoin = [];
 
-			jQuery.fn.scrollTo = function(elem) {
-				$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-				return this;
-			}
+		jQuery.fn.scrollTo = function(elem) {
+			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
+			return this;
+		}
 
-			function scrolltokeyword() {
-				ptexts = $('.ptext.text-justify');
-				ptextsl = ptexts.length;
-				$.each(ptexts, function(index, val) {
-					cpid = $(val).attr('id');
-					scpid = '#'+cpid;
-					keywfound = '#'+cpid+' > .kwfound';
-					keyword = '<?php echo $keyword_selected; ?>';
+		function scrolltokeyword() {
+			ptexts = $('.ptext.text-justify');
+			ptextsl = ptexts.length;
+			$.each(ptexts, function(index, val) {
+				cpid = $(val).attr('id');
+				scpid = '#'+cpid;
+				keywfound = '#'+cpid+' > .kwfound';
+				keyword = '<?php echo $keyword_selected; ?>';
 
-					pbodytext = $(val).text();
-					rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-					pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
-					$(scpid).html(null);
-					$(scpid).html(pbodynewtext);
+				pbodytext = $(val).text();
+				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
+				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+				$(scpid).html(null);
+				$(scpid).html(pbodynewtext);
 
-					qtkwf = $(keywfound).length;
-					$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
-					$(val).scrollTo(keywfound);
-				});
-			}
-
-			$(document).ready(function() {
-				totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-				scrolltokeyword();
-
-				pstart = <?php echo $start;?>;
-				pcstart = <?php echo $rows;?>;
-				pfound = <?php echo $keyword_texts->response->numFound;?>;
-				$(window).scroll(function() {
-					winscrollToph = ($(window).scrollTop() + $(window).height());
-					winheight = $(document).height();
-					if (winscrollToph == winheight) {
-						pstart = pstart + pcstart;
-						if (pstart <= pfound) {
-							$('#loadmore').animate({'opacity': 100}, 500);
-							$.post('get_tv_novo_keyword_texts',
-								{
-									'id_keyword': <?php echo $id_keyword;?>,
-									'id_client': <?php echo $id_client;?>,
-									'keyword_selected': '<?php echo $keyword_selected;?>',
-									'client_selected': '<?php echo $client_selected;?>',
-									'startdate': '<?php echo $startdate;?>',
-									'enddate': '<?php echo $enddate;?>',
-									'start': pstart,
-									'rows': <?php echo $rows;?>
-								},
-								function(data, textStatus, xhr) {
-									$('#loadmore').before(data);
-									totalpanels = $('div.panel.panel-default.collapse.in').length;
-									scrolltokeyword();
-									$('#loadmore').animate({'opacity': 0}, 500);
-							});
-						}
-					}
-				});
-
-				// fvideo = $('video[preload="none"]');
-				// $(fvideo[0]).attr('preload', 'metadata');
-				// $(fvideo[0]).removeClass('noloaded');
-				// $(fvideo[0]).removeAttr('poster');
-
-				// $(this).scroll(function(event) {
-				// 	var windowh = $(window).height() - 200;
-				// 	// console.log('Window Height:')
-				// 	// console.log(windowh);
-
-				// 	// videoels = document.querySelectorAll('video[preload="none"]');
-				// 	// videoels = document.querySelectorAll('.noloaded');
-				// 	// videoels = $('.noloaded');
-				// 	videoels = $('video[preload="none"]');
-				// 	videoel = $(videoels[0]);
-
-				// 	// console.log('Video elements:');
-				// 	// console.log(videoels);
-				// 	// console.log(videoels.length);
-				// 	videoelo = videoel.offset().top;
-				// 	// console.log('Video element 0 offset top:');
-				// 	// console.log(videoelo);
-				// 	// console.log('');
-				// 	if (videoelo <= windowh) {
-				// 		videoel.attr('preload', 'metadata');
-				// 		videoel.removeAttr('poster');
-				// 		videoel.removeClass('noloaded');
-
-				// 		// videoel.setAttribute('preload', 'metadata');
-				// 		// videoel.removeAttribute('poster');
-				// 		// videoel.classList.remove('noloaded');
-
-				// 		// videoels = $('.noloaded');
-				// 	}
-				// });
+				qtkwf = $(keywfound).length;
+				$(val)[0].parentElement.parentElement.parentElement.parentElement.children[0].children[1].children[1].innerText = qtkwf;
+				$(val).scrollTo(keywfound);
 			});
+		}
 
-			$('video').bind('contextmenu', function() { return false; });
+		$(document).ready(function() {
+			totalpanels = $('div.panel.panel-default.collapse.in').length;
 
-			if ($('#back-to-top').length) {
-				var scrollTrigger = 1000,
-				backToTop = function() {
-					var scrollTop = $(window).scrollTop();
-					if (scrollTop > scrollTrigger) {
-						$('#back-to-top').addClass('show');
-					} else {
-						$('#back-to-top').removeClass('show');
+			scrolltokeyword();
+
+			pstart = <?php echo $start;?>;
+			pcstart = <?php echo $rows;?>;
+			pfound = <?php echo $keyword_texts->response->numFound;?>;
+			$(window).scroll(function() {
+				winscrollToph = ($(window).scrollTop() + $(window).height());
+				winheight = $(document).height();
+				if (winscrollToph == winheight) {
+					pstart = pstart + pcstart;
+					if (pstart <= pfound) {
+						$('#loadmore').animate({'opacity': 100}, 500);
+						$.post('get_tv_novo_keyword_texts',
+							{
+								'id_keyword': <?php echo $id_keyword;?>,
+								'id_client': <?php echo $id_client;?>,
+								'keyword_selected': '<?php echo $keyword_selected;?>',
+								'client_selected': '<?php echo $client_selected;?>',
+								'startdate': '<?php echo $startdate;?>',
+								'enddate': '<?php echo $enddate;?>',
+								'start': pstart,
+								'rows': <?php echo $rows;?>
+							},
+							function(data, textStatus, xhr) {
+								$('#loadmore').before(data);
+								totalpanels = $('div.panel.panel-default.collapse.in').length;
+								scrolltokeyword();
+								$('#loadmore').animate({'opacity': 0}, 500);
+						});
 					}
 				}
-				backToTop();
-				$(window).on('scroll', function() {
-					backToTop();
-				})
-				$('#back-to-top').on('click', function (e) {
-					e.preventDefault();
-					$('html,body').animate({scrollTop: 0}, 700);
-				})
+			});
+
+			// fvideo = $('video[preload="none"]');
+			// $(fvideo[0]).attr('preload', 'metadata');
+			// $(fvideo[0]).removeClass('noloaded');
+			// $(fvideo[0]).removeAttr('poster');
+
+			// $(this).scroll(function(event) {
+			// 	var windowh = $(window).height() - 200;
+			// 	// console.log('Window Height:')
+			// 	// console.log(windowh);
+
+			// 	// videoels = document.querySelectorAll('video[preload="none"]');
+			// 	// videoels = document.querySelectorAll('.noloaded');
+			// 	// videoels = $('.noloaded');
+			// 	videoels = $('video[preload="none"]');
+			// 	videoel = $(videoels[0]);
+
+			// 	// console.log('Video elements:');
+			// 	// console.log(videoels);
+			// 	// console.log(videoels.length);
+			// 	videoelo = videoel.offset().top;
+			// 	// console.log('Video element 0 offset top:');
+			// 	// console.log(videoelo);
+			// 	// console.log('');
+			// 	if (videoelo <= windowh) {
+			// 		videoel.attr('preload', 'metadata');
+			// 		videoel.removeAttr('poster');
+			// 		videoel.removeClass('noloaded');
+
+			// 		// videoel.setAttribute('preload', 'metadata');
+			// 		// videoel.removeAttribute('poster');
+			// 		// videoel.classList.remove('noloaded');
+
+			// 		// videoels = $('.noloaded');
+			// 	}
+			// });
+		});
+
+		$('video').bind('contextmenu', function() { return false; });
+
+		if ($('#back-to-top').length) {
+			var scrollTrigger = 1000,
+			backToTop = function() {
+				var scrollTop = $(window).scrollTop();
+				if (scrollTop > scrollTrigger) {
+					$('#back-to-top').addClass('show');
+				} else {
+					$('#back-to-top').removeClass('show');
+				}
 			}
+			backToTop();
+			$(window).on('scroll', function() {
+				backToTop();
+			})
+			$('#back-to-top').on('click', function (e) {
+				e.preventDefault();
+				$('html,body').animate({scrollTop: 0}, 700);
+			})
+		}
 
-			$(document).on('click', '.loadprevious', function(event) {
-				loadp = $(this);
-				loadp.children('i').css('display', 'inline-block');
+		$(document).on('click', '.loadprevious', function(event) {
+			loadp = $(this);
+			loadp.children('i').css('display', 'inline-block');
 
-				iddiv = $(this).attr('data-iddiv');
-				iddivn = Number(iddiv.replace('div', ''));
-				idsource = $(this).attr('data-idsource');
-				startdate = $(this).attr('data-startdate');
+			iddiv = $(this).attr('data-iddiv');
+			iddivn = Number(iddiv.replace('div', ''));
+			idsource = $(this).attr('data-idsource');
+			startdate = $(this).attr('data-startdate');
 
-				$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
-					// console.log(data);
-					loadp.children('i').css('display', 'none');
-					numfound = data.response.numFound;
-					if (numfound == 0) {
-						warnhtml =	'<div class="alert alert-warning" role="alert">'+
-										'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
-										'<span class="sr-only">Error:</span>'+
-										'<?php echo get_phrase('no_more_files'); ?>'+'!'+
-									'</div>';
-						$('#'+iddiv).before(warnhtml);
+			$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/previous', function(data) {
+				// console.log(data);
+				loadp.children('i').css('display', 'none');
+				numfound = data.response.numFound;
+				if (numfound == 0) {
+					warnhtml =	'<div class="alert alert-warning" role="alert">'+
+									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+									'<span class="sr-only">Error:</span>'+
+									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+								'</div>';
+					$('#'+iddiv).before(warnhtml);
 
-						setTimeout(function() {
-							$('div.alert.alert-warning').fadeOut('slow');
-						}, 3000);
-					} else {
-						did = data.response.docs[0].id_i;
-						dsourceid = data.response.docs[0].source_id_i;
-						dsource = data.response.docs[0].source_s;
-						dmediaurl = data.response.docs[0].mediaurl_s;
-						dstartdate = data.response.docs[0].starttime_dt;
-						denddate = data.response.docs[0].endtime_dt;
-						dcontent = data.response.docs[0].content_t[0];
+					setTimeout(function() {
+						$('div.alert.alert-warning').fadeOut('slow');
+					}, 3000);
+				} else {
+					did = data.response.docs[0].id_i;
+					dsourceid = data.response.docs[0].source_id_i;
+					dsource = data.response.docs[0].source_s;
+					dmediaurl = data.response.docs[0].mediaurl_s;
+					dstartdate = data.response.docs[0].starttime_dt;
+					denddate = data.response.docs[0].endtime_dt;
+					dcontent = data.response.docs[0].content_t[0];
 
-						var sd = new Date(dstartdate);
-						var sday = sd.getDate();
-						var sday = ('0' + sday).slice(-2);
-						var smonth = (sd.getMonth() + 1);
-						var smonth = ('0' + smonth).slice(-2);
-						var syear = sd.getFullYear();
-						var shour = sd.getHours();
-						var shour = ('0' + shour).slice(-2);
-						var sminute = sd.getMinutes();
-						var sminute = ('0' + sminute).slice(-2);
-						var ssecond = sd.getSeconds();
-						var ssecond = ('0' + ssecond).slice(-2);
-						var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+					var sd = new Date(dstartdate);
+					var sday = sd.getDate();
+					var sday = ('0' + sday).slice(-2);
+					var smonth = (sd.getMonth() + 1);
+					var smonth = ('0' + smonth).slice(-2);
+					var syear = sd.getFullYear();
+					var shour = sd.getHours();
+					var shour = ('0' + shour).slice(-2);
+					var sminute = sd.getMinutes();
+					var sminute = ('0' + sminute).slice(-2);
+					var ssecond = sd.getSeconds();
+					var ssecond = ('0' + ssecond).slice(-2);
+					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-						var ed = new Date(denddate);
-						var eday = ed.getDate();
-						var eday = ('0' + eday).slice(-2);
-						var emonth = (ed.getMonth() + 1);
-						var emonth = ('0' + emonth).slice(-2);
-						var eyear = ed.getFullYear();
-						var ehour = ed.getHours();
-						var ehour = ('0' + ehour).slice(-2);
-						var eminute = ed.getMinutes();
-						var eminute = ('0' + eminute).slice(-2);
-						var esecond = ed.getSeconds();
-						var esecond = ('0' + esecond).slice(-2);
-						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+					var ed = new Date(denddate);
+					var eday = ed.getDate();
+					var eday = ('0' + eday).slice(-2);
+					var emonth = (ed.getMonth() + 1);
+					var emonth = ('0' + emonth).slice(-2);
+					var eyear = ed.getFullYear();
+					var ehour = ed.getHours();
+					var ehour = ('0' + ehour).slice(-2);
+					var eminute = ed.getMinutes();
+					var eminute = ('0' + eminute).slice(-2);
+					var esecond = ed.getSeconds();
+					var esecond = ('0' + esecond).slice(-2);
+					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
-						newdivid += 1;
-						newdividn = iddiv + '-' + newdivid;
+					newdivid += 1;
+					newdividn = iddiv + '-' + newdivid;
 
-						divclone = $('#'+iddiv).clone(true);
+					divclone = $('#'+iddiv).clone(true);
 
-						divclone.removeClass('panel-default');
-						divclone.addClass('panel-info');
-						divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
-						divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
-						divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
-						divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
-						divclone.attr('id', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-						divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
-						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
+					divclone.removeClass('panel-default');
+					divclone.addClass('panel-info');
+					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+					divclone.attr('id', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+					divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+					divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
+					divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
 
-						$('#'+iddiv).after(divclone);
-					}
-				});
+					$('#'+iddiv).after(divclone);
+				}
 			});
+		});
 
-			$(document).on('click', '.loadnext', function(event) {
-				loadp = $(this);
-				loadp.children('i').css('display', 'inline-block');
+		$(document).on('click', '.loadnext', function(event) {
+			loadp = $(this);
+			loadp.children('i').css('display', 'inline-block');
 
-				iddiv = $(this).attr('data-iddiv');
-				iddivn = Number(iddiv.replace('div', ''));
-				idsource = $(this).attr('data-idsource');
-				startdate = $(this).attr('data-enddate');
+			iddiv = $(this).attr('data-iddiv');
+			iddivn = Number(iddiv.replace('div', ''));
+			idsource = $(this).attr('data-idsource');
+			startdate = $(this).attr('data-enddate');
 
-				$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
-					// console.log(data);
-					loadp.children('i').css('display', 'none');
-					numfound = data.response.numFound;
-					if (numfound == 0) {
-						warnhtml =	'<div class="alert alert-warning" role="alert">'+
-										'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
-										'<span class="sr-only">Error:</span>'+
-										'<?php echo get_phrase('no_more_files'); ?>'+'!'+
-									'</div>';
-						$('#'+iddiv).before(warnhtml);
+			$.get('<?php echo base_url('pages/get_tv_novo/')?>' + idsource + '/' + encodeURI(startdate) +'/next', function(data) {
+				// console.log(data);
+				loadp.children('i').css('display', 'none');
+				numfound = data.response.numFound;
+				if (numfound == 0) {
+					warnhtml =	'<div class="alert alert-warning" role="alert">'+
+									'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
+									'<span class="sr-only">Error:</span>'+
+									'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+								'</div>';
+					$('#'+iddiv).before(warnhtml);
 
-						setTimeout(function() {
-							$('div.alert.alert-warning').fadeOut('slow');
-						}, 3000);
-					} else {
-						did = data.response.docs[0].id_i;
-						dsourceid = data.response.docs[0].source_id_i;
-						dsource = data.response.docs[0].source_s;
-						dmediaurl = data.response.docs[0].mediaurl_s;
-						dstartdate = data.response.docs[0].starttime_dt;
-						denddate = data.response.docs[0].endtime_dt;
-						dcontent = data.response.docs[0].content_t[0];
+					setTimeout(function() {
+						$('div.alert.alert-warning').fadeOut('slow');
+					}, 3000);
+				} else {
+					did = data.response.docs[0].id_i;
+					dsourceid = data.response.docs[0].source_id_i;
+					dsource = data.response.docs[0].source_s;
+					dmediaurl = data.response.docs[0].mediaurl_s;
+					dstartdate = data.response.docs[0].starttime_dt;
+					denddate = data.response.docs[0].endtime_dt;
+					dcontent = data.response.docs[0].content_t[0];
 
-						var sd = new Date(dstartdate);
-						var sday = sd.getDate();
-						var sday = ('0' + sday).slice(-2);
-						var smonth = (sd.getMonth() + 1);
-						var smonth = ('0' + smonth).slice(-2);
-						var syear = sd.getFullYear();
-						var shour = sd.getHours();
-						var shour = ('0' + shour).slice(-2);
-						var sminute = sd.getMinutes();
-						var sminute = ('0' + sminute).slice(-2);
-						var ssecond = sd.getSeconds();
-						var ssecond = ('0' + ssecond).slice(-2);
-						var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
+					var sd = new Date(dstartdate);
+					var sday = sd.getDate();
+					var sday = ('0' + sday).slice(-2);
+					var smonth = (sd.getMonth() + 1);
+					var smonth = ('0' + smonth).slice(-2);
+					var syear = sd.getFullYear();
+					var shour = sd.getHours();
+					var shour = ('0' + shour).slice(-2);
+					var sminute = sd.getMinutes();
+					var sminute = ('0' + sminute).slice(-2);
+					var ssecond = sd.getSeconds();
+					var ssecond = ('0' + ssecond).slice(-2);
+					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-						var ed = new Date(denddate);
-						var eday = ed.getDate();
-						var eday = ('0' + eday).slice(-2);
-						var emonth = (ed.getMonth() + 1);
-						var emonth = ('0' + emonth).slice(-2);
-						var eyear = ed.getFullYear();
-						var ehour = ed.getHours();
-						var ehour = ('0' + ehour).slice(-2);
-						var eminute = ed.getMinutes();
-						var eminute = ('0' + eminute).slice(-2);
-						var esecond = ed.getSeconds();
-						var esecond = ('0' + esecond).slice(-2);
-						var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+					var ed = new Date(denddate);
+					var eday = ed.getDate();
+					var eday = ('0' + eday).slice(-2);
+					var emonth = (ed.getMonth() + 1);
+					var emonth = ('0' + emonth).slice(-2);
+					var eyear = ed.getFullYear();
+					var ehour = ed.getHours();
+					var ehour = ('0' + ehour).slice(-2);
+					var eminute = ed.getMinutes();
+					var eminute = ('0' + eminute).slice(-2);
+					var esecond = ed.getSeconds();
+					var esecond = ('0' + esecond).slice(-2);
+					var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
 
-						newdivid += 1;
-						newdividn = iddiv + '-' + newdivid;
+					newdivid += 1;
+					newdividn = iddiv + '-' + newdivid;
 
-						divclone = $('#'+iddiv).clone(true);
+					divclone = $('#'+iddiv).clone(true);
 
-						divclone.removeClass('panel-default');
-						divclone.addClass('panel-info');
-						divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
-						divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
-						divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
-						divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
-						divclone.attr('id', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
-						divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
-						divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
-						divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
-						divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
+					divclone.removeClass('panel-default');
+					divclone.addClass('panel-info');
+					divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+					divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
+					divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
+					divclone.children('panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
+					divclone.attr('id', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-iddiv', newdividn);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-startdate', dstartdate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.loadnext').attr('data-enddate', denddate);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
+					divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
+					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
+					divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', 'id', iddiv.replace('div', 'ptext') + '-' + newdivid);
+					divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
+					divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
 
-						$('#'+iddiv).before(divclone);
-					}
-				});
+					$('#'+iddiv).before(divclone);
+				}
 			});
+		});
 
-			$(document).on('click', '.cbjoinfiles', function(event) {
-				ciddoc = $(this).attr('data-iddoc');
-				cidsource = $(this).attr('data-idsource');
-				csource = $(this).attr('data-source');
-				cstartdate = $(this).attr('data-startdate');
-				cenddate = $(this).attr('data-enddate');
-				cidclient = $(this).attr('data-idclient');
-				cidkeyword = $(this).attr('data-idkeyword');
+		$(document).on('click', '.cbjoinfiles', function(event) {
+			ciddoc = $(this).attr('data-iddoc');
+			cidsource = $(this).attr('data-idsource');
+			csource = $(this).attr('data-source');
+			cstartdate = $(this).attr('data-startdate');
+			cenddate = $(this).attr('data-enddate');
+			cidclient = $(this).attr('data-idclient');
+			cidkeyword = $(this).attr('data-idkeyword');
 
-				checked = event.target.checked;
-				if (checked) {
-					if (cidsource == cksource || cksource == 0) {
-						$('#wsource').text(csource);
-						$('#fileslist').append('<a id="acb'+ciddoc+'" class="list-group-item">' + cstartdate + ' - '+ cenddate + '</a>');
-						filestojoin.push(ciddoc);
-						$('#joindiv').addClass('show');
-						cksource = cidsource;
-						if (filestojoin.length >= 2) {
-							$('#joinbtn').attr({
-								'data-idclient': cidclient,
-								'data-idkeyword': cidkeyword
-							});
-							$('#joinbtn').removeClass('disabled');
-							$('#joinbtn').removeAttr('disabled');
-							joinfiles = true;
-						}
-					} else {
-						swal("Atenção!", "A rádios devem ser iguais!", "error");
-						$(this).prop("checked", false);
-						$('#acb'+ciddoc).detach();
-						cksource = 0;
+			checked = event.target.checked;
+			if (checked) {
+				if (cidsource == cksource || cksource == 0) {
+					$('#wsource').text(csource);
+					$('#fileslist').append('<a id="acb'+ciddoc+'" class="list-group-item">' + cstartdate + ' - '+ cenddate + '</a>');
+					filestojoin.push(ciddoc);
+					$('#joindiv').addClass('show');
+					cksource = cidsource;
+					if (filestojoin.length >= 2) {
+						$('#joinbtn').attr({
+							'data-idclient': cidclient,
+							'data-idkeyword': cidkeyword
+						});
+						$('#joinbtn').removeClass('disabled');
+						$('#joinbtn').removeAttr('disabled');
+						joinfiles = true;
 					}
 				} else {
-					fileindex = filestojoin.indexOf(ciddoc);
-					filestojoin.splice(fileindex,1);
+					swal("Atenção!", "A rádios devem ser iguais!", "error");
+					$(this).prop("checked", false);
 					$('#acb'+ciddoc).detach();
-					if (filestojoin.length < 2) {
-						$('#joinbtn').addClass('disabled');
-						$('#joinbtn').attr('disabled', true);
-						joinfiles = false;
-					} else if (filestojoin.length < 1) {
-						$('#joindiv').removeClass('show');
-					}
+					cksource = 0;
 				}
-			});
-
-			$('#joinbtn').click(function(event) {
-				jbtn = $(this);
-				jidclient = jbtn.attr('data-idclient');
-				jidkeyword = jbtn.attr('data-idkeyword');
-
-				$('#jids_doc').val(filestojoin);
-				$('#jid_client').val(jidclient);
-				$('#jid_keyword').val(jidkeyword);
-
-				swal({
-					title: "Carregando...",
-					// text: "Aguarde...",
-					imageUrl: "<?php echo base_url('assets/imgs/loading.gif'); ?>",
-					showCancelButton: false,
-					showConfirmButton: false
-				});
-
-				if (joinfiles) {
-					document.getElementById('joinform').submit();
-					$('#joindiv').removeClass('show');
+			} else {
+				fileindex = filestojoin.indexOf(ciddoc);
+				filestojoin.splice(fileindex,1);
+				$('#acb'+ciddoc).detach();
+				if (filestojoin.length < 2) {
 					$('#joinbtn').addClass('disabled');
 					$('#joinbtn').attr('disabled', true);
-					$('#fileslist').empty();
-					$('input[type="checkbox"]').prop("checked", false);
-					$('.panel-info').detach();
-					filestojoin = [];
 					joinfiles = false;
-					cksource = 0;
-					swal.close();
+				} else if (filestojoin.length < 1) {
+					$('#joindiv').removeClass('show');
 				}
+			}
+		});
+
+		$('#joinbtn').click(function(event) {
+			jbtn = $(this);
+			jidclient = jbtn.attr('data-idclient');
+			jidkeyword = jbtn.attr('data-idkeyword');
+
+			$('#jids_doc').val(filestojoin);
+			$('#jid_client').val(jidclient);
+			$('#jid_keyword').val(jidkeyword);
+
+			swal({
+				title: "Carregando...",
+				// text: "Aguarde...",
+				imageUrl: "<?php echo base_url('assets/imgs/loading.gif'); ?>",
+				showCancelButton: false,
+				showConfirmButton: false
 			});
 
-			$(document).on('click', '.discarddoc', function(event) {
-				discardbtn = $(this);
-				discardbtn.children('i').css('display', 'inline-block');
+			if (joinfiles) {
+				document.getElementById('joinform').submit();
+				$('#joindiv').removeClass('show');
+				$('#joinbtn').addClass('disabled');
+				$('#joinbtn').attr('disabled', true);
+				$('#fileslist').empty();
+				$('input[type="checkbox"]').prop("checked", false);
+				$('.panel-info').detach();
+				filestojoin = [];
+				joinfiles = false;
+				cksource = 0;
+				swal.close();
+			}
+		});
 
-				iddoc = discardbtn.attr('data-iddoc');
-				iddiv = discardbtn.attr('data-iddiv');
-				idkeyword = discardbtn.attr('data-idkeyword');
-				idclient = discardbtn.attr('data-idclient');
-				iduser = '<?php echo $this->session->userdata("id_user");?>';
+		$(document).on('click', '.discarddoc', function(event) {
+			discardbtn = $(this);
+			discardbtn.children('i').css('display', 'inline-block');
 
-				$.post('<?php echo base_url("pages/discard_doc_tv_novo")?>',
-					{
-						'iddoc': iddoc,
-						'idkeyword': idkeyword,
-						'idclient': idclient,
-						'iduser': iduser
-					},
-					function(data, textStatus, xhr) {
-						// console.log(data);
-						discardbtn.children('i').css('display', 'none');
-						$('#'+iddiv).removeClass('panel-default');
-						$('#'+iddiv).addClass('panel-danger');
-						totalpanelsd += 1;
-						// console.log('total descarted panels = ' + $('div.panel.panel-danger.collapse').length);
+			iddoc = discardbtn.attr('data-iddoc');
+			iddiv = discardbtn.attr('data-iddiv');
+			idkeyword = discardbtn.attr('data-idkeyword');
+			idclient = discardbtn.attr('data-idclient');
+			iduser = '<?php echo $this->session->userdata("id_user");?>';
 
-						if (totalpanelsd == totalpanels) {
-							console.log('no more panels!');
-							window.location = '<?php echo base_url("pages/index_tv")?>';
-						}
+			$.post('<?php echo base_url("pages/discard_doc_tv_novo")?>',
+				{
+					'iddoc': iddoc,
+					'idkeyword': idkeyword,
+					'idclient': idclient,
+					'iduser': iduser
+				},
+				function(data, textStatus, xhr) {
+					// console.log(data);
+					discardbtn.children('i').css('display', 'none');
+					$('#'+iddiv).removeClass('panel-default');
+					$('#'+iddiv).addClass('panel-danger');
+					totalpanelsd += 1;
+					// console.log('total descarted panels = ' + $('div.panel.panel-danger.collapse').length);
+
+					if (totalpanelsd == totalpanels) {
+						console.log('no more panels!');
+						window.location = '<?php echo base_url("pages/index_tv")?>';
 					}
-				);
-			});
+				}
+			);
+		});
 
-			$(document).on('click', '.ptext', function() {
-				$(this).css('overflowY', 'auto');
-			})
+		$(document).on('click', '.ptext', function() {
+			$(this).css('overflowY', 'auto');
+		})
 
-			$(document).on('mouseleave' ,'.ptext', function() {
-				$(this).css('overflowY', 'hidden');
-			});
-		</script>
-	</div>
+		$(document).on('mouseleave' ,'.ptext', function() {
+			$(this).css('overflowY', 'hidden');
+		});
+	</script>

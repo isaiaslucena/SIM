@@ -1,42 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-	<style type="text/css">
-		#joindiv {
-			position: fixed;
-			bottom: 0px;
-			left: 260px;
-			z-index: 9999;
-			display: none;
-		}
-
-		#content {
-			height: 2000px;
-		}
-
-		.fkword,.kword{
-			color: white;
-			background-color: red;
-			border: solid;
-			border-color: red;
-			border-width: 2px;
-			border-radius: 8px;
-			padding: 1px;
-		}
-
-		span[data-begin]:focus,
-		span[data-begin]:hover {
-			background-color: yellow;
-			border-radius: 8px;
-		}
-		span[data-begin].speaking {
-			background-color: yellow;
-			border-radius: 8px;
-			z-index: 900;
-		}
-		span[data-begin] {
-			cursor: pointer;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
 
 	<div class="row">
 		<div class="col-lg-12">
@@ -182,7 +146,7 @@
 				<input type="hidden" id="jid_client" name="id_client">
 				<input type="hidden" id="jid_keyword" name="id_keyword">
 			</form>
-		<div>
+		</div>
 	</div>
 
 	<script src="<?php echo base_url('assets/readalong/readalong.js');?>"></script>
