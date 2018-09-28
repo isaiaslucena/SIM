@@ -158,13 +158,6 @@
 		keywcount = keywordarr.length - 1;
 		rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
 
-		$('audio').bind('contextmenu', function() {return false;});
-
-		jQuery.fn.scrollTo = function(elem) {
-			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-			return this;
-		};
-
 		function loadpn(flow, clbtn) {
 			loadp = $(clbtn);
 			loadp.children('i').css('display', 'inline-block');
@@ -509,12 +502,12 @@
 			$('#'+paudioid)[0].play();
 		});
 
-		$(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
-			ptextid = $(this).attr('id');
-			paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+		// $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
+		// 	ptextid = $(this).attr('id');
+		// 	paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
 
-			$('#'+paudioid)[0].pause();
-		});
+		// 	$('#'+paudioid)[0].pause();
+		// });
 
 		$(document).ready(function() {
 			totalpanels = $('div.panel.panel-default.collapse.in').length;

@@ -1632,6 +1632,46 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	public function join_radio($idsdocs) {
+		$soxpath = "/usr/bin/sox";
+		$temppathurl = base_url('assets/temp/');
+		$temppath = '/app/assets/temp/';
+
+		$filesline = null;
+		$datadoc['content_t'] = null;
+		$countf = 0;
+		$countfarr = count($idsdocs);
+		$docinfo = $this->radiol_text_byid_solr($idsdocs[0]);
+		$datadoc['source_s'] = $docinfo->response->docs[0]->source_s;
+		$datadoc['starttime_dt'] = $docinfo->response->docs[0]->starttime_dt;
+		foreach ($idsdocs as $iddoc) {
+			$countf++;
+
+			$docinfo = $this->radiol_text_byid_solr($iddoc);
+			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
+
+			$dfilename = "jdownload_".strtotime("now").".mp3";
+
+			$smuarr = explode("_", $docinfo->response->docs[0]->mediaurl_s);
+			$mediaurl = str_replace("sim", "radio", base_url())."index.php/radio/getmp3?source=".$smuarr[0]."&file=".str_replace($smuarr[0]."_", "", $docinfo->response->docs[0]->mediaurl_s);
+			file_put_contents($temppath.$dfilename, fopen($mediaurl, 'r'));
+
+			if ($countf == $countfarr) {
+				$filesline .= $temppath.$dfilename;
+				$datadoc['endtime_dt'] = $docinfo->response->docs[0]->endtime_dt;
+			} else {
+				$filesline .= $temppath.$dfilename.' ';
+			}
+		}
+
+		$joinfile = 'join_'.date('d-m-Y_His', strtotime("now")).'.mp3';
+
+		exec($soxpath.' '.$filesline.' '.$temppath.$joinfile, $execlog, $execoutput);
+		$datadoc['finalurl'] = $temppathurl.$joinfile;
+
+		return $datadoc;
+	}
+
 	public function join_radio_novo($idsdocs) {
 		$soxpath = "/usr/bin/sox";
 		$temppathurl = base_url('assets/temp/');
@@ -1667,6 +1707,18 @@ class Pages_model extends CI_Model {
 		$datadoc['finalurl'] = $temppathurl.$joinfile;
 
 		return $datadoc;
+	}
+
+	public function join_info_radio($data) {
+		$data_insert_info = array(
+			'ids_docs' => json_encode($data['ids_docs']),
+			'id_user' => $data['id_user'],
+			'id_client' => $data['id_client'],
+			'id_keyword' => $data['id_keyword'],
+			'timestamp' => strtotime("now")
+		);
+		$this->db->insert('join_info_radio', $data_insert_info);
+		return $this->db->insert_id();
 	}
 
 	public function join_info_radio_novo($data) {

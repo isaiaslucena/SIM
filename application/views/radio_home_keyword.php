@@ -36,7 +36,17 @@
 				$epochenddate = $ed->format('U');
 
 				$dtstarttime = substr_replace($found->starttime_dt, '00', 17, 2);
-				$dtendtime = substr_replace($found->starttime_dt, '00', 17, 2);
+				$dtendtime = substr_replace($found->endtime_dt, '00', 17, 2);
+
+				// $ssec = $sd->format('s');
+				// $sss = $sd->format('Y-m-d\TH:i:');
+				// $dtstarttime = $sss.($ssec - 5).'Z';
+				// $esec = $ed->format('s');
+				// $eee = $ed->format('Y-m-d\TH:i:');
+				// $dtendtime = $eee.($esec - 5).'Z';
+
+				// $dtstarttime = $found->starttime_dt;
+				// $dtendtime = $found->endtime_dt;
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
@@ -145,7 +155,7 @@
 				<small id="fileslist"></small>
 			</div>
 			<button id="joinbtn" class="btn btn-default btn-block btn-sm disabled" disabled><?php echo get_phrase('join')?></button>
-			<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio_novo');?>" target="_blank" method="POST">
+			<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_radio');?>" target="_blank" method="POST">
 				<input type="hidden" id="jids_doc" name="ids_doc">
 				<input type="hidden" id="jid_client" name="id_client">
 				<input type="hidden" id="jid_keyword" name="id_keyword">
@@ -161,13 +171,6 @@
 		keywordarr = keyword.split(" ");
 		keywcount = keywordarr.length - 1;
 		rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
-
-		$('audio').bind('contextmenu', function() {return false;});
-
-		jQuery.fn.scrollTo = function(elem) {
-			$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
-			return this;
-		};
 
 		function loadpn(flow, clbtn) {
 			loadp = $(clbtn);
@@ -210,9 +213,8 @@
 					denddate = data.response.docs[0].endtime_dt;
 					dcontent = data.response.docs[0].content_t[0];
 					dtimes = JSON.parse(data.response.docs[0].times_t[0]);
-					// console.log(dtimes);
 
-					var sd = new Date(dstartdate);
+					var sd = new Date(dstartdate.replace('Z',''));
 					var sday = sd.getDate();
 					var sday = ('0' + sday).slice(-2);
 					var smonth = (sd.getMonth() + 1);
@@ -226,7 +228,7 @@
 					var ssecond = ('0' + ssecond).slice(-2);
 					var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-					var ed = new Date(denddate);
+					var ed = new Date(denddate.replace('Z',''));
 					var eday = ed.getDate();
 					var eday = ('0' + eday).slice(-2);
 					var emonth = (ed.getMonth() + 1);
@@ -267,7 +269,6 @@
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 					divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-					// divclone.children('.panel-body').children('.row').children('.pbody').attr('id', iddiv.replace('div', 'pbody') + '-' + newdivid);
 					divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
 					divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
 					divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
@@ -397,8 +398,13 @@
 			if (checked) {
 				if (cidsource == cksource || cksource == 0) {
 					$('#wsource').text(csource);
-					$('#fileslist').append('<a id="acb'+ciddoc+'" class="list-group-item">' + cstartdate + ' - '+ cenddate + '</a>');
+					$('#fileslist').append(
+						'<a id="acb'+ciddoc+'" class="list-group-item">'+
+							cstartdate + ' - '+ cenddate +
+						'</a>'
+					);
 					filestojoin.push(ciddoc);
+					console.log(filestojoin);
 					$('#joindiv').fadeIn('fast');
 					cksource = cidsource;
 					if (filestojoin.length >= 2) {
@@ -419,6 +425,7 @@
 			} else {
 				fileindex = filestojoin.indexOf(ciddoc);
 				filestojoin.splice(fileindex,1);
+				console.log(filestojoin);
 				$('#acb'+ciddoc).detach();
 				if (filestojoin.length == 1) {
 					$('#joinbtn').addClass('disabled');
@@ -444,7 +451,6 @@
 			$('#jid_keyword').val(jidkeyword);
 
 			if (joinfiles) {
-				document.getElementById('joinform').submit();
 				$('#joindiv').fadeOut('fast');
 				$('#joinbtn').addClass('disabled');
 				$('#joinbtn').attr('disabled', true);
@@ -454,7 +460,8 @@
 				filestojoin = [];
 				joinfiles = false;
 				cksource = 0;
-				swal.close();
+				swal("Aguarde...");
+				document.getElementById('joinform').submit();
 			}
 		});
 

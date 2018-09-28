@@ -32,8 +32,7 @@ if (isset($novodoc)) {
 	$rstartdate = $starttime_dt;
 	$renddate = $endtime_dt;
 	$ssource = $source_s;
-	$smuarr = explode("_", $mediaurl_s);
-	$mediaurl = str_replace("sim", "radio", base_url())."index.php/radio/getmp3?source=".$smuarr[0]."&file=".str_replace($smuarr[0]."_", "", $mediaurl_s);
+	$mediaurl = $mediaurl_s;
 	$content = $content_t;
 	if (isset($times_t)) {
 		$times = $times_t;

@@ -1536,6 +1536,63 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function join_radio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$start = $time;
+
+			$sessiondata = array(
+				'view' => 'join_radio_novo',
+				'last_page' => base_url('pages/join_radio')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'join_radio';
+
+			$ids_doc = explode(',', $this->input->post('ids_doc'));
+			$data['id_source'] = $this->input->post('id_source');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			// var_dump($data);
+			if (!empty($data['id_client'])) {
+				$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
+			} else {
+				$data['client_selected'] = '';
+			}
+
+			if (!empty($data['id_keyword'])) {
+				$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			} else {
+				$data['keyword_selected'] = '';
+			}
+
+			$datadoc = $this->pages_model->join_radio($ids_doc);
+
+			$datajoin['ids_docs'] = $ids_doc;
+			$datajoin['id_client'] = $data['id_client'];
+			$datajoin['id_keyword'] = $data['id_keyword'];
+			$datajoin['id_user'] = $this->session->userdata('id_user');
+			$data['id_join_info'] = $this->pages_model->join_info_radio($datajoin);
+
+			$data['source_s'] = $datadoc['source_s'];
+			$data['content_t'] = $datadoc['content_t'];
+			$data['mediaurl_s'] = $datadoc['finalurl'];
+			$data['starttime_dt'] = $datadoc['starttime_dt'];
+			$data['endtime_dt'] = $datadoc['endtime_dt'];
+
+			$time = microtime();
+			$time = explode(' ', $time);
+			$time = $time[1] + $time[0];
+			$finish = $time;
+			$data['total_time'] = round(($finish - $start), 4);
+
+			$this->load->view('edit', $data);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio'), 'refresh');
+		}
+	}
+
 	public function join_radio_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$time = microtime();
