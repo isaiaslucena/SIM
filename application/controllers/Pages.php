@@ -810,11 +810,8 @@ class Pages extends CI_Controller {
 			$data['start'] = 0;
 			$data['rows'] = 10;
 
-			// $timezone = new DateTimeZone('UTC');
-			$timezone = new DateTimeZone('America/Sao_Paulo');
-			$sd = new Datetime($data['startdate'], $timezone);
-			$ed = new Datetime($data['enddate'], $timezone);
-			// $sd->setTimezone($newtimezone);
+			$sd = new Datetime($data['startdate']);
+			$ed = new Datetime($data['enddate']);
 			$epochstartdate = $sd->format('U');
 			$epochenddate = $ed->format('U');
 
@@ -1544,7 +1541,7 @@ class Pages extends CI_Controller {
 			$start = $time;
 
 			$sessiondata = array(
-				'view' => 'join_radio_novo',
+				'view' => 'join_radio',
 				'last_page' => base_url('pages/join_radio')
 			);
 			$this->session->set_userdata($sessiondata);
@@ -1554,7 +1551,6 @@ class Pages extends CI_Controller {
 			$data['id_source'] = $this->input->post('id_source');
 			$data['id_client'] = $this->input->post('id_client');
 			$data['id_keyword'] = $this->input->post('id_keyword');
-			// var_dump($data);
 			if (!empty($data['id_client'])) {
 				$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
 			} else {
@@ -1611,7 +1607,6 @@ class Pages extends CI_Controller {
 			$data['id_source'] = $this->input->post('id_source');
 			$data['id_client'] = $this->input->post('id_client');
 			$data['id_keyword'] = $this->input->post('id_keyword');
-			var_dump($data);
 			if (!empty($data['id_client'])) {
 				$data['client_selected'] = $this->db->get_where('client', array('id_client' => $data['id_client']))->row()->name;
 			} else {

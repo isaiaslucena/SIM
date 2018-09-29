@@ -460,7 +460,7 @@
 				filestojoin = [];
 				joinfiles = false;
 				cksource = 0;
-				swal("Aguarde...");
+				// swal("Aguarde...");
 				document.getElementById('joinform').submit();
 			}
 		});

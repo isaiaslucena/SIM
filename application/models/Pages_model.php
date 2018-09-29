@@ -1650,7 +1650,7 @@ class Pages_model extends CI_Model {
 			$docinfo = $this->radiol_text_byid_solr($iddoc);
 			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
 
-			$dfilename = "jdownload_".strtotime("now").".mp3";
+			$dfilename = "jdownload_".strtotime("now")."-".$countf.".mp3";
 
 			$smuarr = explode("_", $docinfo->response->docs[0]->mediaurl_s);
 			$mediaurl = str_replace("sim", "radio", base_url())."index.php/radio/getmp3?source=".$smuarr[0]."&file=".str_replace($smuarr[0]."_", "", $docinfo->response->docs[0]->mediaurl_s);
