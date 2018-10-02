@@ -68,7 +68,7 @@
 											<label>Tipo de Veículo</label>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and $vtype == 'radio') {echo "checked";} ?> required>
+													<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and ($vtype == 'radio' or $vtype == 'radio_novo')) {echo "checked";} ?> required>
 													Rádio
 												</label>
 											</div>
@@ -82,12 +82,12 @@
 									</div>
 
 									<div class="col-sm-6 col-md-6 col-lg-6">
-										<div id="radioselsrctype" class="form-group" style="display: none;">
+										<div id="radioselsrctype" class="form-group" style="<?php if (!isset($vsrctype)) { echo "display: none"; }?>">
 											<label>Fonte</label>
 											<div class="radio">
 												<label>
 													<input type="radio" name="optionssrcadios" id="optradiotype1" value="audimus" <?php if (isset($vsrctype) and $vsrctype == 'audimus') {echo "checked";} ?> required>
-													Audimus
+													Interno
 												</label>
 											</div>
 											<div class="radio">
@@ -100,17 +100,17 @@
 									</div>
 								</div>
 
-								<div id="radioidsel" class="form-group" style="display: none;">
+								<div id="radioidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'audimus') { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('radio');?></label>
 									<input id="radioid" name="radioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 
-								<div id="kneradioidsel" class="form-group" style="display: none;">
+								<div id="kneradioidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'novo') { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('radio');?></label>
 									<input id="kneradioid" name="kneradioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 
-								<div id="tvidsel" class="form-group" style="display: none;">
+								<div id="tvidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'tv') { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('television');?></label>
 									<input id="tvchannel" name="tvchannel" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
@@ -146,7 +146,6 @@
 				</div>
 			</div>
 		</div>
-
 
 		<?php
 			$clientslinevar = null;

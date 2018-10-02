@@ -502,7 +502,7 @@
 					}
 				} ?>
 				<?php if (!empty($keyword)) { ?>
-					</div>s
+					</div>
 				<?php } ?>
 				<?php if (!empty($keyword)) { ?>
 					</div>

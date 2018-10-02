@@ -865,14 +865,20 @@ class Pages extends CI_Controller {
 			$epochstartdate = $sd->format('U');
 			$epochenddate = $ed->format('U');
 
-			$data_discard['startdate'] = $epochstartdate;
-			$data_discard['enddate'] = $epochenddate;
+			$sd1 = new Datetime($data['startdate']);
+			$ed1 = new Datetime($data['enddate']);
+			$epochstartdate1 = $sd->format('U');
+			$epochenddate1 = $ed->format('U');
+
+			$data_discard['startdate'] = $epochstartdate1;
+			$data_discard['enddate'] = $epochenddate1;
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
 			// $data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate']);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -1821,6 +1827,8 @@ class Pages extends CI_Controller {
 			$data_crop_info['starttime'] = $data['starttime'];
 			$data_crop_info['endtime'] = $data['endtime'];
 			$data_crop_info['content'] = $this->input->post('textseld');
+
+			// var_dump($data_crop_info);
 
 			$data['crop_inserted_id'] = $this->pages_model->crop_info_radio_novo($data_crop_info);
 			$data['finalfile'] = $this->pages_model->crop_novo($data['starttime'], $data['endtime'], $data['urlmp3']);

@@ -23,9 +23,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$ed = new Datetime($enddate, $timezone);
 						$newtimezone = new DateTimeZone('America/Sao_Paulo');
 						$sd->setTimezone($newtimezone);
-						$sstartdate = $sd->format('d/m/Y H:i:s');
+						$ed->setTimezone($newtimezone);
+						$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+						$senddate = $ed->format('Y-m-d\TH:i:s\Z');
 						$epochstartdate = $sd->format('U');
 						$epochenddate = $ed->format('U');
+
+						$sd1 = new Datetime($startdate);
+						$ed1 = new Datetime($enddate);
+						$sstartdate1 = $sd->format('Y-m-d\TH:i:s\Z');
+						$senddate1 = $ed->format('Y-m-d\TH:i:s\Z');
+						$epochstartdate1 = $sd->format('U');
+						$epochenddate1 = $ed->format('U');
+
+
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.str_replace('T', ' ', $startdate); ?>
 
 						<span class="pull-right" id="allkeywordsquant"></span>
@@ -63,13 +74,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<?php $keywords = $this->pages_model->keywords_client($client['id_client']);
 											$client_keywords = 0;
 											foreach ($keywords as $keyword) {
-												$data_discard['startdate'] = $epochstartdate;
-												$data_discard['enddate'] = $epochenddate;
+												$data_discard['startdate'] = $epochstartdate1;
+												$data_discard['enddate'] = $epochenddate1;
 												$data_discard['id_client'] = $client['id_client'];
 												$data_discard['id_keyword'] = $keyword['id_keyword'];
 
 												$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
-												$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $keyword['keyword'], $startdate, $enddate);
+												$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
+												// var_dump($croppeddocs);
+												$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $startdate, $enddate);
 												$keyword_foundc = $keyword_found->response->numFound;
 												$allkeyword_found = $this->pages_model->radio_knewin_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 												$allkeyword_foundc = $allkeyword_found->response->numFound;

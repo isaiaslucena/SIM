@@ -469,6 +469,13 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function cropped_docs_novo_radio($data_cropped) {
+		$sqlquery =	"SELECT id_doc FROM crop_info_radio_knewin
+								WHERE id_client = ".$data_cropped['id_client']." AND id_keyword = ".$data_cropped['id_keyword']." AND
+								timestamp >= ".$data_cropped['startdate']." AND timestamp <= ".$data_cropped['enddate']." AND download_timestamp IS NOT NULL GROUP BY id_doc";
+		return $this->db->query($sqlquery)->result_array();
+	}
+
 	public function texts_keyword_byid_solr($ids_text, $keyword, $startdate, $enddate) {
 		//Solr Connection
 		$protocol='http';
@@ -627,7 +634,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio_novo($ids_doc, $keyword, $startdate, $enddate) {
+	public function docs_byid_radio_novo($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -638,6 +645,21 @@ class Pages_model extends CI_Model {
 		$cidsarr = count($ids_doc);
 		$ccount = 0;
 		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		$idsline = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
 			$ccount++;
 			foreach ($idstexts as $idd => $id_text) {
 				if ($ccount == $cidsarr) {
@@ -679,7 +701,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio_novo_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
+	public function docs_byid_radio_novo_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -690,6 +712,21 @@ class Pages_model extends CI_Model {
 		$cidsarr = count($ids_doc);
 		$ccount = 0;
 		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		$idsline = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
 			$ccount++;
 			foreach ($idstexts as $idd => $id_text) {
 				if ($ccount == $cidsarr) {
@@ -2392,8 +2429,9 @@ class Pages_model extends CI_Model {
 			}
 		} else {
 			if ($vtype == 'radio') {
-				$path='/solr/text/query?wt=json&start='.$start.'&sort=id_text_i+asc';
-				$url=$protocol."://".$host.":".$port.$path;
+				// $path = '/solr/text/query?wt=json&start='.$start.'&sort=id_text_i+asc';
+				$path = '/solr/radio/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
+				$url = $protocol."://".$host.":".$port.$path;
 				$data_string = $datasearch;
 				$header = array(
 					'Content-Type: application/json',
