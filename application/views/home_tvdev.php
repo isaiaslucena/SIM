@@ -241,7 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				hidenokeyword();
 
 				timelinebody = $('#timelinebody');
-				if (timelinebody.height() < 420) {
+				if (timelinebody.height() < 500) {
 					$('#btnloadmore').fadeIn('fast');
 				} else {
 					$('#btnloadmore').fadeOut('fast');
