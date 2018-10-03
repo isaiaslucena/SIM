@@ -18,24 +18,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
 						<?php
-						$timezone = new DateTimeZone('UTC');
+						$timezone = new DateTimeZone('America/Sao_Paulo');
 						$sd = new Datetime($startdate, $timezone);
 						$ed = new Datetime($enddate, $timezone);
-						$newtimezone = new DateTimeZone('America/Sao_Paulo');
+						$newtimezone = new DateTimeZone('UTC');
 						$sd->setTimezone($newtimezone);
 						$ed->setTimezone($newtimezone);
-						$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
-						$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+						$sstartdate = $sd->format('Y-m-d\TH:i:s');
+						$senddate = $ed->format('Y-m-d\TH:i:s');
 						$epochstartdate = $sd->format('U');
 						$epochenddate = $ed->format('U');
 
-						$sd1 = new Datetime($startdate);
-						$ed1 = new Datetime($enddate);
-						$sstartdate1 = $sd->format('Y-m-d\TH:i:s\Z');
-						$senddate1 = $ed->format('Y-m-d\TH:i:s\Z');
-						$epochstartdate1 = $sd->format('U');
-						$epochenddate1 = $ed->format('U');
-
+						// $timezone1 = new DateTimeZone('America/Sao_Paulo');
+						// $sd1 = new Datetime($startdate, $timezone1);
+						// $ed1 = new Datetime($enddate, $timezone1);
+						// $sstartdate1 = $sd->format('Y-m-d\TH:i:s\Z');
+						// $senddate1 = $ed->format('Y-m-d\TH:i:s\Z');
+						// $epochstartdate1 = $sd->format('U');
+						// $epochenddate1 = $ed->format('U');
+						$epochstartdate1 = strtotime($startdate);
+						$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+						$epochenddate1 = strtotime($enddate);
+						$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
 
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.str_replace('T', ' ', $startdate); ?>
 
@@ -48,6 +52,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div id="timelinebody" class="panel-body">
 						<ul class="timeline" id="client-ul">
 							<?php
+
+							// var_dump($epochstartdate1);
+							// echo "<br>";
+							// var_dump($sstartdate1);
+							// echo "<br><br>";
+							// var_dump($epochenddate1);
+							// echo "<br>";
+							// var_dump($senddate1);
+							// echo "<br><br>";
+							// echo "<br><br>";
+							// var_dump($epochstartdate);
+							// echo "<br>";
+							// var_dump($sstartdate);
+							// echo "<br><br>";
+							// var_dump($epochenddate);
+							// echo "<br>";
+							// var_dump($senddate);
+
 							$clientn = 0;
 							$invert=0;
 							$keywordquant = array();
@@ -81,10 +103,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 												$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 												$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
-												// var_dump($croppeddocs);
-												$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $startdate, $enddate);
+												$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
 												$keyword_foundc = $keyword_found->response->numFound;
-												$allkeyword_found = $this->pages_model->radio_knewin_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
+												$allkeyword_found = $this->pages_model->radio_knewin_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
 												$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 												$ic = null;

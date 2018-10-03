@@ -469,6 +469,13 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function cropped_docs_radio($data_cropped) {
+		$sqlquery =	"SELECT id_doc FROM crop_info_radio
+								WHERE id_client = ".$data_cropped['id_client']." AND id_keyword = ".$data_cropped['id_keyword']." AND
+								timestamp >= ".$data_cropped['startdate']." AND timestamp <= ".$data_cropped['enddate']." AND download_timestamp IS NOT NULL GROUP BY id_doc";
+		return $this->db->query($sqlquery)->result_array();
+	}
+
 	public function cropped_docs_novo_radio($data_cropped) {
 		$sqlquery =	"SELECT id_doc FROM crop_info_radio_knewin
 								WHERE id_client = ".$data_cropped['id_client']." AND id_keyword = ".$data_cropped['id_keyword']." AND
@@ -582,7 +589,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
+	public function docs_byid_radio_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -605,35 +612,35 @@ class Pages_model extends CI_Model {
 			}
 		}
 
-		$idsline2 = null;
-		$cidsarr = count($ids_cdoc);
-		$ccount = 0;
-		foreach ($ids_cdoc as $id => $idstexts) {
-			$ccount++;
-			foreach ($idstexts as $idd => $id_text) {
-				if ($ccount == $cidsarr) {
-					$idsline2 .= "NOT ".$id_text;
-				}
-				else {
-					$idsline2 .= "NOT ".$id_text." OR ";
-				}
-			}
-		}
+		// $idsline2 = null;
+		// $cidsarr = count($ids_cdoc);
+		// $ccount = 0;
+		// foreach ($ids_cdoc as $id => $idstexts) {
+		// 	$ccount++;
+		// 	foreach ($idstexts as $idd => $id_text) {
+		// 		if ($ccount == $cidsarr) {
+		// 			$idsline2 .= "NOT ".$id_text;
+		// 		}
+		// 		else {
+		// 			$idsline2 .= "NOT ".$id_text." OR ";
+		// 		}
+		// 	}
+		// }
 
-		if ($idsline != null and $idsline2 != null) {
-			$idslinefull = $idsline.' OR '.$idsline2;
-		} else if ($idsline != null and $idsline2 == null) {
-			$idslinefull = $idsline;
-		} else if ($idsline == null and $idsline2 != null) {
-			$idslinefull = $idsline2;
-		}
+		// if ($idsline != null and $idsline2 != null) {
+		// 	$idslinefull = $idsline.' OR '.$idsline2;
+		// } else if ($idsline != null and $idsline2 == null) {
+		// 	$idslinefull = $idsline;
+		// } else if ($idsline == null and $idsline2 != null) {
+		// 	$idslinefull = $idsline2;
+		// }
 
-		if (!is_null($idslinefull)) {
+		if (!is_null($idsline)) {
 			$data = array(
 				'query' => 'content_t:"'.$keyword.'"',
 				'filter' => array(
 					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
-					'id_i:('.$idslinefull.')'
+					'id_i:('.$idsline.')'
 				),
 			);
 		} else {

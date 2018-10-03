@@ -58,7 +58,7 @@ curl_setopt_array($curl, array(
 	CURLOPT_TIMEOUT => 30,
 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": 0,"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
+	CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": 0,"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-3","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
 	CURLOPT_HTTPHEADER => array(
 		"cache-control: no-cache",
 		"content-type: application/json",
@@ -115,7 +115,7 @@ if ($datafound > 10) {
 			CURLOPT_TIMEOUT => 30,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": '.$datastart.',"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-2","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
+			CURLOPT_POSTFIELDS => '{"key": "1fb56fc7-a17f-4535-88a1-429d30565392","offset": '.$datastart.',"filter": {"languages": ["pt"],"sinceCrawled": "'.$start.'", "untilCrawled": "'.$end.'"},"gmt": "-3","showTimes": true,"sort": {"field": "startTime","order": "asc"}}',
 			CURLOPT_HTTPHEADER => array(
 				"cache-control: no-cache",
 				"content-type: application/json",
@@ -155,6 +155,8 @@ if ($datafound > 10) {
 			echo "Content ID: ".$did."\r\n";
 			echo "Source ID: ".$didsource."\r\n";
 			echo "Source: ".$dsource."\r\n";
+			echo "starttime:".$dstarttime."\r\n";
+			echo "endtime:".$dendtime."\r\n";
 			// echo "Media URL: ".$dmurl."\r\n";
 			// echo "\r\n";
 			// echo "\r\n";
@@ -261,6 +263,8 @@ if ($datafound > 10) {
 		echo "Content ID: ".$did."\r\n";
 		echo "Source ID: ".$didsource."\r\n";
 		echo "Source: ".$dsource."\r\n";
+		echo "starttime:".$dstarttime."\r\n";
+		echo "endtime:".$dendtime."\r\n";
 		// echo "Media URL: ".$dmurl."\r\n";
 		// echo "\r\n";
 		// echo "\r\n";

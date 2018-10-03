@@ -821,7 +821,8 @@ class Pages extends CI_Controller {
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 			$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
-			// $croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
+			// $croppedd'ocs = $this->pages_model->cropped_docs_radio($data_discard);
+			$croppeddocs = array('id' => '');
 			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
@@ -857,18 +858,21 @@ class Pages extends CI_Controller {
 			$data['start'] = 0;
 			$data['rows'] = 10;
 
-			$timezone = new DateTimeZone('UTC');
-			$sd = new Datetime($data['startdate'], $timezone);
-			$ed = new Datetime($data['enddate'], $timezone);
-			$newtimezone = new DateTimeZone('America/Sao_Paulo');
-			$sd->setTimezone($newtimezone);
-			$epochstartdate = $sd->format('U');
-			$epochenddate = $ed->format('U');
+						$timezone = new DateTimeZone('America/Sao_Paulo');
+						$sd = new Datetime($data['startdate'], $timezone);
+						$ed = new Datetime($data['enddate'], $timezone);
+						$newtimezone = new DateTimeZone('UTC');
+						$sd->setTimezone($newtimezone);
+						$ed->setTimezone($newtimezone);
+						$sstartdate = $sd->format('Y-m-d\TH:i:s');
+						$senddate = $ed->format('Y-m-d\TH:i:s');
+						$epochstartdate = $sd->format('U');
+						$epochenddate = $ed->format('U');
 
-			$sd1 = new Datetime($data['startdate']);
-			$ed1 = new Datetime($data['enddate']);
-			$epochstartdate1 = $sd->format('U');
-			$epochenddate1 = $ed->format('U');
+						$epochstartdate1 = strtotime($data['startdate']);
+						$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+						$epochenddate1 = strtotime($data['enddate']);
+						$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
 
 			$data_discard['startdate'] = $epochstartdate1;
 			$data_discard['enddate'] = $epochenddate1;
@@ -877,7 +881,7 @@ class Pages extends CI_Controller {
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 			$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');

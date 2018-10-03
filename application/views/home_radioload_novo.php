@@ -5,23 +5,21 @@
 							$time = $time[1] + $time[0];
 							$start = $time;
 
-							$timezone = new DateTimeZone('UTC');
+							$timezone = new DateTimeZone('America/Sao_Paulo');
 							$sd = new Datetime($startdate, $timezone);
 							$ed = new Datetime($enddate, $timezone);
-							$newtimezone = new DateTimeZone('America/Sao_Paulo');
+							$newtimezone = new DateTimeZone('UTC');
 							$sd->setTimezone($newtimezone);
 							$ed->setTimezone($newtimezone);
-							$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
-							$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+							$sstartdate = $sd->format('Y-m-d\TH:i:s');
+							$senddate = $ed->format('Y-m-d\TH:i:s');
 							$epochstartdate = $sd->format('U');
 							$epochenddate = $ed->format('U');
 
-							$sd1 = new Datetime($startdate);
-							$ed1 = new Datetime($enddate);
-							$sstartdate1 = $sd->format('Y-m-d\TH:i:s\Z');
-							$senddate1 = $ed->format('Y-m-d\TH:i:s\Z');
-							$epochstartdate1 = $sd->format('U');
-							$epochenddate1 = $ed->format('U');
+							$epochstartdate1 = strtotime($startdate);
+							$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+							$epochenddate1 = strtotime($enddate);
+							$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
 
 							$clientn = 0;
 							$invert=0;
@@ -57,9 +55,9 @@
 
 													$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 													$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $startdate, $enddate);
+													$keyword_found = $this->pages_model->docs_byid_radio_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
 													$keyword_foundc = $keyword_found->response->numFound;
-													$allkeyword_found = $this->pages_model->radio_knewin_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
+													$allkeyword_found = $this->pages_model->radio_knewin_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
 													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;
