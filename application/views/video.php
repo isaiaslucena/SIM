@@ -792,13 +792,27 @@
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
 								});
 
-								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
+								arr = lastvideo.split('_');
+								channel = arr[2];
+								if (channel != 'AVULSO') {
+									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+										videoel[0].pause();
 
-									loadingthumbs();
+										loadingthumbs();
+									} else {
+										videoel[0].play();
+									}
 								} else {
 									videoel[0].play();
 								}
+
+								// if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+								// 	videoel[0].pause();
+
+								// 	loadingthumbs();
+								// } else {
+								// 	videoel[0].play();
+								// }
 
 								videotitle.text(firstvideo);
 								videotitle.attr('data-vsrc', selglvsource);
@@ -831,10 +845,16 @@
 									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
 								});
 
-								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
+								arr = lastvideo.split('_');
+								channel = arr[2];
+								if (channel != 'AVULSO') {
+									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+										videoel[0].pause();
 
-									loadingthumbs();
+										loadingthumbs();
+									} else {
+										videoel[0].play();
+									}
 								} else {
 									videoel[0].play();
 								}

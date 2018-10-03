@@ -858,21 +858,21 @@ class Pages extends CI_Controller {
 			$data['start'] = 0;
 			$data['rows'] = 10;
 
-						$timezone = new DateTimeZone('America/Sao_Paulo');
-						$sd = new Datetime($data['startdate'], $timezone);
-						$ed = new Datetime($data['enddate'], $timezone);
-						$newtimezone = new DateTimeZone('UTC');
-						$sd->setTimezone($newtimezone);
-						$ed->setTimezone($newtimezone);
-						$sstartdate = $sd->format('Y-m-d\TH:i:s');
-						$senddate = $ed->format('Y-m-d\TH:i:s');
-						$epochstartdate = $sd->format('U');
-						$epochenddate = $ed->format('U');
+			$timezone = new DateTimeZone('America/Sao_Paulo');
+			$sd = new Datetime($data['startdate'], $timezone);
+			$ed = new Datetime($data['enddate'], $timezone);
+			$newtimezone = new DateTimeZone('UTC');
+			$sd->setTimezone($newtimezone);
+			$ed->setTimezone($newtimezone);
+			$sstartdate = $sd->format('Y-m-d\TH:i:s');
+			$senddate = $ed->format('Y-m-d\TH:i:s');
+			$epochstartdate = $sd->format('U');
+			$epochenddate = $ed->format('U');
 
-						$epochstartdate1 = strtotime($data['startdate']);
-						$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
-						$epochenddate1 = strtotime($data['enddate']);
-						$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+			$epochstartdate1 = strtotime($data['startdate']);
+			$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+			$epochenddate1 = strtotime($data['enddate']);
+			$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
 
 			$data_discard['startdate'] = $epochstartdate1;
 			$data_discard['enddate'] = $epochenddate1;

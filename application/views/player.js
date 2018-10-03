@@ -103,19 +103,19 @@
 				});
 
 				videoel.on('loadedmetadata', function() {
-					// loadthumbs = setInterval(function() {
-						vvideosrc = videoel[0].currentSrc;
-						if (vvideosrc.match(vvideosrcsearch) == null) {
-							vduration = videoel[0].duration;
+					var vvideosrc = videoel[0].currentSrc;
+					if (vvideosrc.match(vvideosrcsearch) == null) {
+						var vduration = videoel[0].duration;
 
-							vdurtime.text(sectostring(vduration));
+						vdurtime.text(sectostring(vduration));
 
-							nimage = [];
-							if (joinvideosclk) {
-								vdfilename = videotitle.text();
-								srcarr = vdfilename.split("_");
-								srcfilename = srcarr[0];
-								console.log(srcfilename);
+						var nimage = [];
+						if (joinvideosclk) {
+							var vdfilename = videotitle.text();
+							var srcarr = vdfilename.split("_");
+							var srcfilename = srcarr[0];
+							var channel = srcarr[6];
+							if (channel != 'AVULSO') {
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									fjoinedquant = filesjoined.length;
 									fjoinedcount = 0;
@@ -126,7 +126,7 @@
 										for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
 											nthumbn = ("00" + thumbn).slice(-3);
 											nimage[thumbn] = new Image();
-											imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + vdfilename + '/' + nthumbn;
+											imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vdfilename+'/'+nthumbn;
 											nimage[thumbn].src = imgsrc;
 
 											if (fjoinedquant === fjoinedcount) {
@@ -166,57 +166,60 @@
 											}
 										}
 									});
-									// clearInterval(loadthumbs);
 								}
-							} else {
-								vdfilename = videotitle.text();
+							}
+						} else {
+							var vdfilename = videotitle.text();
+							var arr = vdfilename.split('_');
+							var channel = arr[2];
+							if (channel != 'AVULSO') {
 								sfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
 								if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-										nthumbn = ("00" + thumbn).slice(-3);
-										nimage[thumbn] = new Image();
-										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
-										nimage[thumbn].src = imgsrc;
-										nimage[thumbn].onload = function(e) {
-											if (navigator.vendor == 'Google Inc.') {
-												loadedsrc = e.path[0].src;
-											} else {
-												loadedsrc = e.target.src;
-											}
+									nthumbn = ("00" + thumbn).slice(-3);
+									nimage[thumbn] = new Image();
+									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
+									nimage[thumbn].src = imgsrc;
+									nimage[thumbn].onload = function(e) {
+										if (navigator.vendor == 'Google Inc.') {
+											loadedsrc = e.path[0].src;
+										} else {
+											loadedsrc = e.target.src;
+										}
 
-											urlload = window.location.origin;
-											urlload = urlload.replace('sim.', 'video.');
-											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
-											ldtmbn = parseInt(ldtmbnarr[1]);
-											if (ldtmbn === maxthumb) {
-												closeloadingthumbs();
-												videoel[0].play();
-											}
-										};
+										urlload = window.location.origin;
+										urlload = urlload.replace('sim.', 'video.');
+										ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
+										ldtmbn = parseInt(ldtmbnarr[1]);
+										if (ldtmbn === maxthumb) {
+											closeloadingthumbs();
+											videoel[0].play();
+										}
+									};
 
-										nimage[thumbn].onerror = function(e) {
-											if (navigator.vendor == 'Google Inc.') {
-												loadedsrc = e.path[0].src;
-											} else {
-												loadedsrc = e.target.src;
-											}
+									nimage[thumbn].onerror = function(e) {
+										if (navigator.vendor == 'Google Inc.') {
+											loadedsrc = e.path[0].src;
+										} else {
+											loadedsrc = e.target.src;
+										}
 
-											urlload = window.location.origin;
-											urlload = urlload.replace('sim.', 'video.');
-											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
-											ldtmbn = parseInt(ldtmbnarr[1]);
-											if (ldtmbn === maxthumb) {
-												closeloadingthumbs();
-												videoel[0].play();
-											}
-										};
+										urlload = window.location.origin;
+										urlload = urlload.replace('sim.', 'video.');
+										ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
+										ldtmbn = parseInt(ldtmbnarr[1]);
+										if (ldtmbn === maxthumb) {
+											closeloadingthumbs();
+											videoel[0].play();
+										}
+									};
 									}
-									// clearInterval(loadthumbs);
 								}
+								// clearInterval(loadthumbs);
 							}
 						}
-					// }, 5000);
+					}
 				});
 
 				videoel.on('timeupdate', function() {
@@ -615,7 +618,7 @@
 					disclass = $('#'+aid).hasClass('disabled');
 					if (disclass == false) {
 						if (elclick == "SPAN" || elclick == "H4") {
-							joinvideosclk - false;
+							joinvideosclk = false;
 							cfilename = event.target.innerText;
 							cfilevsource = event.target.dataset.vsrc;
 
@@ -627,10 +630,16 @@
 								src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 							});
 
-							if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
-								videoel[0].pause();
+							arr = lastvideo.split('_');
+							channel = arr[2];
+							if (channel != 'AVULSO') {
+								if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
+									videoel[0].pause();
 
-								loadingthumbs();
+									loadingthumbs();
+								} else {
+									videoel[0].play();
+								}
 							} else {
 								videoel[0].play();
 							}
@@ -663,7 +672,7 @@
 								vfilenamei = cfilenamei+'.mp4';
 
 								joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
-								console.log(joinvideos);
+								// console.log(joinvideos);
 							}
 						}
 					}
@@ -676,8 +685,8 @@
 						onOpen: () => {
 							swal.showLoading()
 						},
-						title: "Carregando...",
-						animation: false,
+						title: "Carregando imagens...",
+						animation: true,
 						allowEscapeKey: false,
 						allowOutsideClick: false,
 						showCancelButton: false,
