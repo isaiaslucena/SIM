@@ -307,7 +307,7 @@
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
-				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
+				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, srcposter;
 				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false;
 				var cropstartss = null, cropendss = null;
@@ -787,33 +787,6 @@
 							if (todaydatesel === false) {
 								// console.log('Data selecionada menor que hoje');
 
-								videoel.attr({
-									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+firstvideo+'/001',
-									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
-								});
-
-								arr = lastvideo.split('_');
-								channel = arr[2];
-								if (channel != 'AVULSO') {
-									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-										videoel[0].pause();
-
-										loadingthumbs();
-									} else {
-										videoel[0].play();
-									}
-								} else {
-									videoel[0].play();
-								}
-
-								// if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-								// 	videoel[0].pause();
-
-								// 	loadingthumbs();
-								// } else {
-								// 	videoel[0].play();
-								// }
-
 								videotitle.text(firstvideo);
 								videotitle.attr('data-vsrc', selglvsource);
 								videotitle.css('font-size', '30px');
@@ -839,14 +812,24 @@
 									}
 									nextvideo.append(html);
 								});
-							} else {
-								videoel.attr({
-									poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
-									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
-								});
 
 								arr = lastvideo.split('_');
 								channel = arr[2];
+
+								if (channel != 'AVULSO') {
+									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+										var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+firstvideo+'/001';
+									} else {
+										var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+									}
+								} else {
+									var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+								}
+								videoel.attr({
+									poster: srcposter,
+									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
+								});
+
 								if (channel != 'AVULSO') {
 									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 										videoel[0].pause();
@@ -858,7 +841,7 @@
 								} else {
 									videoel[0].play();
 								}
-
+							} else {
 								videotitle.text(lastvideo);
 								videotitle.attr('data-vsrc', selglvsource);
 								videotitle.css('font-size', '30px');
@@ -890,9 +873,37 @@
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									}
-
 									nextvideo.append(html);
 								});
+							}
+
+							arr = lastvideo.split('_');
+							channel = arr[2];
+
+							if (channel != 'AVULSO') {
+								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+									var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001';
+								} else {
+									var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+								}
+							} else {
+								var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							}
+							videoel.attr({
+								poster: srcposter,
+								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
+							});
+
+							if (channel != 'AVULSO') {
+								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+									videoel[0].pause();
+
+									loadingthumbs();
+								} else {
+									videoel[0].play();
+								}
+							} else {
+								videoel[0].play();
 							}
 
 							mobileconf();

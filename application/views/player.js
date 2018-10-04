@@ -103,18 +103,18 @@
 				});
 
 				videoel.on('loadedmetadata', function() {
-					var vvideosrc = videoel[0].currentSrc;
+					vvideosrc = videoel[0].currentSrc;
 					if (vvideosrc.match(vvideosrcsearch) == null) {
-						var vduration = videoel[0].duration;
+						vduration = videoel[0].duration;
 
 						vdurtime.text(sectostring(vduration));
 
-						var nimage = [];
+						nimage = [];
 						if (joinvideosclk) {
-							var vdfilename = videotitle.text();
-							var srcarr = vdfilename.split("_");
-							var srcfilename = srcarr[0];
-							var channel = srcarr[6];
+							vdfilename = videotitle.text();
+							srcarr = vdfilename.split("_");
+							srcfilename = srcarr[0];
+							channel = srcarr[6];
 							if (channel != 'AVULSO') {
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									fjoinedquant = filesjoined.length;
@@ -144,6 +144,7 @@
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
+														$('#vnext').scrollTo('a.active');
 													}
 												};
 
@@ -161,6 +162,7 @@
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
+														$('#vnext').scrollTo('a.active');
 													}
 												};
 											}
@@ -169,54 +171,55 @@
 								}
 							}
 						} else {
-							var vdfilename = videotitle.text();
-							var arr = vdfilename.split('_');
-							var channel = arr[2];
+							vdfilename = videotitle.text();
+							arr = vdfilename.split('_');
+							channel = arr[2];
 							if (channel != 'AVULSO') {
 								sfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
 								if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-									nthumbn = ("00" + thumbn).slice(-3);
-									nimage[thumbn] = new Image();
-									imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
-									nimage[thumbn].src = imgsrc;
-									nimage[thumbn].onload = function(e) {
-										if (navigator.vendor == 'Google Inc.') {
-											loadedsrc = e.path[0].src;
-										} else {
-											loadedsrc = e.target.src;
-										}
+										nthumbn = ("00" + thumbn).slice(-3);
+										nimage[thumbn] = new Image();
+										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + sfilename +'_'+ vdfilename + '/' + nthumbn;
+										nimage[thumbn].src = imgsrc;
+										nimage[thumbn].onload = function(e) {
+											if (navigator.vendor == 'Google Inc.') {
+												loadedsrc = e.path[0].src;
+											} else {
+												loadedsrc = e.target.src;
+											}
 
-										urlload = window.location.origin;
-										urlload = urlload.replace('sim.', 'video.');
-										ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
-										ldtmbn = parseInt(ldtmbnarr[1]);
-										if (ldtmbn === maxthumb) {
-											closeloadingthumbs();
-											videoel[0].play();
-										}
-									};
+											urlload = window.location.origin;
+											urlload = urlload.replace('sim.', 'video.');
+											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
+											ldtmbn = parseInt(ldtmbnarr[1]);
+											if (ldtmbn === maxthumb) {
+												closeloadingthumbs();
+												videoel[0].play();
+												$('#vnext').scrollTo('a.active');
+											}
+										};
 
-									nimage[thumbn].onerror = function(e) {
-										if (navigator.vendor == 'Google Inc.') {
-											loadedsrc = e.path[0].src;
-										} else {
-											loadedsrc = e.target.src;
-										}
+										nimage[thumbn].onerror = function(e) {
+											if (navigator.vendor == 'Google Inc.') {
+												loadedsrc = e.path[0].src;
+											} else {
+												loadedsrc = e.target.src;
+											}
 
-										urlload = window.location.origin;
-										urlload = urlload.replace('sim.', 'video.');
-										ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
-										ldtmbn = parseInt(ldtmbnarr[1]);
-										if (ldtmbn === maxthumb) {
-											closeloadingthumbs();
-											videoel[0].play();
-										}
-									};
+											urlload = window.location.origin;
+											urlload = urlload.replace('sim.', 'video.');
+											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
+											ldtmbn = parseInt(ldtmbnarr[1]);
+											if (ldtmbn === maxthumb) {
+												closeloadingthumbs();
+												videoel[0].play();
+												$('#vnext').scrollTo('a.active');
+											}
+										};
 									}
 								}
-								// clearInterval(loadthumbs);
 							}
 						}
 					}
@@ -333,9 +336,8 @@
 						filenarr = filesjoined[0].file.split("_");
 						thnsfilename = filenarr[0];
 						if (thnsfilename.replace(/[0-9]/g, '') != 'cagiva') {
-							var ttime = 0;
-							var thumbnnf;
-							var thnvdfilename;
+							ttime = 0;
+							var thumbnnf, thnvdfilename;
 
 							$.each(filesjoined, function(index, filer) {
 								ttime = ttime + filer.time;
@@ -358,10 +360,9 @@
 				};
 
 				function updatebarkeyb(sec) {
-					var maxduration = videoel[0].duration;
-					// var position = sec - time.offset().left;
-					var position = sec;
-					var percentage = (position * 100) / maxduration;
+					maxduration = videoel[0].duration;
+					position = sec;
+					percentage = (position * 100) / maxduration;
 
 					if (percentage > 100) {
 						percentage = 100;
@@ -399,9 +400,8 @@
 						filenarr = filesjoined[0].file.split("_");
 						thnsfilename = filenarr[0];
 
-						var ttime = 0;
-						var thumbnnf;
-						var thnvdfilename;
+						ttime = 0;
+						var thumbnnf, thnvdfilename;
 
 						$.each(filesjoined, function(index, filer) {
 							ttime = ttime + filer.time;
@@ -427,9 +427,9 @@
 				function updateTimetooltip(x) {
 					vdfilename = videotitle.text();
 					sfilename = $( "span:contains('"+vdfilename+"')" ).data('vsrc');
-					var maxduration = videoel[0].duration;
-					var position = x - progressbar.offset().left;
-					var percentage = (100 * position) / progressbar.width();
+					maxduration = videoel[0].duration;
+					position = x - progressbar.offset().left;
+					percentage = (100 * position) / progressbar.width();
 
 					if (percentage > 100) {
 						percentage = 100;
@@ -461,10 +461,10 @@
 					$('.tooltiptime').fadeOut("fast");
 				})
 				.mousemove(function(event) {
-					var barHeight = progressbar.height();
-					var barPosition = progressbar.position();
-					var barPositionoff = progressbar.offset();
-					var maxduration = videoel[0].duration;
+					barHeight = progressbar.height();
+					barPosition = progressbar.position();
+					barPositionoff = progressbar.offset();
+					maxduration = videoel[0].duration;
 					// thumbleft = event.pageX - 106;
 					// thumbtop = barPositionoff.top - 155;
 					ttimeleft = event.pageX - 52;
@@ -539,14 +539,12 @@
 				});
 
 				function sectostring(secs) {
-					var sec_num = parseInt(secs, 10);
-					var hours   = Math.floor(sec_num / 3600);
-					// var hours = (sec_num / 3600).toFixed(2);
-					var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-					// var minutes = ((sec_num - (hours * 3600)) / 60).toFixed(2);
-					var seconds = sec_num - (hours * 3600) - (minutes * 60);
-					var mseconds = String(secs);
-					var milliseconds =  mseconds.slice(-3);
+					sec_num = parseInt(secs, 10);
+					hours   = Math.floor(sec_num / 3600);
+					minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+					seconds = sec_num - (hours * 3600) - (minutes * 60);
+					mseconds = String(secs);
+					milliseconds =  mseconds.slice(-3);
 
 					if (hours  < 10) {hours = "0" + hours;}
 					if (minutes < 10) {minutes = "0" + minutes;}
@@ -555,19 +553,12 @@
 				}
 
 				function videoelBuffer() {
-					// var startBuffer = videoel[0].buffered.start(0);
 					if (videoel[0].buffered.length > 0) {
-						var maxduration = videoel[0].duration;
-						var startBuffer = videoel[0].buffered.start(0);
-						var endBuffer = videoel[0].buffered.end(0);
-						// var percentageBuffer = (100 * endBuffer) / maxduration;
-						var percentageBuffer = (endBuffer / maxduration) * 100;
+						maxduration = videoel[0].duration;
+						startBuffer = videoel[0].buffered.start(0);
+						endBuffer = videoel[0].buffered.end(0);
+						percentageBuffer = (endBuffer / maxduration) * 100;
 						$('.bufferBar').css('width', percentageBuffer+'%');
-
-						// if (endBuffer < maxduration) {
-						// 	// setTimeout(startBuffer(), 500);
-							// setTimeout(videoelBuffer(),500);
-						// }
 					}
 				};
 
@@ -591,7 +582,6 @@
 
 				function vfullscreen(videoelt) {
 					var elem = document.getElementById(videoelt);
-					// var elem = document.querySelector(videoelt);
 					if (elem.requestFullscreen) {
 						elem.requestFullscreen();
 					} else if (elem.msRequestFullscreen) {
@@ -672,7 +662,12 @@
 								vfilenamei = cfilenamei+'.mp4';
 
 								joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
-								// console.log(joinvideos);
+								console.log(' ');
+								console.log('joinvideos');
+								console.log(joinvideos);
+								console.log(' ');
+								console.log('joinvideosclk');
+								console.log(joinvideosclk);
 							}
 						}
 					}
@@ -696,7 +691,6 @@
 
 				function closeloadingthumbs() {
 					$('body').css('cursor', 'default');
-					$('#vnext').scrollTo('.active');
 
 					swal.close();
 				}
