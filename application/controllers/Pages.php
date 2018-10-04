@@ -164,7 +164,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function index_tv() {
+	public function index_tv_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$id_user = $this->session->userdata('id_user');
 			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
@@ -173,15 +173,15 @@ class Pages extends CI_Controller {
 
 			if ($id_group == 1 or $id_group == 5) {
 				$sessiondata = array(
-					'view' => 'index_tv',
+					'view' => 'index_tv_novo',
 					'last_page' => base_url('pages/index')
 				);
 				$this->session->set_userdata($sessiondata);
 
 				$data_navbar['vtype'] = 'tv';
-				$data_navbar['selected_page'] = 'home_tv';
+				$data_navbar['selected_page'] = 'home_tv_novo';
 				$data_navbar['selected_date'] = 'today';
-				$data['page'] = 'pages/home_tv';
+				$data['page'] = 'pages/home_tv_novo';
 				$data['selected_date'] = 'today';
 
 				$this->load->view('head');
@@ -550,7 +550,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function home_tv($selecteddate = null, $limit = null, $offset = null) {
+	public function home_tv_novo($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'home',
@@ -580,9 +580,9 @@ class Pages extends CI_Controller {
 			}
 
 			if ($limit == 0) {
-				$this->load->view('home_tvdev',$data);
+				$this->load->view('home_tvdev_novo',$data);
 			} else {
-				$this->load->view('home_tvload',$data);
+				$this->load->view('home_tvload_novo',$data);
 			}
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');

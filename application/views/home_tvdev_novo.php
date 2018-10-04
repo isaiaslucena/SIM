@@ -18,11 +18,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
 						<?php
-						$timezone = new DateTimeZone('UTC');
+						$timezone = new DateTimeZone('America/Sao_Paulo');
 						$sd = new Datetime($startdate, $timezone);
-						$newtimezone = new DateTimeZone('America/Sao_Paulo');
+						$ed = new Datetime($enddate, $timezone);
+						$newtimezone = new DateTimeZone('UTC');
 						$sd->setTimezone($newtimezone);
-						$sstartdate = $sd->format('d/m/Y H:i:s');
+						$ed->setTimezone($newtimezone);
+						$sstartdate = $sd->format('Y-m-d\TH:i:s');
+						$senddate = $ed->format('Y-m-d\TH:i:s');
+						$epochstartdate = $sd->format('U');
+						$epochenddate = $ed->format('U');
+
+						$epochstartdate1 = strtotime($startdate);
+						$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+						$epochenddate1 = strtotime($enddate);
+						$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
 
 						echo get_phrase('kewords_found').' '.get_phrase('since').' '.str_replace('T', ' ', $startdate); ?>
 
@@ -61,15 +71,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												<?php $keywords = $this->pages_model->keywords_client($client['id_client']);
 												$client_keywords = 0;
 												foreach ($keywords as $keyword) {
-													$data_discard['startdate'] = $startdate;
-													$data_discard['enddate'] = $enddate;
+													$data_discard['startdate'] = $epochstartdate1;
+													$data_discard['enddate'] = $epochenddate1;
 													$data_discard['id_client'] = $client['id_client'];
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
 
 													$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $keyword['keyword'], $data_discard['startdate'], $data_discard['enddate']);
+													$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
 													$keyword_foundc = $keyword_found->response->numFound;
-													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
+													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
 													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;
