@@ -7,7 +7,7 @@ function backToTop() {
 	}
 }
 
-function loadpn(flow, clbtn) {
+function loadpn(flow, clbtn, sc, type) {
 	loadp = $(clbtn);
 	loadp.children('i').css('display', 'inline-block');
 
@@ -18,19 +18,27 @@ function loadpn(flow, clbtn) {
 	if (flow == 'previous') {
 		position = 'after';
 		startdate = loadp.attr('data-startdate');
-	} else if (flow == 'next'){
+		slidep = 'slideDown';
+	} else if (flow == 'next') {
 		position = 'before';
 		startdate = loadp.attr('data-enddate');
+		slidep = 'slideUp';
 	}
 
-	$.get('<?php echo base_url('pages/get_radio/')?>'+idsource+'/'+encodeURI(startdate)+'/'+flow, function(data) {
+	if (sc == 'local') {
+		gurl = window.location.origin+'/pages/get_radio/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (sc == 'novo') {
+		gurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	}
+
+	$.get(gurl, function(data) {
 		loadp.children('i').css('display', 'none');
 		numfound = data.response.numFound;
 		if (numfound == 0) {
 			warnhtml =	'<div class="alert alert-warning" role="alert">'+
 										'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
 										'<span class="sr-only">Error:</span>'+
-										'<?php echo get_phrase('no_more_files'); ?>'+'!'+
+										'<?php echo get_phrase("no_more_files"); ?>'+'!'+
 									'</div>';
 			eval('$("#'+iddiv+'")'+'.'+position+'(warnhtml)');
 
@@ -43,13 +51,29 @@ function loadpn(flow, clbtn) {
 			dsource = data.response.docs[0].source_s;
 			dmuarr = data.response.docs[0].mediaurl_s.split('_');
 			dmedia = data.response.docs[0].mediaurl_s;
-			dmediaurl = window.location.origin.replace('sim.', 'radio.')+'/index.php/radio/getmp3?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
 			dstartdate = data.response.docs[0].starttime_dt;
 			denddate = data.response.docs[0].endtime_dt;
 			dcontent = data.response.docs[0].content_t[0];
 			dtimes = JSON.parse(data.response.docs[0].times_t[0]);
 
-			var sd = new Date(dstartdate.replace('Z',''));
+			if (sc == 'local' && type == 'audio') {
+				dmediaurl = window.location.origin.replace('sim.', 'radio.')+'/index.php/radio/getmp3?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
+				var sd = new Date(dstartdate.replace('Z',''));
+				var ed = new Date(denddate.replace('Z',''));
+			} else if (sc == 'novo' && type == 'audio') {
+				dmediaurl = dmedia;
+				var sd = new Date(dstartdate);
+				var ed = new Date(denddate);
+			} else if (sc == 'local' && type == 'video') {
+				var sd = new Date(dstartdate.replace('Z',''));
+				var ed = new Date(denddate.replace('Z',''));
+				dmediaurl = window.location.origin.replace('sim.', 'video.')+'/video/getvideo?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
+			} else if (sc == 'novo' && type == 'video') {
+				dmediaurl = dmedia;
+				var sd = new Date(dstartdate);
+				var ed = new Date(denddate);
+			}
+
 			var sday = sd.getDate();
 			var sday = ('0' + sday).slice(-2);
 			var smonth = (sd.getMonth() + 1);
@@ -63,7 +87,6 @@ function loadpn(flow, clbtn) {
 			var ssecond = ('0' + ssecond).slice(-2);
 			var dfstartdate = sday+'/'+smonth+'/'+syear+' '+shour+':'+sminute+':'+ssecond;
 
-			var ed = new Date(denddate.replace('Z',''));
 			var eday = ed.getDate();
 			var eday = ('0' + eday).slice(-2);
 			var emonth = (ed.getMonth() + 1);
@@ -76,6 +99,7 @@ function loadpn(flow, clbtn) {
 			var esecond = ed.getSeconds();
 			var esecond = ('0' + esecond).slice(-2);
 			var dfenddate = eday+'/'+emonth+'/'+eyear+' '+ehour+':'+eminute+':'+esecond;
+			var dfendtime = ehour+':'+eminute+':'+esecond;
 
 			newdivid += 1;
 			newdividn = iddiv+'-'+newdivid;
@@ -83,9 +107,13 @@ function loadpn(flow, clbtn) {
 			divclone = $('#'+iddiv).clone(true);
 
 			divclone.removeClass('panel-default');
+			// divclone.removeClass('collapse');
 			divclone.addClass('panel-info');
+			// divclone.addClass('collapse');
+			// divclone.addClass('in');
+			divclone.css('display', 'none');
 			divclone.attr('id', newdividn);
-			divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> ' + dsource + ' | ' + dfstartdate + ' - ' + dfenddate);
+			divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> '+dsource+' | '+dfstartdate+' - '+dfendtime);
 			divclone.children('.panel-heading').children('.labeltitle').children('.fa.fa-search.fa-fw').detach();
 			divclone.children('.panel-heading').children('.labeltitle').children('.sqtkwf').detach();
 			divclone.children('.panel-heading').children('.btn-toolbar').children('.loadprevious').attr('data-iddiv', newdividn);
@@ -99,22 +127,30 @@ function loadpn(flow, clbtn) {
 			divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-danger').addClass('disabled');
 			divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').attr('disabled', true);
 			divclone.children('.panel-heading').children('.btn-toolbar').children('.btn-primary').addClass('disabled');
-			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb') + '-' + newdivid);
+			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('id', iddiv.replace('div', 'cb')+'-'+newdivid);
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-iddoc', did);
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-startdate', dfstartdate);
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
-			divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
-			divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
-			divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
-			divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
-			divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
 
-			eval('$("#'+iddiv+'")'+'.'+position+'(divclone)');
+			if (type == 'audio') {
+				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
+				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
+				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
+				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
+			} else if (type == 'video') {
+				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
+				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').addClass('noscrolled');
+				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
+			}
 
-			addtimes('#'+iddiv.replace('div', 'ptext')+'-'+newdivid, dtimes);
+			eval('$("#'+iddiv+'").'+position+'(divclone);');
 
+			addtimes("#"+iddiv.replace("div", "ptext")+'-'+newdivid, dtimes);
 			scrolltokeyword();
+			$("#"+newdividn).slideDown("slow");
 		}
 	});
 };
@@ -123,7 +159,6 @@ function addtimes(idptext, times) {
 	$.each(times, function(index, val1) {
 		$.each(val1.words, function(index, val2) {
 			wbegin = parseFloat(String(val2.begin).slice(0, 5));
-			// console.log(wbegin);
 			wend = parseFloat(val2.end);
 			wdur = String(wend - wbegin).slice(0, 5);
 			wspan = '<span data-dur="'+wdur+'" data-begin="'+wbegin+'">'+val2.word+'</span> ';
@@ -132,7 +167,13 @@ function addtimes(idptext, times) {
 	});
 };
 
-function scrolltokeyword() {
+function scrolltokeyword(mtype) {
+	if (mtype == 'audio') {
+		imtype = 'paudio';
+	} else {
+		imtype = 'pvideo';
+	}
+
 	ptexts = $('.ptext.text-justify.noscrolled');
 	ptextsl = ptexts.length;
 	$.each(ptexts, function(index, val) {
@@ -171,19 +212,30 @@ function scrolltokeyword() {
 
 			fkeywfound = keywfound[0];
 			fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
-			$('#paudio'+idnumb)[0].currentTime = fkeywfoundtime;
+			$('#'+imtype+idnumb).on('loadedmetadata', function() {
+					// setTimeout(function() {
+					// 	setTimeout(function() {
+					// 		$('#'+imtype+idnumb)[0].pause();
+					// 		$('#'+imtype+idnumb)[0].mute = false;
+					// 	}, 300);
+					// 	$('#'+imtype+idnumb)[0].currentTime = fkeywfoundtime;
+					// 	$('#'+imtype+idnumb)[0].mute = true;
+					// 	$('#'+imtype+idnumb)[0].play();
+					// }, 200);
+					$('#'+imtype+idnumb)[0].currentTime = fkeywfoundtime;
+			});
 		}
 	});
 };
 
-function startread(idpaudio, idptext, starttime = 0, audiotime = false) {
-	if (audiotime) {
-		$('#'+idpaudio)[0].currentTime = starttime;
+function startread(idpmedia, idptext, starttime = 0, mediatime = false) {
+	if (mediatime) {
+		$('#'+idpmedia)[0].currentTime = starttime;
 	}
 
 	var args = {
 		text_element: document.getElementById(idptext),
-		audio_element: document.getElementById(idpaudio),
+		audio_element: document.getElementById(idpmedia),
 		autofocus_current_word: document.getElementById('autofocus-current-word').checked
 	};
 

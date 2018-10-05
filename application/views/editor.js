@@ -95,6 +95,13 @@
 													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/'+data.joinfilename;
 
 													var waitf = setTimeout(function() {
+														videoel.attr({
+															poster: srcposter,
+															src: videourlmjoin
+														});
+
+														videoel[0].pause();
+
 														$('.joinmodal').modal('hide');
 														progressjbar.animate(0);
 
@@ -121,12 +128,6 @@
 													} else {
 														var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 													}
-													videoel.attr({
-														poster: srcposter,
-														src: videourlmjoin
-													});
-
-													videoel[0].pause();
 
 													$('input').prop("checked", false);
 													$('.list-group').children().removeClass('active');

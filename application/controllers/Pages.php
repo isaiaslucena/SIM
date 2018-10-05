@@ -2772,29 +2772,30 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function rhkw_functions() {
+	public function hkw_functions() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
-				'last_page' => base_url('pages/index_radio_novo')
+				'last_page' => base_url('pages/index_radio')
 			);
 			$this->session->set_userdata($sessiondata);
-			$this->load->view('rhkw_functions.js');
+			$this->load->view('hkw_functions.js');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_novo'),'refresh');
+			redirect('login?rdt='.urlencode('pages/index_radio'),'refresh');
 		}
 	}
 
-	public function rhkw_listeners() {
+	public function hkw_listeners($jdata) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
 				'last_page' => base_url('pages/index_radio_novo')
 			);
 			$this->session->set_userdata($sessiondata);
-			$this->load->view('rhkw_listeners.js');
+			$data = json_decode(base64_decode($jdata));
+			$this->load->view('hkw_listeners.js', $data);
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_radio_novo'),'refresh');
+			redirect('login?rdt='.urlencode('pages/index'),'refresh');
 		}
 	}
 

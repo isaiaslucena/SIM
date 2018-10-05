@@ -32,21 +32,12 @@
 				$ed = new Datetime($found->endtime_dt);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$sendtime = $ed->format('H:i:s');
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 
 				$dtstarttime = substr_replace($found->starttime_dt, '00', 17, 2);
 				$dtendtime = substr_replace($found->endtime_dt, '00', 17, 2);
-
-				// $ssec = $sd->format('s');
-				// $sss = $sd->format('Y-m-d\TH:i:');
-				// $dtstarttime = $sss.($ssec - 5).'Z';
-				// $esec = $ed->format('s');
-				// $eee = $ed->format('Y-m-d\TH:i:');
-				// $dtendtime = $eee.($esec - 5).'Z';
-
-				// $dtstarttime = $found->starttime_dt;
-				// $dtendtime = $found->endtime_dt;
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
@@ -67,11 +58,11 @@
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
-							<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+							<?php echo $ssource." | ".$sstartdate." - ".$sendtime;?>
 						</label>
 
 						<div class="btn-toolbar pull-right">
-							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>"
+							<button class="btn btn-warning btn-xs loadprevious" data-sc="local" data-type="audio" data-iddiv="<?php echo 'div'.$divcount;?>"
 								data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $dtstarttime;?>"
 								data-enddate="<?php echo $dtendtime;?>" data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
@@ -79,14 +70,14 @@
 								$icount++; ?>
 							</button>
 
-							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>"
+							<button class="btn btn-warning btn-xs loadnext" data-sc="local" data-type="audio" data-iddiv="<?php echo 'div'.$divcount;?>"
 								data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $dtstarttime;?>"
 								data-enddate="<?php echo $dtendtime;?>" data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
 
-							<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>" data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
+							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="local" data-type="audio" data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>" data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
 								<i style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('discard');?>
 							</button>
@@ -163,51 +154,23 @@
 		</div>
 	</div>
 
+	<?php
+		$adata = array(
+			'keyword_selected' => $keyword_selected,
+			'start' => $start,
+			'rows' => $rows,
+			'ktfound' => $keyword_texts->response->numFound,
+			'id_keyword' => $id_keyword,
+			'id_client' => $id_client,
+			'client_selected' => $client_selected,
+			'startdate' => $startdate,
+			'enddate' => $enddate,
+			'mtype' => 'audio'
+		);
+
+		$jdata = base64_encode(json_encode($adata));
+	?>
+
 	<script src="<?php echo base_url('assets/readalong/readalong.js');?>"></script>
-	<script src="<?php echo base_url('pages/rhkw_functions');?>"></script>
-	<script type="text/javascript">
-		var newdivid = 0, cksource = 0, totalpanels, pstart, pcstart,
-		totalpanelsd = 0, joinfiles = false, filestojoin = [],
-		keyword = '<?php echo $keyword_selected; ?>';
-		keywordarr = keyword.split(" ");
-		keywcount = keywordarr.length - 1;
-		rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
-
-		$(document).ready(function() {
-			totalpanels = $('div.panel.panel-default.collapse.in').length;
-
-			scrolltokeyword();
-
-			pstart = <?php echo $start;?>;
-			pcstart = <?php echo $rows;?>;
-			pfound = <?php echo $keyword_texts->response->numFound;?>;
-			$(window).scroll(function() {
-				winscrollToph = ($(window).scrollTop() + $(window).height());
-				winheight = $(document).height();
-				if (winscrollToph == winheight) {
-					pstart = pstart + pcstart;
-					if (pstart <= pfound) {
-						$('#loadmore').animate({'opacity': 100}, 500);
-						$.post('get_radio_keyword_texts',
-							{
-								'id_keyword': <?php echo $id_keyword;?>,
-								'id_client': <?php echo $id_client;?>,
-								'keyword_selected': '<?php echo $keyword_selected;?>',
-								'client_selected': '<?php echo $client_selected;?>',
-								'startdate': '<?php echo $startdate;?>',
-								'enddate': '<?php echo $enddate;?>',
-								'start': pstart,
-								'rows': <?php echo $rows;?>
-							},
-							function(data, textStatus, xhr) {
-								$('#loadmore').before(data);
-								totalpanels = $('div.panel.panel-default.collapse.in').length;
-								scrolltokeyword();
-								$('#loadmore').animate({'opacity': 0}, 500);
-						});
-					}
-				}
-			});
-		});
-	</script>
-	<script src="<?php echo base_url('pages/rhkw_listeners');?>"></script>
+	<script src="<?php echo base_url('pages/hkw_functions');?>"></script>
+	<script src="<?php echo base_url('pages/hkw_listeners/').$jdata;?>"></script>

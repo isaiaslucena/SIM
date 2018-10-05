@@ -1,3 +1,49 @@
+var totalpanels, pstart, pcstart, mediatype = '<?php echo $mtype;?>',
+newdivid = 0, cksource = 0, totalpanelsd = 0,
+joinfiles = false, filestojoin = [];
+
+$(document).ready(function() {
+	keyword = '<?php echo $keyword_selected; ?>';
+	keywordarr = keyword.split(" ");
+	keywcount = keywordarr.length - 1;
+	rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
+
+	totalpanels = $('div.panel.panel-default.collapse.in').length;
+
+	scrolltokeyword(mediatype);
+
+	pstart = <?php echo $start;?>;
+	pcstart = <?php echo $rows;?>;
+	pfound = <?php echo $ktfound;?>;
+	$(window).scroll(function() {
+		winscrollToph = ($(window).scrollTop() + $(window).height());
+		winheight = $(document).height();
+		if (winscrollToph == winheight) {
+			pstart = pstart + pcstart;
+			if (pstart <= pfound) {
+				$('#loadmore').animate({'opacity': 100}, 600);
+				$.post('get_radio_keyword_texts',
+					{
+						'id_keyword': <?php echo $id_keyword;?>,
+						'id_client': <?php echo $id_client;?>,
+						'keyword_selected': '<?php echo $keyword_selected;?>',
+						'client_selected': '<?php echo $client_selected;?>',
+						'startdate': '<?php echo $startdate;?>',
+						'enddate': '<?php echo $enddate;?>',
+						'start': pstart,
+						'rows': <?php echo $rows;?>
+					},
+					function(data, textStatus, xhr) {
+						$('#loadmore').before(data);
+						totalpanels = $('div.panel.panel-default.collapse.in').length;
+						scrolltokeyword(mediatype);
+						$('#loadmore').animate({'opacity': 0}, 600);
+				});
+			}
+		}
+	});
+});
+
 if ($('#back-to-top').length) {
 	var scrollTrigger = 1000;
 	backToTop();
@@ -11,11 +57,15 @@ if ($('#back-to-top').length) {
 };
 
 $(document).on('click', '.loadprevious', function(event) {
-	loadpn('previous', $(this));
+	sc = $(this).attr('data-sc');
+	type = $(this).attr('data-type');
+	loadpn('previous', $(this), sc, type);
 });
 
 $(document).on('click', '.loadnext', function(event) {
-	loadpn('next', $(this));
+	sc = $(this).attr('data-sc');
+	type = $(this).attr('data-type');
+	loadpn('next', $(this), sc, type);
 });
 
 $(document).on('click', '.cbjoinfiles', function(event) {
@@ -106,6 +156,8 @@ $(document).on('click', '.discarddoc', function(event) {
 	iddiv = discardbtn.attr('data-iddiv');
 	idkeyword = discardbtn.attr('data-idkeyword');
 	idclient = discardbtn.attr('data-idclient');
+	sc = discardbtn.attr('data-sc');
+	type = discardbtn.attr('data-type');
 	iduser = '<?php echo $this->session->userdata("id_user");?>';
 
 	audioid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
@@ -132,39 +184,74 @@ $(document).on('click', '.discarddoc', function(event) {
 	);
 });
 
+$(document).on('click', '.tndiscarddoc', function(event) {
+	discardbtn = $(this);
+	discardbtn.children('i').css('display', 'inline-block');
+
+	iddoc = discardbtn.attr('data-iddoc');
+	iddiv = discardbtn.attr('data-iddiv');
+	idkeyword = discardbtn.attr('data-idkeyword');
+	idclient = discardbtn.attr('data-idclient');
+	iduser = '<?php echo $this->session->userdata("id_user");?>';
+
+	$.post('<?php echo base_url("pages/discard_doc_tv_novo")?>',
+		{
+			'iddoc': iddoc,
+			'idkeyword': idkeyword,
+			'idclient': idclient,
+			'iduser': iduser
+		},
+		function(data, textStatus, xhr) {
+			// console.log(data);
+			discardbtn.children('i').css('display', 'none');
+			$('#'+iddiv).removeClass('panel-default');
+			$('#'+iddiv).addClass('panel-danger');
+			totalpanelsd += 1;
+
+			if (totalpanelsd == totalpanels) {
+				console.log('no more panels!');
+				window.location = '<?php echo base_url("pages/index_tv")?>';
+			}
+		}
+	);
+});
+
 $(document).on('click', '.desativado', function() {
 	$(this).css('overflowY', 'auto');
 })
 
 $(document).on('click', 'span', function(){
 	ptextid = $(this).parent('.ptext').attr('id');
-	paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+	if (mediatype == 'audio') {
+		imedia = 'paudio';
+	} else {
+		imedia = 'pvideo';
+	}
+	pmedia = imedia+ptextid.replace(/[a-zA-Z]/g, '');
 	spantime = $(this).attr('data-begin');
 
-	startread(paudioid, ptextid, spantime, true);
-	$('#'+paudioid)[0].play();
+	startread(pmedia, ptextid, spantime, true);
+	$('#'+pmedia)[0].play();
 });
 
-$(document).on('click', 'audio', function(){
+$(document).on('click', 'audio, video', function(){
 	if ($(this)[0].paused) {
-		console.log('playing audio');
-
-		paudioid = $(this).attr('id');
-		ptextid = 'ptext'+paudioid.replace(/[a-zA-Z]/g, '');
+		idpmedia = $(this).attr('id');
+		ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
 
 		ptextspans = $('#'+ptextid).children('span.fkword');
-		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
+		if (ptextspans.length == 0) {
+			ptextspans = $('#'+ptextid).children('span');
+		}
 
-		startread(paudioid, ptextid, spantime, true);
-		// $('#'+paudioid)[0].play();
-	} else {
-		console.log('paused audio');
+		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
+		startread(idpmedia, ptextid, spantime, true);
 	}
 });
 
 // $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
 // 	ptextid = $(this).attr('id');
-// 	paudioid = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
+// 	pmedia = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');
 
-// 	$('#'+paudioid)[0].pause();
+// 	$('#'+pmedia)[0].pause();
 // });

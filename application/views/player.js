@@ -662,12 +662,12 @@
 								vfilenamei = cfilenamei+'.mp4';
 
 								joinfiles(cfileid, cfilevsourcei, vfilenamei, cvbtnid);
-								console.log(' ');
-								console.log('joinvideos');
-								console.log(joinvideos);
-								console.log(' ');
-								console.log('joinvideosclk');
-								console.log(joinvideosclk);
+								// console.log(' ');
+								// console.log('joinvideos');
+								// console.log(joinvideos);
+								// console.log(' ');
+								// console.log('joinvideosclk');
+								// console.log(joinvideosclk);
 							}
 						}
 					}
