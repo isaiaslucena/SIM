@@ -29,13 +29,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						$epochstartdate = $sd->format('U');
 						$epochenddate = $ed->format('U');
 
-						// $timezone1 = new DateTimeZone('America/Sao_Paulo');
-						// $sd1 = new Datetime($startdate, $timezone1);
-						// $ed1 = new Datetime($enddate, $timezone1);
-						// $sstartdate1 = $sd->format('Y-m-d\TH:i:s\Z');
-						// $senddate1 = $ed->format('Y-m-d\TH:i:s\Z');
-						// $epochstartdate1 = $sd->format('U');
-						// $epochenddate1 = $ed->format('U');
 						$epochstartdate1 = strtotime($startdate);
 						$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
 						$epochenddate1 = strtotime($enddate);

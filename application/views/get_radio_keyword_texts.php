@@ -16,6 +16,7 @@
 				$ed = new Datetime($found->endtime_dt);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$sendtime = $ed->format('H:i:s');
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 
@@ -38,7 +39,7 @@
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
-							<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+							<?php echo $ssource." | ".$sstartdate." - ".$sendtime;?>
 						</label>
 
 						<div class="btn-toolbar pull-right">

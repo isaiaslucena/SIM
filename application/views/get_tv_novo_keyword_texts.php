@@ -19,6 +19,7 @@
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$sendtime = $ed->format('H:i:s');
 				$dstartdate = $sd->format('Y-m-d_H-i-s');
 				$denddate = $ed->format('Y-m-d_H-i-s');
 
@@ -39,7 +40,7 @@
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
-							<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+							<?php echo $ssource." | ".$sstartdate." - ".$sendtime;?>
 						</label>
 
 						<div class="btn-toolbar pull-right">

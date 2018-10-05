@@ -975,7 +975,7 @@ class Pages extends CI_Controller {
 				'last_page' => base_url('pages/tv_home_keyword')
 			);
 			$this->session->set_userdata($sessiondata);
-			$data_navbar['selected_page'] = 'home_tv';
+			$data_navbar['selected_page'] = 'home_tv_novo';
 			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
 			$data_navbar['vtype'] = 'tv';
 
@@ -988,24 +988,40 @@ class Pages extends CI_Controller {
 			$data['start'] = 0;
 			$data['rows'] = 10;
 
-			$data_discard['startdate'] = $data['startdate'];
-			$data_discard['enddate'] = $data['enddate'];
+			$timezone = new DateTimeZone('America/Sao_Paulo');
+			$sd = new Datetime($data['startdate'], $timezone);
+			$ed = new Datetime($data['enddate'], $timezone);
+			$newtimezone = new DateTimeZone('UTC');
+			$sd->setTimezone($newtimezone);
+			$ed->setTimezone($newtimezone);
+			$sstartdate = $sd->format('Y-m-d\TH:i:s');
+			$senddate = $ed->format('Y-m-d\TH:i:s');
+			$epochstartdate = $sd->format('U');
+			$epochenddate = $ed->format('U');
+
+			$epochstartdate1 = strtotime($data['startdate']);
+			$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+			$epochenddate1 = strtotime($data['enddate']);
+			$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+			$data_discard['startdate'] = $epochstartdate1;
+			$data_discard['enddate'] = $epochenddate1;
 			$data_discard['id_client'] = $data['id_client'];
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-			// $data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate'], $data['start'], $data['rows']);
+			$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
 
 			$this->load->view('head');
 			$this->load->view('navbar', $data_navbar);
-			$this->load->view('tv_home_keyword', $data);
+			$this->load->view('tv_novo_home_keyword', $data);
 			$this->load->view('footer');
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv_novo'), 'refresh');
 		}
 	}
 
@@ -1023,14 +1039,30 @@ class Pages extends CI_Controller {
 		$data['start'] =$this->input->post('start');
 		$data['rows'] = $this->input->post('rows');
 
-		$data_discard['startdate'] = $data['startdate'];
-		$data_discard['enddate'] = $data['enddate'];
+		$timezone = new DateTimeZone('America/Sao_Paulo');
+		$sd = new Datetime($data['startdate'], $timezone);
+		$ed = new Datetime($data['enddate'], $timezone);
+		$newtimezone = new DateTimeZone('UTC');
+		$sd->setTimezone($newtimezone);
+		$ed->setTimezone($newtimezone);
+		$sstartdate = $sd->format('Y-m-d\TH:i:s');
+		$senddate = $ed->format('Y-m-d\TH:i:s');
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		$epochstartdate1 = strtotime($data['startdate']);
+		$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+		$epochenddate1 = strtotime($data['enddate']);
+		$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+		$data_discard['startdate'] = $epochstartdate1;
+		$data_discard['enddate'] = $epochenddate1;
 		$data_discard['id_client'] = $data['id_client'];
 		$data_discard['id_keyword'] = $data['id_keyword'];
 
 		$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-		// $data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate']);
-		$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $data['keyword_selected'], $data_discard['startdate'], $data_discard['enddate'], $data['start'], $data['rows']);
+		$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
+		$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
 
 		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 		$data['id_user'] = $this->session->userdata('id_user');
@@ -2718,12 +2750,12 @@ class Pages extends CI_Controller {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
-				'last_page' => base_url('pages/audioplayerfunctions')
+				'last_page' => base_url('pages/audio')
 			);
 			$this->session->set_userdata($sessiondata);
 			$this->load->view('audio-player-functions.js');
 		} else {
-			redirect('login?rdt='.urlencode('pages/audioplayerfunctions'),'refresh');
+			redirect('login?rdt='.urlencode('pages/audio'),'refresh');
 		}
 	}
 
@@ -2731,12 +2763,38 @@ class Pages extends CI_Controller {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
-				'last_page' => base_url('pages/audioplayerlisteners')
+				'last_page' => base_url('pages/audio')
 			);
 			$this->session->set_userdata($sessiondata);
 			$this->load->view('audio-player-listeners.js');
 		} else {
-			redirect('login?rdt='.urlencode('pages/audioplayerlisteners'),'refresh');
+			redirect('login?rdt='.urlencode('pages/audio'),'refresh');
+		}
+	}
+
+	public function rhkw_functions() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/index_radio_novo')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('rhkw_functions.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'),'refresh');
+		}
+	}
+
+	public function rhkw_listeners() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/index_radio_novo')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('rhkw_listeners.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_radio_novo'),'refresh');
 		}
 	}
 

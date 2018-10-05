@@ -21,20 +21,23 @@
 				$sid = $found->id_i;
 				$sidsource = $found->id_source_i;
 				$smediaurl = $found->mediaurl_s;
-				// $sstartdate = $found->starttime_dt;
-				// $senddate = $found->endtime_dt;
+				if (isset($found->times_t)) {
+					$stimes = json_decode(str_replace('\u0000', '', $found->times_t[0]), true);
+				}
 
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
-
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
+				$sendtime = $ed->format('H:i:s');
 				$dstartdate = $sd->format('Y-m-d_H-i-s');
 				$denddate = $ed->format('Y-m-d_H-i-s');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
@@ -53,7 +56,7 @@
 							<span class="sqtkwf" id="<?php echo 'qtkwfid'.$divcount;?>"></span>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<i class="fa fa-bullhorn fa-fw"></i>
-							<?php echo $ssource." | ".$sstartdate." - ".$senddate;?>
+							<?php echo $ssource." | ".$sstartdate." - ".$sendtime;?>
 						</label>
 
 						<div class="btn-toolbar pull-right">
@@ -102,7 +105,25 @@
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
 								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: hidden">
-									<?php echo (string)$stext; ?>
+									<?php
+									// echo (string)$stext;
+
+									if (isset($found->times_t)) {
+										foreach ($stimes as $stime) {
+											if (isset($stime['words'])) {
+												foreach ($stime['words'] as $word) {
+													$wbegin = (float)$word['begin'];
+													$wend = (float)$word['end'];
+													$wdur = substr((string)($wend - $wbegin), 0, 5);
+													$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+													echo $wspan;
+												}
+											}
+										}
+									} else {
+										echo (string)$stext;
+									}
+									?>
 								</p>
 							</div>
 						</div>
@@ -130,12 +151,12 @@
 			$.each(ptexts, function(index, val) {
 				cpid = $(val).attr('id');
 				scpid = '#'+cpid;
-				keywfound = '#'+cpid+' > .kwfound';
+				keywfound = '#'+cpid+' > .kword';
 				keyword = '<?php echo $keyword_selected; ?>';
 
 				pbodytext = $(val).text();
 				rgx = new RegExp ('\\b'+keyword+'\\b', 'ig');
-				pbodynewtext = pbodytext.replace(rgx, '<strong class="kwfound">'+keyword+'</strong>');
+				pbodynewtext = pbodytext.replace(rgx, '<span class="kword">'+keyword+'</span>');
 				$(scpid).html(null);
 				$(scpid).html(pbodynewtext);
 

@@ -900,13 +900,14 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_tv_novo_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
+	public function docs_byid_tv_novo_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
 		$path='/solr/knewin_tv/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
+		$idslinefull = null;
 		$idsline = null;
 		$cidsarr = count($ids_doc);
 		$ccount = 0;
@@ -922,12 +923,35 @@ class Pages_model extends CI_Model {
 			}
 		}
 
-		if (!is_null($idsline)) {
+		$idsline2 = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline2 .= "NOT ".$id_text;
+				}
+				else {
+					$idsline2 .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if ($idsline != null and $idsline2 != null) {
+			$idslinefull = $idsline.' OR '.$idsline2;
+		} else if ($idsline != null and $idsline2 == null) {
+			$idslinefull = $idsline;
+		} else if ($idsline == null and $idsline2 != null) {
+			$idslinefull = $idsline2;
+		}
+
+		if (!is_null($idslinefull)) {
 			$data = array(
 				'query' => 'content_t:"'.$keyword.'"',
 				'filter' => array(
 					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
-					'id_i:('.$idsline.')'
+					'id_i:('.$idslinefull.')'
 				),
 			);
 		} else {
@@ -985,7 +1009,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/mmstv_story/query?rows=500&wt=json&sort=startdate_l+asc';
+		$path='/solr/mmstv_story/query?rows=1&wt=json&sort=startdate_l+asc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$idsline = null;
@@ -1070,7 +1094,7 @@ class Pages_model extends CI_Model {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
-		$path='/solr/knewin_tv/query?rows=500&wt=json&sort=starttime_dt+desc';
+		$path='/solr/knewin_tv/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$data = array(
