@@ -1,4 +1,5 @@
-var totalpanels, pstart, pcstart, mediatype = '<?php echo $mtype;?>',
+var totalpanels, pstart, pcstart,
+scmedia = '<?php echo $msc;?>', mediatype = '<?php echo $mtype;?>',
 newdivid = 0, cksource = 0, totalpanelsd = 0,
 joinfiles = false, filestojoin = [];
 
@@ -12,6 +13,16 @@ $(document).ready(function() {
 
 	scrolltokeyword(mediatype);
 
+	if (scmedia == 'local' && mediatype == 'audio') {
+		posturl = 'get_radio_keyword_texts';
+	} else if (scmedia == 'novo' && mediatype == 'audio') {
+		posturl = 'get_radio_novo_keyword_texts';
+	} else if (scmedia == 'local' && mediatype == 'video') {
+		posturl = 'get_tv_keyword_texts';
+	} else if (scmedia == 'novo' && mediatype == 'video') {
+		posturl = 'get_tv_novo_keyword_texts';
+	}
+
 	pstart = <?php echo $start;?>;
 	pcstart = <?php echo $rows;?>;
 	pfound = <?php echo $ktfound;?>;
@@ -22,7 +33,7 @@ $(document).ready(function() {
 			pstart = pstart + pcstart;
 			if (pstart <= pfound) {
 				$('#loadmore').animate({'opacity': 100}, 600);
-				$.post('get_radio_keyword_texts',
+				$.post(posturl,
 					{
 						'id_keyword': <?php echo $id_keyword;?>,
 						'id_client': <?php echo $id_client;?>,
@@ -234,7 +245,7 @@ $(document).on('click', 'span', function(){
 	$('#'+pmedia)[0].play();
 });
 
-$(document).on('click', 'audio, video', function(){
+$(document).on('click', 'audio, video', function() {
 	if ($(this)[0].paused) {
 		idpmedia = $(this).attr('id');
 		ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
@@ -249,6 +260,26 @@ $(document).on('click', 'audio, video', function(){
 	}
 });
 
+
+$('window .pfaudio, .pfvideo').on('loadedmetadata', function() {
+	mediaid = $(this).attr('id');
+	fkwtime = $(this).attr('data-fkwtime');
+	// jmediael = $('#'+mediaid);
+	mediael = document.getElementById(mediaid);
+	// console.log(mediael);
+	if (mediael.readyState === 4){
+		// mediael[0].currentTime = fkwtime;
+		mediael.currentTime = fkwtime;
+		console.log(mediaid);
+		console.log(fkwtime);
+	} else {
+		setTimeout(function() {
+			console.log('not ready! waiting 1.5s...');
+			mediael.currentTime = fkwtime;
+		},1500)
+	}
+
+});
 // $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
 // 	ptextid = $(this).attr('id');
 // 	pmedia = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');

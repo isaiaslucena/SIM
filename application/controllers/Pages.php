@@ -37,7 +37,7 @@ class Pages extends CI_Controller {
 			$this->load->view('loading', $data);
 			$this->load->view('footer', $data_navbar);
 		} else {
-			redirect('login','refresh');
+			redirect(base_url('login'),'refresh');
 		}
 	}
 
@@ -2714,10 +2714,24 @@ class Pages extends CI_Controller {
 			);
 			$this->session->set_userdata($sessiondata);
 
-			// var_dump(current_url());
+			if ($this->input->method(TRUE) == 'POST') {
+				// $postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 
-			// $data['tvchannels'] = $this->pages_model->tvc();
-			$this->load->view('video');
+				$data['sid'] = $this->input->post('sid');
+				$data['mediaurl'] = $this->input->post('mediaurl');
+				$data['ssource'] = $this->input->post('ssource');
+				$data['sstartdate'] = $this->input->post('sstartdate');
+				$data['senddate'] = $this->input->post('senddate');
+				$data['id_keyword'] = $this->input->post('id_keyword');
+				$data['id_client'] = $this->input->post('id_client');
+				$data['client_selected'] = $this->input->post('client_selected');
+				// var_dump($data);
+
+				$this->load->view('video', $data);
+			} else {
+				$this->load->view('video');
+			}
+
 			$this->load->view('player.js');
 			$this->load->view('editor.js');
 			$this->load->view('video-footer');

@@ -39,7 +39,7 @@
 		<div class="container-fluid center-block text-center">
 			<div class="row">
 				<div class="col-md-10">
-					<h2 id="vtitle" class="center-block">Nenhuma Seleção</h2>
+					<h2 id="vtitle" class="center-block"><?php echo isset($ssource) ? $ssource : 'Nenhuma Seleção'; ?></h2>
 				</div>
 
 				<div class="col-md-2">
@@ -54,7 +54,12 @@
 						<!-- <div class="embed-responsive embed-responsive-16by9"> -->
 						<div>
 							<div id="vvideobtn" class='vbutton' style="display: none"></div>
-							<video id="vvideo" class="center-block" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>" width="854" height="480" preload="metadata" autoplay="false"></video>
+							<video id="vvideo" class="center-block"
+							<?php if (isset($mediaurl)) {
+								echo 'src="'.$mediaurl.'"';
+							}?>
+							poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
+							width="854" height="480" preload="metadata" autoplay="false"></video>
 							<img id="thvideo" class="center-block"  width="854" height="480" style="display: none;">
 						</div>
 				</div>
@@ -179,7 +184,6 @@
 					</div>
 					</p>
 				</div>
-
 			</div>
 		</div>
 

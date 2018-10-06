@@ -178,7 +178,6 @@ function scrolltokeyword(mtype) {
 	ptextsl = ptexts.length;
 	$.each(ptexts, function(index, val) {
 		cpid = $(val).attr('id');
-		scpid = '#'+cpid;
 
 		keywordxarr = [];
 		kc = 0;
@@ -203,7 +202,7 @@ function scrolltokeyword(mtype) {
 			});
 			$(val).html(pbodyhtml);
 
-			keywfound = $(scpid+' > .fkword');
+			keywfound = $('#'+cpid+' > .fkword');
 			qtkwf = keywfound.length;
 			idnumb = cpid.replace(/[a-zA-Z]/g, '');
 			$('#tkeyfound'+idnumb).text(qtkwf);
@@ -212,18 +211,10 @@ function scrolltokeyword(mtype) {
 
 			fkeywfound = keywfound[0];
 			fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
-			$('#'+imtype+idnumb).on('loadedmetadata', function() {
-					// setTimeout(function() {
-					// 	setTimeout(function() {
-					// 		$('#'+imtype+idnumb)[0].pause();
-					// 		$('#'+imtype+idnumb)[0].mute = false;
-					// 	}, 300);
-					// 	$('#'+imtype+idnumb)[0].currentTime = fkeywfoundtime;
-					// 	$('#'+imtype+idnumb)[0].mute = true;
-					// 	$('#'+imtype+idnumb)[0].play();
-					// }, 200);
-					$('#'+imtype+idnumb)[0].currentTime = fkeywfoundtime;
-			});
+			mediaid = String('#'+imtype+idnumb);
+			$(mediaid).attr('data-fkwtime', fkeywfoundtime);
+			$('#form'+idnumb).children('input[name="ifkwfound"]').val(fkeywfoundtime);
+			// console.log(mediaid);
 		}
 	});
 };

@@ -3,24 +3,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 	public function index($message = '') {
-		if ($message == 'fail'){
-			$data['message'] = get_phrase('user_password_incorrect');
-		}
-		else if ($message == 'signout'){
-			$data['message'] = get_phrase('see_you');
-		}
-		else if (!empty($message)){
-			redirect('login/index','refresh');
-			$data['message'] = null;
-		}
-		else {
-			$data['message'] = null;
-		}
+		if ($this->session->has_userdata('logged_in')) {
+			redirect(base_url(), 'refresh');
+		} else {
+			if ($message == 'fail'){
+				$data['message'] = get_phrase('user_password_incorrect');
+			}
+			else if ($message == 'signout'){
+				$data['message'] = get_phrase('see_you');
+			}
+			else if (!empty($message)){
+				redirect('login/index','refresh');
+				$data['message'] = null;
+			}
+			else {
+				$data['message'] = null;
+			}
 
-		$data['urlredirect'] = $this->input->get('rdt', TRUE);
+			$data['urlredirect'] = $this->input->get('rdt', TRUE);
 
-		$this->load->view('head');
-		$this->load->view('login', $data);
+			$this->load->view('head');
+			$this->load->view('login', $data);
+		}
 	}
 
 	public function mobile_index($message = '') {

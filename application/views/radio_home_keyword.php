@@ -165,6 +165,7 @@
 			'client_selected' => $client_selected,
 			'startdate' => $startdate,
 			'enddate' => $enddate,
+			'msc' => 'local',
 			'mtype' => 'audio'
 		);
 

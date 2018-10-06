@@ -7,13 +7,13 @@
 				$sid = $found->id_i;
 				$sidsource = $found->id_source_i;
 				$smediaurl = $found->mediaurl_s;
-				// $sstartdate = $found->starttime_dt;
-				// $senddate = $found->endtime_dt;
+				if (isset($found->times_t)) {
+					$stimes = json_decode(str_replace('\u0000', '', $found->times_t[0]), true);
+				}
 
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
-
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
@@ -22,6 +22,8 @@
 				$sendtime = $ed->format('H:i:s');
 				$dstartdate = $sd->format('Y-m-d_H-i-s');
 				$denddate = $ed->format('Y-m-d_H-i-s');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
 
 				$stext = $found->content_t[0];
 				$ssource = $found->source_s; ?>
@@ -67,8 +69,8 @@
 								<?php echo get_phrase('discard');?>
 							</button>
 
-							<button disabled type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right disabled"><?php echo get_phrase('edit');?></button>
-							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
+							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
+							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/video');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -83,12 +85,30 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video class="center-block img-thumbnail noloaded" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video id="<?php echo 'pvideo'.$divcount;?>" class="center-block img-thumbnail pfvideo" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext" style="height: 300px; overflow-y: hidden">
-									<?php echo (string)$stext; ?>
+								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+									<?php
+									// echo (string)$stext;
+
+									if (isset($found->times_t)) {
+										foreach ($stimes as $stime) {
+											if (isset($stime['words'])) {
+												foreach ($stime['words'] as $word) {
+													$wbegin = (float)$word['begin'];
+													$wend = (float)$word['end'];
+													$wdur = substr((string)($wend - $wbegin), 0, 5);
+													$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+													echo $wspan;
+												}
+											}
+										}
+									} else {
+										echo (string)$stext;
+									}
+									?>
 								</p>
 							</div>
 						</div>

@@ -161,6 +161,7 @@
 			'client_selected' => $client_selected,
 			'startdate' => $startdate,
 			'enddate' => $enddate,
+			'msc' => 'novo',
 			'mtype' => 'audio'
 		);
 

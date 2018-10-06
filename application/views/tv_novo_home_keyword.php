@@ -84,8 +84,8 @@
 								<?php echo get_phrase('discard');?>
 							</button>
 
-							<button disabled type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right disabled"><?php echo get_phrase('edit');?></button>
-							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo');?>" target="_blank" method="POST">
+							<button type="submit" form="<?php echo 'form'.$divcount;?>" class="btn btn-primary btn-xs pull-right"><?php echo get_phrase('edit');?></button>
+							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/video');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
@@ -94,6 +94,7 @@
 								<input type="hidden" name="id_keyword" value="<?php echo $id_keyword;?>">
 								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
 								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
+								<input type="hidden" name="ifkwfound" value="BLANK">
 							</form>
 						</div>
 
@@ -101,7 +102,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video id="<?php echo 'pvideo'.$divcount;?>" class="center-block img-thumbnail" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video id="<?php echo 'pvideo'.$divcount;?>" class="center-block img-thumbnail pfvideo" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
@@ -149,6 +150,7 @@
 			'client_selected' => $client_selected,
 			'startdate' => $startdate,
 			'enddate' => $enddate,
+			'msc' => 'novo',
 			'mtype' => 'video'
 		);
 
