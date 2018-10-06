@@ -1221,7 +1221,7 @@ class Pages extends CI_Controller {
 			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
 			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
 			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
-			$this->pages_model->discard_doc_tv_novo($data_discard);
+			print $this->pages_model->discard_doc_tv_novo($data_discard);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}

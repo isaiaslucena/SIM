@@ -1507,6 +1507,7 @@ class Pages_model extends CI_Model {
 			'id_user' => $data_discard['id_user']
 		);
 		$this->db->insert('discard_keyword_tv_knewin', $data_insert_discard);
+		return $this->db->insert_id();
 	}
 
 	public function client_vhtype($data) {

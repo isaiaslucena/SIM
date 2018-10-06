@@ -366,9 +366,5 @@ class Api extends CI_Controller {
 			// header("HTTP/1.1 403 Forbidden");
 		// }
 	}
-
-	public function transc() {
-		echo "teste";
-	}
 }
 ?>

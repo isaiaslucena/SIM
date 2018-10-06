@@ -46,9 +46,9 @@
 						<label class="pull-left disabled" style="font-weight: normal">
 							<input type="checkbox" class="cbjoinfiles disabled" id="<?php echo 'cb'.$divcount;?>"
 							 data-iddoc="<?php echo $sid?>" data-idsource="<?php echo $sidsource?>"
-							  data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>"
-							   data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>"
-							    data-idkeyword="<?php echo $id_keyword;?>" disabled> <?php echo get_phrase('join');?>
+							 data-source="<?php echo $ssource?>" data-startdate="<?php echo $sstartdate; ?>"
+							 data-enddate="<?php echo $senddate; ?>" data-idclient="<?php echo $id_client;?>"
+							 data-idkeyword="<?php echo $id_keyword;?>" disabled> <?php echo get_phrase('join');?>
 						</label>
 
 						<label class="labeltitle">
@@ -61,25 +61,28 @@
 						</label>
 
 						<div class="btn-toolbar pull-right">
-							<button class="btn btn-warning btn-xs loadprevious" data-iddiv="<?php echo 'div'.$divcount;?>"
-							 data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
-							  data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
+							<button class="btn btn-warning btn-xs loadprevious" data-sc="novo" data-type="video"
+							 data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
+							 data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
+							 data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('previous');
 								$icount++; ?>
 							</button>
 
-							<button class="btn btn-warning btn-xs loadnext" data-iddiv="<?php echo 'div'.$divcount;?>"
-							 data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
-							  data-enddate="<?php echo $found->endtime_dt?>" data-position="next">
+							<button class="btn btn-warning btn-xs loadnext" data-sc="novo" data-type="video"
+							 data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
+							 data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
+							 data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
 
-							<button type="button" class="btn btn-danger btn-xs discarddoc" data-iddiv="<?php echo 'div'.$divcount;?>"
+							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="novo" data-type="video"
+							 data-iddiv="<?php echo 'div'.$divcount;?>"
 							 data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>"
-							  data-idclient="<?php echo $id_client;?>" data-toggle="collapse"
-							   data-target="<?php echo '#div'.$divcount;?>">
+							 data-idclient="<?php echo $id_client;?>"
+							 data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
 								<i style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('discard');?>
 							</button>
@@ -97,8 +100,8 @@
 								<input type="hidden" name="ifkwfound" value="BLANK">
 							</form>
 						</div>
-
 					</div>
+
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
@@ -108,23 +111,21 @@
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
 								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
 									<?php
-									// echo (string)$stext;
-
-									if (isset($found->times_t)) {
-										foreach ($stimes as $stime) {
-											if (isset($stime['words'])) {
-												foreach ($stime['words'] as $word) {
-													$wbegin = (float)$word['begin'];
-													$wend = (float)$word['end'];
-													$wdur = substr((string)($wend - $wbegin), 0, 5);
-													$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
-													echo $wspan;
+										if (isset($found->times_t)) {
+											foreach ($stimes as $stime) {
+												if (isset($stime['words'])) {
+													foreach ($stime['words'] as $word) {
+														$wbegin = (float)$word['begin'];
+														$wend = (float)$word['end'];
+														$wdur = substr((string)($wend - $wbegin), 0, 5);
+														$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+														echo $wspan;
+													}
 												}
 											}
+										} else {
+											echo (string)$stext;
 										}
-									} else {
-										echo (string)$stext;
-									}
 									?>
 								</p>
 							</div>
@@ -136,6 +137,19 @@
 			<span class="text-muted center-block text-center" id="loadmore" style="opacity: 0;">
 				<i class="fa fa-refresh fa-spin"></i> Carregando...
 			</span>
+		</div>
+
+		<div class="well well-sm" id="joindiv">
+			<span id="wsource" class="center-block text-center"></span>
+			<div class="list-group" style="max-height:  150px ; overflow: auto;">
+				<small id="fileslist"></small>
+			</div>
+			<button id="joinbtn" class="btn btn-default btn-block btn-sm disabled" disabled><?php echo get_phrase('join')?></button>
+			<form id="joinform" style="all: unset;" action="<?php echo base_url('pages/join_tv_novo');?>" target="_blank" method="POST">
+				<input type="hidden" id="jids_doc" name="ids_doc">
+				<input type="hidden" id="jid_client" name="id_client">
+				<input type="hidden" id="jid_keyword" name="id_keyword">
+			</form>
 		</div>
 	</div>
 

@@ -14,13 +14,13 @@ $(document).ready(function() {
 	scrolltokeyword(mediatype);
 
 	if (scmedia == 'local' && mediatype == 'audio') {
-		posturl = 'get_radio_keyword_texts';
+		posturl = window.location.origin+'/pages/get_radio_keyword_texts';
 	} else if (scmedia == 'novo' && mediatype == 'audio') {
-		posturl = 'get_radio_novo_keyword_texts';
+		posturl = window.location.origin+'/pages/get_radio_novo_keyword_texts';
 	} else if (scmedia == 'local' && mediatype == 'video') {
-		posturl = 'get_tv_keyword_texts';
+		posturl = window.location.origin+'/pages/get_tv_keyword_texts';
 	} else if (scmedia == 'novo' && mediatype == 'video') {
-		posturl = 'get_tv_novo_keyword_texts';
+		posturl = window.location.origin+'/pages/get_tv_novo_keyword_texts';
 	}
 
 	pstart = <?php echo $start;?>;
@@ -111,7 +111,7 @@ $(document).on('click', '.cbjoinfiles', function(event) {
 				joinfiles = true;
 			}
 		} else {
-			swal("Atenção!", "A rádios devem ser iguais!", "error");
+			swal("Atenção!", "Os veículos devem ser iguais!", "error");
 			$(this).prop("checked", false);
 			$('#acb'+ciddoc).detach();
 			cksource = 0;
@@ -167,14 +167,29 @@ $(document).on('click', '.discarddoc', function(event) {
 	iddiv = discardbtn.attr('data-iddiv');
 	idkeyword = discardbtn.attr('data-idkeyword');
 	idclient = discardbtn.attr('data-idclient');
-	sc = discardbtn.attr('data-sc');
-	type = discardbtn.attr('data-type');
+	mediasc = discardbtn.attr('data-sc');
+	mediatype = discardbtn.attr('data-type');
 	iduser = '<?php echo $this->session->userdata("id_user");?>';
 
-	audioid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
-	$('#'+audioid)[0].pause();
+	if (mediatype == 'audio') {
+		mediaid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
+		$('#'+mediaid)[0].pause();
+	} else if (mediatype == 'video') {
+		mediaid = 'pvideo'+iddiv.replace(/[a-zA-Z]/g, '');
+		$('#'+mediaid)[0].pause();
+	}
 
-	$.post('<?php echo base_url("pages/discard_doc_radio")?>',
+	if (mediasc == 'local' && mediatype == 'audio') {
+		posturl = window.location.origin+'/pages/discard_doc_radio';
+	} else if (mediasc == 'novo' && mediatype == 'audio') {
+		posturl = window.location.origin+'/pages/discard_doc_radio_novo';
+	} else if (mediasc == 'local' && mediatype == 'video') {
+		posturl = window.location.origin+'/pages/discard_doc_tv';
+	} else if (mediasc == 'novo' && mediatype == 'video') {
+		posturl = window.location.origin+'/pages/discard_doc_tv_novo';
+	}
+
+	$.post(posturl,
 		{
 			'iddoc': iddoc,
 			'idkeyword': idkeyword,
@@ -182,6 +197,7 @@ $(document).on('click', '.discarddoc', function(event) {
 			'iduser': iduser
 		},
 		function(data, textStatus, xhr) {
+			console.log(data);
 			discardbtn.children('i').css('display', 'none');
 			$('#'+iddiv).removeClass('panel-default');
 			$('#'+iddiv).addClass('panel-danger');
@@ -190,38 +206,6 @@ $(document).on('click', '.discarddoc', function(event) {
 			if (totalpanelsd == totalpanels) {
 				console.log('no more panels!');
 				window.location = '<?php echo base_url("pages/index_radio")?>';
-			}
-		}
-	);
-});
-
-$(document).on('click', '.tndiscarddoc', function(event) {
-	discardbtn = $(this);
-	discardbtn.children('i').css('display', 'inline-block');
-
-	iddoc = discardbtn.attr('data-iddoc');
-	iddiv = discardbtn.attr('data-iddiv');
-	idkeyword = discardbtn.attr('data-idkeyword');
-	idclient = discardbtn.attr('data-idclient');
-	iduser = '<?php echo $this->session->userdata("id_user");?>';
-
-	$.post('<?php echo base_url("pages/discard_doc_tv_novo")?>',
-		{
-			'iddoc': iddoc,
-			'idkeyword': idkeyword,
-			'idclient': idclient,
-			'iduser': iduser
-		},
-		function(data, textStatus, xhr) {
-			// console.log(data);
-			discardbtn.children('i').css('display', 'none');
-			$('#'+iddiv).removeClass('panel-default');
-			$('#'+iddiv).addClass('panel-danger');
-			totalpanelsd += 1;
-
-			if (totalpanelsd == totalpanels) {
-				console.log('no more panels!');
-				window.location = '<?php echo base_url("pages/index_tv")?>';
 			}
 		}
 	);
