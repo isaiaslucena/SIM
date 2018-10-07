@@ -1,59 +1,61 @@
 var totalpanels, pstart, pcstart,
 scmedia = '<?php echo $msc;?>', mediatype = '<?php echo $mtype;?>',
+pagesrc = '<?php echo isset($pagesrc) ? $pagesrc : "home_kw";?>',
 newdivid = 0, cksource = 0, totalpanelsd = 0,
 joinfiles = false, filestojoin = [];
+keyword = '<?php echo $keyword_selected; ?>';
+keywordarr = keyword.split(" ");
+keywcount = keywordarr.length - 1;
+rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
 
+<?php if (!isset($pagesrc)) { ?>
 $(document).ready(function() {
-	keyword = '<?php echo $keyword_selected; ?>';
-	keywordarr = keyword.split(" ");
-	keywcount = keywordarr.length - 1;
-	rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
+		totalpanels = $('div.panel.panel-default.collapse.in').length;
 
-	totalpanels = $('div.panel.panel-default.collapse.in').length;
+		scrolltokeyword(mediatype);
 
-	scrolltokeyword(mediatype);
-
-	if (scmedia == 'local' && mediatype == 'audio') {
-		posturl = window.location.origin+'/pages/get_radio_keyword_texts';
-	} else if (scmedia == 'novo' && mediatype == 'audio') {
-		posturl = window.location.origin+'/pages/get_radio_novo_keyword_texts';
-	} else if (scmedia == 'local' && mediatype == 'video') {
-		posturl = window.location.origin+'/pages/get_tv_keyword_texts';
-	} else if (scmedia == 'novo' && mediatype == 'video') {
-		posturl = window.location.origin+'/pages/get_tv_novo_keyword_texts';
-	}
-
-	pstart = <?php echo $start;?>;
-	pcstart = <?php echo $rows;?>;
-	pfound = <?php echo $ktfound;?>;
-	$(window).scroll(function() {
-		winscrollToph = ($(window).scrollTop() + $(window).height());
-		winheight = $(document).height();
-		if (winscrollToph == winheight) {
-			pstart = pstart + pcstart;
-			if (pstart <= pfound) {
-				$('#loadmore').animate({'opacity': 100}, 600);
-				$.post(posturl,
-					{
-						'id_keyword': <?php echo $id_keyword;?>,
-						'id_client': <?php echo $id_client;?>,
-						'keyword_selected': '<?php echo $keyword_selected;?>',
-						'client_selected': '<?php echo $client_selected;?>',
-						'startdate': '<?php echo $startdate;?>',
-						'enddate': '<?php echo $enddate;?>',
-						'start': pstart,
-						'rows': <?php echo $rows;?>
-					},
-					function(data, textStatus, xhr) {
-						$('#loadmore').before(data);
-						totalpanels = $('div.panel.panel-default.collapse.in').length;
-						scrolltokeyword(mediatype);
-						$('#loadmore').animate({'opacity': 0}, 600);
-				});
-			}
+		if (scmedia == 'local' && mediatype == 'audio') {
+			posturl = window.location.origin+'/pages/get_radio_keyword_texts';
+		} else if (scmedia == 'novo' && mediatype == 'audio') {
+			posturl = window.location.origin+'/pages/get_radio_novo_keyword_texts';
+		} else if (scmedia == 'local' && mediatype == 'video') {
+			posturl = window.location.origin+'/pages/get_tv_keyword_texts';
+		} else if (scmedia == 'novo' && mediatype == 'video') {
+			posturl = window.location.origin+'/pages/get_tv_novo_keyword_texts';
 		}
-	});
+
+		pstart = <?php echo $start;?>;
+		pcstart = <?php echo $rows;?>;
+		pfound = <?php echo $ktfound;?>;
+		$(window).scroll(function() {
+			winscrollToph = ($(window).scrollTop() + $(window).height());
+			winheight = $(document).height();
+			if (winscrollToph == winheight) {
+				pstart = pstart + pcstart;
+				if (pstart < pfound) {
+					$('#loadmore').animate({'opacity': 100}, 600);
+					$.post(posturl,
+						{
+							'id_keyword': <?php echo $id_keyword;?>,
+							'id_client': <?php echo $id_client;?>,
+							'keyword_selected': '<?php echo $keyword_selected;?>',
+							'client_selected': '<?php echo $client_selected;?>',
+							'startdate': '<?php echo $startdate;?>',
+							'enddate': '<?php echo $enddate;?>',
+							'start': pstart,
+							'rows': <?php echo $rows;?>
+						},
+						function(data, textStatus, xhr) {
+							$('#loadmore').before(data);
+							totalpanels = $('div.panel.panel-default.collapse.in').length;
+							scrolltokeyword(mediatype);
+							$('#loadmore').animate({'opacity': 0}, 600);
+					});
+				}
+			}
+		});
 });
+<?php } ?>
 
 if ($('#back-to-top').length) {
 	var scrollTrigger = 1000;
@@ -229,6 +231,7 @@ $(document).on('click', 'span', function(){
 	$('#'+pmedia)[0].play();
 });
 
+<?php if (!isset($pagesrc)) { ?>
 $(document).on('click', 'audio, video', function() {
 	if ($(this)[0].paused) {
 		idpmedia = $(this).attr('id');
@@ -244,8 +247,7 @@ $(document).on('click', 'audio, video', function() {
 	}
 });
 
-
-$('window .pfaudio, .pfvideo').on('loadedmetadata', function() {
+$('audio, video').on('loadedmetadata', function() {
 	mediaid = $(this).attr('id');
 	fkwtime = $(this).attr('data-fkwtime');
 	// jmediael = $('#'+mediaid);
@@ -254,16 +256,17 @@ $('window .pfaudio, .pfvideo').on('loadedmetadata', function() {
 	if (mediael.readyState === 4){
 		// mediael[0].currentTime = fkwtime;
 		mediael.currentTime = fkwtime;
-		console.log(mediaid);
-		console.log(fkwtime);
+		// console.log(mediaid);
+		// console.log(fkwtime);
 	} else {
 		setTimeout(function() {
-			console.log('not ready! waiting 1.5s...');
+			// console.log('not ready! waiting 1.5s...');
 			mediael.currentTime = fkwtime;
-		},1500)
+		},500)
 	}
-
 });
+<?php } ?>
+
 // $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
 // 	ptextid = $(this).attr('id');
 // 	pmedia = 'paudio'+ptextid.replace(/[a-zA-Z]/g, '');

@@ -39,7 +39,7 @@
 		<div class="container-fluid center-block text-center">
 			<div class="row">
 				<div class="col-md-10">
-					<h2 id="vtitle" class="center-block"><?php echo isset($ssource) ? $ssource : 'Nenhuma Seleção'; ?></h2>
+					<h2 id="vtitle" class="center-block"><?php echo isset($ssource) ? $ssource : 'Nenhuma Seleção';?></h2>
 				</div>
 
 				<div class="col-md-2">
@@ -51,7 +51,6 @@
 
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-						<!-- <div class="embed-responsive embed-responsive-16by9"> -->
 						<div>
 							<div id="vvideobtn" class='vbutton' style="display: none"></div>
 							<video id="vvideo" class="center-block"
@@ -59,7 +58,7 @@
 								echo 'src="'.$mediaurl.'"';
 							}?>
 							poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
-							width="854" height="480" preload="metadata" autoplay="false"></video>
+							width="854" height="480" preload="metadata"></video>
 							<img id="thvideo" class="center-block"  width="854" height="480" style="display: none;">
 						</div>
 				</div>
@@ -74,6 +73,33 @@
 							} ?>
 						<?php } ?>
 					</div>
+
+					<p id="vptext" class="text-justify ptext noscrolled" style="overflow-y: auto; max-height: 480px; display: none;">
+						<?php
+						if (isset($sid)) {
+							$found = $this->pages_model->tv_novo_text_byid_solr($sid);
+							// var_dump($found);
+							if (isset($found->response->docs[0]->times_t)) {
+								$times = $found->response->docs[0]->times_t[0];
+								// var_dump($times);
+								$stimes = json_decode($times, TRUE);
+								foreach ($stimes as $stime) {
+									if (isset($stime['words'])) {
+										foreach ($stime['words'] as $word) {
+											$wbegin = (float)$word['begin'];
+											$wend = (float)$word['end'];
+											$wdur = substr((string)($wend - $wbegin), 0, 5);
+											$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+											echo $wspan;
+										}
+									}
+								}
+							} else {
+								echo (string)$found->response->docs[0]->content_t[0];
+							}
+						}
+						?>
+					</p>
 				</div>
 			</div>
 
@@ -307,16 +333,18 @@
 		</div>
 
 		<script type="text/javascript">
-			$(document).ready(function() {
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, srcposter;
 				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
-				joincropvideos = false, nightmode = false, todaydatesel = false;
+				joincropvideos = false, nightmode = false, todaydatesel = false,
+				frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
 				var cropstartss = null, cropendss = null;
 				var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
 				var fileseq = 0;
+
+			$(document).ready(function() {
 				var tvch = $('#selchannels');
 				var tvdate = $('#seldate');
 				var videoel = $('#vvideo');
@@ -334,6 +362,87 @@
 				var vtooltiptime = $('.tooltiptime');
 				var timerslider = $('#timeslider');
 
+				var progresscbar = new ProgressBar.Circle('#progresscrop', {
+					color: '#aaa',
+					// This has to be the same size as the maximum width to
+					// prevent clipping
+					strokeWidth: 4,
+					trailWidth: 1,
+					easing: 'easeInOut',
+					duration: 200,
+					text: { autoStyleContainer: false },
+					from: { color: '#aaa', width: 2 },
+					to: { color: '#333', width: 4 },
+					// Set default step function for all animate calls
+					step: function(state, circle) {
+						circle.path.setAttribute('stroke', state.color);
+						circle.path.setAttribute('stroke-width', state.width);
+
+						var value = Math.round(circle.value() * 100);
+						if (value === 0) {
+							circle.setText('0%');
+						} else {
+							circle.setText(value+'%');
+						}
+					}
+				});
+				progresscbar.text.style.fontFamily = 'Helvetica';
+				progresscbar.text.style.fontSize = '4rem';
+
+				var progressjbar = new ProgressBar.Circle('#progressjoin', {
+					color: '#aaa',
+					// This has to be the same size as the maximum width to
+					// prevent clipping
+					strokeWidth: 4,
+					trailWidth: 1,
+					easing: 'easeInOut',
+					duration: 200,
+					text: { autoStyleContainer: false },
+					from: { color: '#aaa', width: 2 },
+					to: { color: '#333', width: 4 },
+					// Set default step function for all animate calls
+					step: function(state, circle) {
+						circle.path.setAttribute('stroke', state.color);
+						circle.path.setAttribute('stroke-width', state.width);
+
+						var value = Math.round(circle.value() * 100);
+						if (value === 0) {
+							circle.setText('0%');
+						} else {
+							circle.setText(value+'%');
+						}
+					}
+				});
+				progressjbar.text.style.fontFamily = 'Helvetica';
+				progressjbar.text.style.fontSize = '4rem';
+
+				var progressjcbar = new ProgressBar.Circle('#progressjcrop', {
+					color: '#aaa',
+					// This has to be the same size as the maximum width to
+					// prevent clipping
+					strokeWidth: 4,
+					trailWidth: 1,
+					easing: 'easeInOut',
+					duration: 200,
+					text: { autoStyleContainer: false },
+					from: { color: '#aaa', width: 2 },
+					to: { color: '#333', width: 4 },
+					// Set default step function for all animate calls
+					step: function(state, circle) {
+						circle.path.setAttribute('stroke', state.color);
+						circle.path.setAttribute('stroke-width', state.width);
+
+						var value = Math.round(circle.value() * 100);
+						if (value === 0) {
+							circle.setText('0%');
+						} else {
+							circle.setText(value+'%');
+						}
+					}
+				});
+				progressjcbar.text.style.fontFamily = 'Helvetica';
+				progressjcbar.text.style.fontSize = '4rem';
+
 				var d = new Date();
 				var day = d.getDate();
 				var day = ('0' + day).slice(-2);
@@ -349,11 +458,6 @@
 				// imgworker.onmessage = function(event) {
 					// console.log(event.data);
 				// }
-
-				getchannels();
-				var tvalerts = setInterval(function() {
-					getchannels();
-				}, 60000);
 
 				function getchannels() {
 					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>'},
@@ -489,127 +593,6 @@
 					}
 					return chlname;
 				};
-
-				videoel.bind('contextmenu', function() { return false; });
-				videomel.bind('contextmenu', function() { return false; });
-
-				$('#btnnight').click(function(event) {
-					if (nightmode) {
-						$('body').css('background-color', '#F6F6F6');
-						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#000000');
-						$('.list-group-item').css('background-color','#FFFFFF');
-						$('.list-group-item .active').css('background-color','##337ab7');
-						$('span').css('color', '#000000');
-						$('label').css('color', '#000000');
-						nightmode = false;
-					} else {
-						$('body').css('background-color', '#222222');
-						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#EEEEEE');
-						$('.list-group-item').css('background-color','#272727');
-						$('.list-group-item .active').css('background-color','##337ab7');
-						$('span').css('color', '#EEEEEE');
-						$('label').css('color', '#EEEEEE');
-						nightmode = true;
-					}
-				});
-
-				$('.input-group.date').datepicker({
-					todayBtn: "linked",
-					language: "pt-BR",
-					format: "dd/mm/yyyy",
-					keyboardNavigation: false,
-					todayHighlight: true,
-					autoclose: true
-				});
-
-				$('.input-group.date').on("changeDate", function() {
-					selecteddate = $('.input-group.date').datepicker('getDate');
-					sday = selecteddate.getDate();
-					sday = ('0' + sday).slice(-2);
-					smonth = (selecteddate.getMonth() + 1);
-					smonth = ('0' + smonth).slice(-2);
-					syear = selecteddate.getFullYear();
-					selectedformdate = syear+'-'+smonth+'-'+sday;
-
-					seldatei = $('#seldate').val();
-					seldateiarr = seldatei.split("/");
-					selday = seldateiarr[0];
-					selmonth = seldateiarr[1];
-					selyear = seldateiarr[2];
-					selformdate = selyear+'-'+selmonth+'-'+selday;
-
-					selectchannel(selformdate);
-				});
-
-				$('#selchannels').change(function(event) {
-					selvalue = event.target.value;
-					selvalarr1 = selvalue.split(':');
-					selvalarr2 = selvalarr1[1].split('_');
-					vsource = selvalarr1[0];
-					channel = selvalarr2[0];
-					state = selvalarr2[1];
-
-					getlistchannel(vsource, selformdate, channel, state);
-
-					datetoday = new Date();
-					tday = datetoday.getDate();
-					tday = ('0'+tday).slice(-2);
-					tmonth = (datetoday.getMonth() + 1);
-					tmonth = ('0'+tmonth).slice(-2);
-					tnmonharr = datetoday.toString().split(' ');
-					tnmonth = tnmonharr[1];
-					tyear = datetoday.getFullYear();
-					thour = datetoday.getHours();
-					thour = ('0'+thour).slice(-2);
-					tminutes = datetoday.getMinutes();
-					tminutes = ('0'+tminutes).slice(-2);
-					tseconds = datetoday.getSeconds();
-					tseconds = ('0'+tseconds).slice(-2);
-					datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
-					datasel = new Date(selformdate+'T00:00:00');
-
-					if (datasel < datetodayf) {
-						todaydatesel = false;
-					} else {
-						todaydatesel = true;
-					}
-
-					// console.log(todaydatesel);
-					if (todaydatesel) {
-						$(function() {
-							function refreshlist(rvsource, rdate, rchannel, rstate) {
-								$.post('proxy',
-									{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + rvsource + '/' + rdate + '/' + rchannel + '/' + rstate},
-									function(data, textStatus, xhr) {
-										playlistv = $('.list-group').children();
-										lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
-										lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
-										lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
-										lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
-										lastvarraytm = data[data.length-1].replace(".mp4","");
-
-										if (lastvplaylist != lastvarraytm) {
-											$('#'+lastvplaylistid).parent().removeClass('disabled');
-											$('#'+lastvplaylistid).css('cursor', 'pointer');
-											html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
-																'<div class="checkbox checkbox-warning pull-left">'+
-																	'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
-																	'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
-																'</div>'+
-																'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
-															'</a>';
-											nextvideo.append(html);
-										}
-									}
-								);
-							}
-
-							setInterval(function() {
-								refreshlist(vsource, selformdate, channel, state);
-							}, 30000);
-						});
-					}
-				});
 
 				function selecteddate(seldddate) {
 					$.post('proxy',
@@ -756,37 +739,7 @@
 								lastvarray = data[data.length-1].replace(".mp4","");
 							}
 
-							$('.vbutton').css('display', 'none');
-							$('.vbutton').removeClass('paused');
-
-							$('#btnplay').removeClass('disabled');
-							$('#btnstop').removeClass('disabled');
-							$('#btnrn').removeClass('disabled');
-							$('#btnrs').removeClass('disabled');
-							$('#btnrf').removeClass('disabled');
-							$('#btncstart').removeClass('disabled');
-							$('#btncend').removeClass('disabled');
-							$('#btnvol').removeClass('disabled');
-							$('#btnvolm').removeClass('disabled');
-							$('#btnvolp').removeClass('disabled');
-							$('#btnfull').removeClass('disabled');
-
-							$('#btnplay').removeAttr('disabled');
-							$('#btnstop').removeAttr('disabled');
-							$('#btnrn').removeAttr('disabled');
-							$('#btnrs').removeAttr('disabled');
-							$('#btnrf').removeAttr('disabled');
-							$('#btncstart').removeAttr('disabled');
-							$('#btncend').removeAttr('disabled');
-							$('#btnvol').removeAttr('disabled');
-							$('#btnvolm').removeAttr('disabled');
-							$('#btnvolp').removeAttr('disabled');
-							$('#btnfull').removeAttr('disabled');
-							$('#checkaplay').bootstrapToggle('enable');
-
-							$('#btntran').removeClass('disabled');
-							$('#btntran').removeAttr('disabled');
-							$('#checkjoincrop').bootstrapToggle('enable');
+							enablebtns();
 
 							if (todaydatesel === false) {
 								// console.log('Data selecionada menor que hoje');
@@ -915,10 +868,252 @@
 					);
 				};
 
+				function enablebtns() {
+					$('.vbutton').css('display', 'none');
+					$('.vbutton').removeClass('paused');
+
+					$('#btnplay').removeClass('disabled');
+					$('#btnstop').removeClass('disabled');
+					$('#btnrn').removeClass('disabled');
+					$('#btnrs').removeClass('disabled');
+					$('#btnrf').removeClass('disabled');
+					$('#btncstart').removeClass('disabled');
+					$('#btncend').removeClass('disabled');
+					$('#btnvol').removeClass('disabled');
+					$('#btnvolm').removeClass('disabled');
+					$('#btnvolp').removeClass('disabled');
+					$('#btnfull').removeClass('disabled');
+
+					$('#btnplay').removeAttr('disabled');
+					$('#btnstop').removeAttr('disabled');
+					$('#btnrn').removeAttr('disabled');
+					$('#btnrs').removeAttr('disabled');
+					$('#btnrf').removeAttr('disabled');
+					$('#btncstart').removeAttr('disabled');
+					$('#btncend').removeAttr('disabled');
+					$('#btnvol').removeAttr('disabled');
+					$('#btnvolm').removeAttr('disabled');
+					$('#btnvolp').removeAttr('disabled');
+					$('#btnfull').removeAttr('disabled');
+					$('#checkaplay').bootstrapToggle('enable');
+
+					$('#btntran').removeClass('disabled');
+					$('#btntran').removeAttr('disabled');
+					$('#checkjoincrop').bootstrapToggle('enable');
+				};
+
+				function disablebtns() {
+					$('.vbutton').css('display', 'none');
+					$('.vbutton').removeClass('paused');
+
+					$('#btnplay').removeClass('disabled');
+					$('#btnstop').removeClass('disabled');
+					$('#btnrn').removeClass('disabled');
+					$('#btnrs').removeClass('disabled');
+					$('#btnrf').removeClass('disabled');
+					$('#btncstart').removeClass('disabled');
+					$('#btncend').removeClass('disabled');
+					$('#btnvol').removeClass('disabled');
+					$('#btnvolm').removeClass('disabled');
+					$('#btnvolp').removeClass('disabled');
+					$('#btnfull').removeClass('disabled');
+
+					$('#btnplay').removeAttr('disabled');
+					$('#btnstop').removeAttr('disabled');
+					$('#btnrn').removeAttr('disabled');
+					$('#btnrs').removeAttr('disabled');
+					$('#btnrf').removeAttr('disabled');
+					$('#btncstart').removeAttr('disabled');
+					$('#btncend').removeAttr('disabled');
+					$('#btnvol').removeAttr('disabled');
+					$('#btnvolm').removeAttr('disabled');
+					$('#btnvolp').removeAttr('disabled');
+					$('#btnfull').removeAttr('disabled');
+					$('#checkaplay').bootstrapToggle('enable');
+
+					$('#btntran').removeClass('disabled');
+					$('#btntran').removeAttr('disabled');
+					$('#checkjoincrop').bootstrapToggle('enable');
+				};
+
 				jQuery.fn.scrollTo = function(elem) {
 					$(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
 					return this;
 				};
+
+				function mobileconf() {
+					if (isTouchDevice()) {
+						$('#vtitle').css('font-size', '18px');
+						$('#vnext').css('max-height', '150px');
+					}
+				};
+
+				function isTouchDevice() {
+					return true == ("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch);
+				};
+
+				function load_vihts() {
+					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
+					$.post('proxy',
+						{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
+						function(data, textStatus, xhr) {
+							$('#selvinheta').html(null);
+							data.map(function(index, elem) {
+								filename = index.replace('.mp4','');
+								html = '<option val="'+filename+'">'+filename+'</option>';
+								$('#selvinheta').append(html);
+							})
+							$('#selvinheta').selectpicker({title: 'Selecione uma vinheta...'}).selectpicker('render');
+							$('#selvinheta').selectpicker('refresh');
+						}
+					);
+				};
+
+				function vtext() {
+					nextvideo.css('display', 'none');
+					$('#vptext').css('display', 'block');
+				}
+
+				function videosetctime(pfp) {
+					if (pfp) {
+						console.log('page from post');
+
+						videoel[0].currentTime = <?php echo isset($ifkwfound) ? $ifkwfound : 0 ;?>;
+						videoel[0].play();
+						enablebtns();
+						vtext();
+					} else {
+						console.log('normal page');
+					}
+				};
+
+				getchannels();
+				var tvalerts = setInterval(function() {
+					getchannels();
+				}, 60000);
+
+				videoel.bind('contextmenu', function() { return false; });
+				videomel.bind('contextmenu', function() { return false; });
+
+				videosetctime(frompost);
+
+				$('#btnnight').click(function(event) {
+					if (nightmode) {
+						$('body').css('background-color', '#F6F6F6');
+						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#000000');
+						$('.list-group-item').css('background-color','#FFFFFF');
+						$('.list-group-item .active').css('background-color','##337ab7');
+						$('span').css('color', '#000000');
+						$('label').css('color', '#000000');
+						nightmode = false;
+					} else {
+						$('body').css('background-color', '#222222');
+						$('h1, h2, h3, h4, h5, h6, h7').css('color', '#EEEEEE');
+						$('.list-group-item').css('background-color','#272727');
+						$('.list-group-item .active').css('background-color','##337ab7');
+						$('span').css('color', '#EEEEEE');
+						$('label').css('color', '#EEEEEE');
+						nightmode = true;
+					}
+				});
+
+				$('.input-group.date').datepicker({
+					todayBtn: "linked",
+					language: "pt-BR",
+					format: "dd/mm/yyyy",
+					keyboardNavigation: false,
+					todayHighlight: true,
+					autoclose: true
+				});
+
+				$('.input-group.date').on("changeDate", function() {
+					selecteddate = $('.input-group.date').datepicker('getDate');
+					sday = selecteddate.getDate();
+					sday = ('0' + sday).slice(-2);
+					smonth = (selecteddate.getMonth() + 1);
+					smonth = ('0' + smonth).slice(-2);
+					syear = selecteddate.getFullYear();
+					selectedformdate = syear+'-'+smonth+'-'+sday;
+
+					seldatei = $('#seldate').val();
+					seldateiarr = seldatei.split("/");
+					selday = seldateiarr[0];
+					selmonth = seldateiarr[1];
+					selyear = seldateiarr[2];
+					selformdate = selyear+'-'+selmonth+'-'+selday;
+
+					selectchannel(selformdate);
+				});
+
+				$('#selchannels').change(function(event) {
+					selvalue = event.target.value;
+					selvalarr1 = selvalue.split(':');
+					selvalarr2 = selvalarr1[1].split('_');
+					vsource = selvalarr1[0];
+					channel = selvalarr2[0];
+					state = selvalarr2[1];
+
+					getlistchannel(vsource, selformdate, channel, state);
+
+					datetoday = new Date();
+					tday = datetoday.getDate();
+					tday = ('0'+tday).slice(-2);
+					tmonth = (datetoday.getMonth() + 1);
+					tmonth = ('0'+tmonth).slice(-2);
+					tnmonharr = datetoday.toString().split(' ');
+					tnmonth = tnmonharr[1];
+					tyear = datetoday.getFullYear();
+					thour = datetoday.getHours();
+					thour = ('0'+thour).slice(-2);
+					tminutes = datetoday.getMinutes();
+					tminutes = ('0'+tminutes).slice(-2);
+					tseconds = datetoday.getSeconds();
+					tseconds = ('0'+tseconds).slice(-2);
+					datetodayf = new Date(tyear+'-'+tmonth+'-'+tday+'T00:00:00');
+					datasel = new Date(selformdate+'T00:00:00');
+
+					if (datasel < datetodayf) {
+						todaydatesel = false;
+					} else {
+						todaydatesel = true;
+					}
+
+					// console.log(todaydatesel);
+					if (todaydatesel) {
+						$(function() {
+							function refreshlist(rvsource, rdate, rchannel, rstate) {
+								$.post('proxy',
+									{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + rvsource + '/' + rdate + '/' + rchannel + '/' + rstate},
+									function(data, textStatus, xhr) {
+										playlistv = $('.list-group').children();
+										lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
+										lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
+										lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
+										lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
+										lastvarraytm = data[data.length-1].replace(".mp4","");
+
+										if (lastvplaylist != lastvarraytm) {
+											$('#'+lastvplaylistid).parent().removeClass('disabled');
+											$('#'+lastvplaylistid).css('cursor', 'pointer');
+											html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
+																'<div class="checkbox checkbox-warning pull-left">'+
+																	'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+																	'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
+																'</div>'+
+																'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
+															'</a>';
+											nextvideo.append(html);
+										}
+									}
+								);
+							}
+
+							setInterval(function() {
+								refreshlist(vsource, selformdate, channel, state);
+							}, 30000);
+						});
+					}
+				});
 
 				window.addEventListener("orientationchange", function() {
 					videoplay = $('#vvideo');
@@ -931,17 +1126,6 @@
 						vfullscreen('vvideo');
 					}
 				}, false);
-
-				function mobileconf() {
-					if (isTouchDevice()) {
-						$('#vtitle').css('font-size', '18px');
-						$('#vnext').css('max-height', '150px');
-					}
-				};
-
-				function isTouchDevice() {
-					return true == ("ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch);
-				};
 
 				$('#miclient').blur(function(event) {
 					cropfpr = $('#miprogram').val();
@@ -1054,100 +1238,6 @@
 					});
 				});
 
-				function load_vihts() {
-					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
-						function(data, textStatus, xhr) {
-							$('#selvinheta').html(null);
-							data.map(function(index, elem) {
-								filename = index.replace('.mp4','');
-								html = '<option val="'+filename+'">'+filename+'</option>';
-								$('#selvinheta').append(html);
-							})
-							$('#selvinheta').selectpicker({title: 'Selecione uma vinheta...'}).selectpicker('render');
-							$('#selvinheta').selectpicker('refresh');
-						}
-					);
-				};
 
-				var progresscbar = new ProgressBar.Circle('#progresscrop', {
-					color: '#aaa',
-					// This has to be the same size as the maximum width to
-					// prevent clipping
-					strokeWidth: 4,
-					trailWidth: 1,
-					easing: 'easeInOut',
-					duration: 200,
-					text: { autoStyleContainer: false },
-					from: { color: '#aaa', width: 2 },
-					to: { color: '#333', width: 4 },
-					// Set default step function for all animate calls
-					step: function(state, circle) {
-						circle.path.setAttribute('stroke', state.color);
-						circle.path.setAttribute('stroke-width', state.width);
 
-						var value = Math.round(circle.value() * 100);
-						if (value === 0) {
-							circle.setText('0%');
-						} else {
-							circle.setText(value+'%');
-						}
-					}
-				});
-				progresscbar.text.style.fontFamily = 'Helvetica';
-				progresscbar.text.style.fontSize = '4rem';
 
-				var progressjbar = new ProgressBar.Circle('#progressjoin', {
-					color: '#aaa',
-					// This has to be the same size as the maximum width to
-					// prevent clipping
-					strokeWidth: 4,
-					trailWidth: 1,
-					easing: 'easeInOut',
-					duration: 200,
-					text: { autoStyleContainer: false },
-					from: { color: '#aaa', width: 2 },
-					to: { color: '#333', width: 4 },
-					// Set default step function for all animate calls
-					step: function(state, circle) {
-						circle.path.setAttribute('stroke', state.color);
-						circle.path.setAttribute('stroke-width', state.width);
-
-						var value = Math.round(circle.value() * 100);
-						if (value === 0) {
-							circle.setText('0%');
-						} else {
-							circle.setText(value+'%');
-						}
-					}
-				});
-				progressjbar.text.style.fontFamily = 'Helvetica';
-				progressjbar.text.style.fontSize = '4rem';
-
-				var progressjcbar = new ProgressBar.Circle('#progressjcrop', {
-					color: '#aaa',
-					// This has to be the same size as the maximum width to
-					// prevent clipping
-					strokeWidth: 4,
-					trailWidth: 1,
-					easing: 'easeInOut',
-					duration: 200,
-					text: { autoStyleContainer: false },
-					from: { color: '#aaa', width: 2 },
-					to: { color: '#333', width: 4 },
-					// Set default step function for all animate calls
-					step: function(state, circle) {
-						circle.path.setAttribute('stroke', state.color);
-						circle.path.setAttribute('stroke-width', state.width);
-
-						var value = Math.round(circle.value() * 100);
-						if (value === 0) {
-							circle.setText('0%');
-						} else {
-							circle.setText(value+'%');
-						}
-					}
-				});
-				progressjcbar.text.style.fontFamily = 'Helvetica';
-				progressjcbar.text.style.fontSize = '4rem';

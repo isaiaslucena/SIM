@@ -2725,6 +2725,7 @@ class Pages extends CI_Controller {
 				$data['id_keyword'] = $this->input->post('id_keyword');
 				$data['id_client'] = $this->input->post('id_client');
 				$data['client_selected'] = $this->input->post('client_selected');
+				$data['ifkwfound'] = $this->input->post('ifkwfound');
 				// var_dump($data);
 
 				$this->load->view('video', $data);
