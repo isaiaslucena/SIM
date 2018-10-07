@@ -169,6 +169,19 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	public function get_tv($data) {
+		return $this->db->get_where('tv', $data)->result_array();
+	}
+
+	public function add_tv($data) {
+		$data_insert = array(
+			'name' => $data['name'],
+			'state' => $data['state']
+		);
+		$this->db->insert('tv', $data_insert);
+		return $this->db->insert_id();
+	}
+
 	public function radios_novo() {
 		$this->db->order_by('source','asc');
 		return $this->db->get('knewin_radio')->result_array();

@@ -231,17 +231,33 @@ class Api extends CI_Controller {
 				$radiostartt = str_replace("-", ":", $filearr[2]);
 				$radiostarttime = $radiostartd.'T'.$radiostartt.'Z';
 
-				$radiodata = array(
-					'name' => $radioname,
-					'state' => $radiostate
-				);
 
-				$radioiddb = $this->pages_model->get_radio($radiodata);
+				if ($postdata['type'] == 'radio') {
+					$radiodata = array(
+						'name' => $radioname,
+						'state' => $radiostate
+					);
 
-				if (count($radioiddb) == 0) {
-					$radiosourceid = $this->pages_model->add_radio($radiodata);
+					$radioiddb = $this->pages_model->get_radio($radiodata);
+
+					if (count($radioiddb) == 0) {
+						$radiosourceid = $this->pages_model->add_radio($radiodata);
+					} else {
+						$radiosourceid = $radioiddb[0]['id_radio'];
+					}
 				} else {
-					$radiosourceid = $radioiddb[0]['id_radio'];
+					$radiodata = array(
+						'name' => $radioname,
+						'state' => $radiostate
+					);
+
+					$radioiddb = $this->pages_model->get_tv($radiodata);
+
+					if (count($radioiddb) == 0) {
+						$radiosourceid = $this->pages_model->add_tv($radiodata);
+					} else {
+						$radiosourceid = $radioiddb[0]['id_radio'];
+					}
 				}
 
 				$secarr = explode(".", $postdata['duration']);
