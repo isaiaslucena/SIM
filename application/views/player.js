@@ -104,7 +104,7 @@
 
 				videoel.on('loadedmetadata', function() {
 					vvideosrc = videoel[0].currentSrc;
-					if (vvideosrc.match(vvideosrcsearch) == null) {
+					if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
 						vduration = videoel[0].duration;
 
 						vdurtime.text(sectostring(vduration));
@@ -279,9 +279,11 @@
 					}
 
 					videoel[0].pause();
-					if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
-						videoel.css('display', 'none');
-						videoelth.css('display', 'block');
+					if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
+						if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
+							videoel.css('display', 'none');
+							videoelth.css('display', 'block');
+						}
 					}
 
 					$("#ipause").addClass('hidden');
@@ -294,9 +296,11 @@
 						// vsourcefile = $("span:contains('"+vfile+"')").data('vsrc');
 						vsourcefile = videotitle.attr('data-vsrc');
 						//videoel[0].pause();
+						if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
 						if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
 							videoelth.css('display', 'none');
 							videoel.css('display', 'block');
+						}
 						}
 						timeDrag = false;
 						$('.vbutton').css('dusplay', 'block');
@@ -353,8 +357,10 @@
 					} else {
 						vdfilename = videotitle.text();
 						sfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
-						if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
-							uptadevThumb(sfilename, vdfilename, thumbnum);
+						if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
+							if (sfilename.replace(/[0-9]/g, '') != 'cagiva') {
+								uptadevThumb(sfilename, vdfilename, thumbnum);
+							}
 						}
 					}
 				};

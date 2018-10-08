@@ -38,13 +38,16 @@
 
 		<div class="container-fluid center-block text-center">
 			<div class="row">
-				<div class="col-md-10">
+				<div class="col-md-8">
 					<h2 id="vtitle" class="center-block"><?php echo isset($ssource) ? $ssource : 'Nenhuma Seleção';?></h2>
 				</div>
 
-				<div class="col-md-2">
+				<div class="col-md-4">
+					<h2 class="pull-left">
+					<select id="selvnext" class="selectpicker" data-size="15" data-width="350" data-live-search="true"></select>
+					</h2>
 					<h2 class="pull-right">
-					<input id="checkaplay" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+					<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
 					</h2>
 				</div>
 			</div>
@@ -969,21 +972,76 @@
 					);
 				};
 
-				function vtext() {
+				function enablenovo() {
 					nextvideo.css('display', 'none');
 					$('#vptext').css('display', 'block');
+				}
+
+				function getdocsbydate(idsouce, startdate, enddate) {
+					$.get('tv_novo_docs_bydate/'+idsouce+'/'+encodeURI(startdate)+'/'+encodeURI(enddate), function(data) {
+						// console.log(data);
+
+						$.each(data.response.docs, function(index, val) {
+							viddoc = val.id_i;
+							vidsource = val.id_source_i;
+							vsource = val.source_s.replace(' ', '-');
+							vstartdate = val.starttime_dt;
+							venddate = val.endtime_dt;
+
+							d = new Date(vstartdate);
+							day = d.getDate();
+							day = ('0' + day).slice(-2);
+							month = (d.getMonth() + 1);
+							month = ('0' + month).slice(-2);
+							year = d.getFullYear();
+							hour = d.getHours();
+							hour = ('0'+hour).slice(-2);
+							min = d.getMinutes();
+							min = ('0'+min).slice(-2);
+							sec = d.getSeconds();
+							sec = ('0'+sec).slice(-2);
+							vsstdate = year+'-'+month+'-'+day+'_'+hour+'-'+min+'-'+sec;
+
+							e = new Date(venddate);
+							eday = e.getDate();
+							eday = ('0' + eday).slice(-2);
+							emonth = (e.getMonth() + 1);
+							emonth = ('0' + month).slice(-2);
+							eyear = e.getFullYear();
+							ehour = e.getHours();
+							ehour = ('0'+ehour).slice(-2)
+							emin = e.getMinutes();
+							emin = ('0'+emin).slice(-2)
+							esec = e.getSeconds();
+							esec = ('0'+esec).slice(-2);
+							vseddate = eyear+'-'+emonth+'-'+eday+'_'+ehour+'-'+emin+'-'+esec;
+
+							html = '<option data-docid="'+viddoc+'" data-idsource="'+vidsource+'">'+vsstdate+'_'+vsource+'</option>';
+							$('#selvnext').append(html);
+						});
+
+						$('#selvnext').selectpicker('render');
+						$('#selvnext').selectpicker('refresh');
+					});
 				}
 
 				function videosetctime(pfp) {
 					if (pfp) {
 						console.log('page from post');
 
+						sidsource = '<?php echo isset($sidsource) ? $sidsource : null ?>';
+						sstartdate = '<?php echo isset($sstartdate) ? $sstartdate : null ?>';
+						senddate = '<?php echo isset($senddate) ? $senddate : null ?>';
+
 						videoel[0].currentTime = <?php echo isset($ifkwfound) ? $ifkwfound : 0 ;?>;
+
 						videoel[0].play();
 						enablebtns();
-						vtext();
+						enablenovo();
+						getdocsbydate(sidsource, sstartdate, senddate);
 					} else {
 						console.log('normal page');
+						$('#selvnext').selectpicker('hide');
 					}
 				};
 

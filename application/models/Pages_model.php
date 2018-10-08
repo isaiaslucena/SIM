@@ -1267,6 +1267,49 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
+	public function tv_novo_docs_bydate($idsource, $startdate, $enddate) {
+		//Solr Connection
+		$protocol = 'http';
+		$port = '8983';
+		$host = '172.17.0.3';
+		$path = '/solr/knewin_tv/query?rows=1&wt=json&sort=startdate_l+asc';
+		$url = $protocol."://".$host.":".$port.$path;
+
+		$data = array(
+		"query" => '*:*',
+		"filter" => array(
+				"starttime_dt:[".$startdate."Z TO ".$enddate."Z]",
+				"id_source_i:".$idsource
+			)
+		);
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		$res = json_decode(curl_exec($ch));
+		// var_dump($res);
+		$nfound = $res->response->numFound;
+		$path='/solr/knewin_tv/query?rows='.$nfound.'&fl=id_i,id_source_i,source_s,starttime_dt,endtime_dt,duration_i,mediaurl_s&wt=json&sort=startdate_l+asc';
+		$url = $protocol."://".$host.":".$port.$path;
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return curl_exec($ch);
+	}
+
 	public function get_radiol_byid_solr($idsource, $startdate, $position) {
 		//Solr Connection
 		$protocol = 'http';

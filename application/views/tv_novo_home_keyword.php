@@ -31,8 +31,10 @@
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
-				$sstartdate = $sd->format('d/m/Y H:i:s');
-				$senddate = $ed->format('d/m/Y H:i:s');
+				// $sstartdate = $sd->format('d/m/Y H:i:s');
+				// $senddate = $ed->format('d/m/Y H:i:s');
+				$sstartdate = $sd->format('Y-m-d\TH:i:s');
+				$senddate = $ed->format('Y-m-d\TH:i:s');				
 				$sendtime = $ed->format('H:i:s');
 				$dstartdate = $sd->format('Y-m-d_H-i-s');
 				$denddate = $ed->format('Y-m-d_H-i-s');
@@ -91,6 +93,7 @@
 							<form id="<?php echo 'form'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/video');?>" target="_blank" method="POST">
 								<input type="hidden" name="sid" value="<?php echo $sid;?>">
 								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
+								<input type="hidden" name="sidsource" value="<?php echo $sidsource;?>">
 								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
 								<input type="hidden" name="sstartdate" value="<?php echo $sstartdate;?>">
 								<input type="hidden" name="senddate" value="<?php echo $senddate;?>">

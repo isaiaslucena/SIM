@@ -1070,6 +1070,35 @@ class Pages extends CI_Controller {
 		$this->load->view('get_tv_novo_keyword_texts', $data);
 	}
 
+	public function tv_novo_docs_bydate($idsource, $startdate, $enddate) {
+		// var_dump(substr(urldecode($startdate), 0, 10)."T00:00:00");
+		// var_dump(substr(urldecode($enddate), 0, 10)."T23:59:59");
+
+		$timezone = new DateTimeZone('America/Sao_Paulo');
+		$sd = new Datetime(substr(urldecode($startdate), 0, 10)."T00:00:00", $timezone);
+		$ed = new Datetime(substr(urldecode($enddate), 0, 10)."T23:59:59", $timezone);
+		$newtimezone = new DateTimeZone('UTC');
+		$sd->setTimezone($newtimezone);
+		$ed->setTimezone($newtimezone);
+		$sstartdate = $sd->format('Y-m-d\TH:i:s');
+		$senddate = $ed->format('Y-m-d\TH:i:s');
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		// var_dump($sstartdate);
+		// var_dump($senddate);
+
+		// $epochstartdate1 = strtotime($data['startdate']);
+		// $sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+		// $epochenddate1 = strtotime($data['enddate']);
+		// $senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+		$founddocs = $this->pages_model->tv_novo_docs_bydate($idsource, $sstartdate, $senddate);
+
+		header('Content-Type: application/json');
+		print $founddocs;
+	}
+
 	public function load_file() {
 		$position = $this->input->post('position');
 		$id_client = $this->input->post('idclient');
@@ -2719,6 +2748,7 @@ class Pages extends CI_Controller {
 
 				$data['sid'] = $this->input->post('sid');
 				$data['mediaurl'] = $this->input->post('mediaurl');
+				$data['sidsource'] = $this->input->post('sidsource');
 				$data['ssource'] = $this->input->post('ssource');
 				$data['sstartdate'] = $this->input->post('sstartdate');
 				$data['senddate'] = $this->input->post('senddate');
