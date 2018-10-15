@@ -55,6 +55,40 @@ $(document).ready(function() {
 			}
 		});
 });
+
+$(document).on('click', 'audio, video', function() {
+	if ($(this)[0].paused) {
+		idpmedia = $(this).attr('id');
+		ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
+
+		ptextspans = $('#'+ptextid).children('span.fkword');
+		if (ptextspans.length == 0) {
+			ptextspans = $('#'+ptextid).children('span');
+		}
+
+		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
+		startread(idpmedia, ptextid, spantime, true);
+	}
+});
+
+$('audio, video').on('loadedmetadata', function() {
+	mediaid = $(this).attr('id');
+	fkwtime = $(this).attr('data-fkwtime');
+	// jmediael = $('#'+mediaid);
+	mediael = document.getElementById(mediaid);
+	// console.log(mediael);
+	if (mediael.readyState === 4){
+		// mediael[0].currentTime = fkwtime;
+		mediael.currentTime = fkwtime;
+		// console.log(mediaid);
+		// console.log(fkwtime);
+	} else {
+		setTimeout(function() {
+			// console.log('not ready! waiting 1.5s...');
+			mediael.currentTime = fkwtime;
+		},500)
+	}
+});
 <?php } ?>
 
 if ($('#back-to-top').length) {
@@ -215,7 +249,7 @@ $(document).on('click', '.discarddoc', function(event) {
 
 $(document).on('click', '.desativado', function() {
 	$(this).css('overflowY', 'auto');
-})
+});
 
 $(document).on('click', 'span', function(){
 	ptextid = $(this).parent('.ptext').attr('id');
@@ -230,42 +264,6 @@ $(document).on('click', 'span', function(){
 	startread(pmedia, ptextid, spantime, true);
 	$('#'+pmedia)[0].play();
 });
-
-<?php if (!isset($pagesrc)) { ?>
-$(document).on('click', 'audio, video', function() {
-	if ($(this)[0].paused) {
-		idpmedia = $(this).attr('id');
-		ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
-
-		ptextspans = $('#'+ptextid).children('span.fkword');
-		if (ptextspans.length == 0) {
-			ptextspans = $('#'+ptextid).children('span');
-		}
-
-		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
-		startread(idpmedia, ptextid, spantime, true);
-	}
-});
-
-$('audio, video').on('loadedmetadata', function() {
-	mediaid = $(this).attr('id');
-	fkwtime = $(this).attr('data-fkwtime');
-	// jmediael = $('#'+mediaid);
-	mediael = document.getElementById(mediaid);
-	// console.log(mediael);
-	if (mediael.readyState === 4){
-		// mediael[0].currentTime = fkwtime;
-		mediael.currentTime = fkwtime;
-		// console.log(mediaid);
-		// console.log(fkwtime);
-	} else {
-		setTimeout(function() {
-			// console.log('not ready! waiting 1.5s...');
-			mediael.currentTime = fkwtime;
-		},500)
-	}
-});
-<?php } ?>
 
 // $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {
 // 	ptextid = $(this).attr('id');

@@ -5,7 +5,7 @@ function backToTop() {
 	} else {
 		$('#back-to-top').fadeOut('fast');
 	}
-}
+};
 
 function loadpn(flow, clbtn, sc, type) {
 	loadp = $(clbtn);
