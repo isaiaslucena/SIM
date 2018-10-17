@@ -25,9 +25,13 @@ function loadpn(flow, clbtn, sc, type) {
 		slidep = 'slideUp';
 	}
 
-	if (sc == 'local') {
+	if (sc == 'local' && type == 'audio') {
 		gurl = window.location.origin+'/pages/get_radio/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
-	} else if (sc == 'novo') {
+	} else if (sc == 'novo' && type == 'audio') {
+		gurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (sc == 'local' && type == 'video') {
+		gurl = window.location.origin+'/pages/get_tv/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (sc == 'novo' && type == 'video') {
 		gurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
 	}
 

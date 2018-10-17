@@ -56,7 +56,7 @@
 								<div class="btn-group pull-right">
 									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 										<?php
-										$keyquant =  count($client_news->PChaves);
+										$keyquant = count($client_news->PChaves);
 										echo $keyquant;
 										if ($keyquant == 0) {
 										 	echo $keyquantm = " nenhuma palavra-chave";
@@ -70,9 +70,10 @@
 									<ul class="dropdown-menu dropup pull-right scrollable-menu" role="menu">
 										<?php
 										asort($client_news->PChaves);
-										foreach ($client_news->PChaves as $keyword) { ?>
+										foreach ($client_news->PChaves as $keyword) {
+											$arr = explode(";", $keyword->Grifar); ?>
 											<li>
-												<a class="likeyword" href="#" data-pbodyt="<?php echo 'pbody'.$divcount;?>" data-idkeyword="<?php echo $keyword->IdPChave; ?>"><?php echo $keyword->PChave; ?></a>
+												<a class="likeyword" href="#" data-pbodyt="<?php echo 'pbody'.$divcount;?>" data-idkeyword="<?php echo $keyword->IdPChave; ?>"><?php echo $arr[0]; ?></a>
 											</li>
 										<?php } ?>
 									</ul>
