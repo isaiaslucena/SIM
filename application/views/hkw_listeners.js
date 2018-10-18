@@ -57,17 +57,20 @@ $(document).ready(function() {
 });
 
 $(document).on('click', 'audio, video', function() {
-	if ($(this)[0].paused) {
-		idpmedia = $(this).attr('id');
-		ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
+	idpmedia = $(this).attr('id');
+	ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
+	ptextspans = $('#'+ptextid).children('span.fkword');
 
-		ptextspans = $('#'+ptextid).children('span.fkword');
+	if ($(this)[0].paused) {
+		console.log('media is paused');
 		if (ptextspans.length == 0) {
 			ptextspans = $('#'+ptextid).children('span');
 		}
 
 		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
 		startread(idpmedia, ptextid, spantime, true);
+	} else {
+		console.log('media is playing');
 	}
 });
 

@@ -32,7 +32,7 @@ function loadpn(flow, clbtn, sc, type) {
 	} else if (sc == 'local' && type == 'video') {
 		gurl = window.location.origin+'/pages/get_tv/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
 	} else if (sc == 'novo' && type == 'video') {
-		gurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+		gurl = window.location.origin+'/pages/get_tv_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
 	}
 
 	$.get(gurl, function(data) {
@@ -111,10 +111,7 @@ function loadpn(flow, clbtn, sc, type) {
 			divclone = $('#'+iddiv).clone(true);
 
 			divclone.removeClass('panel-default');
-			// divclone.removeClass('collapse');
 			divclone.addClass('panel-info');
-			// divclone.addClass('collapse');
-			// divclone.addClass('in');
 			divclone.css('display', 'none');
 			divclone.attr('id', newdividn);
 			divclone.children('.panel-heading').children('.labeltitle').html('<i class="fa fa-bullhorn fa-fw"></i> '+dsource+' | '+dfstartdate+' - '+dfendtime);
@@ -145,9 +142,10 @@ function loadpn(flow, clbtn, sc, type) {
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
 			} else if (type == 'video') {
 				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
-				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').addClass('noscrolled');
-				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
-				divclone.children('.panel-body').children('.row').children('.pbody').children('.ptext').text(dcontent);
+				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('id', iddiv.replace('div', 'pvideo')+'-'+newdivid);
+				divclone.children('.panel-body').children('.row').children('.col-lg-7').children('.ptext').addClass('noscrolled');
+				divclone.children('.panel-body').children('.row').children('.col-lg-7').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
+				divclone.children('.panel-body').children('.row').children('.col-lg-7').children('.ptext').html(null);
 			}
 
 			eval('$("#'+iddiv+'").'+position+'(divclone);');
@@ -233,8 +231,6 @@ function startread(idpmedia, idptext, starttime = 0, mediatime = false) {
 		audio_element: document.getElementById(idpmedia),
 		autofocus_current_word: document.getElementById('autofocus-current-word').checked
 	};
-
-	// console.log(args);
 
 	ReadAlong.init(args);
 };
