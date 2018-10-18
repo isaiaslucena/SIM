@@ -38,10 +38,10 @@
 		</div>
 
 		<script type="text/javascript">
-			var filename, count = 0, fcount, ratec = 1,
+			var count = 0, fcount, ratec = 1,
 			audioel = $('#audiofile'),
-			ccrops = false, ccrope = false, joinfiles = false, fileerr = false, lastfile,
-			audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
+			ccrops = false, ccrope = false, joinfiles = false, fileerr = false,
+			lastfile, audiofiles, cropstart, cropend, cropstartss, cropendss, cropstarts, cropends,
 			audiofilestojoin = [], uploadaudiofiles = [];
 
 			$('#btnupload').change(function(event) {
@@ -55,18 +55,15 @@
 				$('#waitmsg').text('Aguarde...');
 				$('#waitimg').css('display', 'block');
 
-				var audiofiles = document.querySelector('#btnupload').files;
+				var audiofiles = document.getElementById('btnupload').files;
 				audiofilesc = audiofiles.length;
-
 				if (audiofilesc > 1) {
 					fcount = 1;
 					$.each(audiofiles, function(index, val) {
-						// console.log(val);
 						var filelastmod = val.lastModified;
-						filename = val.name;
+						var filename = val.name;
 						var filesize = val.size;
 						var filetype = val.type;
-						var fileb64;
 
 						if (filetype != 'audio/mp3' && filetype != 'audio/mpeg') {
 							swal('Atenção', 'O arquivo "' + filename + '" não é um arquivo de áudio.\n\nTodos os arquivos devem ser do tipo mp3!', 'error');
@@ -76,14 +73,17 @@
 						} else {
 							audiofilestojoin.push(filename);
 
-							filereader = new FileReader();
+							var filereader = new FileReader();
 							filereader.readAsDataURL(val);
 							filereader.onload = function(e) {
-								// console.log(e);
 								fileb64 = e.target.result.replace(/^data:audio\/(mp3|mpeg);base64,/, "");
 								uploadaudiofiles.push(
-									$.post('<?php echo base_url("pages/upload_join_edit_audio")?>',
-										{'audioname': filename,'audiofile': fileb64}
+									$.post(
+										'<?php echo base_url("pages/upload_join_edit_audio")?>',
+										{'audioname': filename, 'audiofile': fileb64},
+										function(data, textStatus, xhr) {
+											// console.log(data);
+										}
 									)
 								);
 								if (fcount == audiofilesc) {
@@ -106,7 +106,6 @@
 				}
 
 				audiofilestojoinc = audiofilestojoin.length;
-				console.log(audiofilestojoinc);
 				if (audiofilestojoinc > 1) {
 					$(document).ajaxComplete(function(event, xhr, settings) {
 						// console.log(xhr);
@@ -115,7 +114,7 @@
 						if (settings.url === '<?php echo base_url("pages/upload_join_edit_audio")?>' && rgx.test(fdata)) {
 							join_files(audiofilestojoin);
 							lastfile = null;
-							audiofilestojoinc = [];
+							audiofilestojoin = [];
 							uploadaudiofiles = [];
 						}
 					});
@@ -125,7 +124,6 @@
 					filereader.readAsDataURL(audiofiles[0]);
 
 					filereader.onload = function(e) {
-						// console.log(e);
 						enable_editor(e.target.result);
 					}
 				}
@@ -330,7 +328,7 @@
 				$.post('<?php echo base_url("pages/join_edit_audio"); ?>', {adfiles: jaudiofilestojoin},
 					function(data, textStatus, xhr) {
 						// console.log(data);
-						console.log('Joined files!')
+						// console.log('Joined files!')
 						joinfiles = true;
 						joinned_id = data.id_join_info;
 						$('#btncrop').attr('data-joinid', joinned_id);

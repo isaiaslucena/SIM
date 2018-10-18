@@ -44,7 +44,7 @@
 
 				<div class="col-md-4">
 					<h2 class="pull-left">
-					<select id="selvnext" class="selectpicker" data-size="15" data-width="350" data-live-search="true"></select>
+					<select id="selvnext" class="selectpicker" data-size="15" data-width="300" data-live-search="true" multiple></select>
 					</h2>
 					<h2 class="pull-right">
 					<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
@@ -54,16 +54,16 @@
 
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-						<div>
-							<div id="vvideobtn" class='vbutton' style="display: none"></div>
-							<video id="vvideo" class="center-block"
-							<?php if (isset($mediaurl)) {
-								echo 'src="'.$mediaurl.'"';
-							}?>
-							poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
-							width="854" height="480" preload="metadata"></video>
-							<img id="thvideo" class="center-block"  width="854" height="480" style="display: none;">
-						</div>
+					<div>
+						<div id="vvideobtn" class='vbutton' style="display: none"></div>
+						<video id="vvideo" class="center-block"
+						<?php if (isset($mediaurl)) {
+							echo 'src="'.$mediaurl.'"';
+						}?>
+						poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
+						width="854" height="480" preload="metadata"></video>
+						<img id="thvideo" class="center-block" width="854" height="480" style="display: none;">
+					</div>
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
@@ -106,6 +106,7 @@
 				</div>
 			</div>
 
+			<!-- progress bar, current time and total time -->
 			<div class="row">
 				<div class="col-sm-1 col-md-1 col-lg-1">
 					<span id="currtime">--:--</span>
@@ -123,6 +124,7 @@
 					<span id="durtime">--:--</span>
 				</div>
 			</div>
+
 
 			<div class="row">
 				<div id="controls" class="col-md-7">
@@ -185,7 +187,7 @@
 							</div>
 						</div>
 
-						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" title="Selecione uma data" disabled></select>
+						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" data-windowPadding="top" title="Selecione uma data" disabled></select>
 
 						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
 							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
