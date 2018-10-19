@@ -123,7 +123,7 @@
 								<a href="<?php echo base_url('pages/index_tv_novo'); ?>" <?php if ($selected_page == "home_tv_novo") {echo 'class="active"';} ?>><i class="fa fa-television fa-fw"></i> <?php echo get_phrase('television')." (novo)";?></a>
 							</li>
 							<li>
-								<a href="<?php echo base_url('pages/edit_audio'); ?>" <?php if ($selected_page == "edit_audio") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editor de áudio</a>
+								<a href="<?php echo base_url('pages/edit_audio'); ?>" <?php if ($selected_page == "edits_audio") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editor de áudio</a>
 							</li>
 							<li>
 								<a href="<?php echo base_url('pages/video'); ?>" <?php if ($selected_page == "edit_video") {echo 'class="active"';} ?>><i class="fa fa-edit fa-fw"></i> Editar vídeo</a>

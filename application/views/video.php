@@ -201,7 +201,7 @@
 									<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
 									<i class="fa fa-bell"></i>
 								</button>
-								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 200px; overflow-y: auto;">
+								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 200px; width: 350px;overflow-y: auto;">
 									<li>
 										<a class="text-center" href="#">
 											<strong>Nenhum alerta de tv!</strong>
@@ -366,6 +366,8 @@
 				var vdurtime = $('#durtime');
 				var vtooltiptime = $('.tooltiptime');
 				var timerslider = $('#timeslider');
+
+				var vnextthumbf;
 
 				var progresscbar = new ProgressBar.Circle('#progresscrop', {
 					color: '#aaa',
@@ -605,10 +607,13 @@
 						function(data, textStatus, xhr) {
 							lastvideo = data[0].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
-							videoel.removeAttr('loop');
+							// videoel.removeAttr('loop');
+
+							srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001';
+							srcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo;
 							videoel.attr({
-								poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001',
-								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
+								poster: srcposter,
+								src: srcvideo
 							});
 
 							videotitle.text(lastvideo);
@@ -732,7 +737,7 @@
 
 				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
 					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + selglvsource + '/' + selgldate + '/' + selglchannel + '/' + selglstate},
+						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate},
 						function(data, textStatus, xhr) {
 							if (data.length == 1) {
 								firstvideo = data[0].replace(".mp4", "");
@@ -744,91 +749,84 @@
 								lastvarray = data[data.length-1].replace(".mp4","");
 							}
 
-							enablebtns();
-
 							if (todaydatesel === false) {
 								// console.log('Data selecionada menor que hoje');
+								cvideo = firstvideo;
 
 								videotitle.text(firstvideo);
 								videotitle.attr('data-vsrc', selglvsource);
 								videotitle.css('font-size', '30px');
 								nextvideo.html(null);
+
 								$.each(data, function(index, val) {
 									file = val.replace(".mp4","");
+									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
+
 									if (file == firstvideo) {
-										html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
+										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
+															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+															'</div>'+
+															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-															'</div>'+
+															'</div><br>'+
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									} else {
-										html =	'<a id="vbtn'+index+'" class="list-group-item">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
+										html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
+															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+															'</div>'+
+															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-															'</div>'+
+															'</div><br>'+
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									}
 									nextvideo.append(html);
 								});
-
-								arr = lastvideo.split('_');
-								channel = arr[2];
-
-								if (channel != 'AVULSO') {
-									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-										var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+firstvideo+'/001';
-									} else {
-										var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-									}
-								} else {
-									var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-								}
-								videoel.attr({
-									poster: srcposter,
-									src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+firstvideo
-								});
-
-								if (channel != 'AVULSO') {
-									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-										videoel[0].pause();
-
-										loadingthumbs();
-									} else {
-										videoel[0].play();
-									}
-								} else {
-									videoel[0].play();
-								}
 							} else {
+								cvideo = lastvideo;
+
 								videotitle.text(lastvideo);
 								videotitle.attr('data-vsrc', selglvsource);
 								videotitle.css('font-size', '30px');
 								nextvideo.html(null);
+
 								$.each(data, function(index, val) {
 									file = val.replace(".mp4","");
+									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
+
 									if (file == lastvideo) {
-										html =	'<a id="vbtn'+index+'" class="list-group-item active">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
+										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
+															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+															'</div>'+
+															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 															'</div>'+
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
 									} else if (file == lastvarray) {
-										html =	'<a id="vbtn'+index+'" class="list-group-item disabled">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
+										html =	'<a id="vbtn'+index+'" class="list-group-item disabled" style="height: 105px;">'+
+															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<img id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" width="125.4">'+
+															'</div>'+
+															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 															'</div>'+
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'">'+file+'</span>'+
 														'</a>';
 									} else {
-										html =	'<a id="vbtn'+index+'" class="list-group-item">'+
-															'<div class="checkbox checkbox-warning pull-left">'+
+										html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
+															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+															'</div>'+
+															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
 															'</div>'+
@@ -839,21 +837,24 @@
 								});
 							}
 
+							csrcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+cvideo
+
 							arr = lastvideo.split('_');
 							channel = arr[2];
 
 							if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+lastvideo+'/001';
+									csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 								} else {
-									var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
 							} else {
-								var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+								csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 							}
+
 							videoel.attr({
-								poster: srcposter,
-								src: '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+lastvideo
+								poster: csrcposter,
+								src: csrcvideo
 							});
 
 							if (channel != 'AVULSO') {
@@ -868,6 +869,7 @@
 								videoel[0].play();
 							}
 
+							enablebtns();
 							mobileconf();
 						}
 					);
@@ -1045,6 +1047,14 @@
 						console.log('normal page');
 						$('#selvnext').selectpicker('hide');
 					}
+				};
+
+				function loadimgvnthumb(tvimg, tvsrc, tvfile, number) {
+					strn = ("000"+number).slice(-3);
+					tcsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+tvsrc+'_'+tvfile+'/'+strn;
+					// console.log(tcsrc);
+
+					$('#'+tvimg).attr('src', tcsrc);
 				};
 
 				getchannels();
@@ -1298,6 +1308,37 @@
 					});
 				});
 
+				$(document).on('mouseover', '.vnextthumb', function(){
+					// console.log('mouse over image thumb on vnext!');
 
+					timgid = $(this).attr('data-tbid');
+					tsrc = $(this).attr('data-vsrc');
+					tfile = $(this).attr('data-vfile');
 
+					if ($(this).parent('a').hasClass('disabled') == false) {
+						nn = 1;
+						vnextthumbf = setInterval(function() {
+							if (nn > 20) {
+								clearInterval(vnextthumbf);
+							} else {
+								loadimgvnthumb(timgid, tsrc, tfile, nn);
+								nn = nn + 1;
+							}
+						}, 250);
+					}
+				});
+
+				$(document).on('mouseleave', '.vnextthumb', function(){
+					// console.log('mouse leave image thumb on vnext!');
+
+					tsrc = $(this).attr('data-vsrc');
+					tfile = $(this).attr('data-vfile');
+
+					if ($(this).parent('a').hasClass('disabled') == false) {
+						clearInterval(vnextthumbf);
+
+						tcsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+tsrc+'_'+tfile+'/001';
+						$(this).children('img').attr('src', tcsrc);
+					}
+				});
 

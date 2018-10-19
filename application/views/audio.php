@@ -116,7 +116,7 @@
 								<sup><span id="alertradiobnum" class="navnotification" style="display: none"></span></sup>
 								<i class="fa fa-bell"></i>
 							</button>
-							<ul id="alertradiolist" class="dropdown-menu dropdown-menu-right" style="max-height: 500px; max-width: 400px; overflow-y: auto;">
+							<ul id="alertradiolist" class="dropdown-menu dropdown-menu-right" style="max-height: 500px; width: 350px; overflow-y: auto;">
 								<li>
 									<a class="text-center" href="#">
 										<strong>Nenhum alerta de rádio!</strong>

@@ -262,7 +262,7 @@ class Pages extends CI_Controller {
 
 			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
 			$data['changepass_id'] = $id_user;
-			$data_navbar['selected_page'] = 'edit_audio';
+			$data_navbar['selected_page'] = 'edita_audio';
 
 			if ($id_group == 1 or $id_group == 5) {
 				$sessiondata = array(
