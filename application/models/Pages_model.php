@@ -1964,7 +1964,7 @@ class Pages_model extends CI_Model {
 		$port='8983';
 		$host='172.17.0.3';
 
-		if (empty($start)) {
+		if (is_null($start)) {
 			$start = 0;
 		}
 

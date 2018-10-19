@@ -1,28 +1,33 @@
 	<?php
 		defined('BASEPATH') OR exit('No direct script access allowed');
 
-		$query = base64_encode($searchresult->responseHeader->params->json);
-		$jquery = json_decode($searchresult->responseHeader->params->json)->query;
-		$searchkwquery = strpos($jquery, 'text_t:');
-		$searchikwquery = strpos($jquery, 'content_t:');
-		if (is_int($searchkwquery)) {
-			$querykw = substr($jquery, 8, -1);
-			$keyword = $querykw;
-		} else if (is_int($searchikwquery)) {
-			$querykw = substr($jquery, 11, -1);
-			$keyword = $querykw;
-		} else if (!isset($keyword)) {
-			$keyword = '';
-		}
+		// var_dump($searchresult);
 
-		$searchtime = (int)$searchresult->responseHeader->QTime;
-		$totalfound = (int)$searchresult->response->numFound;
-		$totalpages = ceil($totalfound/10);
-		$firstpage = (int)$searchresult->response->start;
-		if ($totalpages >= 4 ) {
-			$pageselectedend = $pageselected + 3;
-		} else {
-			$pageselectedend = $pageselected;
+		if (isset($searchresult->responseHeader->params->json)) {
+			$query = base64_encode($searchresult->responseHeader->params->json);
+			$jquery = json_decode($searchresult->responseHeader->params->json)->query;
+
+			$searchkwquery = strpos($jquery, 'text_t:');
+			$searchikwquery = strpos($jquery, 'content_t:');
+			if (is_int($searchkwquery)) {
+				$querykw = substr($jquery, 8, -1);
+				$keyword = $querykw;
+			} else if (is_int($searchikwquery)) {
+				$querykw = substr($jquery, 11, -1);
+				$keyword = $querykw;
+			} else if (!isset($keyword)) {
+				$keyword = '';
+			}
+
+			$searchtime = (int)$searchresult->responseHeader->QTime;
+			$totalfound = (int)$searchresult->response->numFound;
+			$totalpages = ceil($totalfound/10);
+			$firstpage = (int)$searchresult->response->start;
+			if ($totalpages >= 4 ) {
+				$pageselectedend = $pageselected + 3;
+			} else {
+				$pageselectedend = $pageselected;
+			}
 		}
 
 		if (!isset($id_client)) {

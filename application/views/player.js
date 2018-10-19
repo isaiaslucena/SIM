@@ -144,7 +144,7 @@
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
-														$('#vnext').scrollTo('a.active');
+														//$('#vnext').scrollTo('a.active');
 													}
 												};
 
@@ -162,7 +162,7 @@
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
-														$('#vnext').scrollTo('a.active');
+														//$('#vnext').scrollTo('a.active');
 													}
 												};
 											}
@@ -197,7 +197,7 @@
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
 												videoel[0].play();
-												$('#vnext').scrollTo('a.active');
+												//$('#vnext').scrollTo('a.active');
 											}
 										};
 
@@ -215,7 +215,7 @@
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
 												videoel[0].play();
-												$('#vnext').scrollTo('a.active');
+												//$('#vnext').scrollTo('a.active');
 											}
 										};
 									}

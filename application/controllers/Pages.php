@@ -2146,7 +2146,7 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function search_result($vtype = null, $pageselected = '', $query = '', $start = '') {
+	public function search_result($vtype = null, $pageselected = null, $query = null, $start = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'search_result',
@@ -2165,7 +2165,7 @@ class Pages extends CI_Controller {
 				$data_sresult['pageselected'] = $pageselected;
 			}
 
-			if (empty($query)) {
+			if (is_null($query)) {
 				$data_search['id_client'] = $this->input->post('clientid');
 				$data_search['clientkeywordid'] = $this->input->post('clientkeywordid');
 				$data_search['vtype'] = $this->input->post('optionsRadios');
@@ -2178,6 +2178,8 @@ class Pages extends CI_Controller {
 				$data_search['starttime'] = $this->input->post('starttime');
 				$data_search['endtime'] = $this->input->post('endtime');
 				$data_search['keyword'] = $this->input->post('keyword');
+
+				var_dump($data_search);
 
 				$data['id_client'] = $data_search['id_client'];
 				$data['clientkeywordid'] = $data_search['clientkeywordid'];

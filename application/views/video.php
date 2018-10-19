@@ -638,7 +638,6 @@
 														'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 													'</a>';
 								}
-
 								nextvideo.append(html);
 							});
 						}
@@ -799,6 +798,13 @@
 									file = val.replace(".mp4","");
 									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
 
+									var testeimg = new Image();
+									testeimg.src = srcposter;
+
+									testeimg.onerror = function() {
+										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+									};
+
 									if (file == lastvideo) {
 										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -845,12 +851,22 @@
 							if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 									csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
+
+									var testeimg = new Image();
+									testeimg.src = csrcposter;
+
+									testeimg.onerror = function() {
+										csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+									};
+
 								} else {
 									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
 							} else {
 								csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 							}
+
+							$('#vnext').scrollTo('a.active');
 
 							videoel.attr({
 								poster: csrcposter,
