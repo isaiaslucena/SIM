@@ -1340,7 +1340,7 @@
 								loadimgvnthumb(timgid, tsrc, tfile, nn);
 								nn = nn + 1;
 							}
-						}, 250);
+						}, 200);
 					}
 				});
 
