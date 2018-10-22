@@ -1,5 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
+date_default_timezone_set('America/Recife');
+// date_default_timezone_set('America/Sao_Paulo');
 
 function replace_chars($string) {
 	// $pattern = "/\n|\\u0000/";
@@ -35,7 +37,7 @@ $host = '172.17.0.3';
 
 //Get start and endtime
 // $sstart = strtotime('2018-10-21 03:00:00');
-// $send = strtotime('2018-10-22 02:59:59');
+// $send = strtotime('2018-10-23 02:59:59');
 $sstart = strtotime("-10 minutes");
 $send = strtotime("now");
 $start = date('Y-m-d\TH:i:s', $sstart);

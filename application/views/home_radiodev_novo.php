@@ -18,7 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="panel-heading">
 						<i class="fa fa-key fa-fw"></i>
 						<?php
-						$timezone = new DateTimeZone('America/Sao_Paulo');
+						// $timezone = new DateTimeZone('America/Sao_Paulo');
+						$timezone = new DateTimeZone('America/Recife');
 						$sd = new Datetime($startdate, $timezone);
 						$ed = new Datetime($enddate, $timezone);
 						$newtimezone = new DateTimeZone('UTC');
