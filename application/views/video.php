@@ -367,7 +367,7 @@
 				var vtooltiptime = $('.tooltiptime');
 				var timerslider = $('#timeslider');
 
-				var vnextthumbf;
+				var vnextthumbf, refreshclist;
 
 				var progresscbar = new ProgressBar.Circle('#progresscrop', {
 					color: '#aaa',
@@ -761,6 +761,13 @@
 									file = val.replace(".mp4","");
 									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
 
+									var testeimg = new Image();
+									testeimg.src = srcposter;
+
+									testeimg.onerror = function() {
+										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+									};
+
 									if (file == firstvideo) {
 										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -796,6 +803,8 @@
 
 								$.each(data, function(index, val) {
 									file = val.replace(".mp4","");
+									filearr = file.split('_');
+
 									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
 
 									var testeimg = new Image();
@@ -805,7 +814,7 @@
 										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 									};
 
-									if (file == lastvideo) {
+									if (file == lastvideo && filearr[2] != 'AVULSO') {
 										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
@@ -816,7 +825,7 @@
 															'</div>'+
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
 														'</a>';
-									} else if (file == lastvarray) {
+									} else if (file == lastvarray && filearr[2] != 'AVULSO') {
 										html =	'<a id="vbtn'+index+'" class="list-group-item disabled" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
 																'<img id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" width="125.4">'+
@@ -828,16 +837,30 @@
 															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'">'+file+'</span>'+
 														'</a>';
 									} else {
-										html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
-															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
-															'</div>'+
-															'<div class="checkbox checkbox-warning">'+
-																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
-															'</div>'+
-															'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
-														'</a>';
+										if (file == firstvideo && filearr[2] == 'AVULSO') {
+											cvideo = firstvideo;
+											html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
+																'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																	'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																'</div>'+
+																'<div class="checkbox checkbox-warning">'+
+																	'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																	'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+																'</div>'+
+																'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+															'</a>';
+										} else {
+											html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
+																'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																	'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																'</div>'+
+																'<div class="checkbox checkbox-warning">'+
+																	'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
+																	'<label for="chbx'+index+'" data-aid="vbtn'+index+'">Juntar</label>'+
+																'</div>'+
+																'<span id="vspan'+index+'" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" style="cursor: pointer;">'+file+'</span>'+
+															'</a>';
+										}
 									}
 									nextvideo.append(html);
 								});
@@ -848,7 +871,7 @@
 							arr = lastvideo.split('_');
 							channel = arr[2];
 
-							if (channel != 'AVULSO') {
+							// if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 									csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
@@ -858,13 +881,12 @@
 									testeimg.onerror = function() {
 										csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 									};
-
 								} else {
 									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
-							} else {
-								csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-							}
+							// } else {
+								// csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							// }
 
 							$('#vnext').scrollTo('a.active');
 
@@ -873,7 +895,7 @@
 								src: csrcvideo
 							});
 
-							if (channel != 'AVULSO') {
+							// if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 									videoel[0].pause();
 
@@ -881,12 +903,50 @@
 								} else {
 									videoel[0].play();
 								}
-							} else {
-								videoel[0].play();
-							}
+							// } else {
+								// videoel[0].play();
+							// }
 
 							enablebtns();
 							mobileconf();
+						}
+					);
+				};
+
+				function refreshlist(rvsource, rdate, rchannel, rstate) {
+					$.post('proxy',
+						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate},
+						function(data, textStatus, xhr) {
+							playlistv = $('.list-group').children();
+							lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
+							lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
+							lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
+							lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
+							lastvarraytm = data[data.length-1].replace(".mp4","");
+							srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+rvsource+'_'+lastvarraytm+'/001';
+
+							var testeimg = new Image();
+							testeimg.src = srcposter;
+
+							testeimg.onerror = function() {
+								srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							};
+
+							if (lastvplaylist != lastvarraytm) {
+								$('#'+lastvplaylistid).parent().removeClass('disabled');
+								$('#'+lastvplaylistid).css('cursor', 'pointer');
+								html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled style="height: 105px;"">'+
+													'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
+														'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" width="125.4">'+
+													'</div>'+
+													'<div class="checkbox checkbox-warning pull-left">'+
+														'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+														'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
+													'</div>'+
+													'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'">'+lastvarraytm+'</span>'+
+												'</a>';
+								nextvideo.append(html);
+							}
 						}
 					);
 				};
@@ -1165,39 +1225,11 @@
 					}
 
 					// console.log(todaydatesel);
+					clearInterval(refreshclist);
 					if (todaydatesel) {
-						$(function() {
-							function refreshlist(rvsource, rdate, rchannel, rstate) {
-								$.post('proxy',
-									{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>' + rvsource + '/' + rdate + '/' + rchannel + '/' + rstate},
-									function(data, textStatus, xhr) {
-										playlistv = $('.list-group').children();
-										lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
-										lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
-										lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
-										lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
-										lastvarraytm = data[data.length-1].replace(".mp4","");
-
-										if (lastvplaylist != lastvarraytm) {
-											$('#'+lastvplaylistid).parent().removeClass('disabled');
-											$('#'+lastvplaylistid).css('cursor', 'pointer');
-											html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled">'+
-																'<div class="checkbox checkbox-warning pull-left">'+
-																	'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
-																	'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
-																'</div>'+
-																'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+vsource+'">'+lastvarraytm+'</span>'+
-															'</a>';
-											nextvideo.append(html);
-										}
-									}
-								);
-							}
-
-							setInterval(function() {
-								refreshlist(vsource, selformdate, channel, state);
-							}, 30000);
-						});
+						refreshclist = setInterval(function() {
+							refreshlist(vsource, selformdate, channel, state);
+						}, 30000);
 					}
 				});
 
