@@ -871,7 +871,7 @@
 							arr = lastvideo.split('_');
 							channel = arr[2];
 
-							// if (channel != 'AVULSO') {
+							if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 									csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
@@ -884,9 +884,9 @@
 								} else {
 									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
-							// } else {
-								// csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-							// }
+							} else {
+								csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							}
 
 							$('#vnext').scrollTo('a.active');
 
@@ -895,7 +895,7 @@
 								src: csrcvideo
 							});
 
-							// if (channel != 'AVULSO') {
+							if (channel != 'AVULSO') {
 								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 									videoel[0].pause();
 
@@ -903,9 +903,9 @@
 								} else {
 									videoel[0].play();
 								}
-							// } else {
-								// videoel[0].play();
-							// }
+							} else {
+								videoel[0].play();
+							}
 
 							enablebtns();
 							mobileconf();
@@ -923,27 +923,31 @@
 							lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
 							lastvplaylistidn = Number(lastvplaylistid.replace('vspan', '')) + 1;
 							lastvarraytm = data[data.length-1].replace(".mp4","");
-							srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+rvsource+'_'+lastvarraytm+'/001';
 
-							var testeimg = new Image();
-							testeimg.src = srcposter;
-
-							testeimg.onerror = function() {
-								srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-							};
+							srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 
 							if (lastvplaylist != lastvarraytm) {
 								$('#'+lastvplaylistid).parent().removeClass('disabled');
 								$('#'+lastvplaylistid).css('cursor', 'pointer');
-								html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled style="height: 105px;"">'+
+								// html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
+								// 					'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
+								// 						'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" width="125.4">'+
+								// 					'</div>'+
+								// 					'<div class="checkbox checkbox-warning">'+
+								// 						'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+								// 						'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
+								// 					'</div>'+
+								// 					'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'">'+lastvarraytm+'</span>'+
+								// 				'</a>';
+								html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 													'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
 														'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" width="125.4">'+
 													'</div>'+
-													'<div class="checkbox checkbox-warning pull-left">'+
-														'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
+													'<div class="checkbox checkbox-warning">'+
+														'<input id="chbx'+lastvplaylistidn+'" type="checkbox" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
 														'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
 													'</div>'+
-													'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'">'+lastvarraytm+'</span>'+
+													'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" style="cursor: pointer;">'+lastvarraytm+'</span>'+
 												'</a>';
 								nextvideo.append(html);
 							}
@@ -1133,6 +1137,23 @@
 					$('#'+tvimg).attr('src', tcsrc);
 				};
 
+				function setcookie(cname, cvalue) {
+					document.cookie = cname+'='+cvalue;
+				};
+
+				function getcookies() {
+					var gcookies = document.cookie;
+					return gcookies.split(';');
+				};
+
+				function browservendor() {
+					if (navigator.vendor == 'Google Inc.') {
+						return 'chrome';
+					} else {
+						return 'other';
+					}
+				};
+
 				getchannels();
 				var tvalerts = setInterval(function() {
 					getchannels();
@@ -1142,6 +1163,8 @@
 				videomel.bind('contextmenu', function() { return false; });
 
 				videosetctime(frompost);
+
+				console.log(getcookies);
 
 				$('#btnnight').click(function(event) {
 					if (nightmode) {

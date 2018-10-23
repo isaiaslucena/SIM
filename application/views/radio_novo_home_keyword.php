@@ -30,8 +30,8 @@
 				$timezone = new DateTimeZone('UTC');
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
-				// $newtimezone = new DateTimeZone('America/Sao_Paulo');
-				$newtimezone = new DateTimeZone('America/Recife');
+				$newtimezone = new DateTimeZone('America/Sao_Paulo');
+				// $newtimezone = new DateTimeZone('America/Recife');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
