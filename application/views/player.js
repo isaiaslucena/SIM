@@ -67,15 +67,18 @@
 				});
 
 				$("#btnrn").click(function() {
-					videoel[0].playbackRate=1;
+					videoel[0].playbackRate = 1;
+					setlocalstorage('videoprate', videoel[0].playbackRate);
 				});
 
 				$("#btnrs").click(function() {
-					videoel[0].playbackRate-=0.1;
+					videoel[0].playbackRate -= 0.1;
+					setlocalstorage('videoprate', videoel[0].playbackRate);
 				});
 
 				$("#btnrf").click(function() {
-					videoel[0].playbackRate+=0.65;
+					videoel[0].playbackRate += 0.65;
+					setlocalstorage('videoprate', videoel[0].playbackRate);
 				});
 
 				$("#btnvol").click(function() {
@@ -83,19 +86,21 @@
 						$("#btnvol").removeClass('btn-danger');
 						$("#btnvol").addClass('btn-default');
 						videoel[0].muted = false;
+						setlocalstorage('videomuted', false);
 					} else {
 						$("#btnvol").removeClass('btn-default');
 						$("#btnvol").addClass('btn-danger');
 						videoel[0].muted = true;
+						setlocalstorage('videomuted', true);
 					}
 				});
 
 				$("#btnvolm").click(function() {
-					videoel[0].volume-=0.5;
+					videoel[0].volume -= 0.5;
 				});
 
 				$("#btnvolp").click(function() {
-					videoel[0].volume+=0.5;
+					videoel[0].volume += 0.5;
 				});
 
 				$('#btnfull').click(function(event) {
@@ -223,9 +228,9 @@
 								}
 							}
 						}
-						setcookie('joinvideosclk', joinvideosclk);
-						setcookie('videofile', vdfilename);
-						setcookie('videosrc', srcfilename);
+						setlocalstorage('joinvideosclk', joinvideosclk);
+						setlocalstorage('videofile', vdfilename);
+						setlocalstorage('videosrc', srcfilename);
 					}
 				});
 
@@ -235,7 +240,7 @@
 						maxduration = videoel[0].duration;
 						percentage = 100 * currentPos / maxduration;
 
-						setcookie('videoctime', currentPos);
+						setlocalstorage('videoctime', currentPos);
 
 						currentPosh = ('0' + Math.floor(currentPos / 60 / 60)).slice(-2);
 						currentPosm = ('0' + Math.floor(currentPos - currentPosh * 60)).slice(-2);
@@ -583,12 +588,14 @@
 						$('.vbutton').css('display', 'block');
 						setTimeout(function() {$('.vbutton').fadeOut('fast')}, 1500);
 						vvideoelmt[0].play();
+						setlocalstorage('videoplaying', true);
 					} else {
 						$("#ipause").addClass('hidden');
 						$("#iplay").removeClass('hidden');
 						$('.vbutton').addClass('paused');
 						$('.vbutton').css('display', 'block');
 						vvideoelmt[0].pause();
+						setlocalstorage('videoplaying', false);
 					}
 				}
 

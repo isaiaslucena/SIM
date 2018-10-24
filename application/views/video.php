@@ -734,7 +734,7 @@
 					);
 				};
 
-				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate) {
+				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play) {
 					$.post('proxy',
 						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate},
 						function(data, textStatus, xhr) {
@@ -766,6 +766,7 @@
 
 									testeimg.onerror = function() {
 										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+										console.log(srcposter);
 									};
 
 									if (file == firstvideo) {
@@ -866,45 +867,49 @@
 								});
 							}
 
-							csrcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+cvideo
+							if (play) {
+								console.log('play is true!!!!');
 
-							arr = lastvideo.split('_');
-							channel = arr[2];
+								csrcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+cvideo
 
-							if (channel != 'AVULSO') {
-								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
+								arr = lastvideo.split('_');
+								channel = arr[2];
 
-									var testeimg = new Image();
-									testeimg.src = csrcposter;
+								if (channel != 'AVULSO') {
+									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+										csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
-									testeimg.onerror = function() {
+										var testeimg = new Image();
+										testeimg.src = csrcposter;
+
+										testeimg.onerror = function() {
+											csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+										};
+									} else {
 										csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-									};
+									}
 								} else {
 									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
-							} else {
-								csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-							}
 
-							$('#vnext').scrollTo('a.active');
+								$('#vnext').scrollTo('a.active');
 
-							videoel.attr({
-								poster: csrcposter,
-								src: csrcvideo
-							});
+								videoel.attr({
+									poster: csrcposter,
+									src: csrcvideo
+								});
 
-							if (channel != 'AVULSO') {
-								if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
+								if (channel != 'AVULSO') {
+									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
+										videoel[0].pause();
 
-									loadingthumbs();
+										loadingthumbs();
+									} else {
+										videoel[0].play();
+									}
 								} else {
 									videoel[0].play();
 								}
-							} else {
-								videoel[0].play();
 							}
 
 							enablebtns();
@@ -1111,7 +1116,7 @@
 
 				function videosetctime(pfp) {
 					if (pfp) {
-						console.log('page from post');
+						// console.log('page from post');
 
 						sidsource = '<?php echo isset($sidsource) ? $sidsource : null ?>';
 						sstartdate = '<?php echo isset($sstartdate) ? $sstartdate : null ?>';
@@ -1124,7 +1129,7 @@
 						enablenovo();
 						getdocsbydate(sidsource, sstartdate, senddate);
 					} else {
-						console.log('normal page');
+						// console.log('normal page');
 						$('#selvnext').selectpicker('hide');
 					}
 				};
@@ -1142,8 +1147,15 @@
 				};
 
 				function getcookies() {
-					var gcookies = document.cookie;
-					return gcookies.split(';');
+					return document.cookie.split(';');
+				};
+
+				function setlocalstorage(cname, cvalue) {
+					window.localStorage.setItem(cname, cvalue);
+				};
+
+				function getlocalstorage(cname) {
+					window.localStorage.getItem(cname);
 				};
 
 				function browservendor() {
@@ -1164,7 +1176,59 @@
 
 				videosetctime(frompost);
 
-				console.log(getcookies);
+				// if (document.cookie.indexOf('videofile') != -1 ) {
+				// 	console.log('videofile exist @ cookie!');
+				// } else {
+				// 	console.log('videofile not exist @ cookie!');
+				// }
+
+				// if (window.localStorage.getItem('videofile')) {
+				// 	vsource = window.localStorage.getItem('videosrc');
+				// 	vfile = window.localStorage.getItem('videofile');
+				// 	// console.log(vfile);
+				// 	vfarr = vfile.split('_');
+				// 	selformdate = vfarr[0];
+				// 	channel = vfarr[2];
+				// 	state = vfarr[3];
+
+				// 	vctime = window.localStorage.getItem('videoctime');
+				// 	vplaying = window.localStorage.getItem('videoplaying');
+
+				// 	setTimeout(function() {
+				// 		$('.list-group').children().removeClass('active');
+
+				// 		$('.input-group.date').datepicker('setDate', new Date(selformdate+' 00:00:00'));
+				// 		$('#selchannels').selectpicker('val', vsource+':'+channel+'_'+state);
+
+				// 		spanid = $("span:contains('"+vfile+"')").attr('id');
+				// 		$('#'+spanid).parent().addClass('active');
+
+				// 		$('#vnext').scrollTo('a.active');
+
+				// 		videotitle.text(vfile);
+				// 		videotitle.attr('data-vsrc', vsource);
+
+				// 		vsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+vfile
+				// 		vposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+vfile+'/001';
+				// 		console.log(vsource);
+				// 		videoel.attr({
+				// 			poster: vposter,
+				// 			src: vsrc
+				// 		});
+
+				// 		loadingthumbs();
+
+				// 		videoel[0].currentTime = vctime;
+				// 		// if (vplaying == 'false') {
+				// 		// 	videoel[0].pause();
+				// 		// } else {
+				// 		// 	videoel[0].play();
+				// 		// }
+				// 	}, 300);
+
+				// 	selectchannel(selformdate);
+				// 	getlistchannel(vsource, selformdate, channel, state, false);
+				// }
 
 				$('#btnnight').click(function(event) {
 					if (nightmode) {
@@ -1222,7 +1286,7 @@
 					channel = selvalarr2[0];
 					state = selvalarr2[1];
 
-					getlistchannel(vsource, selformdate, channel, state);
+					getlistchannel(vsource, selformdate, channel, state, true);
 
 					datetoday = new Date();
 					tday = datetoday.getDate();
