@@ -2195,6 +2195,27 @@ class Pages_model extends CI_Model {
 				$de = new DateTime(date('Y-m-d H:i:s', $enddate));
 				$startdatem = $ds->format('Y-m-d\TH:i:s\Z');
 				$enddatem = $de->format('Y-m-d\TH:i:s\Z');
+
+
+
+				$timezone = new DateTimeZone('America/Sao_Paulo');
+				$sd = new Datetime($datasearch['starttime'], $timezone);
+				$ed = new Datetime($datasearch['endtime'], $timezone);
+				$newtimezone = new DateTimeZone('UTC');
+				$sd->setTimezone($newtimezone);
+				$ed->setTimezone($newtimezone);
+				$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+				$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
+
+				$epochstartdate1 = strtotime($startdate);
+				$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+				$epochenddate1 = strtotime($enddate);
+				$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+
+
 				$path = '/solr/knewin_radio/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
 				$url = $protocol."://".$host.":".$port.$path;
 

@@ -51,6 +51,14 @@
 					}
 				});
 
+				$('#checkaplay').change(function(event) {
+					if ($(this).prop('checked')) {
+						setlocalstorage('videoautoplay', 'true');
+					} else {
+						setlocalstorage('videoautoplay', 'false');
+					}
+				});
+
 				$('.vbutton').click(function(event) {
 					playpausevideo('vvideo');
 				});

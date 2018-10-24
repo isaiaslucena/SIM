@@ -13,7 +13,6 @@
 		<script src="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/js/bootstrap.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-select/js/bootstrap-select.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.js');?>"></script>
-		<!-- <script src="<?php echo base_url('assets/sweetalert/dist/sweetalert.min.js');?>"></script> -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.js"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js');?>"></script>
@@ -23,7 +22,6 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-select/css/bootstrap-select.min.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-toggle/bootstrap-toggle.min.css');?>">
-		<!-- <link rel="stylesheet" href="<?php echo base_url('assets/sweetalert/dist/sweetalert.css');?>"> -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.css"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
@@ -1181,6 +1179,13 @@
 				// } else {
 				// 	console.log('videofile not exist @ cookie!');
 				// }
+
+				if (window.localStorage.getItem('videoautoplay')) {
+					console.log(window.localStorage.getItem('videoautoplay'));
+					if (window.localStorage.getItem('videoautoplay') == 'true') {
+						$('#checkaplay').bootstrapToggle('enable').bootstrapToggle('on').bootstrapToggle('disable');
+					}
+				}
 
 				// if (window.localStorage.getItem('videofile')) {
 				// 	vsource = window.localStorage.getItem('videosrc');
