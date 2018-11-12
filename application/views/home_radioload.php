@@ -44,9 +44,10 @@
 													$data_discard['id_keyword'] = $keyword['id_keyword'];
 
 													$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
-													$keyword_found = $this->pages_model->docs_byid_radio($discardeddocs, $keyword['keyword'], $startdate, $enddate);
+													$croppeddocs = $this->pages_model->cropped_docs_radio($data_discard);
+													$keyword_found = $this->pages_model->docs_byid_radio($discardeddocs, $croppeddocs, $keyword['keyword'], $startdate, $enddate);
 													$keyword_foundc = $keyword_found->response->numFound;
-													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate,$enddate,$keyword['keyword']);
+													$allkeyword_found = $this->pages_model->radio_text_keyword_solr($startdate, $enddate, $keyword['keyword']);
 													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;

@@ -164,6 +164,38 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function index_tv() {
+		if ($this->session->has_userdata('logged_in')) {
+			$id_user = $this->session->userdata('id_user');
+			$id_group = $this->db->get_where('user',array('id_user' => $id_user))->row()->id_group;
+			$data['changepass'] = $this->db->get_where('user', array('id_user' => $id_user))->row()->change_password;
+			$data['changepass_id'] = $id_user;
+
+			if ($id_group == 1 or $id_group == 5) {
+				$sessiondata = array(
+					'view' => 'index_tv_novo',
+					'last_page' => base_url('pages/index_tv')
+				);
+				$this->session->set_userdata($sessiondata);
+
+				$data_navbar['vtype'] = 'tv';
+				$data_navbar['selected_page'] = 'home_tv';
+				$data_navbar['selected_date'] = 'today';
+				$data['page'] = 'pages/home_tv';
+				$data['selected_date'] = 'today';
+
+				$this->load->view('head');
+				$this->load->view('navbar', $data_navbar);
+				$this->load->view('loading', $data);
+				$this->load->view('footer', $data_navbar);
+			} else {
+				redirect(base_url(),'refresh');
+			}
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+		}
+	}
+
 	public function index_tv_novo() {
 		if ($this->session->has_userdata('logged_in')) {
 			$id_user = $this->session->userdata('id_user');
@@ -192,7 +224,7 @@ class Pages extends CI_Controller {
 				redirect(base_url(),'refresh');
 			}
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv_novo'), 'refresh');
 		}
 	}
 
@@ -487,7 +519,7 @@ class Pages extends CI_Controller {
 			$data['keywords'] = $this->pages_model->keywords();
 			$data['selected_date'] = $selecteddate;
 
-			if (is_null($selecteddate)  or $selecteddate == 'today') {
+			if (is_null($selecteddate) or $selecteddate == 'today') {
 				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime('today 00:00:00'));
 				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime('today 23:59:59'));
 			}
@@ -550,14 +582,53 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function home_tv_novo($selecteddate = null, $limit = null, $offset = null) {
+	public function home_tv($selecteddate = null, $limit = null, $offset = null) {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
-				'view' => 'home',
+				'view' => 'home_tv',
 				'last_page' => base_url('pages/home_tv')
 			);
 			$this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_tv';
+			$data_navbar['selected_date'] = $selecteddate;
+			$clientsc = count($this->pages_model->clients(null, null, 'tv'));
+			$data['clientsmp'] = ($clientsc / 5);
+
+			if (!is_null($limit)) {
+				$data['clients'] = $this->pages_model->clients($limit, $offset, 'tv');
+			} else {
+				$data['clients'] = $this->pages_model->clients();
+			}
+
+			$data['keywords'] = $this->pages_model->keywords();
+			$data['selected_date'] = $selecteddate;
+
+			if (is_null($selecteddate)  or $selecteddate == 'today') {
+				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime('today 00:00:00'));
+				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime('today 23:59:59'));
+			} else {
+				$data['startdate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 00:00:00'));
+				$data['enddate'] = date('Y-m-d\TH:i:s', strtotime($selecteddate.' 23:59:59'));
+			}
+
+			if ($limit == 0) {
+				$this->load->view('home_tvdev',$data);
+			} else {
+				$this->load->view('home_tvload',$data);
+			}
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+		}
+	}
+
+	public function home_tv_novo($selecteddate = null, $limit = null, $offset = null) {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'home_tv_novo',
+				'last_page' => base_url('pages/home_tv_novo')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'home_tv_novo';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'tv'));
 			$data['clientsmp'] = ($clientsc / 5);
@@ -585,7 +656,7 @@ class Pages extends CI_Controller {
 				$this->load->view('home_tvload_novo',$data);
 			}
 		} else {
-			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+			redirect('login?rdt='.urlencode('pages/index_tv_novo'), 'refresh');
 		}
 	}
 
@@ -775,11 +846,6 @@ class Pages extends CI_Controller {
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['keyword_texts'] = $this->pages_model->text_keyword_id($data['ids_file_xml']);
 
-			#foreach ($data['keyword_texts'] as $keywordtext) {
-				#var_dump($keywordtext);
-			#}
-			#exit();
-
 			$data['id_user'] = $this->session->userdata('id_user');
 
 			header('Content-Type: application/json, charset=utf-8');
@@ -792,7 +858,7 @@ class Pages extends CI_Controller {
 	public function radio_home_keyword() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
-				'view' => 'tv_home_keyword',
+				'view' => 'radio_home_keyword',
 				'last_page' => base_url('pages/radio_home_keyword')
 			);
 			$this->session->set_userdata($sessiondata);
@@ -803,10 +869,11 @@ class Pages extends CI_Controller {
 
 			$data['id_keyword'] = $this->input->post('id_keyword');
 			$data['id_client'] = $this->input->post('id_client');
-			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
+			$data['pagesrc'] = 'radio_home_keyword';
 			$data['start'] = 0;
 			$data['rows'] = 10;
 
@@ -821,9 +888,8 @@ class Pages extends CI_Controller {
 			$data_discard['id_keyword'] = $data['id_keyword'];
 
 			$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
-			// $croppedd'ocs = $this->pages_model->cropped_docs_radio($data_discard);
-			$croppeddocs = array('id' => '');
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$croppeddocs = $this->pages_model->cropped_docs_radio($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $croppeddocs, $data['keyword'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -851,12 +917,14 @@ class Pages extends CI_Controller {
 
 			$data['id_keyword'] = $this->input->post('id_keyword');
 			$data['id_client'] = $this->input->post('id_client');
-			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
 			$data['start'] = 0;
 			$data['rows'] = 10;
+			$data['pagesrc'] = 'radio_novo_home_keyword';
+			$data['id_source'] = 0;
 
 			$timezone = new DateTimeZone('America/Sao_Paulo');
 			$sd = new Datetime($data['startdate'], $timezone);
@@ -881,7 +949,7 @@ class Pages extends CI_Controller {
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
 			$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword'], $sstartdate, $senddate, $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -896,24 +964,32 @@ class Pages extends CI_Controller {
 	}
 
 	public function get_radio_keyword_texts() {
-		$data_navbar['selected_page'] = 'home_radio_novo';
-		$data_navbar['vtype'] = 'radio_novo';
-		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
-
+		if ($this->input->post('id_source') != 0) {
+			$data['id_source'] = $this->input->post('id_source');
+		}
 		$data['id_keyword'] = $this->input->post('id_keyword');
+		if ($data['id_keyword'] != 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		} else if ($data['id_keyword'] == 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->input->post('keyword');
+		} else {
+			$data['keyword'] = null;
+		}
+
 		$data['id_client'] = $this->input->post('id_client');
-		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
-		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		if ($data['id_client'] != 0) {
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		}
 		$data['startdate'] = $this->input->post('startdate');
 		$data['enddate'] = $this->input->post('enddate');
 		$data['start'] = $this->input->post('start');
 		$data['rows'] = $this->input->post('rows');
+		$data['pagesrc'] = $this->input->post('pagesrc');
+		$data['msc'] = $this->input->post('msc');
+		$data['mtype'] = $this->input->post('mtype');
 
-		// $timezone = new DateTimeZone('UTC');
-		$timezone = new DateTimeZone('America/Sao_Paulo');
-		$sd = new Datetime($data['startdate'], $timezone);
-		$ed = new Datetime($data['enddate'], $timezone);
-		// $sd->setTimezone($newtimezone);
+		$sd = new Datetime($data['startdate']);
+		$ed = new Datetime($data['enddate']);
 		$epochstartdate = $sd->format('U');
 		$epochenddate = $ed->format('U');
 
@@ -922,28 +998,44 @@ class Pages extends CI_Controller {
 		$data_discard['id_client'] = $data['id_client'];
 		$data_discard['id_keyword'] = $data['id_keyword'];
 
-		$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
-		$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+		if ($data['pagesrc'] == 'search_result') {
+			$data['keyword_texts'] = $this->pages_model->search_result($data);
+		} else {
+			$discardeddocs = $this->pages_model->discarded_docs_radio($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_radio($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_page($discardeddocs, $croppeddocs, $data['keyword'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		}
 
-		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 		$data['id_user'] = $this->session->userdata('id_user');
 
 		$this->load->view('get_radio_keyword_texts', $data);
 	}
 
 	public function get_radio_novo_keyword_texts() {
-		$data_navbar['selected_page'] = 'home_radio_novo';
-		$data_navbar['vtype'] = 'radio_novo';
-		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
-
+		if ($this->input->post('id_source') != 0) {
+			$data['id_source'] = $this->input->post('id_source');
+		}
 		$data['id_keyword'] = $this->input->post('id_keyword');
+		if ($data['id_keyword'] != 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		} else if ($data['id_keyword'] == 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->input->post('keyword');
+		} else {
+			$data['keyword'] = null;
+		}
+
 		$data['id_client'] = $this->input->post('id_client');
-		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
-		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		if ($data['id_client'] != 0) {
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		}
 		$data['startdate'] = $this->input->post('startdate');
 		$data['enddate'] = $this->input->post('enddate');
 		$data['start'] = $this->input->post('start');
 		$data['rows'] = $this->input->post('rows');
+		$data['pagesrc'] = $this->input->post('pagesrc');
+		$data['msc'] = $this->input->post('msc');
+		$data['mtype'] = $this->input->post('mtype');
 
 		$timezone = new DateTimeZone('UTC');
 		$sd = new Datetime($data['startdate'], $timezone);
@@ -958,14 +1050,73 @@ class Pages extends CI_Controller {
 		$data_discard['id_client'] = $data['id_client'];
 		$data_discard['id_keyword'] = $data['id_keyword'];
 
-		$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
-		$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
-		$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+		if ($data['pagesrc'] == 'search_result') {
+			$data['keyword_texts'] = $this->pages_model->search_result($data);
+		} else {
+			$discardeddocs = $this->pages_model->discarded_docs_novo_radio($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_novo_radio($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_radio_novo_page($discardeddocs, $croppeddocs, $data['keyword'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		}
 
-		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 		$data['id_user'] = $this->session->userdata('id_user');
 
 		$this->load->view('get_radio_novo_keyword_texts', $data);
+	}
+
+	public function tv_home_keyword() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'tv_home_keyword',
+				'last_page' => base_url('pages/home_tv')
+			);
+			$this->session->set_userdata($sessiondata);
+			$data_navbar['selected_page'] = 'home_tv';
+			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
+			$data_navbar['vtype'] = 'tv';
+
+			$data['id_keyword'] = $this->input->post('id_keyword');
+			$data['id_client'] = $this->input->post('id_client');
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+			$data['startdate'] = $this->input->post('startdate');
+			$data['enddate'] = $this->input->post('enddate');
+			$data['start'] = 0;
+			$data['rows'] = 10;
+			$data['pagesrc'] = 'tv_home_keyword';
+			$data['id_source'] = 0;
+
+			$sd = new Datetime($data['startdate']);
+			$ed = new Datetime($data['enddate']);
+			$sstartdate = $sd->format('Y-m-d\TH:i:s');
+			$senddate = $ed->format('Y-m-d\TH:i:s');
+			$epochstartdate = $sd->format('U');
+			$epochenddate = $ed->format('U');
+
+			$epochstartdate1 = strtotime($data['startdate']);
+			$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+			$epochenddate1 = strtotime($data['enddate']);
+			$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+			$data_discard['startdate'] = $epochstartdate1;
+			$data_discard['enddate'] = $epochenddate1;
+			$data_discard['id_client'] = $data['id_client'];
+			$data_discard['id_keyword'] = $data['id_keyword'];
+
+			$discardeddocs = $this->pages_model->discarded_docs_tv($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_page($discardeddocs, $croppeddocs, $data['keyword'], $sstartdate, $senddate, $data['start'], $data['rows']);
+
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+			$data['id_user'] = $this->session->userdata('id_user');
+
+			$this->load->view('head');
+			$this->load->view('navbar', $data_navbar);
+			$this->load->view('tv_home_keyword', $data);
+			$this->load->view('footer');
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
+		}
 	}
 
 	public function tv_novo_home_keyword() {
@@ -981,12 +1132,14 @@ class Pages extends CI_Controller {
 
 			$data['id_keyword'] = $this->input->post('id_keyword');
 			$data['id_client'] = $this->input->post('id_client');
-			$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
 			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 			$data['startdate'] = $this->input->post('startdate');
 			$data['enddate'] = $this->input->post('enddate');
 			$data['start'] = 0;
 			$data['rows'] = 10;
+			$data['pagesrc'] = 'tv_novo_home_keyword';
+			$data['id_source'] = 0;
 
 			$timezone = new DateTimeZone('America/Sao_Paulo');
 			$sd = new Datetime($data['startdate'], $timezone);
@@ -1011,7 +1164,7 @@ class Pages extends CI_Controller {
 
 			$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
 			$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
-			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword'], $sstartdate, $senddate, $data['start'], $data['rows']);
 
 			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 			$data['id_user'] = $this->session->userdata('id_user');
@@ -1025,44 +1178,102 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function get_tv_novo_keyword_texts() {
-		$data_navbar['selected_page'] = 'home_tv';
-		$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
-		$data_navbar['vtype'] = 'tv';
+	public function get_tv_keyword_texts() {
+		$data['id_client'] = $this->input->post('id_client');
+		if ($this->input->post('id_source') != 0) {
+			$data['id_source'] = $this->input->post('id_source');
+		}
 
 		$data['id_keyword'] = $this->input->post('id_keyword');
-		$data['id_client'] = $this->input->post('id_client');
-		$data['keyword_selected'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
-		$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		if ($data['id_keyword'] != 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		} else if ($data['id_keyword'] == 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->input->post('keyword');
+		} else {
+			$data['keyword'] = null;
+		}
+		if ($data['id_client'] != 0) {
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		}
 		$data['startdate'] = $this->input->post('startdate');
 		$data['enddate'] = $this->input->post('enddate');
-		$data['start'] =$this->input->post('start');
+		$data['start'] = $this->input->post('start');
 		$data['rows'] = $this->input->post('rows');
+		$data['pagesrc'] = $this->input->post('pagesrc');
+		$data['msc'] = $this->input->post('msc');
+		$data['mtype'] = $this->input->post('mtype');
 
-		$timezone = new DateTimeZone('America/Sao_Paulo');
-		$sd = new Datetime($data['startdate'], $timezone);
-		$ed = new Datetime($data['enddate'], $timezone);
-		$newtimezone = new DateTimeZone('UTC');
-		$sd->setTimezone($newtimezone);
-		$ed->setTimezone($newtimezone);
-		$sstartdate = $sd->format('Y-m-d\TH:i:s');
-		$senddate = $ed->format('Y-m-d\TH:i:s');
+		$sd = new Datetime($data['startdate']);
+		$ed = new Datetime($data['enddate']);
 		$epochstartdate = $sd->format('U');
 		$epochenddate = $ed->format('U');
 
-		$epochstartdate1 = strtotime($data['startdate']);
-		$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
-		$epochenddate1 = strtotime($data['enddate']);
-		$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
-
-		$data_discard['startdate'] = $epochstartdate1;
-		$data_discard['enddate'] = $epochenddate1;
+		$data_discard['startdate'] = $epochstartdate;
+		$data_discard['enddate'] = $epochenddate;
 		$data_discard['id_client'] = $data['id_client'];
 		$data_discard['id_keyword'] = $data['id_keyword'];
 
-		$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-		$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
-		$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword_selected'], $sstartdate, $senddate, $data['start'], $data['rows']);
+		if ($data['pagesrc'] == 'search_result') {
+			$data['keyword_texts'] = $this->pages_model->search_result($data);
+		} else {
+			$discardeddocs = $this->pages_model->discarded_docs_tv($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_page($discardeddocs, $croppeddocs, $data['keyword'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		}
+
+		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		$data['id_user'] = $this->session->userdata('id_user');
+
+		$this->load->view('get_tv_keyword_texts', $data);
+	}
+
+	public function get_tv_novo_keyword_texts() {
+		$data['id_client'] = $this->input->post('id_client');
+		if ($this->input->post('id_source') != 0) {
+			$data['id_source'] = $this->input->post('id_source');
+		}
+
+		$data['id_keyword'] = $this->input->post('id_keyword');
+		if ($data['id_keyword'] != 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
+		} else if ($data['id_keyword'] == 0 and !empty($this->input->post('keyword'))) {
+			$data['keyword'] = $this->input->post('keyword');
+		} else {
+			$data['keyword'] = null;
+		}
+		if ($data['id_client'] != 0) {
+			$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
+		}
+		$data['startdate'] = $this->input->post('startdate');
+		$data['enddate'] = $this->input->post('enddate');
+		$data['start'] = $this->input->post('start');
+		$data['rows'] = $this->input->post('rows');
+		$data['pagesrc'] = $this->input->post('pagesrc');
+		$data['msc'] = $this->input->post('msc');
+		$data['mtype'] = $this->input->post('mtype');
+
+		$timezone = new DateTimeZone('UTC');
+		$sd = new Datetime($data['startdate'], $timezone);
+		$ed = new Datetime($data['enddate'], $timezone);
+		$newtimezone = new DateTimeZone('America/Sao_Paulo');
+		$sd->setTimezone($newtimezone);
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		$data_discard['startdate'] = $epochstartdate;
+		$data_discard['enddate'] = $epochenddate;
+		$data_discard['id_client'] = $data['id_client'];
+		$data_discard['id_keyword'] = $data['id_keyword'];
+
+		if ($data['pagesrc'] == 'search_result') {
+			$data['keyword_texts'] = $this->pages_model->search_result($data);
+		} else {
+			$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
+			$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
+			$data['keyword_texts'] = $this->pages_model->docs_byid_tv_novo_page($discardeddocs, $croppeddocs, $data['keyword'], $data['startdate'], $data['enddate'], $data['start'], $data['rows']);
+			$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
+		}
 
 		$data['clients_keyword'] = $this->pages_model->clients_keyword($data['id_keyword']);
 		$data['id_user'] = $this->session->userdata('id_user');
@@ -1241,6 +1452,18 @@ class Pages extends CI_Controller {
 			$this->pages_model->discard_doc_radio_novo($data_discard);
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio_novo'), 'refresh');
+		}
+	}
+
+	public function discard_doc_tv() {
+		if ($this->session->has_userdata('logged_in')) {
+			$data_discard['id_doc'] = $this->input->post('iddoc', TRUE);
+			$data_discard['id_client'] = $this->input->post('idclient', TRUE);
+			$data_discard['id_keyword'] = $this->input->post('idkeyword', TRUE);
+			$data_discard['id_user'] = $this->input->post('iduser', TRUE);
+			print $this->pages_model->discard_doc_tv($data_discard);
+		} else {
+			redirect('login?rdt='.urlencode('pages/index_tv'), 'refresh');
 		}
 	}
 
@@ -2133,7 +2356,8 @@ class Pages extends CI_Controller {
 			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
 			$data['allradios'] = $this->pages_model->radios();
 			$data['allradios_novo'] = $this->pages_model->radios_novo();
-			$data['alltvc'] = $this->pages_model->tvc_novo();
+			$data['alltvs'] = $this->pages_model->tvs();
+			$data['alltvs_novo'] = $this->pages_model->tvs_novo();
 			$data['vsr'] = 'false';
 			// $data['alltvp'] = = $this->pages_model->tvp();
 
@@ -2146,84 +2370,71 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function search_result($vtype = null, $pageselected = null, $query = null, $start = null) {
+	public function search_result() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'search_result',
-				'last_page' => base_url('pages/search_result/'.$pageselected.'/'.$query.'/'.$start),
+				'last_page' => base_url('pages/search_result'),
 			);
 			$this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'search';
-			$data['allclients'] = $this->pages_model->clients(null, null, 'radio');
-			$data['allradios'] = $this->pages_model->radios();
-			$data['allradios_novo'] = $this->pages_model->radios_novo();
-			$data['alltvc'] = $this->pages_model->tvc_novo();
-			if (empty($pageselected)) {
-				$data_sresult['pageselected'] = 1;
+			$data_search['allclients'] = $this->pages_model->clients(null, null, 'radio');
+			$data_search['allradios'] = $this->pages_model->radios();
+			$data_search['allradios_novo'] = $this->pages_model->radios_novo();
+			$data_search['alltvs'] = $this->pages_model->tvs();
+			$data_search['alltvs_novo'] = $this->pages_model->tvs_novo();
+			$data_search['id_client'] = $this->input->post('clientid');
+			$data_search['clientkeywordid'] = $this->input->post('clientkeywordid');
+			$data_search['msc'] = $this->input->post('optionssrcadios');
+
+			if ($this->input->post('optionsRadios') == 'radio') {
+				$data_search['mtype'] = 'audio';
 			} else {
-				$data_sresult['pageselected'] = $pageselected;
+				$data_search['mtype'] = 'video';
 			}
-
-			if (is_null($query)) {
-				$data_search['id_client'] = $this->input->post('clientid');
-				$data_search['clientkeywordid'] = $this->input->post('clientkeywordid');
-				$data_search['vtype'] = $this->input->post('optionsRadios');
-				$data_search['vsrctype'] = $this->input->post('optionssrcadios');
-				$data_search['id_radio'] = $this->input->post('radioid');
-				$data_search['id_radio_novo'] = $this->input->post('kneradioid');
-				$data_search['tvchannel'] = $this->input->post('tvchannel');
-				$data_search['startdate'] = $this->input->post('startdate');
-				$data_search['enddate'] = $this->input->post('enddate');
-				$data_search['starttime'] = $this->input->post('starttime');
-				$data_search['endtime'] = $this->input->post('endtime');
-				$data_search['keyword'] = $this->input->post('keyword');
-
-				var_dump($data_search);
-
-				$data['id_client'] = $data_search['id_client'];
-				$data['clientkeywordid'] = $data_search['clientkeywordid'];
-				$data['vtype'] = $data_search['vtype'];
-				$data['vsrctype'] = $data_search['vsrctype'];
-				$data['id_radio'] = $data_search['id_radio'];
-				$data['id_radio_novo'] = $data_search['id_radio_novo'];
-				$data['tvchannel'] = $data_search['tvchannel'];
-				$data['startdate'] = $data_search['startdate'];
-				$data['enddate'] = $data_search['enddate'];
-				$data['starttime'] = $data_search['starttime'];
-				$data['endtime'] = $data_search['endtime'];
-				$data['keyword'] = $data_search['keyword'];
-
-				$vtype = $data['vtype'];
-				$vsrctype = $data['vsrctype'];
+			if (!empty($this->input->post('radioid'))) {
+				$data_search['id_source'] = $this->input->post('radioid');
+			} else if (!empty($this->input->post('radionovoid'))) {
+				$data_search['id_source'] = $this->input->post('radionovoid');
+			} else if (!empty($this->input->post('tvid'))){
+				$data_search['id_source'] = $this->input->post('tvid');
+			}	else if (!empty($this->input->post('tvnovoid'))){
+				$data_search['id_source'] = $this->input->post('tvnovoid');
 			} else {
-				$data_search = base64_decode($query);
-				$data['search'] = $data_search;
-				$data['vtype'] = $vtype;
-				if ($vtype == 'radio') {
-					$data['vsrctype'] = 'audimus';
-					$data_sresult['vsrctype'] = 'audimus';
-				} else if ($vtype == 'radio_novo'){
-					$data_sresult['vsrctype'] = 'novo';
-					$data['vsrctype'] = 'novo';
-				}
+				$data_search['id_source'] = 0;
 			}
+			$data_search['pstartdate'] = $this->input->post('startdate');
+			$data_search['penddate'] = $this->input->post('enddate');
+			$data_search['pstarttime'] = $this->input->post('starttime');
+			$data_search['pendtime'] = $this->input->post('endtime');
+			$data_search['keyword'] = $this->input->post('keyword');
+			$data_search['keyword_selected'] = $this->input->post('keyword');
 
-			$searchresult = $this->pages_model->search_result($vtype, $data_search, $start);
-			$data_sresult['searchresult'] = $searchresult;
-			$data['searchresult'] = $searchresult;
-			$data['vsr'] = 'true';
+			$sdatearr = explode("/", $data_search['pstartdate']);
+			$edatearr = explode("/", $data_search['penddate']);
+			$data_search['startdate'] = $sdatearr[2]."-".$sdatearr[1]."-".$sdatearr[0]."T".$data_search['pstarttime'].":00";
+			$data_search['enddate'] = $edatearr[2]."-".$edatearr[1]."-".$edatearr[0]."T".$data_search['pendtime'].":59";
+
+			$data_search['pagesrc'] = 'search_result';
+			$data_search['start'] = 0;
+			$data_search['rows'] = 10;
+			$data_search['vsr'] = 'true';
+
+			$data_search['keyword_texts'] = $this->pages_model->search_result($data_search);
 
 			$this->load->view('head');
 			$this->load->view('navbar', $data_navbar);
-			$this->load->view('search', $data);
+			$this->load->view('search', $data_search);
 
-			if ($vtype == 'radio') {
-				$this->load->view('search_result', $data_sresult);
-			} else if ($vtype == 'radio_novo') {
-				$this->load->view('novosearch_result', $data_sresult);
-			} else if ($vtype == 'tv') {
-				$this->load->view('tvsearch_result', $data_sresult);
+			if ($data_search['msc'] == 'local' and $data_search['mtype'] == 'audio') {
+				$this->load->view('radio_home_keyword', $data_search);
+			} else if ($data_search['msc'] == 'novo' and $data_search['mtype'] == 'audio') {
+				$this->load->view('radio_novo_home_keyword', $data_search);
+			} else if ($data_search['msc'] == 'local' and $data_search['mtype'] == 'video') {
+				$this->load->view('tv_home_keyword', $data_search);
+			} else if ($data_search['msc'] == 'novo' and $data_search['mtype'] == 'video') {
+				$this->load->view('tv_novo_home_keyword', $data_search);
 			}
 
 			$this->load->view('footer',$data_navbar);

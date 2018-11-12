@@ -7,6 +7,14 @@
 		</div>
 
 		<?php
+			if (isset($keyword_texts)) {
+				$querytime = $keyword_texts->responseHeader->QTime;
+				$params = json_decode($keyword_texts->responseHeader->params->json, TRUE);
+				$nfound = $keyword_texts->response->numFound;
+				$pagesearchp = 'Encontrado: '.$nfound.' itens <br> Tempo da pesquisa: '.$querytime.'ms';
+				// var_dump($keyword_texts->responseHeader);
+			}
+
 			if (isset($search)) {
 				if ($vtype == 'radio') {
 					if (preg_match("/\(/", $search) == 1) {
@@ -54,7 +62,7 @@
 							<div class="col-sm-6 col-md-6 col-lg-6">
 								<div class="form-group">
 									<label><?php echo get_phrase('client');?></label>
-									<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+									<input id="clientname" name="clientid" type="text"  class="form-control typeahead input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off" disabled>
 								</div>
 								<div id="scrollable-dropdown-menu" class="form-group">
 									<label><?php echo get_phrase('keyword');?></label>
@@ -68,13 +76,13 @@
 											<label>Tipo de Veículo</label>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($vtype) and ($vtype == 'radio' or $vtype == 'radio_novo')) {echo "checked";} ?> required>
+													<input type="radio" name="optionsRadios" id="optradio" value="radio" <?php if (isset($mtype) and ($mtype == 'audio')) {echo "checked";} ?> required>
 													Rádio
 												</label>
 											</div>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($vtype) and $vtype == 'tv') {echo "checked";} ?> required>
+													<input type="radio" name="optionsRadios" id="opttv" value="tv" <?php if (isset($mtype) and $mtype == 'video') {echo "checked";} ?> required>
 													Televisão
 												</label>
 											</div>
@@ -82,17 +90,17 @@
 									</div>
 
 									<div class="col-sm-6 col-md-6 col-lg-6">
-										<div id="radioselsrctype" class="form-group" style="<?php if (!isset($vsrctype)) { echo "display: none"; }?>">
+										<div id="msrctype" class="form-group" style="<?php if (!isset($msc)) { echo "display: none"; }?>">
 											<label>Fonte</label>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionssrcadios" id="optradiotype1" value="audimus" <?php if (isset($vsrctype) and $vsrctype == 'audimus') {echo "checked";} ?> required>
-													Interno
+													<input type="radio" name="optionssrcadios" id="optradiotype1" value="local" <?php if (isset($msc) and $msc == 'local') {echo "checked";} ?> required>
+													Local
 												</label>
 											</div>
 											<div class="radio">
 												<label>
-													<input type="radio" name="optionssrcadios" id="optradiotype2" value="novo" <?php if (isset($vsrctype) and $vsrctype == 'novo') {echo "checked";} ?> required>
+													<input type="radio" name="optionssrcadios" id="optradiotype2" value="novo" <?php if (isset($msc) and $msc == 'novo') {echo "checked";} ?> required>
 													Novo
 												</label>
 											</div>
@@ -100,38 +108,62 @@
 									</div>
 								</div>
 
-								<div id="radioidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'audimus') { echo "display: block;"; } else { echo "display: none;"; } ?>">
+								<div id="radioidsel" class="form-group"
+								style="<?php if (isset($msc) and ($msc == 'local' and $mtype == 'audio')) { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('radio');?></label>
 									<input id="radioid" name="radioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 
-								<div id="kneradioidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'novo') { echo "display: block;"; } else { echo "display: none;"; } ?>">
+								<div id="radionovoidsel" class="form-group"
+								style="<?php if (isset($msc) and ($msc == 'novo' and $mtype == 'audio')) { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('radio');?></label>
-									<input id="kneradioid" name="kneradioid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+									<input id="radionovoid" name="radionovoid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 
-								<div id="tvidsel" class="form-group" style="<?php if (isset($vsrctype) and $vsrctype == 'tv') { echo "display: block;"; } else { echo "display: none;"; } ?>">
+								<div id="tvidsel" class="form-group"
+								style="<?php if (isset($msc) and ($msc == 'local' and $mtype == 'video')) { echo "display: block;"; } else { echo "display: none;"; } ?>">
 									<label><?php echo get_phrase('television');?></label>
-									<input id="tvchannel" name="tvchannel" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+									<input id="tvid" name="tvid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
+								</div>
+
+								<div id="tvnovoidsel" class="form-group"
+								style="<?php if (isset($msc) and ($msc == 'novo' and $mtype == 'video')) { echo "display: block;"; } else { echo "display: none;"; } ?>">
+									<label><?php echo get_phrase('television');?></label>
+									<input id="tvnovoid" name="tvnovoid" type="text" class="form-control input-sm" placeholder="<?php echo get_phrase('type_to_search');?>" autocomplete="off">
 								</div>
 							</div>
+
+							<!-- Date, Time Selector and Text Input-->
 							<div class="col-sm-6 col-md-6 col-lg-6">
+								<?php
+									if (isset($startdate) and isset($enddate)) {
+										$sd = new Datetime($startdate);
+										$ed = new Datetime($enddate);
+										$sstartdate = $sd->format('d/m/Y H:i:s');
+										$senddate = $ed->format('d/m/Y H:i:s');
+										$estartdate = $sd->format('d/m/Y');
+										$eenddate = $ed->format('d/m/Y');
+										$estarttime = $sd->format('H:i');
+										$eendtime = $ed->format('H:i');
+									}
+								?>
 								<div class="form-group">
 									<label><?php echo get_phrase('date');?></label>
 									<div class="input-daterange input-group" id="datepicker">
-										<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" <?php if (isset($startdate)) { echo 'value="'.$startdate.'"'; } ?> autocomplete="off"/>
+										<input required type="text" class="input-sm form-control" id="startdate" name="startdate" placeholder="<?php echo get_phrase('start');?>" <?php if (isset($estartdate)) { echo 'value="'.$estartdate.'"'; } ?> autocomplete="off"/>
 										<span class="input-group-addon"><?php echo get_phrase('until');?></span>
-										<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" <?php if (isset($enddate)) { echo 'value="'.$enddate.'"'; } ?> autocomplete="off"/>
+										<input required type="text" class="input-sm form-control" id="enddate" name="enddate" placeholder="<?php echo get_phrase('end');?>" <?php if (isset($eenddate)) { echo 'value="'.$eenddate.'"'; } ?> autocomplete="off"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label><?php echo get_phrase('time');?></label>
 									<div class="input-daterange input-group">
-										<input required type="text" class="input-sm form-control clockpicker" id="starttime" name="starttime" placeholder="<?php echo get_phrase('start');?>" value="00:00" autocomplete="off"/>
+										<input required type="text" class="input-sm form-control clockpicker" id="starttime" name="starttime" placeholder="<?php echo get_phrase('start');?>" <?php if (isset($estarttime)) { echo 'value="'.$estarttime.'"'; } else { echo 'value="00:00"'; } ?> autocomplete="off"/>
 										<span class="input-group-addon"><?php echo get_phrase('until');?></span>
-										<input required type="text" class="input-sm form-control clockpicker" id="endtime" name="endtime" placeholder="<?php echo get_phrase('end');?>" value="23:59" autocomplete="off"/>
+										<input required type="text" class="input-sm form-control clockpicker" id="endtime" name="endtime" placeholder="<?php echo get_phrase('end');?>" <?php if (isset($eendtime)) { echo 'value="'.$eendtime.'"'; } else { echo 'value="23:59"'; } ?> autocomplete="off"/>
 									</div>
 								</div>
+								<!-- Text Input -->
 								<label><?php echo get_phrase('text');?></label>
 								<div class="form-group input-group">
 									<input type="text" id="keyword" name="keyword" class="form-control input-sm"  <?php if (isset($keyword)) { echo 'value="'.$keyword.'"'; } ?> autocomplete="off">
@@ -139,6 +171,8 @@
 										<button class="btn btn-default btn-sm" type="submit" name="text"><i class="fa fa-search"></i></button>
 									</span>
 								</div>
+								<small><span id="pagesearchp" class="pull-right text-muted" style="<?php if (!isset($keyword_texts)) { echo 'display: none'; } ?>"><?php echo isset($pagesearchp) ? $pagesearchp : null ;?></span></small>
+
 								<div id="searchtop"></div>
 							</div>
 						</form>
@@ -191,21 +225,36 @@
 			}
 
 			$tvclinevar = null;
-			$tcountarr = count($alltvc);
+			$tcountarr = count($alltvs);
 			$tvccount = 0;
-			foreach ($alltvc as $tvc) {
+			foreach ($alltvs as $tvc) {
 				$tvccount++;
 				if ($tvccount == $tcountarr) {
-					$tvclinevar .= "{'id':".$tvc['id_source'].",";
-					$tvclinevar .= "'name':"."'".$tvc['source']."'}";
+					$tvclinevar .= "{'id':".$tvc['id_radio'].",";
+					$tvclinevar .= "'name':"."'".$tvc['name']."'}";
 				} else {
-					$tvclinevar .= "{'id':".$tvc['id_source'].",";
-					$tvclinevar .= "'name':"."'".$tvc['source']."'},";
+					$tvclinevar .= "{'id':".$tvc['id_radio'].",";
+					$tvclinevar .= "'name':"."'".$tvc['name']."'},";
+				}
+			}
+
+			$novotvclinevar = null;
+			$tcountarr = count($alltvs_novo);
+			$tvccount = 0;
+			foreach ($alltvs_novo as $tvc) {
+				$tvccount++;
+				if ($tvccount == $tcountarr) {
+					$novotvclinevar .= "{'id':".$tvc['id_source'].",";
+					$novotvclinevar .= "'name':"."'".$tvc['source']."'}";
+				} else {
+					$novotvclinevar .= "{'id':".$tvc['id_source'].",";
+					$novotvclinevar .= "'name':"."'".$tvc['source']."'},";
 				}
 			}
 		?>
 
 		<script type="text/javascript">
+			var rchecked, rsrcchecked;
 			$('[data-toggle="tooltip"]').tooltip();
 
 			$('#datepicker').datepicker({
@@ -230,107 +279,114 @@
 
 			$('input[name=optionsRadios]').on("click", function() {
 				rchecked = $('input[name=optionsRadios]:checked').val();
+				console.log(rchecked);
+				$('#msrctype').show('fast');
+			});
+
+			$('input[name=optionssrcadios').on('click', function() {
+				rsrcchecked = $('input[name=optionssrcadios]:checked').val();
 				if (rchecked == 'radio') {
-					$('input[name=optionssrcadios]').attr('required', true);
+					$('#tvnovoidsel').hide('fast');
 					$('#tvidsel').hide('fast');
-					$('#radioselsrctype').show('fast');
-					$('input[name=optionssrcadios').on('click', function() {
-						rsrcchecked = $('input[name=optionssrcadios]:checked').val();
-						if (rsrcchecked == 'audimus') {
-							$('#radioidsel').show('fast');
-						} else {
-							$('#optradio').val('radio_novo');
-							$('#kneradioidsel').show('fast');
-						}
-					});
+					if (rsrcchecked == 'local') {
+						$('#radionovoidsel').hide('fast');
+						$('#radioidsel').show('fast');
+					} else {
+						$('#radionovoidsel').show('fast');
+						$('#radioidsel').hide('fast');
+					}
 				} else if (rchecked == 'tv') {
-					$('input[name=optionssrcadios]').removeAttr('required');
+					$('#radionovoidsel').hide('fast');
 					$('#radioidsel').hide('fast');
-					$('#kneradioidsel').hide('fast');
-					$('#radioselsrctype').hide('fast');
-					$('#tvidsel').show('fast');
+					if (rsrcchecked == 'local') {
+						$('#tvnovoidsel').hide('fast');
+						$('#tvidsel').show('fast');
+					} else {
+						$('#tvnovoidsel').show('fast');
+						$('#tvidsel').hide('fast');
+					}
 				}
 			});
 
 			//clients typeahead
-			var clients = [<?php echo $clientslinevar; ?>];
-			var clientsblood = new Bloodhound({
-				"datumTokenizer": Bloodhound.tokenizers.obj.whitespace('name'),
-				"queryTokenizer": Bloodhound.tokenizers.whitespace,
-				"identify": function(obj) {
-					return obj.id;
-				},
-				local: clients
-			});
-			$('#clientname').typeahead({
-				hint: true,
-				highlight: true,
-				minLength: 0,
-				limit: 20
-			}, {
-				name: 'clients',
-				value: 'id',
-				source: clientsblood,
-				display: 'name'
-			}).on('typeahead:select', function(ev, suggestion) {
-					$('#clientid').val(suggestion.id);
-					$('#keywordid').prop('disabled',false);
-					$('#keywordid').prop('placeholder','Digite para pesquisar');
-					$('#tooltipkw').css('display', 'inline');
-					var keywordid_input = $('#keywordid');
-					// keywordid_input.tagsinput('destroy');
-					// $('#keywordid').typeahead('val', '');
-					// instantiate the bloodhound suggestion engine
-					var keywordsblood = new Bloodhound({
-						datumTokenizer: function(keywordsblood) {
-							return Bloodhound.tokenizers.whitespace(keywordsblood.val);
-						},
-						queryTokenizer: Bloodhound.tokenizers.whitespace,
-						// prefetch: {
-							// url: "<?php //echo base_url('pages/keywords_client/')?>" + suggestion.id,
-							// filter: function(response) {
-							// 	// console.log(response);
-							// 	return response;
-							// }
-						// 	filter: function(response) {
-						// 		return $.map(response, function(data) {
-						// 			console.log({ keyword: data.keyword });
-						// 			return { keyword: data.keyword };
-						// 		});
-						// 	}
-						// }
-						remote: {
-							url: "<?php echo base_url('pages/keywords_client/')?>" + suggestion.id,
-							filter: function(response) {
-								// console.log(response);
-								return response;
-							}
-						}
-					});
-					keywordsblood.clearPrefetchCache();
-					// keywordsblood.clearRemoteCache();
-					keywordsblood.initialize();
-					keywordid_input.tagsinput({
-						itemValue: 'id_keyword',
-						itemText: 'keyword',
-						allowDuplicates: false,
-						typeaheadjs: {
-							limit: 100,
-							hint: false,
-							highlight: true,
-							minLength: 1,
-							name: 'keyword',
-							displayKey: function(keywordsblood) {
-								return keywordsblood.keyword;
-							},
-							source: keywordsblood.ttAdapter()
-						}
-					});
-			}).on('focus', function() {
-				// if (defaultOption.length) {
-					// $(this).data().ttTypeahead.input.trigger('queryChanged', nm);
-				// }
-			});
+			// var clients = [<?php echo $clientslinevar; ?>];
+			// var clientsblood = new Bloodhound({
+			// 	"datumTokenizer": Bloodhound.tokenizers.obj.whitespace('name'),
+			// 	"queryTokenizer": Bloodhound.tokenizers.whitespace,
+			// 	"identify": function(obj) {
+			// 		return obj.id;
+			// 	},
+			// 	local: clients
+			// });
+			// $('#clientname').typeahead({
+			// 	hint: true,
+			// 	highlight: true,
+			// 	minLength: 0,
+			// 	limit: 20
+			// }, {
+			// 	name: 'clients',
+			// 	value: 'id',
+			// 	source: clientsblood,
+			// 	display: 'name'
+			// }).on('typeahead:select', function(ev, suggestion) {
+			// 		$('#clientid').val(suggestion.id);
+			// 		$('#keywordid').prop('disabled',false);
+			// 		$('#keywordid').prop('placeholder','Digite para pesquisar');
+			// 		$('#tooltipkw').css('display', 'inline');
+			// 		var keywordid_input = $('#keywordid');
+			// 		// keywordid_input.tagsinput('destroy');
+			// 		// $('#keywordid').typeahead('val', '');
+			// 		// instantiate the bloodhound suggestion engine
+			// 		var keywordsblood = new Bloodhound({
+			// 			datumTokenizer: function(keywordsblood) {
+			// 				return Bloodhound.tokenizers.whitespace(keywordsblood.val);
+			// 			},
+			// 			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			// 			// prefetch: {
+			// 				// url: "<?php //echo base_url('pages/keywords_client/')?>" + suggestion.id,
+			// 				// filter: function(response) {
+			// 				// 	// console.log(response);
+			// 				// 	return response;
+			// 				// }
+			// 			// 	filter: function(response) {
+			// 			// 		return $.map(response, function(data) {
+			// 			// 			console.log({ keyword: data.keyword });
+			// 			// 			return { keyword: data.keyword };
+			// 			// 		});
+			// 			// 	}
+			// 			// }
+			// 			remote: {
+			// 				url: "<?php echo base_url('pages/keywords_client/')?>" + suggestion.id,
+			// 				filter: function(response) {
+			// 					// console.log(response);
+			// 					return response;
+			// 				}
+			// 			}
+			// 		});
+			// 		keywordsblood.clearPrefetchCache();
+			// 		// keywordsblood.clearRemoteCache();
+			// 		keywordsblood.initialize();
+			// 		keywordid_input.tagsinput({
+			// 			itemValue: 'id_keyword',
+			// 			itemText: 'keyword',
+			// 			allowDuplicates: false,
+			// 			typeaheadjs: {
+			// 				limit: 100,
+			// 				hint: false,
+			// 				highlight: true,
+			// 				minLength: 1,
+			// 				name: 'keyword',
+			// 				displayKey: function(keywordsblood) {
+			// 					return keywordsblood.keyword;
+			// 				},
+			// 				source: keywordsblood.ttAdapter()
+			// 			}
+			// 		});
+			// }).on('focus', function() {
+			// 	// if (defaultOption.length) {
+			// 		// $(this).data().ttTypeahead.input.trigger('queryChanged', nm);
+			// 	// }
+			// });
 
 			//radios typeahead and tagsinput
 			var radios = [<?php echo $radioslinevar; ?>];
@@ -341,7 +397,6 @@
 			});
 			radiosblood.initialize();
 			var radioid_input = $('#radioid');
-			//radioid_input.tagsinput('destroy')
 			radioid_input.tagsinput({
 				focusClass: 'form-control input-sm',
 				itemValue: 'id',
@@ -352,21 +407,20 @@
 					displayKey: 'name',
 					hint: true,
 					highlight: true,
-					limit: 20,
+					limit: 10,
 					source: radiosblood.ttAdapter()
 				}
 			});
 
 			//radios novo typeahead and tagsinput
-			var radios = [<?php echo $novoradioslinevar; ?>];
-			var radiosblood = new Bloodhound({
+			var radiosnovo = [<?php echo $novoradioslinevar; ?>];
+			var radiosnovoblood = new Bloodhound({
 				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
 				queryTokenizer: Bloodhound.tokenizers.whitespace,
-				local: radios
+				local: radiosnovo
 			});
-			radiosblood.initialize();
-			var radioid_input = $('#kneradioid');
-			//radioid_input.tagsinput('destroy')
+			radiosnovoblood.initialize();
+			var radioid_input = $('#radionovoid');
 			radioid_input.tagsinput({
 				focusClass: 'form-control input-sm',
 				itemValue: 'id',
@@ -377,34 +431,55 @@
 					displayKey: 'name',
 					hint: true,
 					highlight: true,
-					limit: 20,
-					source: radiosblood.ttAdapter()
+					limit: 10,
+					source: radiosnovoblood.ttAdapter()
 				}
 			});
 
 			//tv channels typeahead and tagsinput
-			var tvc = [<?php echo $tvclinevar; ?>];
-			var tvcblood = new Bloodhound({
+			var tvs = [<?php echo $tvclinevar; ?>];
+			var tvblood = new Bloodhound({
 				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
 				queryTokenizer: Bloodhound.tokenizers.whitespace,
-				local: tvc
+				local: tvs
 			});
-			tvcblood.initialize();
-			var tvcid_input = $('#tvchannel');
-			//tvcid_input.tagsinput('destroy')
+			tvblood.initialize();
+			var tvcid_input = $('#tvid');
 			tvcid_input.tagsinput({
 				focusClass: 'form-control input-sm',
-				// itemValue: 'id',
-				itemValue: 'name',
+				itemValue: 'id',
 				itemText: 'name',
 				allowDuplicates: false,
 				typeaheadjs: {
-					name: 'tvc',
+					name: 'tv',
 					displayKey: 'name',
 					hint: true,
 					highlight: true,
-					limit: 20,
-					source: tvcblood.ttAdapter()
+					limit: 10,
+					source: tvblood.ttAdapter()
+				}
+			});
+
+			var tvsnovo = [<?php echo $novotvclinevar; ?>];
+			var tvnovoblood = new Bloodhound({
+				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				local: tvsnovo
+			});
+			tvnovoblood.initialize();
+			var tvcnovoid_input = $('#tvnovoid');
+			tvcnovoid_input.tagsinput({
+				focusClass: 'form-control input-sm',
+				itemValue: 'id',
+				itemText: 'name',
+				allowDuplicates: false,
+				typeaheadjs: {
+					name: 'tv',
+					displayKey: 'name',
+					hint: true,
+					highlight: true,
+					limit: 10,
+					source: tvnovoblood.ttAdapter()
 				}
 			});
 
@@ -429,12 +504,36 @@
 			};
 
 			$(document).ready(function(){
-				vsearchresult = '<?php echo $vsr; ?>';
+				var vsearchresult = '<?php echo $vsr; ?>';
+				var idsourcesel = '<?php echo isset($id_source) ? $id_source : 0 ?>';
+				var mscsel = '<?php echo isset($msc) ? $msc : 'none' ?>';
+				var mtypesel = '<?php echo isset($mtype) ? $mtype : 'none' ?>';
 
 				if (vsearchresult == 'true') {
 					$('html, body').animate({
 						scrollTop: $("#searchtop").offset().top
-					}, 400);
+					}, 200);
+				}
+
+				if (idsourcesel != '0') {
+					var idsourcearr = idsourcesel.split(',');
+					if (mtypesel == 'audio') {
+						if (mscsel == 'local') {
+							$('#radioid').tagsinput('add',{id: idsourcesel});
+						} else {
+							$.each(idsourcearr, function(index, val) {
+								let obj = radiosnovo.find(obj => obj.id == val);
+								$('#radionovoid').tagsinput('add', obj);
+							});
+						}
+					} else {
+						if (mscsel == 'novo') {
+							$.each(idsourcearr, function(index, val) {
+								let obj = tvsnovo.find(obj => obj.id == val);
+								$('#tvnovoid').tagsinput('add', obj);
+							});
+						}
+					}
 				}
 			});
 		</script>

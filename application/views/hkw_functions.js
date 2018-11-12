@@ -7,7 +7,7 @@ function backToTop() {
 	}
 };
 
-function loadpn(flow, clbtn, sc, type) {
+function loadpn(flow, clbtn, nsc, ntype) {
 	loadp = $(clbtn);
 	loadp.children('i').css('display', 'inline-block');
 
@@ -25,19 +25,22 @@ function loadpn(flow, clbtn, sc, type) {
 		slidep = 'slideUp';
 	}
 
-	if (sc == 'local' && type == 'audio') {
-		gurl = window.location.origin+'/pages/get_radio/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
-	} else if (sc == 'novo' && type == 'audio') {
-		gurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
-	} else if (sc == 'local' && type == 'video') {
-		gurl = window.location.origin+'/pages/get_tv/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
-	} else if (sc == 'novo' && type == 'video') {
-		gurl = window.location.origin+'/pages/get_tv_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	if (nsc == 'local' && ntype == 'audio') {
+		var nurl = window.location.origin+'/pages/get_radio/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (nsc == 'novo' && ntype == 'audio') {
+		var nurl = window.location.origin+'/pages/get_radio_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (nsc == 'local' && ntype == 'video') {
+		var nurl = window.location.origin+'/pages/get_tv/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else if (nsc == 'novo' && ntype == 'video') {
+		var nurl = window.location.origin+'/pages/get_tv_novo/'+idsource+'/'+encodeURI(startdate)+'/'+flow;
+	} else {
+		var nurl = 'NO URL';
+			console.log(nurl);
 	}
 
-	$.get(gurl, function(data) {
+	$.get(nurl, function(ndata) {
 		loadp.children('i').css('display', 'none');
-		numfound = data.response.numFound;
+		numfound = ndata.response.numFound;
 		if (numfound == 0) {
 			warnhtml =	'<div class="alert alert-warning" role="alert">'+
 										'<i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></i> '+
@@ -50,30 +53,30 @@ function loadpn(flow, clbtn, sc, type) {
 				$('div.alert.alert-warning').fadeOut('slow');
 			}, 3000);
 		} else {
-			did = data.response.docs[0].id_i;
-			dsourceid = data.response.docs[0].source_id_i;
-			dsource = data.response.docs[0].source_s;
-			dmuarr = data.response.docs[0].mediaurl_s.split('_');
-			dmedia = data.response.docs[0].mediaurl_s;
-			dstartdate = data.response.docs[0].starttime_dt;
-			denddate = data.response.docs[0].endtime_dt;
-			dcontent = data.response.docs[0].content_t[0];
-			dtimes = JSON.parse(data.response.docs[0].times_t[0]);
+			did = ndata.response.docs[0].id_i;
+			dsourceid = ndata.response.docs[0].source_id_i;
+			dsource = ndata.response.docs[0].source_s;
+			dmuarr = ndata.response.docs[0].mediaurl_s.split('_');
+			dmedia = ndata.response.docs[0].mediaurl_s;
+			dstartdate = ndata.response.docs[0].starttime_dt;
+			denddate = ndata.response.docs[0].endtime_dt;
+			dcontent = ndata.response.docs[0].content_t[0];
+			dtimes = JSON.parse(ndata.response.docs[0].times_t[0]);
 
-			if (sc == 'local' && type == 'audio') {
-				dmediaurl = window.location.origin.replace('sim.', 'radio.')+'/index.php/radio/getmp3?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
+			if (nsc == 'local' && ntype == 'audio') {
+				var dmediaurl = window.location.origin.replace('sim.', 'radio.')+'/index.php/radio/getmp3?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
 				var sd = new Date(dstartdate.replace('Z',''));
 				var ed = new Date(denddate.replace('Z',''));
-			} else if (sc == 'novo' && type == 'audio') {
-				dmediaurl = dmedia;
+			} else if (nsc == 'novo' && ntype == 'audio') {
+				var dmediaurl = dmedia;
 				var sd = new Date(dstartdate);
 				var ed = new Date(denddate);
-			} else if (sc == 'local' && type == 'video') {
+			} else if (nsc == 'local' && ntype == 'video') {
 				var sd = new Date(dstartdate.replace('Z',''));
 				var ed = new Date(denddate.replace('Z',''));
-				dmediaurl = window.location.origin.replace('sim.', 'video.')+'/video/getvideo?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
-			} else if (sc == 'novo' && type == 'video') {
-				dmediaurl = dmedia;
+				var dmediaurl = window.location.origin.replace('sim.', 'video.')+'/video/getvideo?source='+dmuarr[0]+'&file='+dmedia.replace(dmuarr[0]+'_', '');
+			} else if (nsc == 'novo' && ntype == 'video') {
+				var dmediaurl = dmedia;
 				var sd = new Date(dstartdate);
 				var ed = new Date(denddate);
 			}
@@ -134,13 +137,13 @@ function loadpn(flow, clbtn, sc, type) {
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').attr('data-enddate', dfenddate);
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
 
-			if (type == 'audio') {
+			if (ntype == 'audio') {
 				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
 				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('id', iddiv.replace('div', 'ptext')+'-'+newdivid);
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
-			} else if (type == 'video') {
+			} else if (ntype == 'video') {
 				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
 				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('id', iddiv.replace('div', 'pvideo')+'-'+newdivid);
 				divclone.children('.panel-body').children('.row').children('.col-lg-7').children('.ptext').addClass('noscrolled');
@@ -212,11 +215,10 @@ function scrolltokeyword(mtype) {
 			$(val).removeClass('noscrolled');
 
 			fkeywfound = keywfound[0];
-			fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin')) - 0.3;
+			fkeywfoundtime = parseInt($(fkeywfound).attr('data-begin'));
 			mediaid = String('#'+imtype+idnumb);
 			$(mediaid).attr('data-fkwtime', fkeywfoundtime);
 			$('#form'+idnumb).children('input[name="ifkwfound"]').val(fkeywfoundtime);
-			// console.log(mediaid);
 		}
 	});
 };

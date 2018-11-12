@@ -80,11 +80,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
 													$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
 													$keyword_foundc = $keyword_found->response->numFound;
-													$allkeyword_found = $this->pages_model->tv_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
+													$allkeyword_found = $this->pages_model->tv_novo_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
 													$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 													$ic = null;
-													if ($allkeyword_foundc != 0) { ?>
+													if ($keyword_foundc != 0) { ?>
 														<form style="all: unset;" action="<?php echo base_url('pages/tv_novo_home_keyword');?>" method="post">
 															<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 															<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">

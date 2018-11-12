@@ -13,17 +13,15 @@
 				$icount++;
 				$sid = $found->id_i;
 				$sidsource = $found->id_source_i;
-				$smediaurl = $found->mediaurl_s;
+
+				$smediaurl = str_replace("sim", "video", base_url())."video/getvideo/".$found->mediaurl_s;
+
 				if (isset($found->times_t)) {
 					$stimes = json_decode(str_replace('\u0000', '', $found->times_t[0]), true);
 				}
 
-				$timezone = new DateTimeZone('UTC');
-				$sd = new Datetime($found->starttime_dt, $timezone);
-				$ed = new Datetime($found->endtime_dt, $timezone);
-				$newtimezone = new DateTimeZone('America/Sao_Paulo');
-				$sd->setTimezone($newtimezone);
-				$ed->setTimezone($newtimezone);
+				$sd = new Datetime($found->starttime_dt);
+				$ed = new Datetime($found->endtime_dt);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
 				$sendtime = $ed->format('H:i:s');
@@ -54,7 +52,7 @@
 						</label>
 
 						<div class="btn-toolbar pull-right">
-							<button class="btn btn-warning btn-xs loadprevious" data-sc="novo" data-type="video"
+							<button class="btn btn-warning btn-xs loadprevious" data-sc="local" data-type="video"
 							data-iddiv="<?php echo 'div'.$divcount;?>"
 							data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
 							data-enddate="<?php echo $found->endtime_dt?>" data-position="previous">
@@ -63,14 +61,14 @@
 								$icount++; ?>
 							</button>
 
-							<button class="btn btn-warning btn-xs loadnext" data-sc="novo" data-type="video" data-iddiv="<?php echo 'div'.$divcount;?>"
+							<button class="btn btn-warning btn-xs loadnext" data-sc="local" data-type="video" data-iddiv="<?php echo 'div'.$divcount;?>"
 							 data-idsource="<?php echo $sidsource?>" data-startdate="<?php echo $found->starttime_dt?>"
 							  data-enddate="<?php echo $found->endtime_dt?>" data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
 
-							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="novo" data-type="video" data-iddiv="<?php echo 'div'.$divcount;?>"
+							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="local" data-type="video" data-iddiv="<?php echo 'div'.$divcount;?>"
 							 data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>"
 							  data-idclient="<?php echo $id_client;?>" data-toggle="collapse"
 							   data-target="<?php echo '#div'.$divcount;?>">

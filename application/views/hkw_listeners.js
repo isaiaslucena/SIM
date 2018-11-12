@@ -1,60 +1,72 @@
 var totalpanels, pstart, pcstart,
 scmedia = '<?php echo $msc;?>', mediatype = '<?php echo $mtype;?>',
-pagesrc = '<?php echo isset($pagesrc) ? $pagesrc : "home_kw";?>',
+pagesrc = '<?php echo isset($pagesrc) ? $pagesrc : "null";?>',
+id_source = '<?php echo isset($id_source) ? $id_source : 0;?>',
 newdivid = 0, cksource = 0, totalpanelsd = 0,
-joinfiles = false, filestojoin = [];
-keyword = '<?php echo $keyword_selected; ?>';
+joinfiles = false, sckeypress = false, filestojoin = [];
+keyword = '<?php echo $keyword; ?>';
 keywordarr = keyword.split(" ");
 keywcount = keywordarr.length - 1;
 rgx = new RegExp('\\b'+keyword+'\\b', 'ig');
 
-<?php if (!isset($pagesrc)) { ?>
+<?php if (!is_null($pagesrc)) { ?>
 $(document).ready(function() {
-		totalpanels = $('div.panel.panel-default.collapse.in').length;
+	totalpanels = $('div.panel.panel-default.collapse.in').length;
 
-		scrolltokeyword(mediatype);
+	scrolltokeyword(mediatype);
 
-		if (scmedia == 'local' && mediatype == 'audio') {
-			posturl = window.location.origin+'/pages/get_radio_keyword_texts';
-		} else if (scmedia == 'novo' && mediatype == 'audio') {
-			posturl = window.location.origin+'/pages/get_radio_novo_keyword_texts';
-		} else if (scmedia == 'local' && mediatype == 'video') {
-			posturl = window.location.origin+'/pages/get_tv_keyword_texts';
-		} else if (scmedia == 'novo' && mediatype == 'video') {
-			posturl = window.location.origin+'/pages/get_tv_novo_keyword_texts';
-		}
+	if (scmedia == 'local' && mediatype == 'audio') {
+		var sposturl = window.location.origin+'/pages/get_radio_keyword_texts';
+	} else if (scmedia == 'novo' && mediatype == 'audio') {
+		var sposturl = window.location.origin+'/pages/get_radio_novo_keyword_texts';
+	} else if (scmedia == 'local' && mediatype == 'video') {
+		var sposturl = window.location.origin+'/pages/get_tv_keyword_texts';
+	} else if (scmedia == 'novo' && mediatype == 'video') {
+		var sposturl = window.location.origin+'/pages/get_tv_novo_keyword_texts';
+	} else {
+		var sposturl = 'NO URL';
+		console.log(sposturl);
+	}
 
-		pstart = <?php echo $start;?>;
-		pcstart = <?php echo $rows;?>;
-		pfound = <?php echo $ktfound;?>;
-		$(window).scroll(function() {
-			winscrollToph = ($(window).scrollTop() + $(window).height());
-			winheight = $(document).height();
-			if (winscrollToph == winheight) {
-				pstart = pstart + pcstart;
-				if (pstart < pfound) {
-					$('#loadmore').animate({'opacity': 100}, 600);
-					$.post(posturl,
-						{
-							'id_keyword': <?php echo $id_keyword;?>,
-							'id_client': <?php echo $id_client;?>,
-							'keyword_selected': '<?php echo $keyword_selected;?>',
-							'client_selected': '<?php echo $client_selected;?>',
-							'startdate': '<?php echo $startdate;?>',
-							'enddate': '<?php echo $enddate;?>',
-							'start': pstart,
-							'rows': <?php echo $rows;?>
-						},
-						function(data, textStatus, xhr) {
-							$('#loadmore').before(data);
-							totalpanels = $('div.panel.panel-default.collapse.in').length;
-							scrolltokeyword(mediatype);
-							$('#loadmore').animate({'opacity': 0}, 600);
-					});
-				}
+	pstart = <?php echo $start;?>;
+	pcstart = <?php echo $rows;?>;
+	pfound = <?php echo $ktfound;?>;
+	$(window).scroll(function() {
+		winscrollToph = ($(window).scrollTop() + $(window).height());
+		winheight = $(document).height();
+		if (winscrollToph == winheight) {
+			pstart = pstart + pcstart;
+			if (pstart < pfound) {
+				$('#loadmore').animate({'opacity': 100}, 600);
+				$.post(sposturl,
+					{
+						'id_keyword': <?php echo $id_keyword;?>,
+						'id_client': <?php echo $id_client;?>,
+						'keyword': '<?php echo $keyword;?>',
+						'client_selected': '<?php echo $client_selected;?>',
+						'id_source': id_source,
+						'startdate': '<?php echo $startdate;?>',
+						'enddate': '<?php echo $enddate;?>',
+						'start': pstart,
+						'rows': <?php echo $rows;?>,
+						'pagesrc': pagesrc,
+						'msc': scmedia,
+						'mtype': mediatype
+					},
+					function(data, textStatus, xhr) {
+						$('#loadmore').before(data);
+						totalpanels = $('div.panel.panel-default.collapse.in').length;
+						scrolltokeyword(mediatype);
+						$('#loadmore').animate({'opacity': 0}, 600);
+
+						loadedmedia();
+				});
 			}
-		});
+		}
+	});
 });
+
+loadedmedia();
 
 $(document).on('click', 'audio, video', function() {
 	idpmedia = $(this).attr('id');
@@ -67,29 +79,10 @@ $(document).on('click', 'audio, video', function() {
 			ptextspans = $('#'+ptextid).children('span');
 		}
 
-		spantime = $(ptextspans[0]).attr('data-begin') - 0.3;
+		spantime = $(ptextspans[0]).attr('data-begin');
 		startread(idpmedia, ptextid, spantime, true);
 	} else {
 		console.log('media is playing');
-	}
-});
-
-$('audio, video').on('loadedmetadata', function() {
-	mediaid = $(this).attr('id');
-	fkwtime = $(this).attr('data-fkwtime');
-	// jmediael = $('#'+mediaid);
-	mediael = document.getElementById(mediaid);
-	// console.log(mediael);
-	if (mediael.readyState === 4){
-		// mediael[0].currentTime = fkwtime;
-		mediael.currentTime = fkwtime;
-		// console.log(mediaid);
-		// console.log(fkwtime);
-	} else {
-		setTimeout(function() {
-			// console.log('not ready! waiting 1.5s...');
-			mediael.currentTime = fkwtime;
-		},500)
 	}
 });
 <?php } ?>
@@ -106,15 +99,41 @@ if ($('#back-to-top').length) {
 	})
 };
 
+function loadedmedia() {
+	$('audio, video').on('loadedmetadata', function() {
+		mediaid = $(this).attr('id');
+		fkwtime = $(this).attr('data-fkwtime');
+		sc = $(this).attr('data-sc');
+		type = $(this).attr('data-type');
+		console.log('loaded metada of media '+mediaid);
+		mediael = document.getElementById(mediaid);
+		if (fkwtime) {
+			if (mediael.readyState === 4){
+				mediael.currentTime = fkwtime;
+			} else {
+				setTimeout(function() {
+					mediael.currentTime = fkwtime;
+				},500)
+			}
+		} else {
+			if (sc == 'local' && type == 'video') {
+				vsrc = mediael.src;
+				vsrcarr = vsrc.split('/');
+				mediael.poster = (window.location.origin).replace('sim','video')+'/video/getthumb/'+vsrcarr[5]+'/001'
+			}
+		}
+	});
+};
+
 $(document).on('click', '.loadprevious', function(event) {
-	sc = $(this).attr('data-sc');
-	type = $(this).attr('data-type');
+	var sc = $(this).attr('data-sc');
+	var type = $(this).attr('data-type');
 	loadpn('previous', $(this), sc, type);
 });
 
 $(document).on('click', '.loadnext', function(event) {
-	sc = $(this).attr('data-sc');
-	type = $(this).attr('data-type');
+	var sc = $(this).attr('data-sc');
+	var type = $(this).attr('data-type');
 	loadpn('next', $(this), sc, type);
 });
 
@@ -199,6 +218,7 @@ $(document).on('click', '#joinbtn', function(event) {
 });
 
 $(document).on('click', '.discarddoc', function(event) {
+	btndiscardc = true;
 	discardbtn = $(this);
 	discardbtn.children('i').css('display', 'inline-block');
 
@@ -210,51 +230,58 @@ $(document).on('click', '.discarddoc', function(event) {
 	mediatype = discardbtn.attr('data-type');
 	iduser = '<?php echo $this->session->userdata("id_user");?>';
 
-	if (mediatype == 'audio') {
-		mediaid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
-		$('#'+mediaid)[0].pause();
-	} else if (mediatype == 'video') {
-		mediaid = 'pvideo'+iddiv.replace(/[a-zA-Z]/g, '');
-		$('#'+mediaid)[0].pause();
-	}
-
-	if (mediasc == 'local' && mediatype == 'audio') {
-		posturl = window.location.origin+'/pages/discard_doc_radio';
-	} else if (mediasc == 'novo' && mediatype == 'audio') {
-		posturl = window.location.origin+'/pages/discard_doc_radio_novo';
-	} else if (mediasc == 'local' && mediatype == 'video') {
-		posturl = window.location.origin+'/pages/discard_doc_tv';
-	} else if (mediasc == 'novo' && mediatype == 'video') {
-		posturl = window.location.origin+'/pages/discard_doc_tv_novo';
-	}
-
-	$.post(posturl,
-		{
-			'iddoc': iddoc,
-			'idkeyword': idkeyword,
-			'idclient': idclient,
-			'iduser': iduser
-		},
-		function(data, textStatus, xhr) {
-			console.log(data);
-			discardbtn.children('i').css('display', 'none');
-			$('#'+iddiv).removeClass('panel-default');
-			$('#'+iddiv).addClass('panel-danger');
-
-			totalpanelsd += 1;
-			if (totalpanelsd == totalpanels) {
-				console.log('no more panels!');
-				window.location = '<?php echo base_url("pages/index_radio")?>';
-			}
+	// if (iddoc.length > 0) {
+		if (mediatype == 'audio') {
+			mediaid = 'paudio'+iddiv.replace(/[a-zA-Z]/g, '');
+			$('#'+mediaid)[0].pause();
+		} else if (mediatype == 'video') {
+			mediaid = 'pvideo'+iddiv.replace(/[a-zA-Z]/g, '');
+			$('#'+mediaid)[0].pause();
 		}
-	);
+
+		if (mediasc == 'local' && mediatype == 'audio') {
+			var dposturl = window.location.origin+'/pages/discard_doc_radio';
+		} else if (mediasc == 'novo' && mediatype == 'audio') {
+			var dposturl = window.location.origin+'/pages/discard_doc_radio_novo';
+		} else if (mediasc == 'local' && mediatype == 'video') {
+			var dposturl = window.location.origin+'/pages/discard_doc_tv';
+		} else if (mediasc == 'novo' && mediatype == 'video') {
+			var dposturl = window.location.origin+'/pages/discard_doc_tv_novo';
+		} else {
+			var dposturl = 'NO URL';
+			console.log(dposturl);
+		}
+
+		$.post(dposturl,
+			{
+				'iddoc': iddoc,
+				'idkeyword': idkeyword,
+				'idclient': idclient,
+				'iduser': iduser
+			},
+			function(data, textStatus, xhr) {
+				discardbtn.children('i').css('display', 'none');
+				$('#'+iddiv).removeClass('panel-default');
+				$('#'+iddiv).addClass('panel-danger');
+				$('#'+iddiv).slideUp('slow');
+				// $('#'+iddiv).removeClass('in');
+				// $('#'+iddiv).animate({'opacity': 0}, 'slow');
+
+				totalpanelsd += 1;
+				if (totalpanelsd == totalpanels) {
+					console.log('no more panels!');
+					window.location = '<?php echo base_url("pages/index_radio")?>';
+				}
+			}
+		);
+	// }
 });
 
 $(document).on('click', '.desativado', function() {
 	$(this).css('overflowY', 'auto');
 });
 
-$(document).on('click', 'span', function(){
+$(document).on('click', 'span[data-dur]', function(){
 	ptextid = $(this).parent('.ptext').attr('id');
 	if (mediatype == 'audio') {
 		imedia = 'paudio';
@@ -266,6 +293,28 @@ $(document).on('click', 'span', function(){
 
 	startread(pmedia, ptextid, spantime, true);
 	$('#'+pmedia)[0].play();
+});
+
+$(document).on('mouseover', '.ptext', function() {
+	if (sckeypress) {
+		$(this).css('overflow-y', 'auto');
+	} else {
+		$(this).css('overflow-y', 'hidden');
+	}
+});
+
+$(document).on('mouseleave', '.ptext', function() {
+	$(this).css('overflow-y', 'hidden');
+});
+
+$(document).keydown(function(event) {
+	if(event.altKey) {
+		sckeypress = true;
+	}
+});
+
+$(document).keyup(function(event) {
+	sckeypress = false;
 });
 
 // $(document).on('mouseleave', '.panel.panel-default.collapse.in', function() {

@@ -2,14 +2,28 @@
 
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
 
+	<?php if (isset($client_selected)) { ?>
+
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">
 				<?php echo $client_selected; ?>
-				<small> - <?php echo $keyword_selected; ?></small>
+				<small> - <?php echo $keyword; ?></small>
 			</h1>
 		</div>
 	</div>
+
+	<?php } else {
+		$client_selected = 0;
+		$id_keyword = 0;
+		$id_client = 0;
+	}
+
+	if (!isset($keyword)) {
+		$keyword = null;
+	}
+
+	?>
 
 	<div class="row">
 		<div class="col-lg-12">
@@ -31,12 +45,13 @@
 				$sd = new Datetime($found->starttime_dt, $timezone);
 				$ed = new Datetime($found->endtime_dt, $timezone);
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
-				// $newtimezone = new DateTimeZone('America/Recife');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
 				$sendtime = $ed->format('H:i:s');
+				$dstartdate = $sd->format('Y-m-d_H-i-s');
+				$denddate = $ed->format('Y-m-d_H-i-s');
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 
@@ -65,7 +80,7 @@
 						<div class="btn-toolbar pull-right">
 							<button class="btn btn-warning btn-xs loadprevious" data-sc="novo" data-type="audio"
 							 data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
-							 data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
+							 data-startdate="<?php echo $found->starttime_dt;?>" data-enddate="<?php echo $found->endtime_dt;?>"
 							 data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('previous');
@@ -82,8 +97,7 @@
 
 							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="novo" data-type="audio"
 							data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>"
-							data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>"
-							data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
+							data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>">
 								<i style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('discard');?>
 							</button>
@@ -162,17 +176,19 @@
 
 	<?php
 		$adata = array(
-			'keyword_selected' => $keyword_selected,
+			'keyword' => $keyword,
 			'start' => $start,
 			'rows' => $rows,
 			'ktfound' => $keyword_texts->response->numFound,
 			'id_keyword' => $id_keyword,
 			'id_client' => $id_client,
+			'id_source' => $id_source,
 			'client_selected' => $client_selected,
 			'startdate' => $startdate,
 			'enddate' => $enddate,
 			'msc' => 'novo',
-			'mtype' => 'audio'
+			'mtype' => 'audio',
+			'pagesrc' => $pagesrc
 		);
 
 		$jdata = base64_encode(json_encode($adata));

@@ -1,4 +1,12 @@
 <?php
+
+			if (!isset($client_selected)) {
+				$client_selected = 0;
+				$id_keyword = 0;
+				$keyword_selected = null;
+				$id_client = 0;
+			}
+
 			$divcount = $start;
 			$icount = $start;
 			foreach ($keyword_texts->response->docs as $found) {
@@ -20,6 +28,8 @@
 				$sstartdate = $sd->format('d/m/Y H:i:s');
 				$senddate = $ed->format('d/m/Y H:i:s');
 				$sendtime = $ed->format('H:i:s');
+				$dstartdate = $sd->format('Y-m-d_H-i-s');
+				$denddate = $ed->format('Y-m-d_H-i-s');
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 

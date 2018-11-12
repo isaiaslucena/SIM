@@ -199,7 +199,7 @@
 									<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
 									<i class="fa fa-bell"></i>
 								</button>
-								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 200px; width: 350px;overflow-y: auto;">
+								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
 									<li>
 										<a class="text-center" href="#">
 											<strong>Nenhum alerta de tv!</strong>

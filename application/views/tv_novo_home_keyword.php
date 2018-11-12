@@ -1,14 +1,29 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
+
+	<?php if (isset($client_selected)) { ?>
 
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">
 				<?php echo $client_selected; ?>
-				<small> - <?php echo $keyword_selected; ?></small>
+				<small> - <?php echo $keyword; ?></small>
 			</h1>
 		</div>
 	</div>
+
+	<?php } else {
+		$client_selected = 0;
+		$id_keyword = 0;
+		$id_client = 0;
+	}
+
+	if (!isset($keyword)) {
+		$keyword = null;
+	}
+
+	?>
 
 	<div class="row">
 		<div id="divcolc" class="col-lg-12">
@@ -31,10 +46,8 @@
 				$newtimezone = new DateTimeZone('America/Sao_Paulo');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
-				// $sstartdate = $sd->format('d/m/Y H:i:s');
-				// $senddate = $ed->format('d/m/Y H:i:s');
-				$sstartdate = $sd->format('Y-m-d\TH:i:s');
-				$senddate = $ed->format('Y-m-d\TH:i:s');				
+				$sstartdate = $sd->format('d/m/Y H:i:s');
+				$senddate = $ed->format('d/m/Y H:i:s');
 				$sendtime = $ed->format('H:i:s');
 				$dstartdate = $sd->format('Y-m-d_H-i-s');
 				$denddate = $ed->format('Y-m-d_H-i-s');
@@ -64,27 +77,25 @@
 
 						<div class="btn-toolbar pull-right">
 							<button class="btn btn-warning btn-xs loadprevious" data-sc="novo" data-type="video"
-							 data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
-							 data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
-							 data-position="previous">
+							data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
+							data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
+							data-position="previous">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('previous');
 								$icount++; ?>
 							</button>
 
 							<button class="btn btn-warning btn-xs loadnext" data-sc="novo" data-type="video"
-							 data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
-							 data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
-							 data-position="next">
+							data-iddiv="<?php echo 'div'.$divcount;?>" data-idsource="<?php echo $sidsource?>"
+							data-startdate="<?php echo $found->starttime_dt?>" data-enddate="<?php echo $found->endtime_dt?>"
+							data-position="next">
 								<i id="<?php echo 'iload'.$icount;?>" style="display: none;" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('next'); ?>
 							</button>
 
 							<button type="button" class="btn btn-danger btn-xs discarddoc" data-sc="novo" data-type="video"
-							 data-iddiv="<?php echo 'div'.$divcount;?>"
-							 data-iddoc="<?php echo $sid?>" data-idkeyword="<?php echo $id_keyword;?>"
-							 data-idclient="<?php echo $id_client;?>"
-							 data-toggle="collapse" data-target="<?php echo '#div'.$divcount;?>">
+							data-iddiv="<?php echo 'div'.$divcount;?>" data-iddoc="<?php echo $sid?>"
+							data-idkeyword="<?php echo $id_keyword;?>" data-idclient="<?php echo $id_client;?>">
 								<i style="display: none" class="fa fa-refresh fa-spin"></i>
 								<?php echo get_phrase('discard');?>
 							</button>
@@ -108,7 +119,10 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-5">
-								<video id="<?php echo 'pvideo'.$divcount;?>" class="center-block img-thumbnail pfvideo" src="<?php echo $smediaurl; ?>" controls preload="metadata" poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
+								<video id="<?php echo 'pvideo'.$divcount;?>"
+									class="center-block img-thumbnail pfvideo" data-sc="novo" data-type="video"
+									src="<?php echo $smediaurl; ?>" controls preload="metadata"
+									poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
@@ -158,17 +172,19 @@
 
 	<?php
 		$adata = array(
-			'keyword_selected' => $keyword_selected,
+			'keyword' => $keyword,
 			'start' => $start,
 			'rows' => $rows,
 			'ktfound' => $keyword_texts->response->numFound,
 			'id_keyword' => $id_keyword,
 			'id_client' => $id_client,
+			'id_source' => $id_source,
 			'client_selected' => $client_selected,
 			'startdate' => $startdate,
 			'enddate' => $enddate,
 			'msc' => 'novo',
-			'mtype' => 'video'
+			'mtype' => 'video',
+			'pagesrc' => $pagesrc
 		);
 
 		$jdata = base64_encode(json_encode($adata));

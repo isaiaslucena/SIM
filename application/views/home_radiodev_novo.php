@@ -19,7 +19,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<i class="fa fa-key fa-fw"></i>
 						<?php
 						$timezone = new DateTimeZone('America/Sao_Paulo');
-						// $timezone = new DateTimeZone('America/Recife');
 						$sd = new Datetime($startdate, $timezone);
 						$ed = new Datetime($enddate, $timezone);
 						$newtimezone = new DateTimeZone('UTC');
@@ -87,7 +86,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<div class="timeline-heading"><h4 class="timeline-title"><?php echo $client['name'];?></h4></div>
 									<div class="timeline-body">
 										<p class="text-center">
-											<?php $keywords = $this->pages_model->keywords_client($client['id_client']);
+											<?php
+											$keywords = $this->pages_model->keywords_client($client['id_client']);
 											$client_keywords = 0;
 											foreach ($keywords as $keyword) {
 												$data_discard['startdate'] = $epochstartdate1;

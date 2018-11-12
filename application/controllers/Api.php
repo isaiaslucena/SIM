@@ -382,5 +382,33 @@ class Api extends CI_Controller {
 			// header("HTTP/1.1 403 Forbidden");
 		// }
 	}
+
+	public function get_texts_by_keyword() {
+		$getdata['keyword'] = $this->input->get('keyword');
+		$getdata['startdate'] = $this->input->get('startdate').' 00:00:00';
+		$getdata['enddate'] = $this->input->get('enddate').' 23:59:59';
+
+		$timezone = new DateTimeZone('America/Sao_Paulo');
+		$sd = new Datetime($getdata['startdate'], $timezone);
+		$ed = new Datetime($getdata['enddate'], $timezone);
+		$newtimezone = new DateTimeZone('UTC');
+		$sd->setTimezone($newtimezone);
+		$ed->setTimezone($newtimezone);
+		$sstartdate = $sd->format('Y-m-d\TH:i:s');
+		$senddate = $ed->format('Y-m-d\TH:i:s');
+		$epochstartdate = $sd->format('U');
+		$epochenddate = $ed->format('U');
+
+		$epochstartdate1 = strtotime($getdata['startdate']);
+		$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
+		$epochenddate1 = strtotime($getdata['enddate']);
+		$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
+
+
+		$texts = $this->pages_model->radio_knewin_text_keyword_solr($sstartdate, $senddate, $getdata['keyword']);
+
+		header('Content-Type: application/json');
+		print json_encode($texts);
+	}
 }
 ?>

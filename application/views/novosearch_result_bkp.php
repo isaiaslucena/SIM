@@ -1,33 +1,28 @@
 	<?php
 		defined('BASEPATH') OR exit('No direct script access allowed');
 
-		// var_dump($searchresult);
+		$query = base64_encode($searchresult->responseHeader->params->json);
+		$jquery = json_decode($searchresult->responseHeader->params->json)->query;
+		$searchkwquery = strpos($jquery, 'text_t:');
+		$searchikwquery = strpos($jquery, 'content_t:');
+		if (is_int($searchkwquery)) {
+			$querykw = substr($jquery, 8, -1);
+			$keyword = $querykw;
+		} else if (is_int($searchikwquery)) {
+			$querykw = substr($jquery, 11, -1);
+			$keyword = $querykw;
+		} else if (!isset($keyword)) {
+			$keyword = '';
+		}
 
-		if (isset($searchresult->responseHeader->params->json)) {
-			$query = base64_encode($searchresult->responseHeader->params->json);
-			$jquery = json_decode($searchresult->responseHeader->params->json)->query;
-
-			$searchkwquery = strpos($jquery, 'text_t:');
-			$searchikwquery = strpos($jquery, 'content_t:');
-			if (is_int($searchkwquery)) {
-				$querykw = substr($jquery, 8, -1);
-				$keyword = $querykw;
-			} else if (is_int($searchikwquery)) {
-				$querykw = substr($jquery, 11, -1);
-				$keyword = $querykw;
-			} else if (!isset($keyword)) {
-				$keyword = '';
-			}
-
-			$searchtime = (int)$searchresult->responseHeader->QTime;
-			$totalfound = (int)$searchresult->response->numFound;
-			$totalpages = ceil($totalfound/10);
-			$firstpage = (int)$searchresult->response->start;
-			if ($totalpages >= 4 ) {
-				$pageselectedend = $pageselected + 3;
-			} else {
-				$pageselectedend = $pageselected;
-			}
+		$searchtime = (int)$searchresult->responseHeader->QTime;
+		$totalfound = (int)$searchresult->response->numFound;
+		$totalpages = ceil($totalfound/10);
+		$firstpage = (int)$searchresult->response->start;
+		if ($totalpages >= 4 ) {
+			$pageselectedend = $pageselected + 3;
+		} else {
+			$pageselectedend = $pageselected;
 		}
 
 		if (!isset($id_client)) {
@@ -183,12 +178,12 @@
 							$ssource = $story->source_s;
 							$sname = $story->name_s;
 
-							$timezone = new DateTimeZone('America/Sao_Paulo');
+							$timezone = new DateTimeZone('UTC');
 							$sd = new Datetime($found->starttime_dt, $timezone);
 							$ed = new Datetime($found->endtime_dt, $timezone);
-							// $newtimezone = new DateTimeZone('America/Sao_Paulo');
-							// $sd->setTimezone($newtimezone);
-							// $ed->setTimezone($newtimezone);
+							$newtimezone = new DateTimeZone('America/Sao_Paulo');
+							$sd->setTimezone($newtimezone);
+							$ed->setTimezone($newtimezone);
 							$sstartdate = $sd->format('d/m/Y H:i:s');
 							$senddate = $ed->format('d/m/Y H:i:s');
 							$sendtime = $ed->format('H:i:s');

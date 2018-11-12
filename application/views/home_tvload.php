@@ -5,12 +5,8 @@
 							$time = $time[1] + $time[0];
 							$start = $time;
 
-							$timezone = new DateTimeZone('America/Sao_Paulo');
-							$sd = new Datetime($startdate, $timezone);
-							$ed = new Datetime($enddate, $timezone);
-							$newtimezone = new DateTimeZone('UTC');
-							$sd->setTimezone($newtimezone);
-							$ed->setTimezone($newtimezone);
+							$sd = new Datetime($startdate);
+							$ed = new Datetime($enddate);
 							$sstartdate = $sd->format('Y-m-d\TH:i:s');
 							$senddate = $ed->format('Y-m-d\TH:i:s');
 							$epochstartdate = $sd->format('U');
@@ -53,16 +49,16 @@
 																$data_discard['id_client'] = $client['id_client'];
 																$data_discard['id_keyword'] = $keyword['id_keyword'];
 
-																$discardeddocs = $this->pages_model->discarded_docs_novo_tv($data_discard);
-																$croppeddocs = $this->pages_model->cropped_docs_novo_tv($data_discard);
-																$keyword_found = $this->pages_model->docs_byid_tv_novo($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
+																$discardeddocs = $this->pages_model->discarded_docs_tv($data_discard);
+																$croppeddocs = $this->pages_model->cropped_docs_tv($data_discard);
+																$keyword_found = $this->pages_model->docs_byid_tv($discardeddocs, $croppeddocs, $keyword['keyword'], $sstartdate, $senddate);
 																$keyword_foundc = $keyword_found->response->numFound;
-																$allkeyword_found = $this->pages_model->tv_novo_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
+																$allkeyword_found = $this->pages_model->tv_text_keyword_solr($sstartdate, $senddate, $keyword['keyword']);
 																$allkeyword_foundc = $allkeyword_found->response->numFound;
 
 																$ic = null;
 																if ($keyword_foundc != 0) { ?>
-																	<form style="all: unset;" action="<?php echo base_url('pages/tv_novo_home_keyword');?>" method="post">
+																	<form style="all: unset;" action="<?php echo base_url('pages/tv_home_keyword');?>" method="post">
 																		<input type="hidden" name="id_keyword" value="<?php echo $keyword['id_keyword'];?>">
 																		<input type="hidden" name="id_client" value="<?php echo $client['id_client'];?>">
 																		<input type="hidden" name="startdate" value="<?php echo $startdate;?>">

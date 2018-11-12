@@ -188,12 +188,12 @@ class Pages_model extends CI_Model {
 	}
 
 	//return all tv channels
-	public function tvc() {
+	public function tvs() {
 		$this->db->order_by('name','asc');
-		return $this->db->get('tvsource_info4')->result_array();
+		return $this->db->get('tv')->result_array();
 	}
 
-	public function tvc_novo() {
+	public function tvs_novo() {
 		$this->db->order_by('source','asc');
 		return $this->db->get('knewin_tv')->result_array();
 	}
@@ -476,6 +476,12 @@ class Pages_model extends CI_Model {
 		return $this->db->query($sqlquery)->result_array();
 	}
 
+	public function discarded_docs_tv($data_discarded) {
+		$sqlquery =	'SELECT id_doc FROM discard_keyword_tv
+						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
+		return $this->db->query($sqlquery)->result_array();
+	}
+
 	public function discarded_docs_novo_tv($data_discarded) {
 		$sqlquery =	'SELECT id_doc FROM discard_keyword_tv_knewin
 						WHERE id_client = '.$data_discarded['id_client'].' AND id_keyword = '.$data_discarded['id_keyword'];
@@ -491,6 +497,13 @@ class Pages_model extends CI_Model {
 
 	public function cropped_docs_novo_radio($data_cropped) {
 		$sqlquery =	"SELECT id_doc FROM crop_info_radio_knewin
+								WHERE id_client = ".$data_cropped['id_client']." AND id_keyword = ".$data_cropped['id_keyword']." AND
+								timestamp >= ".$data_cropped['startdate']." AND timestamp <= ".$data_cropped['enddate']." AND download_timestamp IS NOT NULL GROUP BY id_doc";
+		return $this->db->query($sqlquery)->result_array();
+	}
+
+	public function cropped_docs_tv($data_cropped) {
+		$sqlquery =	"SELECT id_doc FROM crop_info_tv
 								WHERE id_client = ".$data_cropped['id_client']." AND id_keyword = ".$data_cropped['id_keyword']." AND
 								timestamp >= ".$data_cropped['startdate']." AND timestamp <= ".$data_cropped['enddate']." AND download_timestamp IS NOT NULL GROUP BY id_doc";
 		return $this->db->query($sqlquery)->result_array();
@@ -557,13 +570,14 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio($ids_doc, $keyword, $startdate, $enddate) {
+	public function docs_byid_radio($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
 		$path='/solr/radio/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
+		$idslinefull = null;
 		$idsline = null;
 		$cidsarr = count($ids_doc);
 		$ccount = 0;
@@ -579,12 +593,35 @@ class Pages_model extends CI_Model {
 			}
 		}
 
-		if (!is_null($idsline)) {
+		$idsline2 = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline2 .= "NOT ".$id_text;
+				}
+				else {
+					$idsline2 .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if ($idsline != null and $idsline2 != null) {
+			$idslinefull = $idsline.' OR '.$idsline2;
+		} else if ($idsline != null and $idsline2 == null) {
+			$idslinefull = $idsline;
+		} else if ($idsline == null and $idsline2 != null) {
+			$idslinefull = $idsline2;
+		}
+
+		if (!is_null($idslinefull)) {
 			$data = array(
 				'query' => 'content_t:"'.$keyword.'"',
 				'filter' => array(
 					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
-					'id_i:('.$idsline.')'
+					'id_i:('.$idslinefull.')'
 				),
 			);
 		} else {
@@ -609,7 +646,7 @@ class Pages_model extends CI_Model {
 		return json_decode(curl_exec($ch));
 	}
 
-	public function docs_byid_radio_page($ids_doc, $keyword, $startdate, $enddate, $start, $rows) {
+	public function docs_byid_radio_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
@@ -632,35 +669,35 @@ class Pages_model extends CI_Model {
 			}
 		}
 
-		// $idsline2 = null;
-		// $cidsarr = count($ids_cdoc);
-		// $ccount = 0;
-		// foreach ($ids_cdoc as $id => $idstexts) {
-		// 	$ccount++;
-		// 	foreach ($idstexts as $idd => $id_text) {
-		// 		if ($ccount == $cidsarr) {
-		// 			$idsline2 .= "NOT ".$id_text;
-		// 		}
-		// 		else {
-		// 			$idsline2 .= "NOT ".$id_text." OR ";
-		// 		}
-		// 	}
-		// }
+		$idsline2 = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline2 .= "NOT ".$id_text;
+				}
+				else {
+					$idsline2 .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
 
-		// if ($idsline != null and $idsline2 != null) {
-		// 	$idslinefull = $idsline.' OR '.$idsline2;
-		// } else if ($idsline != null and $idsline2 == null) {
-		// 	$idslinefull = $idsline;
-		// } else if ($idsline == null and $idsline2 != null) {
-		// 	$idslinefull = $idsline2;
-		// }
+		if ($idsline != null and $idsline2 != null) {
+			$idslinefull = $idsline.' OR '.$idsline2;
+		} else if ($idsline != null and $idsline2 == null) {
+			$idslinefull = $idsline;
+		} else if ($idsline == null and $idsline2 != null) {
+			$idslinefull = $idsline2;
+		}
 
-		if (!is_null($idsline)) {
+		if (!is_null($idslinefull)) {
 			$data = array(
 				'query' => 'content_t:"'.$keyword.'"',
 				'filter' => array(
 					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
-					'id_i:('.$idsline.')'
+					'id_i:('.$idslinefull.')'
 				),
 			);
 		} else {
@@ -766,6 +803,158 @@ class Pages_model extends CI_Model {
 		$port='8983';
 		$host='172.17.0.3';
 		$path='/solr/knewin_radio/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idslinefull = null;
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		$idsline2 = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline2 .= "NOT ".$id_text;
+				}
+				else {
+					$idsline2 .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if ($idsline != null and $idsline2 != null) {
+			$idslinefull = $idsline.' OR '.$idsline2;
+		} else if ($idsline != null and $idsline2 == null) {
+			$idslinefull = $idsline;
+		} else if ($idsline == null and $idsline2 != null) {
+			$idslinefull = $idsline2;
+		}
+
+		if (!is_null($idslinefull)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idslinefull.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_tv($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/tv/query?rows=1&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$idslinefull = null;
+		$idsline = null;
+		$cidsarr = count($ids_doc);
+		$ccount = 0;
+		foreach ($ids_doc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline .= "NOT ".$id_text;
+				}
+				else {
+					$idsline .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		$idsline2 = null;
+		$cidsarr = count($ids_cdoc);
+		$ccount = 0;
+		foreach ($ids_cdoc as $id => $idstexts) {
+			$ccount++;
+			foreach ($idstexts as $idd => $id_text) {
+				if ($ccount == $cidsarr) {
+					$idsline2 .= "NOT ".$id_text;
+				}
+				else {
+					$idsline2 .= "NOT ".$id_text." OR ";
+				}
+			}
+		}
+
+		if ($idsline != null and $idsline2 != null) {
+			$idslinefull = $idsline.' OR '.$idsline2;
+		} else if ($idsline != null and $idsline2 == null) {
+			$idslinefull = $idsline;
+		} else if ($idsline == null and $idsline2 != null) {
+			$idslinefull = $idsline2;
+		}
+
+		if (!is_null($idslinefull)) {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => array(
+					'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]',
+					'id_i:('.$idslinefull.')'
+				),
+			);
+		} else {
+			$data = array(
+				'query' => 'content_t:"'.$keyword.'"',
+				'filter' => 'starttime_dt:['.$startdate.'Z TO '.$enddate.'Z]'
+			);
+		}
+
+		$data_string = json_encode($data);
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function docs_byid_tv_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/tv/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
 		$idslinefull = null;
@@ -1103,6 +1292,34 @@ class Pages_model extends CI_Model {
 	}
 
 	public function tv_text_keyword_solr($startdate, $enddate, $keyword) {
+		//Solr Connection
+		$protocol='http';
+		$port='8983';
+		$host='172.17.0.3';
+		$path='/solr/tv/query?rows=1&wt=json&sort=starttime_dt+desc';
+		$url=$protocol."://".$host.":".$port.$path;
+
+		$data = array(
+			"query" => 'content_t:"'.$keyword.'"',
+			"filter" => "starttime_dt:[".$startdate."Z TO ".$enddate."Z]"
+		);
+		$data_string = json_encode($data);
+
+		$header = array(
+			'Content-Type: application/json',
+			'Content-Length: '.strlen($data_string),
+			'charset=UTF-8'
+		);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+		return json_decode(curl_exec($ch));
+	}
+
+	public function tv_novo_text_keyword_solr($startdate, $enddate, $keyword) {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
@@ -1581,6 +1798,18 @@ class Pages_model extends CI_Model {
 		$this->db->insert('discard_keyword_radio_knewin', $data_insert_discard);
 	}
 
+	public function discard_doc_tv($data_discard) {
+		$data_insert_discard = array(
+			'id_doc' => $data_discard['id_doc'],
+			'id_client' => $data_discard['id_client'],
+			'id_keyword' => $data_discard['id_keyword'],
+			'timestamp' => strtotime("now"),
+			'id_user' => $data_discard['id_user']
+		);
+		$this->db->insert('discard_keyword_tv', $data_insert_discard);
+		return $this->db->insert_id();
+	}
+
 	public function discard_doc_tv_novo($data_discard) {
 		$data_insert_discard = array(
 			'id_doc' => $data_discard['id_doc'],
@@ -1958,22 +2187,25 @@ class Pages_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function search_result($vtype, $datasearch, $start) {
+	public function search_result($datasearch) {
+		// var_dump($datasearch['keyword']);
+
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
 		$host='172.17.0.3';
 
-		if (is_null($start)) {
-			$start = 0;
-		}
-
 		if (is_array($datasearch)) {
-			$starttime = $datasearch['starttime'];
-			$endtime = $datasearch['endtime'];
-			$startdate = strtotime(str_replace('/','-',$datasearch['startdate']).' '.$starttime);
-			$enddate = strtotime(str_replace('/','-',$datasearch['enddate']).' '.$endtime);
-			$keyword = $datasearch['keyword'];
+			// $sdatearr = explode("/", $datasearch['startdate']);
+			// $edatearr = explode("/", $datasearch['enddate']);
+			// $startdatetime = $sdatearr[2]."-".$sdatearr[1]."-".$sdatearr[0]." ".$datasearch['starttime'].":00";
+			// $enddatetime = $edatearr[2]."-".$edatearr[1]."-".$edatearr[0]." ".$datasearch['endtime'].":59";
+
+			if (!is_null($datasearch['keyword'])) {
+				$keyword = $datasearch['keyword'];
+			} else {
+				$keyword = '';
+			}
 
 			if (isset($datasearch['clientid'])) {
 				$idclient = $datasearch['clientid'];
@@ -1981,226 +2213,32 @@ class Pages_model extends CI_Model {
 				$idclient = '';
 			}
 
-			if (empty($datasearch['startrow'])) {
-				$datasearch['startrow'] = 0;
-			}
-			if (empty($datasearch['numrows'])) {
-				$datasearch['numrows'] = 10;
-			}
-
-			if ($datasearch['vtype'] == 'radio' and $datasearch['vsrctype'] == 'audimus') {
-				$path='/solr/text/query?wt=json&start='.$start.'&sort=id_text_i+asc';
-				$url=$protocol."://".$host.":".$port.$path;
-
-				// $clientkeyword = $datasearch['clientkeywordid'];
-				if (isset($datasearch['clientkeywordid']) and !empty($idclient)) {
-					//get all keywords of client
-					$sqlquery =	'SELECT ck.id_client,c.name,ck.id_keyword,k.keyword
-									FROM client_keyword ck
-									JOIN client c ON ck.id_client=c.id_client
-									JOIN keyword k ON ck.id_keyword=k.id_keyword
-									WHERE ck.id_client = '.$idclient.' ORDER BY k.keyword ASC';
-					$result = $this->db->query($sqlquery)->result_array();
-					// $ckline = null;
-					$ckcount = 0;
-					$ckarrcount = count($result);
-					foreach ($result as $keyword) {
-						$ckcount++;
-						if ($ckcount == $ckarrcount) {
-							$clientkeyword .= $keyword['keyword'];
-						} else {
-							$clientkeyword .= $keyword['keyword'].'" OR "';
-						}
-					}
+			if ($datasearch['msc'] == 'local' and $datasearch['mtype'] == 'audio') {
+				if (isset($datasearch['id_source']) and $datasearch['id_source'] != 0) {
+					$idradio = $datasearch['id_source'];
 				} else {
-					// $clientkeyword = $this->db->get_where('keyword', array('id_keyword' => $datasearch['clientkeywordid']))->row()->keyword;
-					$clientkeyword = null;
+					$idradio = '';
 				}
 
-				$idradioarr = $datasearch['id_radio'];
-				$idradioc = count($idradioarr);
-				if ($idradioc > 1) {
-					$idradio = implode(',',$idradioarr);
+				$sd = new Datetime($datasearch['startdate']);
+				$ed = new Datetime($datasearch['enddate']);
+				$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+				$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
+
+				$path = '/solr/radio/query?wt=json&start='.$datasearch['start'].'&rows='.$datasearch['rows'].'&sort=source_s+asc,starttime_dt+asc';
+				$url = $protocol."://".$host.":".$port.$path;
+			} else if ($datasearch['msc'] == 'novo' and $datasearch['mtype'] == 'audio') {
+				if (isset($datasearch['id_source']) and $datasearch['id_source'] != 0) {
+					$idradio = $datasearch['id_source'];
 				} else {
-					$idradio = $idradioarr;
+					$idradio = '';
 				}
-
-				//search with startdate and enddate
-				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
-					$data = array(
-						"query"  => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with clientid, all keywords from clientid, startdate and enddate
-				else if (!empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
-					$data = array(
-						"query" => "_text_:(\"".$clientkeyword."\")",
-						"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with clientid, specific keywords from clientid, startdate and enddate
-				else if (!empty($idclient) and !empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
-					$data = array(
-						"query" => "_text_:\"".$clientkeyword."\"",
-						"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with clientid, radio, startdate and enddate
-				else if (!empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio) and empty($keyword)) {
-					$idsradios = str_replace(',', ' OR ', $idradio);
-
-					$data = array(
-						"query" =>  "_text_:(\"".$clientkeyword."\")",
-						"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}id_radio_i:(".$idsradios.") AND timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					var_dump($data);
-					exit();
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with radioid, keyword, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio) and !empty($keyword)) {
-					$idsradios = str_replace(',', ' OR ', $idradio);
-
-					$data = array(
-						"query" =>  "_text_:\"".$keyword."\"",
-						"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}id_radio_i:(".$idsradios.") AND timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with radioid, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio)  and empty($keyword)) {
-					$idsradios = str_replace(',', ' OR ', $idradio);
-
-					$data = array(
-						"query" =>  "{!join from=id_file_i to=id_file_i fromIndex=file}id_radio_i:(".$idsradios.") AND timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with keyword, startdate and endate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio)  and !empty($keyword)) {
-					$data = array(
-						"query" => "_text_:\"".$keyword."\"",
-						"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with client, client_keyword, startdate and enddate
-				// else if (!empty($idclient) and !empty($datasearch['clientkeywordid']) and empty($idradio) and !empty($keyword)) {
-				// 	$sqlquery =	"SELECT t.id_file,f.timestamp,f.path,f.filename,t.text_content, r.name as radio,r.state
-				// 					FROM text t
-				// 					JOIN file f ON t.id_file=f.id_file
-				// 					JOIN radio r ON f.id_radio=r.id_radio
-				// 					WHERE f.timestamp >= ".$startdate."
-				// 					AND f.timestamp <=".$enddate."
-				// 					AND r.id_radio IN (".$idradio.")
-				// 					AND t.text_content REGEXP '[[:<:]]".$keyword."[[:>:]]'";
-				// 	return $this->db->query($sqlquery)->result_array();
-				// }
-			} else if ($datasearch['vtype'] == 'radio_novo' and $datasearch['vsrctype'] == 'novo') {
-				$ds = new DateTime(date('Y-m-d H:i:s', $startdate));
-				$de = new DateTime(date('Y-m-d H:i:s', $enddate));
-				$startdatem = $ds->format('Y-m-d\TH:i:s\Z');
-				$enddatem = $de->format('Y-m-d\TH:i:s\Z');
-
-
 
 				$timezone = new DateTimeZone('America/Sao_Paulo');
-				$sd = new Datetime($datasearch['starttime'], $timezone);
-				$ed = new Datetime($datasearch['endtime'], $timezone);
+				$sd = new Datetime($datasearch['startdate'], $timezone);
+				$ed = new Datetime($datasearch['enddate'], $timezone);
 				$newtimezone = new DateTimeZone('UTC');
 				$sd->setTimezone($newtimezone);
 				$ed->setTimezone($newtimezone);
@@ -2209,433 +2247,143 @@ class Pages_model extends CI_Model {
 				$epochstartdate = $sd->format('U');
 				$epochenddate = $ed->format('U');
 
-				$epochstartdate1 = strtotime($startdate);
-				$sstartdate1 = date('Y-m-d\TH:i:s', $epochstartdate1);
-				$epochenddate1 = strtotime($enddate);
-				$senddate1 = date('Y-m-d\TH:i:s', $epochenddate1);
-
-
-
-				$path = '/solr/knewin_radio/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
+				$path = '/solr/knewin_radio/query?wt=json&start='.$datasearch['start'].'&rows='.$datasearch['rows'].'&sort=source_s+asc,starttime_dt+asc';
 				$url = $protocol."://".$host.":".$port.$path;
-
-				//search with startdate and enddate
-				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_novo']) and empty($keyword)) {
-					$data = array(
-						"query"  => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
-					);
-					$data_string = json_encode($data);
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with keyword, startdate and endate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['id_radio_novo']) and !empty($keyword)) {
-					$data = array(
-						"query" => 'content_t:"'.$keyword.'"',
-						"filter" => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with radio channel, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_novo']) and empty($keyword)) {
-					$channelsline = null;
-					$channels = explode(",", $datasearch['id_radio_novo']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					$data = array(
-						"query" => "starttime_dt:[".$startdatem." TO ".$enddatem."]",
-						"filter" => 'id_source_i:'.$channelsline
-					);
-					$data_string = json_encode($data);
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with tv channel, keyword, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['id_radio_novo']) and !empty($keyword)) {
-					$channelsline = null;
-					$channels = explode(",", $datasearch['id_radio_novo']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					$data = array(
-						"query" => 'content_t:"'.$keyword.'"',
-						"filter" => array(
-							'starttime_dt:['.$startdatem.' TO '.$enddatem.']',
-							'id_source_i:'.$channelsline
-						)
-					);
-					$data_string = json_encode($data);
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-			} else if ($datasearch['vtype'] == 'tv') {
-				$knewinday = strtotime('29-11-2017 12:00');
-
-				if ($startdate < $knewinday) {
-					$startdatem = $startdate * 1000;
-					$enddatem = $enddate * 1000;
-					$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$datastr = 1;
+			} else if ($datasearch['msc'] == 'local' and $datasearch['mtype'] == 'video') {
+				if (isset($datasearch['id_source']) and $datasearch['id_source'] != 0) {
+					$idradio = $datasearch['id_source'];
 				} else {
-					$ds = new DateTime(date('Y-m-d H:i:s', $startdate));
-					$de = new DateTime(date('Y-m-d H:i:s', $enddate));
-					$startdatem = $ds->format('Y-m-d\TH:i:s\Z');
-					$enddatem = $de->format('Y-m-d\TH:i:s\Z');
-					$path = '/solr/knewin_tv/query?wt=json&start='.$start.'&sort=source_s+asc,starttime_dt+asc';
-					$datastr = 2;
+					$idradio = '';
 				}
 
-				//search with startdate and enddate
-				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and empty($keyword)) {
-					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
+				$sd = new Datetime($datasearch['startdate']);
+				$ed = new Datetime($datasearch['enddate']);
+				$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+				$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
 
-					if ($datastr == 1) {
-						$data = array(
-							"query"  => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-						);
-					} else {
-						$data = array(
-							"query"  => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
-						);
-					}
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
+				$path = '/solr/tv/query?wt=json&start='.$datasearch['start'].'&rows='.$datasearch['rows'].'&sort=source_s+asc,starttime_dt+asc';
+				$url = $protocol."://".$host.":".$port.$path;
+			} else if ($datasearch['msc'] == 'novo' and $datasearch['mtype'] == 'video') {
+				if (isset($datasearch['id_source']) and $datasearch['id_source'] != 0) {
+					$idradio = $datasearch['id_source'];
+				} else {
+					$idradio = '';
 				}
-				//search with keyword, startdate and endate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and !empty($keyword)) {
-					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
 
-					if ($datastr == 1) {
-						$data = array(
-							"query" => 'text_t:"'.$keyword.'"',
-							"filter" => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-						);
-					} else {
-						$data = array(
-							"query" => 'content_t:"'.$keyword.'"',
-							"filter" => "starttime_dt:[".$startdatem." TO ".$enddatem."]"
-						);
-					}
-					$data_string = json_encode($data);
+				$timezone = new DateTimeZone('America/Sao_Paulo');
+				$sd = new Datetime($datasearch['startdate'], $timezone);
+				$ed = new Datetime($datasearch['enddate'], $timezone);
+				$newtimezone = new DateTimeZone('UTC');
+				$sd->setTimezone($newtimezone);
+				$ed->setTimezone($newtimezone);
+				$sstartdate = $sd->format('Y-m-d\TH:i:s\Z');
+				$senddate = $ed->format('Y-m-d\TH:i:s\Z');
+				$epochstartdate = $sd->format('U');
+				$epochenddate = $ed->format('U');
 
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with tv channel, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and empty($keyword)) {
-					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					// $tvchannels = str_replace(',', ' OR ', $datasearch['tvchannel']);
-
-					$channelsline = null;
-					$channels = explode(",", $datasearch['tvchannel']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					if ($datastr == 1) {
-						$data = array(
-							"query" => "startdate_l:[".$startdatem." TO ".$enddatem."]",
-							"filter" => 'source_s:'.$channelsline
-						);
-					} else {
-						$data = array(
-							"query" => "starttime_dt:[".$startdatem." TO ".$enddatem."]",
-							"filter" => 'source_s:'.$channelsline
-						);
-					}
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with tv channel, keyword, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and !empty($keyword)) {
-					//$path = '/solr/mmstv_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					$channelsline = null;
-					$channels = explode(",", $datasearch['tvchannel']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					if ($datastr == 1) {
-						$data = array(
-							"query" => 'text_t:"'.$keyword.'"',
-							"filter" => array(
-								'startdate_l:['.$startdatem.' TO '.$enddatem.']',
-								'source_s:'.$channelsline
-							)
-						);
-					} else {
-						$data = array(
-							"query" => 'content_t:"'.$keyword.'"',
-							"filter" => array(
-								'starttime_dt:['.$startdatem.' TO '.$enddatem.']',
-								'source_s:'.$channelsline
-							)
-						);
-					}
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-			} else if ($datasearch['vtype'] == 'radioinfo4') {
-				$startdatem = $startdate * 1000;
-				$enddatem = $enddate * 1000;
-
-				//search with startdate and enddate
-				if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and empty($keyword)) {
-					// $path = '/solr/mmstv_segments/query?wt=json&start='.$start.'&sort=startdate_l+asc';
-					$path = '/solr/mmsradio_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					// $path = '/solr/mmstv_words/query?wt=json&start='.$start.'&rows=80000&sort=starttime_i+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					$data = array(
-						"query"  => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with keyword, startdate and endate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($datasearch['tvchannel']) and !empty($keyword)) {
-					$path = '/solr/mmsradio_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					$data = array(
-						"query" => 'text_t:"'.$keyword.'"',
-						"filter" => "startdate_l:[".$startdatem." TO ".$enddatem."]"
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with tv channel, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and empty($keyword)) {
-					$path = '/solr/mmsradio_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					// $tvchannels = str_replace(',', ' OR ', $datasearch['tvchannel']);
-
-					$channelsline = null;
-					$channels = explode(",", $datasearch['tvchannel']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					$data = array(
-						"query" => "startdate_l:[".$startdatem." TO ".$enddatem."]",
-						"filter" => 'source_s:'.$channelsline
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
-				//search with tv channel, keyword, startdate and enddate
-				else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($datasearch['tvchannel']) and !empty($keyword)) {
-					$path = '/solr/mmsradio_story/query?wt=json&start='.$start.'&sort=source_s+asc,startdate_l+asc';
-					$url = $protocol."://".$host.":".$port.$path;
-
-					// $tvchannels = str_replace(',', ' OR ', $datasearch['tvchannel']);
-
-					$channelsline = null;
-					$channels = explode(",", $datasearch['tvchannel']);
-					$channelscarr = count($channels);
-					$channelsc = 0;
-					foreach ($channels as $channel) {
-						$channelsc++;
-						if ($channelsc == $channelscarr) {
-							$channelsline .= '"'.$channel.'"';
-						} else {
-							$channelsline .= '"'.$channel.'" OR ';
-						}
-					}
-
-					$data = array(
-						"query" => 'text_t:"'.$keyword.'"',
-						"filter" => array(
-							'startdate_l:['.$startdatem.' TO '.$enddatem.']',
-							'source_s:'.$channelsline
-						)
-					);
-					$data_string = json_encode($data);
-
-					$header = array(
-						'Content-Type: application/json',
-						'Content-Length: '.strlen($data_string),
-						'charset=UTF-8'
-					);
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-					return json_decode(curl_exec($ch));
-				}
+				$path = '/solr/knewin_tv/query?wt=json&start='.$datasearch['start'].'&rows='.$datasearch['rows'].'&sort=source_s+asc,starttime_dt+asc';
+				$url = $protocol."://".$host.":".$port.$path;
 			}
+
+			//search with startdate and enddate
+			if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
+				$data = array(
+					"query"  => "starttime_dt:[".$sstartdate." TO ".$senddate."]"
+				);
+			}
+			//search with clientid, all keywords from clientid, startdate and enddate
+			else if (!empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
+				$data = array(
+					"query" => "_text_:(\"".$clientkeyword."\")",
+					"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
+				);
+			}
+			//search with clientid, specific keywords from clientid, startdate and enddate
+			else if (!empty($idclient) and !empty($datasearch['clientkeywordid']) and empty($idradio) and empty($keyword)) {
+				$data = array(
+					"query" => "_text_:\"".$clientkeyword."\"",
+					"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}timestamp_i:[".$startdate." TO ".$enddate."]"
+				);
+				$data_string = json_encode($data);
+
+				$header = array(
+					'Content-Type: application/json',
+					'Content-Length: '.strlen($data_string),
+					'charset=UTF-8'
+				);
+				$ch = curl_init($url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+				return json_decode(curl_exec($ch));
+			}
+			//search with clientid, radio, startdate and enddate
+			else if (!empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio) and empty($keyword)) {
+				$idsradios = str_replace(',', ' OR ', $idradio);
+
+				$data = array(
+					"query" =>  "_text_:(\"".$clientkeyword."\")",
+					"filter" => "{!join from=id_file_i to=id_file_i fromIndex=file}id_radio_i:(".$idsradios.") AND timestamp_i:[".$startdate." TO ".$enddate."]"
+				);
+			}
+			//search with radioid, keyword, startdate and enddate
+			else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio) and !empty($keyword)) {
+				$idssource = str_replace(',', ' OR ', $datasearch['id_source']);
+
+				$data = array(
+					"query" =>  "content_t:\"".$keyword."\"",
+					"filter" => array(
+						"starttime_dt:[".$sstartdate." TO ".$senddate."]",
+						"id_source_i:".$idssource
+					)
+				);
+			}
+			//search with radioid, startdate and enddate
+			else if (empty($idclient) and empty($datasearch['clientkeywordid']) and !empty($idradio)  and empty($keyword)) {
+				$idssource = str_replace(',', ' OR ', $datasearch['id_source']);
+
+				$data = array(
+					"query" => "starttime_dt:[".$sstartdate." TO ".$senddate."]",
+					"filter" => 'id_source_i:'.$idssource
+				);
+			}
+			//search with keyword, startdate and endate
+			else if (empty($idclient) and empty($datasearch['clientkeywordid']) and empty($idradio)  and !empty($keyword)) {
+				$data = array(
+					"query" => "content_t:\"".$keyword."\"",
+					"filter" => "starttime_dt:[".$sstartdate." TO ".$senddate."]"
+				);
+			}
+			//search with client, client_keyword, startdate and enddate
+			else if (!empty($idclient) and !empty($datasearch['clientkeywordid']) and empty($idradio) and !empty($keyword)) {
+				$sqlquery =	"SELECT t.id_file,f.timestamp,f.path,f.filename,t.text_content, r.name as radio,r.state
+								FROM text t
+								JOIN file f ON t.id_file=f.id_file
+								JOIN radio r ON f.id_radio=r.id_radio
+								WHERE f.timestamp >= ".$startdate."
+								AND f.timestamp <=".$enddate."
+								AND r.id_radio IN (".$idradio.")
+								AND t.text_content REGEXP '[[:<:]]".$keyword."[[:>:]]'";
+				return $this->db->query($sqlquery)->result_array();
+			}
+
+			$data_string = json_encode($data);
+			$header = array(
+				'Content-Type: application/json',
+				'Content-Length: '.strlen($data_string),
+				'charset=UTF-8'
+			);
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+			return json_decode(curl_exec($ch));
 		} else {
 			if ($vtype == 'radio') {
 				// $path = '/solr/text/query?wt=json&start='.$start.'&sort=id_text_i+asc';

@@ -1,4 +1,13 @@
 <?php
+
+			if (!isset($client_selected)) {
+				$client_selected = 0;
+				$id_keyword = 0;
+				$keyword_selected = null;
+				$id_client = 0;
+			}
+
+
 			$divcount = $start;
 			$icount = $start;
 			foreach ($keyword_texts->response->docs as $found) {
