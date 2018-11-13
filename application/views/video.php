@@ -78,11 +78,8 @@
 					<p id="vptext" class="text-justify ptext noscrolled" style="overflow-y: auto; max-height: 480px; display: none;">
 						<?php
 						if (isset($sid)) {
-							$found = $this->pages_model->tv_novo_text_byid_solr($sid);
-							// var_dump($found);
 							if (isset($found->response->docs[0]->times_t)) {
 								$times = $found->response->docs[0]->times_t[0];
-								// var_dump($times);
 								$stimes = json_decode($times, TRUE);
 								foreach ($stimes as $stime) {
 									if (isset($stime['words'])) {
@@ -177,40 +174,40 @@
 
 				<div class="col-md-5">
 					<p>
-					<div class="btn-toolbar">
-						<div class="input-group date" style="width: 26%">
-							<input id="seldate" type="text" class="form-control">
-							<div class="input-group-addon">
-								<span class="fa fa-calendar"></span>
+						<div class="btn-toolbar">
+							<div class="input-group date" style="width: 26%">
+								<input id="seldate" type="text" class="form-control">
+								<div class="input-group-addon">
+									<span class="fa fa-calendar"></span>
+								</div>
 							</div>
-						</div>
 
-						<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" data-windowPadding="top" title="Selecione uma data" disabled></select>
+							<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" data-windowPadding="top" title="Selecione uma data" disabled></select>
 
-						<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-							<i class="fa fa-bell"></i>
-						</a> -->
+							<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+								<i class="fa fa-bell"></i>
+							</a> -->
 
-						<div class="btn-group">
-							<div class="dropup">
-								<button type="button" class="btn btn-default dropdown-toggle"
-								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-									<i class="fa fa-bell"></i>
-								</button>
-								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
-									<li>
-										<a class="text-center" href="#">
-											<strong>Nenhum alerta de tv!</strong>
-										</a>
-									</li>
-								</ul>
+							<div class="btn-group">
+								<div class="dropup">
+									<button type="button" class="btn btn-default dropdown-toggle"
+									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+										<i class="fa fa-bell"></i>
+									</button>
+									<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
+										<li>
+											<a class="text-center" href="#">
+												<strong>Nenhum alerta de tv!</strong>
+											</a>
+										</li>
+									</ul>
+								</div>
 							</div>
+							<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+							<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
 						</div>
-						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
-						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
-					</div>
 					</p>
 				</div>
 			</div>
@@ -1035,6 +1032,10 @@
 					if (isTouchDevice()) {
 						$('#vtitle').css('font-size', '18px');
 						$('#vnext').css('max-height', '150px');
+						$('#thvideo').attr({
+							'width': '427',
+							'height': '240'
+						});
 					}
 				};
 
@@ -1448,7 +1449,7 @@
 					});
 				});
 
-				$(document).on('mouseover', '.vnextthumb', function(){
+				$(document).on('mouseover', '.vnextthumb', function() {
 					// console.log('mouse over image thumb on vnext!');
 
 					timgid = $(this).attr('data-tbid');
@@ -1468,7 +1469,7 @@
 					}
 				});
 
-				$(document).on('mouseleave', '.vnextthumb', function(){
+				$(document).on('mouseleave', '.vnextthumb', function() {
 					// console.log('mouse leave image thumb on vnext!');
 
 					tsrc = $(this).attr('data-vsrc');
@@ -1482,3 +1483,9 @@
 					}
 				});
 
+				$(document).on('click', '.vnextthumb', function() {
+					timgid = $(this).attr('data-tbid');
+					tsrc = $(this).attr('data-vsrc');
+					tfile = $(this).attr('data-vfile');
+					videoselect(tfile, tsrc);
+				});

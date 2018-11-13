@@ -110,6 +110,7 @@
 								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
 								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
 								<input type="hidden" name="ifkwfound" value="BLANK">
+								<input type="hidden" name="pagesrc" value="<?php echo $pagesrc;?>">
 							</form>
 						</div>
 					</div>
@@ -120,7 +121,6 @@
 								<video id="<?php echo 'pvideo'.$divcount;?>" class="center-block img-thumbnail pfvideo"
 								src="<?php echo $smediaurl; ?>" controls preload="metadata" data-sc="local" data-type="video"
 								poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
-								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
 								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">

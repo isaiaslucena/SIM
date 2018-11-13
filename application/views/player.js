@@ -575,7 +575,7 @@
 					if (minutes < 10) {minutes = "0" + minutes;}
 					if (seconds < 10) {seconds = "0" + seconds;}
 					return hours+':'+minutes+':'+seconds+'.'+milliseconds;
-				}
+				};
 
 				function videoelBuffer() {
 					if (videoel[0].buffered.length > 0) {
@@ -605,7 +605,7 @@
 						vvideoelmt[0].pause();
 						setlocalstorage('videoplaying', false);
 					}
-				}
+				};
 
 				function vfullscreen(videoelt) {
 					var elem = document.getElementById(videoelt);
@@ -626,7 +626,41 @@
 							elem.webkitRequestFullscreen();
 						}
 					}
-				}
+				};
+
+				function videoselect(cfilename, cfilevsource) {
+					joinvideosclk = false;
+
+					$('.vbutton').css('display', 'none');
+					$('.vbutton').removeClass('paused');
+
+					videoel.attr({
+						poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+cfilevsource+'_'+cfilename+'/001',
+						src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
+					});
+
+					arr = lastvideo.split('_');
+					channel = arr[2];
+					if (channel != 'AVULSO') {
+						if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
+							videoel[0].pause();
+
+							loadingthumbs();
+						} else {
+							videoel[0].play();
+						}
+					} else {
+						videoel[0].play();
+					}
+
+					videotitle.text(cfilename);
+					videotitle.attr('data-vsrc', cfilevsource);
+					videotitle.css('font-size', '30px');
+					mobileconf();
+					$('.list-group').children().removeClass('active');
+					$('span:contains('+cfilename+')').parent().addClass('active');
+					joinvideos = false;
+				};
 
 				$('.list-group').click(function(event) {
 					cfileid = event.target.id;
@@ -635,39 +669,9 @@
 					disclass = $('#'+aid).hasClass('disabled');
 					if (disclass == false) {
 						if (elclick == "SPAN" || elclick == "H4") {
-							joinvideosclk = false;
 							cfilename = event.target.innerText;
 							cfilevsource = event.target.dataset.vsrc;
-
-							$('.vbutton').css('display', 'none');
-							$('.vbutton').removeClass('paused');
-
-							videoel.attr({
-								poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+cfilevsource+'_'+cfilename+'/001',
-								src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
-							});
-
-							arr = lastvideo.split('_');
-							channel = arr[2];
-							if (channel != 'AVULSO') {
-								if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
-									videoel[0].pause();
-
-									loadingthumbs();
-								} else {
-									videoel[0].play();
-								}
-							} else {
-								videoel[0].play();
-							}
-
-							videotitle.text(cfilename);
-							videotitle.attr('data-vsrc', cfilevsource);
-							videotitle.css('font-size', '30px');
-							mobileconf();
-							$('.list-group').children().removeClass('active');
-							event.target.parentElement.className += ' active';
-							joinvideos = false;
+							videoselect(cfilename, cfilevsource);
 						} else if (elclick == "INPUT") {
 							ccbjoincrop = $('#checkjoincrop').prop('checked');
 							if (ccbjoincrop) {

@@ -200,3 +200,7 @@ video {
 	/*word-wrap: break-word;*/
 	white-space: normal;
 }
+
+.vnextthumb{
+	cursor: pointer;
+}

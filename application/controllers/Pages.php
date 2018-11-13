@@ -1577,7 +1577,7 @@ class Pages extends CI_Controller {
 			$data['id_file'] = $this->input->post('id_file');
 			$data['id_text'] = $this->input->post('id_text');
 			$data['client_selected'] = $this->input->post('client_selected');
-			$data['novodoc'] = $this->pages_model->radiol_text_byid_solr($data['sid']);
+			$data['novodoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
 			if (empty($this->input->post('client_selected'))) {
 				$data['keyword_selected'] = $this->input->post('keyword');
 			} else {
@@ -1619,7 +1619,7 @@ class Pages extends CI_Controller {
 			$data['id_file'] = $this->input->post('id_file');
 			$data['id_text'] = $this->input->post('id_text');
 			$data['client_selected'] = $this->input->post('client_selected');
-			$data['novodoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+			$data['novodoc'] = $this->pages_model->radio_novo_text_byid_solr($data['sid']);
 			if (empty($this->input->post('client_selected'))) {
 				$data['keyword_selected'] = $this->input->post('keyword');
 			} else {
@@ -1661,7 +1661,7 @@ class Pages extends CI_Controller {
 			$data['id_file'] = $this->input->post('id_file');
 			$data['id_text'] = $this->input->post('id_text');
 			$data['client_selected'] = $this->input->post('client_selected');
-			$data['novodoc'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+			$data['novodoc'] = $this->pages_model->radio_novo_text_byid_solr($data['sid']);
 			if (empty($this->input->post('client_selected'))) {
 				$data['keyword_selected'] = $this->input->post('keyword');
 			} else {
@@ -2948,6 +2948,52 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function get_doc_bymurl($msc, $mtype, $murl) {
+		// $data['doc_id'] = $this->input->get('murl');
+		// $data['msc'] = $this->input->get('msc');
+		// $data['mtype'] = $this->input->get('mtype');
+
+		if ($msc == 'local' and $mtype == 'audio') {
+			$data['found'] = $this->pages_model->radio_text_bymurl_solr($murl);
+		} else if ($msc == 'novo' and $mtype == 'audio') {
+			$data['found'] = $this->pages_model->radio_novo_text_bymurl_solr($murl);
+		} else if ($msc == 'local' and $mtype == 'video') {
+			$data['found'] = $this->pages_model->tv_text_bymurl_solr($murl);
+		} else if ($msc == 'novo' and $mtype == 'video') {
+			$data['found'] = $this->pages_model->tv_novo_text_bymurl_solr($murl);
+		} else {
+			$data['found'] = null;
+		}
+
+		if ((int)$data['found']->response->numFound == 0) {
+			header("HTTP/1.1 404 Not Found");
+		} else {
+			header('Content-Type: application/json');
+			print json_encode($data['found']);
+		}
+	}
+
+	public function get_doc_byid($msc, $mtype, $doc_id) {
+		// $data['doc_id'] = $this->input->get('doc_id');
+		// $data['msc'] = $this->input->get('msc');
+		// $data['mtype'] = $this->input->get('mtype');
+
+		if ($data['msc'] == 'local' and $data['mtype'] == 'audio') {
+			$data['found'] = $this->pages_model->radio_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'novo' and $data['mtype'] == 'audio') {
+			$data['found'] = $this->pages_model->radio_novo_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'local' and $data['mtype'] == 'video') {
+			$data['found'] = $this->pages_model->tv_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'novo' and $data['mtype'] == 'video') {
+			$data['found'] = $this->pages_model->tv_novo_text_byid_solr($data['doc_id']);
+		} else {
+			$data['found'] = null;
+		}
+
+		header('application/json');
+		print $data;
+	}
+
 	public function video() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
@@ -2966,9 +3012,24 @@ class Pages extends CI_Controller {
 				$data['sstartdate'] = $this->input->post('sstartdate');
 				$data['senddate'] = $this->input->post('senddate');
 				$data['id_keyword'] = $this->input->post('id_keyword');
+				$data['keyword'] = $this->db->get_where('keyword',array('id_keyword' => $data['id_keyword']))->row()->keyword;
 				$data['id_client'] = $this->input->post('id_client');
-				$data['client_selected'] = $this->input->post('client_selected');
+				$data['client_selected'] = $this->db->get_where('client',array('id_client' => $data['id_client']))->row()->name;
 				$data['ifkwfound'] = $this->input->post('ifkwfound');
+				$data['pagesrc'] = $this->input->post('pagesrc');
+
+				if ($data['pagesrc'] == 'radio_home_keyword') {
+					$data['found'] = $this->pages_model->radio_text_byid_solr($data['sid']);
+				} else if ($data['pagesrc'] == 'radio_novo_home_keyword') {
+					$data['found'] = $this->pages_model->radio_novo_text_byid_solr($data['sid']);
+				}
+				else if ($data['pagesrc'] == 'tv_home_keyword') {
+					$data['found'] = $this->pages_model->tv_text_byid_solr($data['sid']);
+				} else if ($data['pagesrc'] == 'tv_novo_home_keyword') {
+					$data['found'] = $this->pages_model->tv_novo_text_byid_solr($data['sid']);
+				} else {
+					$data['found'] = null;
+				}
 				// var_dump($data);
 
 				$this->load->view('video', $data);

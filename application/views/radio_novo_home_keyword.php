@@ -113,18 +113,6 @@
 								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
 								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
 							</form>
-
-							<button type="submit" form="<?php echo 'form_temp'.$divcount;?>" class="btn btn-default btn-xs pull-right">Editar_Temp</button>
-							<form id="<?php echo 'form_temp'.$divcount;?>" style="all: unset;" action="<?php echo base_url('pages/edit_novo_temp');?>" target="_blank" method="POST">
-								<input type="hidden" name="sid" value="<?php echo $sid;?>">
-								<input type="hidden" name="mediaurl" value="<?php echo $smediaurl;?>">
-								<input type="hidden" name="ssource" value="<?php echo $ssource;?>">
-								<input type="hidden" name="sstartdate" value="<?php echo $sstartdate;?>">
-								<input type="hidden" name="senddate" value="<?php echo $senddate;?>">
-								<input type="hidden" name="id_keyword" value="<?php echo $id_keyword;?>">
-								<input type="hidden" name="id_client" value="<?php echo $id_client;?>">
-								<input type="hidden" name="client_selected" value="<?php echo $client_selected;?>">
-							</form>
 						</div>
 					</div>
 
