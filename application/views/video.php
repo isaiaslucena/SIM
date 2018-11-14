@@ -336,7 +336,7 @@
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
-				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, srcposter;
+				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
 				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false,
 				frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
@@ -754,14 +754,14 @@
 
 								$.each(data, function(index, val) {
 									file = val.replace(".mp4","");
-									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
+									var srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
 
 									var testeimg = new Image();
 									testeimg.src = srcposter;
 
-									testeimg.onerror = function() {
+									testeimg.onerror = function(e) {
 										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-										console.log(srcposter);
+										$('#vnttb'+index).attr('src', srcposter);
 									};
 
 									if (file == firstvideo) {
@@ -801,13 +801,13 @@
 									file = val.replace(".mp4","");
 									filearr = file.split('_');
 
-									srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
-
+									var srcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+vsource+'_'+file+'/001';
 									var testeimg = new Image();
 									testeimg.src = srcposter;
 
-									testeimg.onerror = function() {
+									testeimg.onerror = function(e) {
 										srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+										$('#vnttb'+index).attr('src', srcposter);
 									};
 
 									if (file == lastvideo && filearr[2] != 'AVULSO') {
@@ -863,7 +863,7 @@
 							}
 
 							if (play) {
-								console.log('play is true!!!!');
+								// console.log('play is true!!!!');
 
 								csrcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+cvideo
 
@@ -872,7 +872,7 @@
 
 								if (channel != 'AVULSO') {
 									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-										csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
+										var csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
 										var testeimg = new Image();
 										testeimg.src = csrcposter;
@@ -929,16 +929,6 @@
 							if (lastvplaylist != lastvarraytm) {
 								$('#'+lastvplaylistid).parent().removeClass('disabled');
 								$('#'+lastvplaylistid).css('cursor', 'pointer');
-								// html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
-								// 					'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
-								// 						'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
-								// 					'</div>'+
-								// 					'<div class="checkbox checkbox-warning">'+
-								// 						'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
-								// 						'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
-								// 					'</div>'+
-								// 					'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'">'+lastvarraytm+'</span>'+
-								// 				'</a>';
 								html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 													'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
 														'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
@@ -1136,7 +1126,15 @@
 				function loadimgvnthumb(tvimg, tvsrc, tvfile, number) {
 					strn = ("000"+number).slice(-3);
 					tcsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+tvsrc+'_'+tvfile+'/'+strn;
-					// console.log(tcsrc);
+
+					var testeimg = new Image();
+					testeimg.src = tcsrc;
+
+					testeimg.onerror = function(e) {
+						tcsrc = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+						$('#'+tvimg).attr('src', tcsrc);
+						return;
+					};
 
 					$('#'+tvimg).attr('src', tcsrc);
 				};
@@ -1182,7 +1180,7 @@
 				// }
 
 				if (window.localStorage.getItem('videoautoplay')) {
-					console.log(window.localStorage.getItem('videoautoplay'));
+					// console.log(window.localStorage.getItem('videoautoplay'));
 					if (window.localStorage.getItem('videoautoplay') == 'true') {
 						$('#checkaplay').bootstrapToggle('enable').bootstrapToggle('on').bootstrapToggle('disable');
 					}
@@ -1320,7 +1318,7 @@
 					// console.log(todaydatesel);
 					clearInterval(refreshclist);
 					if (todaydatesel) {
-						refreshclist = setInterval(function() {
+						var refreshclist = setInterval(function() {
 							refreshlist(vsource, selformdate, channel, state);
 						}, 30000);
 					}
@@ -1387,7 +1385,7 @@
 							stenddate: cfiletstamp,
 						},
 						function(data, textStatus, xhr) {
-							console.log(data);
+							// console.log(data);
 							if (data.response.docs.length > 0) {
 								var textpw = "";
 
@@ -1474,12 +1472,22 @@
 
 					tsrc = $(this).attr('data-vsrc');
 					tfile = $(this).attr('data-vfile');
+					ttvntb = $(this);
 
 					if ($(this).parent('a').hasClass('disabled') == false) {
 						clearInterval(vnextthumbf);
 
 						tcsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+tsrc+'_'+tfile+'/001';
 						$(this).children('img').attr('src', tcsrc);
+
+						var testeimg = new Image();
+						testeimg.src = tcsrc;
+
+						testeimg.onerror = function(e) {
+							tcsrc = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							ttvntb.children('img').attr('src', tcsrc);
+							return;
+						};
 					}
 				});
 
