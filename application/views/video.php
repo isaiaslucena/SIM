@@ -60,7 +60,7 @@
 						}?>
 						poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
 						width="854" height="480" preload="metadata"></video>
-						<img id="thvideo" class="center-block" width="854" height="480" style="display: none;">
+						<img id="thvideo" class="center-block" style="display: none; max-height: 480px">
 					</div>
 				</div>
 
@@ -767,7 +767,7 @@
 									if (file == firstvideo) {
 										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 															'</div>'+
 															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -778,7 +778,7 @@
 									} else {
 										html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 															'</div>'+
 															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -813,7 +813,7 @@
 									if (file == lastvideo && filearr[2] != 'AVULSO') {
 										html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 															'</div>'+
 															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -824,7 +824,7 @@
 									} else if (file == lastvarray && filearr[2] != 'AVULSO') {
 										html =	'<a id="vbtn'+index+'" class="list-group-item disabled" style="height: 105px;">'+
 															'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																'<img id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" width="125.4">'+
+																'<img id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" style="max-height:80px">'+
 															'</div>'+
 															'<div class="checkbox checkbox-warning">'+
 																'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -837,7 +837,7 @@
 											cvideo = firstvideo;
 											html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 																'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																	'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																	'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 																'</div>'+
 																'<div class="checkbox checkbox-warning">'+
 																	'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -848,7 +848,7 @@
 										} else {
 											html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
 																'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-																	'<img id="vnttb'+index+'" src="'+srcposter+'" width="125.4">'+
+																	'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 																'</div>'+
 																'<div class="checkbox checkbox-warning">'+
 																	'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -931,7 +931,7 @@
 								$('#'+lastvplaylistid).css('cursor', 'pointer');
 								// html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 								// 					'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
-								// 						'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" width="125.4">'+
+								// 						'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
 								// 					'</div>'+
 								// 					'<div class="checkbox checkbox-warning">'+
 								// 						'<input id="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" type="checkbox">'+
@@ -941,7 +941,7 @@
 								// 				'</a>';
 								html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 													'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
-														'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" width="125.4">'+
+														'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
 													'</div>'+
 													'<div class="checkbox checkbox-warning">'+
 														'<input id="chbx'+lastvplaylistidn+'" type="checkbox" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+

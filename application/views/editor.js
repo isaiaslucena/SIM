@@ -507,7 +507,7 @@
 							joinvideos = false;
 						}
 					}
-				}
+				};
 
 				function cropjoinfiles(cjfilename) {
 					cropfilestojoin.push(cjfilename);
@@ -516,5 +516,5 @@
 						$('#btnjoin').removeAttr('disabled');
 						joincropvideos = true;
 					}
-				}
+				};
 			});

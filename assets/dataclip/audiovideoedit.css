@@ -11,7 +11,7 @@ textarea { resize: none; }
 
 video {
 	z-index: 1;
-	object-fit: inherit;
+	object-fit: scale-down;
 }
 
 .vbutton {

@@ -718,13 +718,13 @@
 						showCancelButton: false,
 						showConfirmButton: false,
 					});
-				}
+				};
 
 				function closeloadingthumbs() {
 					$('body').css('cursor', 'default');
 
 					swal.close();
-				}
+				};
 
 				$('#checkjoincrop').change(function() {
 					joinchkbx = $('.list-group input:checked').length > 0;
