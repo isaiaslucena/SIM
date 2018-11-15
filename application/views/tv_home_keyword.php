@@ -123,7 +123,8 @@
 								poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"></video>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled"
+									data-mediaid="<?php echo 'pvideo'.$divcount;?>" style="height: 300px; overflow-y: hidden">
 									<?php
 										if (isset($found->times_t)) {
 											foreach ($stimes as $stime) {

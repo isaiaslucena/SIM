@@ -1,29 +1,25 @@
 		</script>
 		<?php
-			if (isset($sid)) {
 				$adata = array(
-					'keyword' => $keyword,
+					'keyword' => 0,
 					'start' => 0,
 					'rows' => 10,
-					'ktfound' => $found->response->numFound,
-					'id_keyword' => $id_keyword,
-					'id_client' => $id_client,
-					'id_source' => $id_source,
-					'client_selected' => $client_selected,
-					'startdate' => $startdate,
-					'enddate' => $enddate,
+					'ktfound' => 0,
+					'id_keyword' => 0,
+					'id_client' => 0,
+					'id_source' => 0,
+					'client_selected' => 0,
+					'startdate' => date('Y-m-d H:i:s'),
+					'enddate' => date('Y-m-d H:i:s'),
 					'msc' => 'local',
 					'mtype' => 'video',
-					'pagesrc' => $pagesrc
+					'pagesrc' => null
 				);
 
 				$jdata = base64_encode(json_encode($adata));
 			?>
-
 			<script src="<?php echo base_url('assets/readalong/readalong.js');?>"></script>
 			<script src="<?php echo base_url('pages/hkw_functions');?>"></script>
 			<script src="<?php echo base_url('pages/hkw_listeners/').$jdata;?>"></script>
-			<?php }
-		?>
 	</body>
 </html>

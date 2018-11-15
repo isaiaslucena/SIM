@@ -410,5 +410,51 @@ class Api extends CI_Controller {
 		header('Content-Type: application/json');
 		print json_encode($texts);
 	}
+
+	public function get_doc_bymurl($msc, $mtype, $murl) {
+		// $data['doc_id'] = $this->input->get('murl');
+		// $data['msc'] = $this->input->get('msc');
+		// $data['mtype'] = $this->input->get('mtype');
+
+		if ($msc == 'local' and $mtype == 'audio') {
+			$data['found'] = $this->pages_model->radio_text_bymurl_solr($murl);
+		} else if ($msc == 'novo' and $mtype == 'audio') {
+			$data['found'] = $this->pages_model->radio_novo_text_bymurl_solr($murl);
+		} else if ($msc == 'local' and $mtype == 'video') {
+			$data['found'] = $this->pages_model->tv_text_bymurl_solr($murl);
+		} else if ($msc == 'novo' and $mtype == 'video') {
+			$data['found'] = $this->pages_model->tv_novo_text_bymurl_solr($murl);
+		} else {
+			$data['found'] = null;
+		}
+
+		if ((int)$data['found']->response->numFound == 0) {
+			header("HTTP/1.1 404 Not Found");
+		} else {
+			header('Content-Type: application/json');
+			print json_encode($data['found']);
+		}
+	}
+
+	public function get_doc_byid($msc, $mtype, $doc_id) {
+		// $data['doc_id'] = $this->input->get('doc_id');
+		// $data['msc'] = $this->input->get('msc');
+		// $data['mtype'] = $this->input->get('mtype');
+
+		if ($data['msc'] == 'local' and $data['mtype'] == 'audio') {
+			$data['found'] = $this->pages_model->radio_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'novo' and $data['mtype'] == 'audio') {
+			$data['found'] = $this->pages_model->radio_novo_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'local' and $data['mtype'] == 'video') {
+			$data['found'] = $this->pages_model->tv_text_byid_solr($data['doc_id']);
+		} else if ($data['msc'] == 'novo' and $data['mtype'] == 'video') {
+			$data['found'] = $this->pages_model->tv_novo_text_byid_solr($data['doc_id']);
+		} else {
+			$data['found'] = null;
+		}
+
+		header('application/json');
+		print $data;
+	}
 }
 ?>

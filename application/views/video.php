@@ -26,6 +26,7 @@
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/dataclip/audiovideoedit.css')?>"/>
+		<link rel="stylesheet" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
 	</head>
 	<body>
 		<span class="tooltipthumb">
@@ -75,7 +76,8 @@
 						<?php } ?>
 					</div>
 
-					<p id="vptext" class="text-justify ptext noscrolled" style="overflow-y: auto; max-height: 480px; display: none;">
+					<p id="vptext" class="text-justify ptext noscrolled" data-mediaid="vvideo"
+					style="overflow-y: auto; max-height: 480px; display: none;">
 						<?php
 						if (isset($sid)) {
 							if (isset($found->response->docs[0]->times_t)) {
@@ -120,10 +122,10 @@
 				</div>
 			</div>
 
-
 			<div class="row">
 				<div id="controls" class="col-md-7">
 					<p>
+						<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked style="display: none;">
 					<!-- <div class="btn-toolbar"> -->
 						<div class="btn-group" role="group" aria-label="...">
 							<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
@@ -182,12 +184,9 @@
 								</div>
 							</div>
 
-							<select id="selchannels" class="selectpicker pull-left" data-size="10" data-width="200" data-live-search="true" data-windowPadding="top" title="Selecione uma data" disabled></select>
-
-							<!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-								<i class="fa fa-bell"></i>
-							</a> -->
+							<select id="selchannels" class="selectpicker pull-left"
+							data-size="10" data-width="200" data-live-search="true"
+							data-windowPadding="top" title="Selecione uma data" disabled></select>
 
 							<div class="btn-group">
 								<div class="dropup">
@@ -205,6 +204,7 @@
 									</ul>
 								</div>
 							</div>
+
 							<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
 							<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
 						</div>
@@ -338,7 +338,7 @@
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
 				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
 				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
-				joincropvideos = false, nightmode = false, todaydatesel = false,
+				joincropvideos = false, nightmode = false, todaydatesel = false, videotransc = false;
 				frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
 				var cropstartss = null, cropendss = null;
 				var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
@@ -907,6 +907,8 @@
 								}
 							}
 
+							getdocbymurl(vsource, cvideo);
+
 							enablebtns();
 							mobileconf();
 						}
@@ -1122,6 +1124,36 @@
 						$('#selvnext').selectpicker('hide');
 					}
 				};
+
+				function getdocbymurl(vsource, vvideo) {
+					var mediaurls = vsource+"_"+vvideo
+					var gurl = window.location.origin+'/api/get_doc_bymurl/local/video/'+mediaurls
+					$.get(gurl, function(data, xhr, status) {
+						// console.log(data);
+						// console.log(status.status);
+						if (status.status == 200) {
+							videotransc = true;
+							var contentt = data.response.docs[0].content_t[0];
+							var timest = JSON.parse(data.response.docs[0].times_t[0]);
+							$('#vptext').text();
+
+							$('#vnext').animate({'max-height': '100px', 'overflow-y': 'hidden'},
+							'fast', function() {
+								$('#vnext').scrollTo('a.active');
+								$('#vptext').css('max-height', '360px');
+								$('#vptext').slideDown('fast', function() {
+									console.log('slide down done!');
+
+									addtimes('#vptext', timest);
+									startread('vvideo', 'vptext', 1, false);
+								});
+							});
+						} else if (status.status == 404) {
+							videotransc = false;
+							console.log('error 404 onload');
+						}
+					});
+				}
 
 				function loadimgvnthumb(tvimg, tvsrc, tvfile, number) {
 					strn = ("000"+number).slice(-3);

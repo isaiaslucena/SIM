@@ -283,16 +283,12 @@ $(document).on('click', '.desativado', function() {
 
 $(document).on('click', 'span[data-dur]', function(){
 	ptextid = $(this).parent('.ptext').attr('id');
-	if (mediatype == 'audio') {
-		imedia = 'paudio';
-	} else {
-		imedia = 'pvideo';
-	}
-	pmedia = imedia+ptextid.replace(/[a-zA-Z]/g, '');
+	pmediaid = $(this).parent('.ptext').attr('data-mediaid');
+
 	spantime = $(this).attr('data-begin');
 
-	startread(pmedia, ptextid, spantime, true);
-	$('#'+pmedia)[0].play();
+	startread(pmediaid, ptextid, spantime, true);
+	$('#'+pmediaid)[0].play();
 });
 
 $(document).on('mouseover', '.ptext', function() {

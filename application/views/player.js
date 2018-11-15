@@ -210,8 +210,6 @@
 											ldtmbn = parseInt(ldtmbnarr[1]);
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
-												videoel[0].play();
-												//$('#vnext').scrollTo('a.active');
 											}
 										};
 
@@ -228,8 +226,6 @@
 											ldtmbn = parseInt(ldtmbnarr[1]);
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
-												videoel[0].play();
-												//$('#vnext').scrollTo('a.active');
 											}
 										};
 									}
@@ -630,6 +626,7 @@
 
 				function videoselect(cfilename, cfilevsource) {
 					joinvideosclk = false;
+					joinvideos = false;
 
 					$('.vbutton').css('display', 'none');
 					$('.vbutton').removeClass('paused');
@@ -657,9 +654,11 @@
 					videotitle.attr('data-vsrc', cfilevsource);
 					videotitle.css('font-size', '30px');
 					mobileconf();
+
 					$('.list-group').children().removeClass('active');
 					$('span:contains('+cfilename+')').parent().addClass('active');
-					joinvideos = false;
+
+					// getdocbymurl(cfilevsource, cfilename);
 				};
 
 				$('.list-group').click(function(event) {
@@ -724,6 +723,10 @@
 					$('body').css('cursor', 'default');
 
 					swal.close();
+
+					if (videotransc == false) {
+						videoel[0].play();
+					}
 				};
 
 				$('#checkjoincrop').change(function() {
@@ -754,4 +757,4 @@
 							}
 						});
 					}
-				})
+				});
