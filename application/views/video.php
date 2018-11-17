@@ -907,7 +907,7 @@
 								}
 							}
 
-							getdocbymurl(vsource, cvideo);
+							// getdocbymurl(vsource, cvideo);
 
 							enablebtns();
 							mobileconf();
