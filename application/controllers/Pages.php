@@ -2999,10 +2999,40 @@ class Pages extends CI_Controller {
 		}
 	}
 
-	public function audio() {
+	public function video_temp() {
+		$this->load->view('video_temp');
+	}
+
+	public function video_player() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
 				'view' => 'video',
+				'last_page' => base_url('pages/video_temp')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('video_player.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
+		}
+	}
+
+	public function video_editor() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/video_temp')
+			);
+			$this->session->set_userdata($sessiondata);
+			$this->load->view('video_editor.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
+		}
+	}
+
+	public function audio() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'audio',
 				'last_page' => base_url('pages/audio')
 			);
 			$this->session->set_userdata($sessiondata);
