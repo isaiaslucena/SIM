@@ -338,7 +338,7 @@ class Api extends CI_Controller {
 
 	public function check_trans() {
 		// if ($this->input->method(TRUE) == 'POST') {
-			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+			// $postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 
 			$postdata['type'] = $this->input->get('type');
 			$postdata['filename'] = $this->input->get('filename');
@@ -455,6 +455,28 @@ class Api extends CI_Controller {
 
 		header('application/json');
 		print $data;
+	}
+
+	public function add_queue_crop() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+
+			$this->load->model('api_model');
+			$resp['queue_crop_id'] = $this->api_model->add_queue_crop($postdata);
+
+			header('Content-Type: application/json');
+			print json_encode($resp);
+		} else {
+			header("HTTP/1.1 403 Forbidden");
+		}
+	}
+
+	public function get_queue_crop() {
+		$this->load->model('api_model');
+		$resp['queue'] = $this->api_model->get_queue_crop();
+
+		header('Content-Type: application/json');
+		print json_encode($resp);
 	}
 }
 ?>

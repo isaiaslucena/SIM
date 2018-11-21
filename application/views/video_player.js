@@ -1,57 +1,89 @@
 //PLAYER
 
+//Variables
+var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
+selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
+cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile, cfilesource,
+cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, vnextthumbf, refreshclist;
+
+var vvideosrcsearch = "colorbar.jpg";
+
+var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
+joincropvideos = false, nightmode = false, todaydatesel = false, videotransc = false;
+var frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
+
+var cropstartss = null, cropendss = null;
+
+var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
+
+var fileseq = 0;
+
+var tvch = $('#selchannels'), tvdate = $('#seldate'), videoel = $('#vvideo'), videomel = $('#mvvideo'),
+videoelth = $('#thvideo'), videojcmel = $('#mcjvvideo'), vvideosrc = videoel[0].currentSrc, videotitle = $('#vtitle'),
+nextvideo = $('#vnext'), progressbar = $('.progressBar'), timebar = $('.timeBar'), vcurrtime = $('#currtime'),
+vdurtime = $('#durtime'), vtooltiptime = $('.tooltiptime'), timerslider = $('#timeslider');
+
+var d = new Date();
+var day = d.getDate();
+var day = ('0' + day).slice(-2);
+var month = (d.getMonth() + 1);
+var month = ('0' + month).slice(-2);
+var year = d.getFullYear();
+var todaydate = year+'-'+month+'-'+day;
+
 //Functions
 function getchannels() {
-	$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>'},
-		function(data, textStatus, xhr) {
-		radiocount = 0;
-		$('#alerttvlist').html(null);
-		datac = (data.length - 1);
+	$.get('<?php echo str_replace("sim.","video.", base_url("video/getstopchannels"))?>',
+		function(data) {
+			radiocount = 0;
+			$('#alerttvlist').html(null);
+			datac = (data.length - 1);
 
-		$.each(data, function(index, val) {
-			radionamekey = Object.keys(val)[0];
-			radioname = radionamekey.replace("_", " - ");
-			ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
-			ffmpegpid = val[radionamekey].ffmpeg_PID
-			html = 	'<li>'+
-						'<a href="#">'+
-							'<div>'+
-								'<strong class="navnotstrg">'+radioname+'</strong>'+
-									'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
-								'</div>'+
-							'<div class="rruname">'+ffmpeglastmsg+'</div>'+
-						'</a>'+
-					'</li>';
-			$('#alerttvlist').append(html);
-			if (radiocount < datac) {
-				$('#alerttvlist').append('<li class="divider"></li>');
-			}
-			radiocount += 1;
-		});
-
-		fhtml = '<li>'+
-							'<a class="text-center" href="#">'+
-								'<strong>Ver todos os alertas </strong>'+
-								'<i class="fa fa-angle-right"></i>'+
+			$.each(data, function(index, val) {
+				radionamekey = Object.keys(val)[0];
+				radioname = radionamekey.replace("_", " - ");
+				ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
+				ffmpegpid = val[radionamekey].ffmpeg_PID
+				html = 	'<li>'+
+							'<a href="#">'+
+								'<div>'+
+									'<strong class="navnotstrg">'+radioname+'</strong>'+
+										'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
+									'</div>'+
+								'<div class="rruname">'+ffmpeglastmsg+'</div>'+
 							'</a>'+
 						'</li>';
-		// $('#alerttvlist').append(fhtml);
+				$('#alerttvlist').append(html);
+				if (radiocount < datac) {
+					$('#alerttvlist').append('<li class="divider"></li>');
+				}
+				radiocount += 1;
+			});
 
-		if (radiocount > 0) {
-			$('#alerttvbnum').text(radiocount);
-			$('#alerttvbnum').fadeIn('fast');
-		} else {
-			$('#alerttvbnum').fadeOut('fast');
-			$('#alerttvbnum').text(radiocount);
 			fhtml = '<li>'+
 								'<a class="text-center" href="#">'+
-									'<strong>Nenhum alerta de tv! </strong>'+
+									'<strong>Ver todos os alertas </strong>'+
+									'<i class="fa fa-angle-right"></i>'+
 								'</a>'+
 							'</li>';
-			$('#alerttvlist').append(fhtml);
+			// $('#alerttvlist').append(fhtml);
+
+			if (radiocount > 0) {
+				$('#alerttvbnum').text(radiocount);
+				$('#alerttvbnum').fadeIn('fast');
+			} else {
+				$('#alerttvbnum').fadeOut('fast');
+				$('#alerttvbnum').text(radiocount);
+				fhtml = '<li>'+
+									'<a class="text-center" href="#">'+
+										'<strong>Nenhum alerta de tv! </strong>'+
+									'</a>'+
+								'</li>';
+				$('#alerttvlist').append(fhtml);
+			}
 		}
-	});
-}
+	);
+};
 
 function channelname(name) {
 	switch (name) {
@@ -184,8 +216,7 @@ function selectchannel(date) {
 	tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 	tvch.selectpicker('refresh');
 
-	$.post('proxy',
-		{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
+	$.get('<?php echo str_replace('sim.','video.',base_url("video/getchannels/"))?>'+date,
 		function(data, textStatus, xhr) {
 			tvch.html(null);
 			$.each(data, function(elo, indexo) {
@@ -270,13 +301,22 @@ function selectchannel(date) {
 };
 
 function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play) {
-	$.post('proxy',
-		{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate},
+	$.get('<?php echo str_replace('sim.','video.',base_url("video/getlist/"))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate,
 		function(data, textStatus, xhr) {
 			if (data.length == 1) {
 				firstvideo = data[0].replace(".mp4", "");
 				lastvideo = firstvideo;
 				lastvarray = data[0].replace(".mp4","");
+			} else if (data.length == 0) {
+				nextvideo.html(null);
+				for (var i = 0; i <= 15; i++) {
+					if (i == 5) {
+						nextvideo.append('<a class="list-group-item active">Nenhum arquivo!</a>');
+					} else {
+						nextvideo.append('<a class="list-group-item" style="color: white">Nenhum arquivo!</a>');
+					}
+				}
+				return;
 			} else {
 				firstvideo = data[0].replace(".mp4", "");
 				lastvideo = data[data.length-2].replace(".mp4", "");
@@ -291,6 +331,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 				videotitle.attr('data-vsrc', selglvsource);
 				videotitle.css('font-size', '30px');
 				nextvideo.html(null);
+				nextvideo.css('overflow-x', 'auto');
 
 				$.each(data, function(index, val) {
 					file = val.replace(".mp4","");
@@ -456,8 +497,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 };
 
 function refreshlist(rvsource, rdate, rchannel, rstate) {
-	$.post('proxy',
-		{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate},
+	$.get('<?php echo str_replace('sim.','video.',base_url("video/getlist/"))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate,
 		function(data, textStatus, xhr) {
 			playlistv = $('.list-group').children();
 			lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
@@ -467,9 +507,11 @@ function refreshlist(rvsource, rdate, rchannel, rstate) {
 			lastvarraytm = data[data.length-1].replace(".mp4","");
 
 			srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+			lastsrcposter = '<?php echo str_replace("sim.","video.", base_url())?>video/getthumb/'+rvsource+'_'+lastvarraytm+'/001';
 
 			if (lastvplaylist != lastvarraytm) {
 				$('#'+lastvplaylistid).parent().removeClass('disabled');
+				$('#vnttb'+lastvplaylistidn).attr('src', lastsrcposter);
 				$('#'+lastvplaylistid).css('cursor', 'pointer');
 				html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 									'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
@@ -519,6 +561,8 @@ function enablebtns() {
 	$('#btntran').removeClass('disabled');
 	$('#btntran').removeAttr('disabled');
 	$('#checkjoincrop').bootstrapToggle('enable');
+
+	$('#vnext').css('overflow-y', 'auto');
 };
 
 function disablebtns() {
@@ -553,6 +597,8 @@ function disablebtns() {
 	$('#btntran').removeClass('disabled');
 	$('#btntran').removeAttr('disabled');
 	$('#checkjoincrop').bootstrapToggle('enable');
+
+	$('#vnext').css('overflow-y', 'hidden');
 };
 
 jQuery.fn.scrollTo = function(elem) {
@@ -1101,10 +1147,8 @@ $('#btnfull').click(function(event) {
 
 videoel.on('loadedmetadata', function() {
 	vvideosrc = videoel[0].currentSrc;
-
-	if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
+	if (vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
 		vduration = videoel[0].duration;
-
 		vdurtime.text(sectostring(vduration));
 
 		nimage = [];
@@ -1216,6 +1260,7 @@ videoel.on('loadedmetadata', function() {
 				}
 			}
 		}
+
 		setlocalstorage('joinvideosclk', joinvideosclk);
 		setlocalstorage('videofile', vdfilename);
 		setlocalstorage('videosrc', srcfilename);
@@ -1289,17 +1334,16 @@ $('.progressBar').mousedown(function(e) {
 	$("#iplay").removeClass('hidden');
 	updatebar(e.pageX);
 });
+
 $(document).mouseup(function(e) {
 	if (timeDrag) {
 		vfile = videotitle.text()
-		// vsourcefile = $("span:contains('"+vfile+"')").data('vsrc');
 		vsourcefile = videotitle.attr('data-vsrc');
-		//videoel[0].pause();
 		if (vvideosrc.match(vvideosrcsearch) == null && vvideosrc.match('media.resources.s3.amazonaws.com') == null) {
-		if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
-			videoelth.css('display', 'none');
-			videoel.css('display', 'block');
-		}
+			if (vsourcefile.replace(/[0-9]/g, '') != 'cagiva') {
+				videoelth.css('display', 'none');
+				videoel.css('display', 'block');
+			}
 		}
 		timeDrag = false;
 		$('.vbutton').css('dusplay', 'block');
@@ -1311,6 +1355,7 @@ $(document).mouseup(function(e) {
 		videoel[0].play();
 	}
 });
+
 $(document).mousemove(function(e) {
 	if (timeDrag) {
 		updatebar(e.pageX);
@@ -1318,9 +1363,15 @@ $(document).mousemove(function(e) {
 });
 
 progressbar.hover(function(event) {
-	$('.tooltiptime').fadeIn("fast");
+	var vtitlen = $('#vtitle').text();
+	if (vtitlen.match('Nenhuma Seleção') == null) {
+		$('.tooltiptime').fadeIn("fast");
+	}
 }, function() {
-	$('.tooltiptime').fadeOut("fast");
+	var vtitlen = $('#vtitle').text();
+	if (vtitlen.match('Nenhuma Seleção') == null) {
+		$('.tooltiptime').fadeOut("fast");
+	}
 }).mousemove(function(event) {
 	barHeight = progressbar.height();
 	barPosition = progressbar.position();
@@ -1332,7 +1383,7 @@ progressbar.hover(function(event) {
 	ttimetop = barPositionoff.top - barHeight + 10;
 	$('.tooltiptime').css({
 		'top': ttimetop+"px",
-		'left':  ttimeleft + "px"
+		'left':  ttimeleft+"px"
 	});
 	updateTimetooltip(event.pageX);
 });

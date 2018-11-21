@@ -17,6 +17,7 @@
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js');?>"></script>
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js');?>"></script>
 		<script src="<?php echo base_url('assets/progressbarjs/dist/progressbar.min.js');?>"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
@@ -25,6 +26,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.min.css"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/bscheckbox/bscheckbox.css');?>">
 		<link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css');?>"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 		<link rel="stylesheet" href="<?php echo base_url('assets/dataclip/audiovideoedit.css')?>"/>
 		<link rel="stylesheet" href="<?php echo base_url("assets/dataclip/home_keyword.css")?>">
 	</head>
@@ -42,32 +44,27 @@
 				</div>
 
 				<div class="col-md-4">
-					<h2 class="pull-left">
-					<select id="selvnext" class="selectpicker" data-size="15" data-width="300" data-live-search="true" multiple></select>
-					</h2>
-					<h2 class="pull-right">
-					<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+					<h2>
+						<button id="btnqueuecrop" class="btn btn-sm btn-default" title="Fila de cortes"><i class="fa fa-list"></i> Cortes</button>
+						<button id="btnqueuetrans" class="btn btn-sm btn-default" title="Fila de transcrição"><i class="fa fa-list"></i> Transcrição</button>
+						<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
 					</h2>
 				</div>
 			</div>
 
+			<!-- video, thumb, and list of files -->
 			<div class="row">
 				<div id="divvideo" class="col-md-8">
-					<div>
-						<div id="vvideobtn" class='vbutton' style="display: none"></div>
-						<video id="vvideo" class="center-block"
-						<?php if (isset($mediaurl)) {
-							echo 'src="'.$mediaurl.'"';
-						}?>
-						poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
-						width="854" height="480" preload="metadata"></video>
-						<img id="thvideo" class="center-block" style="display: none; max-height: 480px">
-					</div>
+					<div id="vvideobtn" class='vbutton' style="display: none"></div>
+					<video id="vvideo" class="center-block"
+					poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
+					width="854" height="480" preload="metadata"></video>
+					<img id="thvideo" class="center-block" style="display: none; max-height: 480px">
 				</div>
 
 				<div id="vnextdiv" class="col-md-4">
-					<div id="vnext" class="list-group center-block" style="overflow-y: auto; max-height: 480px">
-						<?php for ($i = 0; $i < 12; $i++) {
+					<div id="vnext" class="list-group center-block" style="overflow-y: hidden; height: 480px">
+						<?php for ($i = 0; $i < 15; $i++) {
 							if ($i == 5) {
 								echo '<a class="list-group-item">Nenhuma seleção</a>';
 							} else {
@@ -77,27 +74,27 @@
 					</div>
 
 					<p id="vptext" class="text-justify ptext noscrolled" data-mediaid="vvideo"
-					style="overflow-y: auto; max-height: 480px; display: none;">
+					 style="overflow-y: auto; max-height: 480px; display: none;">
 						<?php
-						if (isset($sid)) {
-							if (isset($found->response->docs[0]->times_t)) {
-								$times = $found->response->docs[0]->times_t[0];
-								$stimes = json_decode($times, TRUE);
-								foreach ($stimes as $stime) {
-									if (isset($stime['words'])) {
-										foreach ($stime['words'] as $word) {
-											$wbegin = (float)$word['begin'];
-											$wend = (float)$word['end'];
-											$wdur = substr((string)($wend - $wbegin), 0, 5);
-											$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
-											echo $wspan;
+							if (isset($sid)) {
+								if (isset($found->response->docs[0]->times_t)) {
+									$times = $found->response->docs[0]->times_t[0];
+									$stimes = json_decode($times, TRUE);
+									foreach ($stimes as $stime) {
+										if (isset($stime['words'])) {
+											foreach ($stime['words'] as $word) {
+												$wbegin = (float)$word['begin'];
+												$wend = (float)$word['end'];
+												$wdur = substr((string)($wend - $wbegin), 0, 5);
+												$wspan = '<span data-dur="'.$wdur.'" data-begin="'.$word['begin'].'">'.$word['word'].'</span> ';
+												echo $wspan;
+											}
 										}
 									}
+								} else {
+									echo (string)$found->response->docs[0]->content_t[0];
 								}
-							} else {
-								echo (string)$found->response->docs[0]->content_t[0];
 							}
-						}
 						?>
 					</p>
 				</div>
@@ -122,93 +119,77 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row" style="margin-top: 10px">
 				<div id="controls" class="col-md-7">
-					<p>
-						<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked style="display: none;">
-					<!-- <div class="btn-toolbar"> -->
-						<div class="btn-group" role="group" aria-label="...">
-							<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
-								<i id="iplay" class="fa fa-play hidden"></i>
-								<i id="ipause" class="fa fa-pause"></i>
-							</a>
-							<a id="btnstop" type="button" class="btn btn-default disabled" title="Parar"><i class="fa fa-stop"></i></a>
-						</div>
+					<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked style="display: none;">
+					<div class="btn-group" role="group" aria-label="...">
+						<a id="btnplay" type="button" class="btn btn-default disabled" title="Iniciar/Pausar" disabled>
+							<i id="iplay" class="fa fa-play hidden"></i>
+							<i id="ipause" class="fa fa-pause"></i>
+						</a>
+						<a id="btnstop" type="button" class="btn btn-default disabled" title="Parar"><i class="fa fa-stop"></i></a>
+					</div>
 
-						<div class="btn-group" role="group" aria-label="...">
-							<a id="btnrn" type="button" class="btn btn-default disabled" title="Velocidade normal" disabled><i class="fa fa-angle-right"></i></a>
-							<a id="btnrs" type="button" class="btn btn-default disabled" title="Reduzir velocidade" disabled><i class="fa fa-angle-double-left"></i></a>
-							<a id="btnrf" type="button" class="btn btn-default disabled" title="Aumentar velocidade" disabled><i class="fa fa-angle-double-right"></i></a>
-						</div>
+					<div class="btn-group" role="group" aria-label="...">
+						<a id="btnrn" type="button" class="btn btn-default disabled" title="Velocidade normal" disabled><i class="fa fa-angle-right"></i></a>
+						<a id="btnrs" type="button" class="btn btn-default disabled" title="Reduzir velocidade" disabled><i class="fa fa-angle-double-left"></i></a>
+						<a id="btnrf" type="button" class="btn btn-default disabled" title="Aumentar velocidade" disabled><i class="fa fa-angle-double-right"></i></a>
+					</div>
 
-						<div class="btn-group" role="group" aria-label="...">
-							<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i></a>
-							<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
-							<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></a>
-							<input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="Juntar" data-off="Juntar" disabled>
-						</div>
+					<div class="btn-group" role="group" aria-label="...">
+						<a id="btncstart" type="button" class="btn btn-default disabled" title="Marcar início" disabled><i class="fa fa-hourglass-start"></i></a>
+						<a id="btncend" type="button" class="btn btn-default disabled" title="Marcar fim" disabled><i class="fa fa-hourglass-end"></i></a>
+						<a id="btncrop" type="button" class="btn btn-default disabled" title="Cortar" data-toggle="modal" disabled><i class="fa fa-scissors"></i></a>
+						<input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="Juntar" data-off="Juntar" disabled>
+					</div>
 
-						<!-- <div class="btn-group" role="group" aria-label="Juntar cortes"> -->
-							<!-- <a id="btnjcrop" type="button" class="btn btn-default" title="Juntar cortes" disabled><i class="fa fa-plus-circle"></i></a> -->
-							<!-- <input id="checkjoincrop" type="checkbox" data-toggle="toggle" title="Juntar cortes" data-size="normal" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-close'></i>" disabled> -->
-						<!-- </div> -->
+					<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
+					<a id="btndownimgs" type="button" class="btn btn-default disabled" title="Baixar imagens" disabled><i class="fa fa-download"></i></a>
 
-						<a id="btnjoin" type="button" class="btn btn-default disabled" title="Juntar" disabled><i class="fa fa-plus"></i></a>
+					<!-- <div class="btn-group" role="group" aria-label="...">
+						<a id="btnvol" type="button" class="btn btn-default disabled" title="Mudo" disabled><i class="fa fa-volume-off"></i></a>
+						<a id="btnvolm" type="button" class="btn btn-default disabled" title="Reduzir volume" disabled><i class="fa fa-volume-down"></i></a>
+						<a id="btnvolp" type="button" class="btn btn-default disabled" title="Aumentar volume" disabled><i class="fa fa-volume-up"></i></a>
+					</div> -->
 
-						<a id="btndownimgs" type="button" class="btn btn-default disabled" title="Baixar imagens" disabled><i class="fa fa-download"></i></a>
-
-						<!-- <a id="btntran" type="button" class="btn btn-default disabled" title="Transcrição" disabled><i class="fa fa-commenting-o"></i></a> -->
-
-						<div class="btn-group" role="group" aria-label="...">
-							<a id="btnvol" type="button" class="btn btn-default disabled" title="Mudo" disabled><i class="fa fa-volume-off"></i></a>
-							<a id="btnvolm" type="button" class="btn btn-default disabled" title="Reduzir volume" disabled><i class="fa fa-volume-down"></i></a>
-							<a id="btnvolp" type="button" class="btn btn-default disabled" title="Aumentar volume" disabled><i class="fa fa-volume-up"></i></a>
-						</div>
-
-						<div class="btn-group" role="group" aria-label="...">
-							<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
-						</div>
-
-						<!-- <a id="btnnight" type="button" class="btn btn-default" title="Modo noite"><i class="fa fa-moon-o"></i></a> -->
-					<!-- </div> -->
-					</p>
+					<!-- <div class="btn-group" role="group" aria-label="...">
+						<a id="btnfull" type="button" class="btn btn-default disabled" title="Tela cheia" disabled><i class="fa fa-arrows-alt"></i></a>
+					</div> -->
 				</div>
 
 				<div class="col-md-5">
-					<p>
-						<div class="btn-toolbar">
-							<div class="input-group date" style="width: 26%">
-								<input id="seldate" type="text" class="form-control">
-								<div class="input-group-addon">
-									<span class="fa fa-calendar"></span>
-								</div>
+					<div class="btn-toolbar">
+						<div class="input-group date" style="width: 26%">
+							<input id="seldate" type="text" class="form-control">
+							<div class="input-group-addon">
+								<span class="fa fa-calendar"></span>
 							</div>
-
-							<select id="selchannels" class="selectpicker pull-left"
-							data-size="10" data-width="200" data-live-search="true"
-							data-windowPadding="top" title="Selecione uma data" disabled></select>
-
-							<div class="btn-group">
-								<div class="dropup">
-									<button type="button" class="btn btn-default dropdown-toggle"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
-										<i class="fa fa-bell"></i>
-									</button>
-									<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
-										<li>
-											<a class="text-center" href="#">
-												<strong>Nenhum alerta de tv!</strong>
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-
-							<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
-							<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
 						</div>
-					</p>
+
+						<select id="selchannels" class="selectpicker pull-left"
+						data-size="10" data-width="200" data-live-search="true"
+						data-windowPadding="top" title="Selecione uma data" disabled></select>
+
+						<div class="btn-group">
+							<div class="dropup">
+								<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<sup><span id="alerttvbnum" class="navnotification" style="display: none"></span></sup>
+									<i class="fa fa-bell"></i>
+								</button>
+								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
+									<li>
+										<a class="text-center" href="#">
+											<strong>Nenhum alerta de tv!</strong>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<a href="<?php echo base_url('pages/index_tv')?>" id="btnback" type="button" class="btn btn-default" title="Voltar"><i class="fa fa-arrow-left"></i></a>
+						<a href="<?php echo base_url('login/signout')?>" id="btnlogout" type="button" class="btn btn-danger" title="Sair"><i class="fa fa-sign-out"></i></a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -332,44 +313,41 @@
 			</div>
 		</div>
 
+		<div class="modal fade cropqueuemodal" tabindex="-1" role="dialog" aria-labelledby="cropqueuemodal">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header text-center">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="gridSystemModalLabel">Fila de cortes</h4>
+					</div>
+					<div class="modal-body center-block text-center">
+						<div class="row">
+							<div class="col-md-6">
+								<div id="vnext" class="list-group center-block">
+									<?php for ($i = 0; $i < 20; $i++) {
+										if ($i == 5) {
+											echo '<a class="list-group-item">Nenhuma arquivo</a>';
+										} else {
+											echo '<a class="list-group-item" style="color: white">Nenhuma arquivo</a>';
+										} ?>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="col-md-6">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Fechar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="<?php echo base_url('pages/video_player'); ?>"></script>
+		<script type="text/javascript" src="<?php echo base_url('pages/video_editor'); ?>"></script>
 		<script type="text/javascript">
-			var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
-			selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
-			cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile, cfilesource,
-			cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, vnextthumbf, refreshclist;
-			var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
-			joincropvideos = false, nightmode = false, todaydatesel = false, videotransc = false;
-			var frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
-			var cropstartss = null, cropendss = null;
-			var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
-			var fileseq = 0;
-
 			$(document).ready(function() {
-				var tvch = $('#selchannels');
-				var tvdate = $('#seldate');
-				var videoel = $('#vvideo');
-				var videomel = $('#mvvideo');
-				var videoelth = $('#thvideo');
-				var videojcmel = $('#mcjvvideo');
-				var vvideosrc = videoel[0].currentSrc;
-				var vvideosrcsearch = "colorbarstatic";
-				var videotitle = $('#vtitle');
-				var nextvideo = $('#vnext');
-				var progressbar = $('.progressBar');
-				var timebar = $('.timeBar')
-				var vcurrtime = $('#currtime');
-				var vdurtime = $('#durtime');
-				var vtooltiptime = $('.tooltiptime');
-				var timerslider = $('#timeslider');
-
-				var d = new Date();
-				var day = d.getDate();
-				var day = ('0' + day).slice(-2);
-				var month = (d.getMonth() + 1);
-				var month = ('0' + month).slice(-2);
-				var year = d.getFullYear();
-				var todaydate = year+'-'+month+'-'+day;
-
 				// if (window.Worker) {
 				// 	imgworker = new Worker('/assets/imgworker.js');
 				// }
