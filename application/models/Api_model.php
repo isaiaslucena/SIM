@@ -16,7 +16,7 @@ class Api_model extends CI_Model {
 	}
 
 	public function get_queue_crop() {
-		$this->db->order_by('ts_add','desc');
+		$this->db->order_by('ts_add','asc');
 		return $this->db->get('queue_crop')->result_array();
 	}
 }

@@ -313,7 +313,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade cropqueuemodal" tabindex="-1" role="dialog" aria-labelledby="cropqueuemodal">
+		<div class="modal fade queuecropmodal" tabindex="-1" role="dialog" aria-labelledby="queuecropmodal">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header text-center">
@@ -323,7 +323,7 @@
 					<div class="modal-body center-block text-center">
 						<div class="row">
 							<div class="col-md-6">
-								<div id="vnext" class="list-group center-block">
+								<div id="queuecroplist" class="list-group center-block noitems" style="overflow-y: auto; max-height: 450px">
 									<?php for ($i = 0; $i < 20; $i++) {
 										if ($i == 5) {
 											echo '<a class="list-group-item">Nenhuma arquivo</a>';
@@ -365,6 +365,11 @@
 				videomel.bind('contextmenu', function() { return false; });
 
 				videosetctime(frompost);
+
+				getqueuecrop();
+				var getqueuecropint = setInterval(function() {
+					getqueuecrop();
+				}, 1000);
 
 				// if (document.cookie.indexOf('videofile') != -1 ) {
 				// 	console.log('videofile exist @ cookie!');

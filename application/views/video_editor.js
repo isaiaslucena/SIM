@@ -143,6 +143,54 @@ function cropjoinfiles(cjfilename) {
 	}
 };
 
+function getqueuecrop() {
+	if ($('#queuecroplist').hasClass('noitems')) {
+		$('#queuecroplist').html(null);
+		$('#queuecroplist').removeClass('noitems');
+	}
+
+	$.get('<?php echo base_url("api/get_queue_crop");?>',
+		function(data) {
+		queuecroplenth = data.queue.length;
+
+			if (queuecroplentha != queuecroplenth) {
+				$('#queuecroplist').html(null);
+				// console.log(data);
+				$.each(data.queue, function(index, val) {
+					var tsadddt = new Date(0);
+					tsadddt.setUTCSeconds(val.ts_add);
+					day = tsadddt.getDate();
+					day = ('0' + day).slice(-2);
+					month = (tsadddt.getMonth() + 1);
+					month = ('0' + month).slice(-2);
+					year = tsadddt.getFullYear();
+					hour = tsadddt.getHours();
+					hour = ('0'+hour).slice(-2);
+					min = tsadddt.getMinutes();
+					min = ('0'+min).slice(-2);
+					sec = tsadddt.getSeconds();
+					sec = ('0'+sec).slice(-2);
+					tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
+
+					html = '<a class="list-group-item queuecropitem" href="#">'+
+										'<h4 class="list-group-item-heading">'+
+											index+' - '+val.filename+
+										'</h4>'+
+										'<p class="list-group-item-text">'+
+											'Inclusão: '+tsaddtime+'<br>'+
+											'Início do Corte: '+val.crop_start+'<br>'+
+											'Fim do Corte: '+val.crop_end+
+										'</p>'+
+									'</a>';
+					$('#queuecroplist').append(html);
+				});
+			}
+
+			queuecroplentha = queuecroplenth;
+		}
+	);
+}
+
 //Listeners
 $('#btncstart').click(function(event) {
 	cropstartss = videoel[0].currentTime;
@@ -305,7 +353,6 @@ $('#btncrop').click(function(event) {
 				}
 			);
 		} else {
-
 			$.ajax({
 				url: '<?php echo base_url("api/add_queue_crop")?>',
 				type: 'POST',
@@ -323,7 +370,7 @@ $('#btncrop').click(function(event) {
 			})
 			.done(function(data) {
 				// console.log(data);
-				toastr.success(cfile+' inserido na fila o corte com ID '+data.queue_crop_id);
+				toastr.success(cfile+' inserido na fila de corte com ID '+data.queue_crop_id);
 			})
 			.fail(function() {
 				console.log("error");
@@ -546,6 +593,10 @@ $('#btnjoin').click(function(event) {
 			}
 		);
 	}
+});
+
+$('#btnqueuecrop').click(function(event) {
+	$('.queuecropmodal').modal('show');
 });
 
 $('#selvinheta').on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {

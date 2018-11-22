@@ -16,7 +16,7 @@ var cropstartss = null, cropendss = null;
 
 var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
 
-var fileseq = 0;
+var fileseq = 0, queuecroplenth = 0, queuecroplentha = 0;
 
 var tvch = $('#selchannels'), tvdate = $('#seldate'), videoel = $('#vvideo'), videomel = $('#mvvideo'),
 videoelth = $('#thvideo'), videojcmel = $('#mcjvvideo'), vvideosrc = videoel[0].currentSrc, videotitle = $('#vtitle'),
