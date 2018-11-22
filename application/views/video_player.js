@@ -499,7 +499,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 function refreshlist(rvsource, rdate, rchannel, rstate) {
 	$.get('<?php echo str_replace('sim.','video.',base_url("video/getlist/"))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate,
 		function(data, textStatus, xhr) {
-			playlistv = $('.list-group').children();
+			playlistv = $('#vnext.list-group').children();
 			lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
 			lastvplaylistsrc = playlistv[playlistv.length-1].lastChild.dataset.vsrc;
 			lastvplaylistid = playlistv[playlistv.length-1].lastChild.id;
@@ -1450,7 +1450,7 @@ $(document).keyup(function(event) {
 	}
 });
 
-$('.list-group').click(function(event) {
+$('#vnext.list-group').click(function(event) {
 	cfileid = event.target.id;
 	elclick = event.target.tagName;
 	aid = $(event.target).attr('data-aid');

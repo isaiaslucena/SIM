@@ -262,7 +262,7 @@ $('#btncend').click(function(event) {
 
 $('#btncrop').click(function(event) {
 	if (ccrops && ccrope) {
-		videoel[0].pause();
+		// videoel[0].pause();
 		$("#ipause").addClass('hidden');
 		$("#iplay").removeClass('hidden');
 		croptimestart = new Date();
@@ -298,7 +298,7 @@ $('#btncrop').click(function(event) {
 
 		if (joinvideos) {
 			$.post('<?php echo base_url("pages/proxy")?>',
-				{address: '<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>' + cfile + '/' + cropstart + '/' + cropdurs},
+				{address: '<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>'+cfile+'/'+cropstart+'/'+cropdurs},
 				function(data, textStatus, xhr) {
 					console.log(data);
 					fileid = data.id;
@@ -368,7 +368,27 @@ $('#btncrop').click(function(event) {
 			})
 			.done(function(data) {
 				// console.log(data);
-				toastr.success(cfile+' inserido na fila de corte com ID '+data.queue_crop_id);
+				cropstartss = null;
+				cropendss = null;
+				cropstarts = null;
+				cropends = null;
+				ccrops = false;
+				ccrope = false;
+				selvinheta = false;
+				vintfile = null;
+
+				$('#btncrop').addClass('disabled');
+				$('#btncrop').attr('disabled');
+				$('#btncend').text(null);
+				$('#btncend').append('<i class="fa fa-hourglass-end"></i>');
+				$('#btncend').removeClass('btn-primary');
+				$('#btncend').addClass('btn-default');
+				$('#btncstart').text(null);
+				$('#btncstart').append('<i class="fa fa-hourglass-end"></i>');
+				$('#btncstart').removeClass('btn-primary');
+				$('#btncstart').addClass('btn-default');
+
+				toastr.success('Inserido na fila de corte com ID '+data.queue_crop_id, cfile);
 			})
 			.fail(function() {
 				console.log("error");
@@ -377,61 +397,60 @@ $('#btncrop').click(function(event) {
 				console.log("complete");
 			});
 
-			// $.post('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
-			// 	function(data, textStatus, xhr) {
-			// 		console.log(data);
-			// 		fileid = data.id;
-			// 		filecname = data.cropfilename;
-			// 		croptimestart = new Date();
-			// 		var rprogress = setInterval(function() {
-			// 				$.post('<?php echo base_url("pages/proxy")?>',
-			// 					{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
-			// 					function(datac, textStatus, xhr) {
-			// 						// console.log(datac);
-			// 						crpercent = datac.percent;
-			// 						crpcircle = crpercent / 100;
-			// 						progresscbar.animate(crpcircle);
+			$.get('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
+				function(data, textStatus, xhr) {
+					console.log(data);
+					fileid = data.id;
+					filecname = data.cropfilename;
+					croptimestart = new Date();
+					var rprogress = setInterval(function() {
+							$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs,
+								function(datac, textStatus, xhr) {
+									// console.log(datac);
+									crpercent = datac.percent;
+									crpcircle = crpercent / 100;
+									progresscbar.animate(crpcircle);
 
-			// 						if (crpercent >= 99) {
-			// 							clearInterval(rprogress);
-			// 							// $('#progresscrop').css('display', 'none');
-			// 							// $('#mdivvideo').css('display', 'block');
+									if (crpercent >= 99) {
+										clearInterval(rprogress);
+										// $('#progresscrop').css('display', 'none');
+										// $('#mdivvideo').css('display', 'block');
 
-			// 							$('#progresscrop').fadeOut('fast', function() {
-			// 								$('#mdivvideo').fadeIn('fast');
-			// 							});
+										$('#progresscrop').fadeOut('fast', function() {
+											$('#mdivvideo').fadeIn('fast');
+										});
 
-			// 							videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
-			// 							videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
-			// 							$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
-			// 								if (data == "OK") {
-			// 									videomel.attr({src: videourlmcrop});
-			// 									// videomel[0].play();
-			// 								}
-			// 							});
+										videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
+										videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
+										$.get(videovurlmcrop, function(data, textStatus, xhr) {
+											if (data == "OK") {
+												videomel.attr({src: videourlmcrop});
+												// videomel[0].play();
+											}
+										});
 
-			// 							cbjoincrop = $('#checkjoincrop').prop('checked');
-			// 							if (cbjoincrop) {
-			// 								cropjoinfiles(filecname);
-			// 								joincropvideos = true;
-			// 								console.log(cropfilestojoin);
-			// 							}
+										cbjoincrop = $('#checkjoincrop').prop('checked');
+										if (cbjoincrop) {
+											cropjoinfiles(filecname);
+											joincropvideos = true;
+											console.log(cropfilestojoin);
+										}
 
-			// 							filenamearr = filecname.split("_");
-			// 							datearr = filenamearr[1].split("-");
-			// 							cropfmonth = datearr[1];
-			// 							cropfday = datearr[2];
-			// 							cropfch = filenamearr[3];
-			// 							cropfst = filenamearr[4];
-			// 							croptimeend = new Date();
-			// 							croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
-			// 							$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
-			// 						}
-			// 					}
-			// 				);
-			// 		}, 1000);
-			// 	}
-			// );
+										filenamearr = filecname.split("_");
+										datearr = filenamearr[1].split("-");
+										cropfmonth = datearr[1];
+										cropfday = datearr[2];
+										cropfch = filenamearr[3];
+										cropfst = filenamearr[4];
+										croptimeend = new Date();
+										croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
+										$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
+									}
+								}
+							);
+					}, 1000);
+				}
+			);
 		}
 	}
 });
@@ -671,8 +690,62 @@ socket.on('get_queue_crop', function(data) {
 	$('#queuecroplist').html(null);
 	$('#queuecroplistdone').html(null);
 
-	if (data.queue.length > 0) {
-		$('#queuecroplistq').text(data.queue.length);
+	queuecount = 0;
+	queuedonecount = 0;
+	$.each(data.queue, function(index, val) {
+		vidcuser = val.id_user;
+		vfilename = val.filename;
+		vtsadd = val.ts_add;
+		vcropstart = val.crop_start;
+		vcropend = val.crop_end;
+		vtsend = val.ts_end;
+
+		tsadddt = new Date(0);
+		tsadddt.setUTCSeconds(vtsadd);
+		day = tsadddt.getDate();
+		day = ('0' + day).slice(-2);
+		month = (tsadddt.getMonth() + 1);
+		month = ('0' + month).slice(-2);
+		year = tsadddt.getFullYear();
+		hour = tsadddt.getHours();
+		hour = ('0'+hour).slice(-2);
+		min = tsadddt.getMinutes();
+		min = ('0'+min).slice(-2);
+		sec = tsadddt.getSeconds();
+		sec = ('0'+sec).slice(-2);
+		tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
+
+		if (vidcuser == idcuser && vtsend == null) {
+			queuecount++;
+			html =	'<a class="list-group-item queuecropitem">'+
+								'<h4 class="list-group-item-heading">'+
+									queuecount+' - '+val.filename+
+								'</h4>'+
+								'<p class="list-group-item-text">'+
+									'Inclusão: '+tsaddtime+'<br>'+
+									'Início do Corte: '+vcropstart+'<br>'+
+									'Fim do Corte: '+vcropend+
+								'</p>'+
+							'</a>';
+			$('#queuecroplist').append(html);
+		} else if (vidcuser == idcuser && vtsend != null) {
+			queuedonecount++;
+			html =	'<a class="list-group-item queuecropitem">'+
+								'<h4 class="list-group-item-heading">'+
+									queuedonecount+' - '+val.filename+
+								'</h4>'+
+								'<p class="list-group-item-text">'+
+									'Inclusão: '+tsaddtime+'<br>'+
+									'Início do Corte: '+vcropstart+'<br>'+
+									'Fim do Corte: '+vcropend+
+								'</p>'+
+							'</a>';
+			$('#queuecroplistdone').append(html);
+		}
+	});
+
+	if (queuecount > 0) {
+		$('#queuecroplistq').text(queuecount);
 		$('#queuecroplistq').fadeIn('fast');
 	} else {
 		$('#queuecroplistq').fadeOut('fast');
@@ -689,54 +762,4 @@ socket.on('get_queue_crop', function(data) {
 
 		return;
 	}
-
-	$.each(data.queue, function(index, val) {
-		vidcuser = val.id_user;
-		vfilename = val.filename;
-		vtsadd = val.ts_add;
-		vcropstart = val.crop_start;
-		vcropend = val.crop_end;
-		vtsend = val.ts_end;
-
-		var tsadddt = new Date(0);
-		tsadddt.setUTCSeconds(vtsadd);
-		day = tsadddt.getDate();
-		day = ('0' + day).slice(-2);
-		month = (tsadddt.getMonth() + 1);
-		month = ('0' + month).slice(-2);
-		year = tsadddt.getFullYear();
-		hour = tsadddt.getHours();
-		hour = ('0'+hour).slice(-2);
-		min = tsadddt.getMinutes();
-		min = ('0'+min).slice(-2);
-		sec = tsadddt.getSeconds();
-		sec = ('0'+sec).slice(-2);
-		tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
-
-		if (vidcuser == idcuser && vtsend == null) {
-			html =	'<a class="list-group-item queuecropitem">'+
-								'<h4 class="list-group-item-heading">'+
-									index+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'Inclusão: '+tsaddtime+'<br>'+
-									'Início do Corte: '+vcropstart+'<br>'+
-									'Fim do Corte: '+vcropend+
-								'</p>'+
-							'</a>';
-			$('#queuecroplist').append(html);
-		} else if (vidcuser == idcuser && vtsend != null) {
-			html =	'<a class="list-group-item queuecropitem">'+
-								'<h4 class="list-group-item-heading">'+
-									index+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'Inclusão: '+tsaddtime+'<br>'+
-									'Início do Corte: '+vcropstart+'<br>'+
-									'Fim do Corte: '+vcropend+
-								'</p>'+
-							'</a>';
-			$('#queuecroplistdone').append(html);
-		}
-	});
 });

@@ -17,7 +17,7 @@ class Pages extends CI_Controller {
 					'view' => 'index',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data_navbar['vtype'] = 'radio_novo';
 				$data_navbar['selected_page'] = 'home_radio_novo';
 				$data['page'] = 'pages/home_radio_novo';
@@ -26,7 +26,7 @@ class Pages extends CI_Controller {
 					'view' => 'index',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data_navbar['vtype'] = 'print';
 				$data_navbar['selected_page'] = 'home_print';
 				$data['page'] = 'pages/home_print';
@@ -53,7 +53,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_radio',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/home_radio';
 				$data['selected_date'] = 'today';
 				$data_navbar['selected_page'] = 'home_radio';
@@ -84,7 +84,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_radio',
 					'last_page' => base_url('pages/index_radio')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/home_radio';
 				$data['selected_date'] = 'today';
 				$data_navbar['selected_page'] = 'home_radio';
@@ -115,7 +115,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_radio_novo',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/home_radio_novo';
 				$data['selected_date'] = 'today';
 				$data_navbar['selected_page'] = 'home_radio_novo';
@@ -150,7 +150,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_admin',
 					'last_page' => base_url('pages/index_admin')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/home';
 				$this->load->view('head');
 				$this->load->view('navbar', $data_navbar);
@@ -176,7 +176,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_tv_novo',
 					'last_page' => base_url('pages/index_tv')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['vtype'] = 'tv';
 				$data_navbar['selected_page'] = 'home_tv';
@@ -208,7 +208,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_tv_novo',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['vtype'] = 'tv';
 				$data_navbar['selected_page'] = 'home_tv_novo';
@@ -239,7 +239,7 @@ class Pages extends CI_Controller {
 					'view' => 'index_print',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data_navbar['vtype'] = 'print';
 				$data['page'] = 'pages/home_print';
 				$data['selected_date'] = 'today';
@@ -272,7 +272,7 @@ class Pages extends CI_Controller {
 					'view' => 'print_upload',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/print_upload';
 				$data['selected_date'] = 'today';
 				$this->load->view('head');
@@ -301,7 +301,7 @@ class Pages extends CI_Controller {
 					'view' => 'edit_audio',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/edit_audio';
 				$data['selected_date'] = 'today';
 				$this->load->view('head');
@@ -330,7 +330,7 @@ class Pages extends CI_Controller {
 					'view' => 'edit_video',
 					'last_page' => base_url('pages/index')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 				$data['page'] = 'pages/edit_audio';
 				$data['selected_date'] = 'today';
 				$this->load->view('head');
@@ -351,7 +351,7 @@ class Pages extends CI_Controller {
 				'view' => 'calendar_index',
 				'last_page' => base_url('pages/calendar_index/'.$vtype)
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			switch ($vtype) {
 				case 'radio':
@@ -385,7 +385,7 @@ class Pages extends CI_Controller {
 				'last_page' => base_url('pages/calendar')
 			);
 
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data['page'] = 'pages/calendar_index';
 			$data['vtype'] = $vtype;
@@ -424,7 +424,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_radio',
 				'last_page' => base_url('pages/home')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_radio';
 			$data_navbar['selected_date'] = $selecteddate;
 
@@ -465,7 +465,7 @@ class Pages extends CI_Controller {
 				'view' => 'home',
 				'last_page' => base_url('pages/home_radio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_radio';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'radio'));
@@ -504,7 +504,7 @@ class Pages extends CI_Controller {
 				'view' => 'home',
 				'last_page' => base_url('pages/home_radio_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_radio_novo';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'radio'));
@@ -588,7 +588,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_tv',
 				'last_page' => base_url('pages/home_tv')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_tv';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'tv'));
@@ -627,7 +627,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_tv_novo',
 				'last_page' => base_url('pages/home_tv_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_tv_novo';
 			$data_navbar['selected_date'] = $selecteddate;
 			$clientsc = count($this->pages_model->clients(null, null, 'tv'));
@@ -666,7 +666,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_print',
 				'last_page' => base_url('pages/home_print')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home_print';
 			$data_navbar['selected_date'] = $selecteddate;
@@ -721,7 +721,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_print',
 				'last_page' => base_url('pages/home_print')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_print';
 			$data_navbar['vtype'] = 'print';
 			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
@@ -780,7 +780,7 @@ class Pages extends CI_Controller {
 					'last_page' => base_url('pages/dashboard')
 				);
 				$data_navbar['selected_page'] = 'dashboard';
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data['connected_users'] = $this->pages_model->connected_users();
 				$data['total_radios'] = $this->pages_model->rradios();
@@ -805,7 +805,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_keyword',
 				'last_page' => base_url('pages/home_keyword')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home';
 			$data_navbar['vtype'] = 'radio';
 			$data_navbar['selected_date'] = $this->input->post('selecteddate');
@@ -832,7 +832,7 @@ class Pages extends CI_Controller {
 				'view' => 'home_radio_keyword',
 				'last_page' => base_url('pages/home_radio_keyword')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home';
 			$data_navbar['vtype'] = 'radio';
 			$data_navbar['selected_date'] = $this->input->post('selecteddate');
@@ -861,7 +861,7 @@ class Pages extends CI_Controller {
 				'view' => 'radio_home_keyword',
 				'last_page' => base_url('pages/radio_home_keyword')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home_radio';
 			$data_navbar['vtype'] = 'radio_novo';
@@ -909,7 +909,7 @@ class Pages extends CI_Controller {
 				'view' => 'tv_home_keyword',
 				'last_page' => base_url('pages/radio_novo_home_keyword')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home_radio_novo';
 			$data_navbar['vtype'] = 'radio_novo';
@@ -1070,7 +1070,7 @@ class Pages extends CI_Controller {
 				'view' => 'tv_home_keyword',
 				'last_page' => base_url('pages/home_tv')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_tv';
 			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
 			$data_navbar['vtype'] = 'tv';
@@ -1125,7 +1125,7 @@ class Pages extends CI_Controller {
 				'view' => 'tv_home_keyword',
 				'last_page' => base_url('pages/tv_home_keyword')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'home_tv_novo';
 			$data_navbar['selected_date'] = str_replace('T00:00:00', '', $this->input->post('startdate'));
 			$data_navbar['vtype'] = 'tv';
@@ -1496,7 +1496,7 @@ class Pages extends CI_Controller {
 				'view' => 'edit',
 				'last_page' => base_url('pages/edit')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home';
 			$this->load->view('head');
@@ -1526,7 +1526,7 @@ class Pages extends CI_Controller {
 				'view' => 'edit_temp',
 				'last_page' => base_url('pages/edit_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home';
 			$data['mp3pathfilename'] = $this->input->post('mp3pathfilename');
@@ -1568,7 +1568,7 @@ class Pages extends CI_Controller {
 				'view' => 'edit_novo',
 				'last_page' => base_url('pages/edit')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'edit_novo';
 			$data['sid'] = $this->input->post('sid');
@@ -1610,7 +1610,7 @@ class Pages extends CI_Controller {
 				'view' => 'edit_novo',
 				'last_page' => base_url('pages/edit_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'edit_novo';
 			$data['sid'] = $this->input->post('sid');
@@ -1652,7 +1652,7 @@ class Pages extends CI_Controller {
 				'view' => 'edit_novo',
 				'last_page' => base_url('pages/edit_novo_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'edit_novo';
 			$data['sid'] = $this->input->post('sid');
@@ -1694,7 +1694,7 @@ class Pages extends CI_Controller {
 				'view' => 'join',
 				'last_page' => base_url('pages/join')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'join';
 
 			$data['id_radio'] = $this->input->post('id_radio');
@@ -1806,7 +1806,7 @@ class Pages extends CI_Controller {
 				'view' => 'join_edit_temp',
 				'last_page' => base_url('pages/join_edit_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data['ff_ids_files_mp3'] = $this->input->post('ff_ids_files_mp3');
 			$data['ff_ids_files_xml'] = $this->input->post('ff_ids_files_xml');
 			$data['ff_id_keyword'] = $this->input->post('ff_keyword');
@@ -1837,7 +1837,7 @@ class Pages extends CI_Controller {
 				'view' => 'join_radio',
 				'last_page' => base_url('pages/join_radio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'join_radio';
 
 			$ids_doc = explode(',', $this->input->post('ids_doc'));
@@ -1893,7 +1893,7 @@ class Pages extends CI_Controller {
 				'view' => 'join_radio_novo',
 				'last_page' => base_url('pages/join_radio_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data_navbar['selected_page'] = 'join_radio_novo';
 
 			$ids_doc = explode(',', $this->input->post('ids_doc'));
@@ -1944,7 +1944,7 @@ class Pages extends CI_Controller {
 				'view' => 'crop',
 				'last_page' => base_url('pages/crop')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home';
 			$this->load->view('head');
@@ -1976,7 +1976,7 @@ class Pages extends CI_Controller {
 				'view' => 'crop_temp',
 				'last_page' => base_url('pages/crop_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data['starttime'] = $this->input->post('starttime');
 			$data['endtime'] = $this->input->post('endtime');
@@ -2045,7 +2045,7 @@ class Pages extends CI_Controller {
 				'view' => 'crop',
 				'last_page' => base_url('pages/crop')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data['starttime'] = $this->input->post('starttime');
 			$data['endtime'] = $this->input->post('endtime');
@@ -2093,7 +2093,7 @@ class Pages extends CI_Controller {
 				'view' => 'crop_novo',
 				'last_page' => base_url('pages/crop_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data['starttime'] = $this->input->post('starttime');
 			$data['endtime'] = $this->input->post('endtime');
@@ -2182,7 +2182,7 @@ class Pages extends CI_Controller {
 				'view' => 'keyword_file',
 				'last_page' => base_url('pages/keyword_file')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'home';
 			$this->load->view('head');
@@ -2203,7 +2203,7 @@ class Pages extends CI_Controller {
 					'view' => 'reports',
 					'last_page' => base_url('pages/reports')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				if ($page == 'radios') {
 					$data_navbar['selected_page'] = 'reports_radios';
@@ -2275,7 +2275,7 @@ class Pages extends CI_Controller {
 					'view' => 'report_user',
 					'last_page' => base_url('pages/report_user')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				if ($page == 'discard') {
 					$data_navbar['selected_page'] = 'reports_users';
@@ -2332,7 +2332,7 @@ class Pages extends CI_Controller {
 				'view' => 'reports_info',
 				'last_page' => base_url('pages/reports_info')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$message = 'Test';
 
@@ -2349,7 +2349,7 @@ class Pages extends CI_Controller {
 				'view' => 'search',
 				'last_page' => base_url('pages/search')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'search';
 
@@ -2376,7 +2376,7 @@ class Pages extends CI_Controller {
 				'view' => 'search_result',
 				'last_page' => base_url('pages/search_result'),
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'search';
 			$data_search['allclients'] = $this->pages_model->clients(null, null, 'radio');
@@ -2478,7 +2478,7 @@ class Pages extends CI_Controller {
 			$sessiondata = array(
 				'view' => 'seach_pagination'
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$query;
 		} else {
@@ -2495,7 +2495,7 @@ class Pages extends CI_Controller {
 					'view' => 'clients',
 					'last_page' => base_url('pages/clients')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['selected_page'] = 'clients';
 
@@ -2613,7 +2613,7 @@ class Pages extends CI_Controller {
 					'view' => 'keywords',
 					'last_page' => base_url('pages/keywords')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['selected_page'] = 'keywords';
 				$this->load->view('head');
@@ -2652,7 +2652,7 @@ class Pages extends CI_Controller {
 					'view' => 'keywords',
 					'last_page' => base_url('pages/keywords')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['selected_page'] = 'terms';
 
@@ -2726,7 +2726,7 @@ class Pages extends CI_Controller {
 					'view' => 'radios',
 					'last_page' => base_url('pages/radios')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data['allradios'] = $this->pages_model->radios();
 
@@ -2751,7 +2751,7 @@ class Pages extends CI_Controller {
 				'view' => 'system',
 				'last_page' => base_url('pages/system')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'users';
 			$this->load->view('head');
@@ -2787,7 +2787,7 @@ class Pages extends CI_Controller {
 					'view' => 'users',
 					'last_page' => base_url('pages/users')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['selected_page'] = 'users';
 				$this->load->view('head');
@@ -2888,7 +2888,7 @@ class Pages extends CI_Controller {
 				'view' => 'groups',
 				'last_page' => base_url('pages/groups')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'groups';
 			$this->load->view('head');
@@ -2921,7 +2921,7 @@ class Pages extends CI_Controller {
 				'view' => 'profile',
 				'last_page' => base_url('pages/profile')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$data_navbar['selected_page'] = 'profile';
 			$this->load->view('head');
@@ -2954,7 +2954,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/video')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			if ($this->input->method(TRUE) == 'POST') {
 				// $postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
@@ -3000,7 +3000,17 @@ class Pages extends CI_Controller {
 	}
 
 	public function video_temp() {
-		$this->load->view('video_temp');
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/video')
+			);
+			// $this->session->set_userdata($sessiondata);
+
+			$this->load->view('video_temp');
+		} else {
+			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
+		}
 	}
 
 	public function video_player() {
@@ -3009,7 +3019,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/video_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$this->load->view('video_player.js');
 		} else {
 			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
@@ -3022,7 +3032,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/video_temp')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$this->load->view('video_editor.js');
 		} else {
 			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
@@ -3035,7 +3045,7 @@ class Pages extends CI_Controller {
 				'view' => 'audio',
 				'last_page' => base_url('pages/audio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			// var_dump(current_url());
 
@@ -3055,7 +3065,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/audio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$this->load->view('audio-player-functions.js');
 		} else {
 			redirect('login?rdt='.urlencode('pages/audio'),'refresh');
@@ -3068,7 +3078,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/audio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$this->load->view('audio-player-listeners.js');
 		} else {
 			redirect('login?rdt='.urlencode('pages/audio'),'refresh');
@@ -3081,7 +3091,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/index_radio')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$this->load->view('hkw_functions.js');
 		} else {
 			redirect('login?rdt='.urlencode('pages/index_radio'),'refresh');
@@ -3094,7 +3104,7 @@ class Pages extends CI_Controller {
 				'view' => 'video',
 				'last_page' => base_url('pages/index_radio_novo')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			$data = json_decode(base64_decode($jdata));
 			$this->load->view('hkw_listeners.js', $data);
 		} else {
@@ -3108,7 +3118,7 @@ class Pages extends CI_Controller {
 				'view' => 'live',
 				'last_page' => base_url('pages/live')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 			header ('Access-Control-Allow-Origin: *');
 			$this->load->view('live');
 		} else {
@@ -3122,7 +3132,7 @@ class Pages extends CI_Controller {
 				'view' => 'crawler',
 				'last_page' => base_url('pages/crawler')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			$this->load->view('crawler');
 		} else {
@@ -3136,7 +3146,7 @@ class Pages extends CI_Controller {
 				'view' => 'crawler_result',
 				'last_page' => base_url('pages/crawler_result')
 			);
-			$this->session->set_userdata($sessiondata);
+			// $this->session->set_userdata($sessiondata);
 
 			if (is_null($query)) {
 				$data['search_text'] = $this->input->post('search_text');
@@ -3207,7 +3217,7 @@ class Pages extends CI_Controller {
 					'view' => 'rec_radio',
 					'last_page' => base_url('pages/rec_radio')
 				);
-				$this->session->set_userdata($sessiondata);
+				// $this->session->set_userdata($sessiondata);
 
 				$data_navbar['selected_page'] = 'rec_radio';
 				$this->load->view('head');
