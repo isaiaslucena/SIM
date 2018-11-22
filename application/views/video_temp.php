@@ -18,6 +18,11 @@
 		<script src="<?php echo base_url('assets/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js');?>"></script>
 		<script src="<?php echo base_url('assets/progressbarjs/dist/progressbar.min.js');?>"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+		<script type="text/javascript">
+			var siourl = 'http://'+window.location.hostname+':8037'
+			const socket = io(siourl);
+		</script>
 
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/bootstrap/css/bootstrap.css');?>"/>
 		<link rel="stylesheet" href="<?php echo base_url('assets/sb-admin2/vendor/font-awesome/css/font-awesome.css');?>">
@@ -45,9 +50,15 @@
 
 				<div class="col-md-4">
 					<h2>
-						<button id="btnqueuecrop" class="btn btn-sm btn-default" title="Fila de cortes"><i class="fa fa-list"></i> Cortes</button>
-						<button id="btnqueuetrans" class="btn btn-sm btn-default" title="Fila de transcrição"><i class="fa fa-list"></i> Transcrição</button>
-						<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="small" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
+						<button id="btnqueuecrop" class="btn btn-default" title="Fila de cortes">
+							<sup><span id="queuecroplistq" class="navnotification" style="display: none"></span></sup>
+							<i class="fa fa-list"></i>
+						</button>
+						<button id="btnqueuetrans" class="btn btn-default" title="Fila de transcrição">
+							<sup><span id="queuetranslistq" class="navnotification" style="display: none"></span></sup>
+							<i class="fa fa-list"></i>
+						</button>
+						<input id="checkaplay" class="selectpicker" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Autoplay" data-off="Autoplay" title="Autoplay" disabled>
 					</h2>
 				</div>
 			</div>
@@ -57,8 +68,8 @@
 				<div id="divvideo" class="col-md-8">
 					<div id="vvideobtn" class='vbutton' style="display: none"></div>
 					<video id="vvideo" class="center-block"
-					poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
-					width="854" height="480" preload="metadata"></video>
+						poster="<?php echo base_url('assets/imgs/colorbar.jpg')?>"
+						width="854" height="480" preload="metadata"></video>
 					<img id="thvideo" class="center-block" style="display: none; max-height: 480px">
 				</div>
 
@@ -326,14 +337,23 @@
 								<div id="queuecroplist" class="list-group center-block noitems" style="overflow-y: auto; max-height: 450px">
 									<?php for ($i = 0; $i < 20; $i++) {
 										if ($i == 5) {
-											echo '<a class="list-group-item">Nenhuma arquivo</a>';
+											echo '<a class="list-group-item">Nenhum arquivo na fila!</a>';
 										} else {
-											echo '<a class="list-group-item" style="color: white">Nenhuma arquivo</a>';
+											echo '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
 										} ?>
 									<?php } ?>
 								</div>
 							</div>
 							<div class="col-md-6">
+								<div id="queuecroplistdone" class="list-group center-block noitems" style="overflow-y: auto; max-height: 450px">
+									<?php for ($i = 0; $i < 20; $i++) {
+										if ($i == 5) {
+											echo '<a class="list-group-item">Nenhum arquivo!</a>';
+										} else {
+											echo '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
+										} ?>
+									<?php } ?>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -356,20 +376,10 @@
 					// console.log(event.data);
 				// }
 
-				getchannels();
-				var tvalerts = setInterval(function() {
-					getchannels();
-				}, 60000);
-
 				videoel.bind('contextmenu', function() { return false; });
 				videomel.bind('contextmenu', function() { return false; });
 
 				videosetctime(frompost);
-
-				getqueuecrop();
-				var getqueuecropint = setInterval(function() {
-					getqueuecrop();
-				}, 1000);
 
 				// if (document.cookie.indexOf('videofile') != -1 ) {
 				// 	console.log('videofile exist @ cookie!');

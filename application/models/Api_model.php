@@ -18,5 +18,12 @@ class Api_model extends CI_Model {
 	public function get_queue_crop() {
 		$this->db->order_by('ts_add','asc');
 		return $this->db->get('queue_crop')->result_array();
+		// return $this->db->get_where('queue_crop', array('id_user' => $iduser))->result_array();
+	}
+
+	public function get_queue_crop_done() {
+		$this->db->order_by('ts_end','asc');
+		return $this->db->get('queue_crop')->result_array();
+		// return $this->db->get_where('queue_crop', array('id_user' => $iduser))->result_array();
 	}
 }

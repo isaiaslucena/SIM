@@ -87,7 +87,7 @@ toastr.options = {
 	"debug": false,
 	"newestOnTop": false,
 	"progressBar": true,
-	"positionClass": "toast-top-right",
+	"positionClass": "toast-top-center",
 	"preventDuplicates": false,
 	"onclick": function(e) {
 		$('.cropqueuemodal').modal('show');
@@ -152,10 +152,8 @@ function getqueuecrop() {
 	$.get('<?php echo base_url("api/get_queue_crop");?>',
 		function(data) {
 		queuecroplenth = data.queue.length;
-
 			if (queuecroplentha != queuecroplenth) {
 				$('#queuecroplist').html(null);
-				// console.log(data);
 				$.each(data.queue, function(index, val) {
 					var tsadddt = new Date(0);
 					tsadddt.setUTCSeconds(val.ts_add);
@@ -664,4 +662,81 @@ $('.jcropmodal').on('hide.bs.modal', function(event) {
 	$('#btnjoin').attr('disabled', true);
 	cropfilestojoin = [];
 	joincropvideos = false;
+});
+
+//websocket listeners
+socket.on('get_queue_crop', function(data) {
+	var idcuser = <?php echo $this->session->userdata('id_user');?>;
+
+	$('#queuecroplist').html(null);
+	$('#queuecroplistdone').html(null);
+
+	if (data.queue.length > 0) {
+		$('#queuecroplistq').text(data.queue.length);
+		$('#queuecroplistq').fadeIn('fast');
+	} else {
+		$('#queuecroplistq').fadeOut('fast');
+		$('#queuecroplistq').text(radiocount);
+
+		for (i = 0; i < 20; i++) {
+			if (i == 5) {
+				fhtml = '<a class="list-group-item">Nenhum arquivo na fila!</a>';
+			} else {
+				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
+			}
+		}
+		$('#queuecroplist').append(fhtml);
+
+		return;
+	}
+
+	$.each(data.queue, function(index, val) {
+		vidcuser = val.id_user;
+		vfilename = val.filename;
+		vtsadd = val.ts_add;
+		vcropstart = val.crop_start;
+		vcropend = val.crop_end;
+		vtsend = val.ts_end;
+
+		var tsadddt = new Date(0);
+		tsadddt.setUTCSeconds(vtsadd);
+		day = tsadddt.getDate();
+		day = ('0' + day).slice(-2);
+		month = (tsadddt.getMonth() + 1);
+		month = ('0' + month).slice(-2);
+		year = tsadddt.getFullYear();
+		hour = tsadddt.getHours();
+		hour = ('0'+hour).slice(-2);
+		min = tsadddt.getMinutes();
+		min = ('0'+min).slice(-2);
+		sec = tsadddt.getSeconds();
+		sec = ('0'+sec).slice(-2);
+		tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
+
+		if (vidcuser == idcuser && vtsend == null) {
+			html =	'<a class="list-group-item queuecropitem">'+
+								'<h4 class="list-group-item-heading">'+
+									index+' - '+val.filename+
+								'</h4>'+
+								'<p class="list-group-item-text">'+
+									'Inclusão: '+tsaddtime+'<br>'+
+									'Início do Corte: '+vcropstart+'<br>'+
+									'Fim do Corte: '+vcropend+
+								'</p>'+
+							'</a>';
+			$('#queuecroplist').append(html);
+		} else if (vidcuser == idcuser && vtsend != null) {
+			html =	'<a class="list-group-item queuecropitem">'+
+								'<h4 class="list-group-item-heading">'+
+									index+' - '+val.filename+
+								'</h4>'+
+								'<p class="list-group-item-text">'+
+									'Inclusão: '+tsaddtime+'<br>'+
+									'Início do Corte: '+vcropstart+'<br>'+
+									'Fim do Corte: '+vcropend+
+								'</p>'+
+							'</a>';
+			$('#queuecroplistdone').append(html);
+		}
+	});
 });
