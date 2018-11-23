@@ -478,5 +478,22 @@ class Api extends CI_Controller {
 		header('Content-Type: application/json');
 		print json_encode($resp);
 	}
+
+	public function get_queue_crop_todo() {
+		$this->load->model('api_model');
+		$resp['queue'] = $this->api_model->get_queue_crop_todo();
+
+		header('Content-Type: application/json');
+		print json_encode($resp);
+	}
+
+	public function update_queue_crop($field, $value, $id_queue) {
+		$this->load->model('api_model');
+
+		$this->api_model->update_queue_crop($field, $value, $id_queue);
+
+		header('Content-Type: application/json');
+		header('200 OK');
+	}
 }
 ?>

@@ -397,60 +397,60 @@ $('#btncrop').click(function(event) {
 				console.log("complete");
 			});
 
-			$.get('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
-				function(data, textStatus, xhr) {
-					console.log(data);
-					fileid = data.id;
-					filecname = data.cropfilename;
-					croptimestart = new Date();
-					var rprogress = setInterval(function() {
-							$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs,
-								function(datac, textStatus, xhr) {
-									// console.log(datac);
-									crpercent = datac.percent;
-									crpcircle = crpercent / 100;
-									progresscbar.animate(crpcircle);
+			// $.get('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
+			// 	function(data, textStatus, xhr) {
+			// 		console.log(data);
+			// 		fileid = data.id;
+			// 		filecname = data.cropfilename;
+			// 		croptimestart = new Date();
+			// 		var rprogress = setInterval(function() {
+			// 				$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs,
+			// 					function(datac, textStatus, xhr) {
+			// 						// console.log(datac);
+			// 						crpercent = datac.percent;
+			// 						crpcircle = crpercent / 100;
+			// 						progresscbar.animate(crpcircle);
 
-									if (crpercent >= 99) {
-										clearInterval(rprogress);
-										// $('#progresscrop').css('display', 'none');
-										// $('#mdivvideo').css('display', 'block');
+			// 						if (crpercent >= 99) {
+			// 							clearInterval(rprogress);
+			// 							// $('#progresscrop').css('display', 'none');
+			// 							// $('#mdivvideo').css('display', 'block');
 
-										$('#progresscrop').fadeOut('fast', function() {
-											$('#mdivvideo').fadeIn('fast');
-										});
+			// 							$('#progresscrop').fadeOut('fast', function() {
+			// 								$('#mdivvideo').fadeIn('fast');
+			// 							});
 
-										videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
-										videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
-										$.get(videovurlmcrop, function(data, textStatus, xhr) {
-											if (data == "OK") {
-												videomel.attr({src: videourlmcrop});
-												// videomel[0].play();
-											}
-										});
+			// 							videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
+			// 							videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
+			// 							$.get(videovurlmcrop, function(data, textStatus, xhr) {
+			// 								if (data == "OK") {
+			// 									videomel.attr({src: videourlmcrop});
+			// 									// videomel[0].play();
+			// 								}
+			// 							});
 
-										cbjoincrop = $('#checkjoincrop').prop('checked');
-										if (cbjoincrop) {
-											cropjoinfiles(filecname);
-											joincropvideos = true;
-											console.log(cropfilestojoin);
-										}
+			// 							cbjoincrop = $('#checkjoincrop').prop('checked');
+			// 							if (cbjoincrop) {
+			// 								cropjoinfiles(filecname);
+			// 								joincropvideos = true;
+			// 								console.log(cropfilestojoin);
+			// 							}
 
-										filenamearr = filecname.split("_");
-										datearr = filenamearr[1].split("-");
-										cropfmonth = datearr[1];
-										cropfday = datearr[2];
-										cropfch = filenamearr[3];
-										cropfst = filenamearr[4];
-										croptimeend = new Date();
-										croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
-										$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
-									}
-								}
-							);
-					}, 1000);
-				}
-			);
+			// 							filenamearr = filecname.split("_");
+			// 							datearr = filenamearr[1].split("-");
+			// 							cropfmonth = datearr[1];
+			// 							cropfday = datearr[2];
+			// 							cropfch = filenamearr[3];
+			// 							cropfst = filenamearr[4];
+			// 							croptimeend = new Date();
+			// 							croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
+			// 							$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
+			// 						}
+			// 					}
+			// 				);
+			// 		}, 1000);
+			// 	}
+			// );
 		}
 	}
 });
@@ -747,9 +747,11 @@ socket.on('get_queue_crop', function(data) {
 	if (queuecount > 0) {
 		$('#queuecroplistq').text(queuecount);
 		$('#queuecroplistq').fadeIn('fast');
+
+		$('#queuecroplist').css('overflow-y', 'auto');
 	} else {
 		$('#queuecroplistq').fadeOut('fast');
-		$('#queuecroplistq').text(radiocount);
+		$('#queuecroplistq').text(queuecount);
 
 		for (i = 0; i < 20; i++) {
 			if (i == 5) {
@@ -757,9 +759,22 @@ socket.on('get_queue_crop', function(data) {
 			} else {
 				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
 			}
+			$('#queuecroplist').append(fhtml);
 		}
-		$('#queuecroplist').append(fhtml);
+		$('#queuecroplist').css('overflow-y', 'hidden');
+	}
 
-		return;
+	if (queuedonecount == 0) {
+		for (i = 0; i < 20; i++) {
+			if (i == 5) {
+				fhtml = '<a class="list-group-item">Nenhum arquivo!</a>';
+			} else {
+				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
+			}
+			$('#queuecroplistdone').append(fhtml);
+		}
+		$('#queuecroplistdone').css('overflow-y', 'hidden');
+	} else {
+		$('#queuecroplistdone').css('overflow-y', 'auto');
 	}
 });
