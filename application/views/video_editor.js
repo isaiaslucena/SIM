@@ -143,51 +143,135 @@ function cropjoinfiles(cjfilename) {
 	}
 };
 
-function getqueuecrop() {
-	if ($('#queuecroplist').hasClass('noitems')) {
-		$('#queuecroplist').html(null);
-		$('#queuecroplist').removeClass('noitems');
+function epochtostring(epochdate) {
+	tsdt = new Date(0);
+	tsdt.setUTCSeconds(epochdate);
+	day = tsdt.getDate();
+	day = ('0' + day).slice(-2);
+	month = (tsdt.getMonth() + 1);
+	month = ('0' + month).slice(-2);
+	year = tsdt.getFullYear();
+	hour = tsdt.getHours();
+	hour = ('0'+hour).slice(-2);
+	min = tsdt.getMinutes();
+	min = ('0'+min).slice(-2);
+	sec = tsdt.getSeconds();
+	sec = ('0'+sec).slice(-2);
+	tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
+	return tsaddtime;
+};
+
+function queuecropdata(qdata) {
+	idcuser = <?php echo $this->session->userdata('id_user');?>;
+	queuecount = 0;
+	queuedonecount = 0;
+
+	$.each(qdata, function(index, val) {
+		vidcuser = val.id_user;
+		vsource = val.source;
+		vfilename = val.filename;
+		vcropstart = val.crop_start;
+		vcropend = val.crop_end;
+		vtsadd = val.ts_add;
+		vtsstart = val.ts_start;
+		vtsend = val.ts_end;
+		vcfilename = val.crop_filename;
+
+		vcurl = (window.location.hostname).replace('sim.', 'video.');
+		vcsrc = 'http://'+vcurl+'/video/getcropvideo/'+vsource+'_'+vcfilename;
+		vcpostern = ("000"+Math.floor(vcropstart)).slice(-3);
+		vcposter = 'http://'+vcurl+'/video/getthumb/'+vsource+'_'+vfilename+'/'+vcpostern;
+		console.log(vcposter);
+
+		tsaddtime = epochtostring(vtsadd);
+		tsstarttime = epochtostring(vtsstart);
+		tsendtime = epochtostring(vtsend);
+
+		if (vidcuser == idcuser && vtsend == null) {
+			queuecount++;
+			html =	'<a class="list-group-item queuecropitem">'+
+								'<h4 class="list-group-item-heading">'+
+									queuecount+' - '+val.filename+
+								'</h4>'+
+								'<p class="list-group-item-text">'+
+									'Inclusão: '+tsaddtime+'<br>'+
+									'Início do Corte: '+vcropstart+'<br>'+
+									'Fim do Corte: '+vcropend+
+								'</p>'+
+							'</a>';
+			$('#queuecroplist').append(html);
+		} else if (vidcuser == idcuser && vtsend != null) {
+			queuedonecount++;
+			videohtml = "<video src='"+vcsrc+"' width='213.5' height='120' "+
+								"poster='"+vcposter+"' preload='metadata'></video>";
+			html =	'<a tabindex="0" class="list-group-item queuecropditem" '+
+								'role="button" data-toggle="popover" data-trigger="focus" data-html="true" '+
+								'title="Clique para ver o corte" data-content="'+videohtml+'">'+
+								'<h4 class="list-group-item-heading">'+
+									queuedonecount+' - '+val.filename+
+								'</h4>'+
+								// '<image src="'+vcposter+'" width="80" height="60"/>'+
+								'<p class="list-group-item-text">'+
+									'Início do corte: '+tsstarttime+'<br>'+
+									'Fim do corte: '+tsendtime+
+								'</p>'+
+							'</a>';
+			$('#queuecroplistdone').append(html);
+		}
+	});
+
+	if (queuecount > 0) {
+		$('#queuecroplistq').text(queuecount);
+		$('#queuecroplistq').fadeIn('fast');
+
+		$('#queuecroplist').css('overflow-y', 'auto');
+	} else {
+		$('#queuecroplistq').fadeOut('fast');
+		$('#queuecroplistq').text(queuecount);
+
+		for (i = 0; i < 20; i++) {
+			if (i == 5) {
+				fhtml = '<a class="list-group-item">Nenhum arquivo na fila!</a>';
+			} else {
+				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
+			}
+			$('#queuecroplist').append(fhtml);
+		}
+		$('#queuecroplist').css('overflow-y', 'hidden');
 	}
 
+	if (queuedonecount == 0) {
+		for (i = 0; i < 20; i++) {
+			if (i == 5) {
+				fhtml = '<a class="list-group-item">Nenhum arquivo!</a>';
+			} else {
+				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
+			}
+			$('#queuecroplistdone').append(fhtml);
+		}
+		$('#queuecroplistdone').css('overflow-y', 'hidden');
+	} else {
+		$('#queuecroplistdone').css('overflow-y', 'auto');
+	}
+};
+
+function getqueuecrop() {
 	$.get('<?php echo base_url("api/get_queue_crop");?>',
 		function(data) {
-		queuecroplenth = data.queue.length;
-			if (queuecroplentha != queuecroplenth) {
+			if ($('#queuecroplist').hasClass('noitems')) {
 				$('#queuecroplist').html(null);
-				$.each(data.queue, function(index, val) {
-					var tsadddt = new Date(0);
-					tsadddt.setUTCSeconds(val.ts_add);
-					day = tsadddt.getDate();
-					day = ('0' + day).slice(-2);
-					month = (tsadddt.getMonth() + 1);
-					month = ('0' + month).slice(-2);
-					year = tsadddt.getFullYear();
-					hour = tsadddt.getHours();
-					hour = ('0'+hour).slice(-2);
-					min = tsadddt.getMinutes();
-					min = ('0'+min).slice(-2);
-					sec = tsadddt.getSeconds();
-					sec = ('0'+sec).slice(-2);
-					tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
-
-					html = '<a class="list-group-item queuecropitem" href="#">'+
-										'<h4 class="list-group-item-heading">'+
-											index+' - '+val.filename+
-										'</h4>'+
-										'<p class="list-group-item-text">'+
-											'Inclusão: '+tsaddtime+'<br>'+
-											'Início do Corte: '+val.crop_start+'<br>'+
-											'Fim do Corte: '+val.crop_end+
-										'</p>'+
-									'</a>';
-					$('#queuecroplist').append(html);
-				});
+				$('#queuecroplist').removeClass('noitems');
 			}
 
-			queuecroplentha = queuecroplenth;
+			if ($('#queuecroplistdone').hasClass('noitems')) {
+				$('#queuecroplistdone').html(null);
+				$('#queuecroplistdone').removeClass('noitems');
+			}
+
+			queuecropdata(data.queue);
 		}
 	);
-}
+};
 
 //Listeners
 $('#btncstart').click(function(event) {
@@ -685,96 +769,21 @@ $('.jcropmodal').on('hide.bs.modal', function(event) {
 
 //websocket listeners
 socket.on('get_queue_crop', function(data) {
-	var idcuser = <?php echo $this->session->userdata('id_user');?>;
+	if ($('#queuecroplist').hasClass('noitems') == false) {
+		qcroplist = $('#queuecroplist').children();
+		qcroplistd = $('#queuecroplistdone').children();
 
-	$('#queuecroplist').html(null);
-	$('#queuecroplistdone').html(null);
+		lastqueuelist = qcroplist[qcroplist.length - 1];
+		lastqueuelistd = qcroplistd[qcroplistd.length - 1];
+		lastdata = data.queue[data.queue.length - 1];
 
-	queuecount = 0;
-	queuedonecount = 0;
-	$.each(data.queue, function(index, val) {
-		vidcuser = val.id_user;
-		vfilename = val.filename;
-		vtsadd = val.ts_add;
-		vcropstart = val.crop_start;
-		vcropend = val.crop_end;
-		vtsend = val.ts_end;
-
-		tsadddt = new Date(0);
-		tsadddt.setUTCSeconds(vtsadd);
-		day = tsadddt.getDate();
-		day = ('0' + day).slice(-2);
-		month = (tsadddt.getMonth() + 1);
-		month = ('0' + month).slice(-2);
-		year = tsadddt.getFullYear();
-		hour = tsadddt.getHours();
-		hour = ('0'+hour).slice(-2);
-		min = tsadddt.getMinutes();
-		min = ('0'+min).slice(-2);
-		sec = tsadddt.getSeconds();
-		sec = ('0'+sec).slice(-2);
-		tsaddtime = year+'-'+month+'-'+day+' '+hour+':'+min+':'+sec;
-
-		if (vidcuser == idcuser && vtsend == null) {
-			queuecount++;
-			html =	'<a class="list-group-item queuecropitem">'+
-								'<h4 class="list-group-item-heading">'+
-									queuecount+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'Inclusão: '+tsaddtime+'<br>'+
-									'Início do Corte: '+vcropstart+'<br>'+
-									'Fim do Corte: '+vcropend+
-								'</p>'+
-							'</a>';
-			$('#queuecroplist').append(html);
-		} else if (vidcuser == idcuser && vtsend != null) {
-			queuedonecount++;
-			html =	'<a class="list-group-item queuecropitem">'+
-								'<h4 class="list-group-item-heading">'+
-									queuedonecount+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'Inclusão: '+tsaddtime+'<br>'+
-									'Início do Corte: '+vcropstart+'<br>'+
-									'Fim do Corte: '+vcropend+
-								'</p>'+
-							'</a>';
-			$('#queuecroplistdone').append(html);
-		}
-	});
-
-	if (queuecount > 0) {
-		$('#queuecroplistq').text(queuecount);
-		$('#queuecroplistq').fadeIn('fast');
-
-		$('#queuecroplist').css('overflow-y', 'auto');
-	} else {
-		$('#queuecroplistq').fadeOut('fast');
-		$('#queuecroplistq').text(queuecount);
-
-		for (i = 0; i < 20; i++) {
-			if (i == 5) {
-				fhtml = '<a class="list-group-item">Nenhum arquivo na fila!</a>';
-			} else {
-				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
-			}
-			$('#queuecroplist').append(fhtml);
-		}
-		$('#queuecroplist').css('overflow-y', 'hidden');
+		console.log(lastqueuelist);
+		console.log(lastqueuelistd);
+		console.log(lastdata);
 	}
+});
 
-	if (queuedonecount == 0) {
-		for (i = 0; i < 20; i++) {
-			if (i == 5) {
-				fhtml = '<a class="list-group-item">Nenhum arquivo!</a>';
-			} else {
-				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
-			}
-			$('#queuecroplistdone').append(fhtml);
-		}
-		$('#queuecroplistdone').css('overflow-y', 'hidden');
-	} else {
-		$('#queuecroplistdone').css('overflow-y', 'auto');
-	}
+$("body").popover({
+	'placement': 'left',
+	'selector': '[data-toggle=popover]'
 });

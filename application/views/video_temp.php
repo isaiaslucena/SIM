@@ -338,7 +338,7 @@
 									<div class="panel-heading">
 										<h3 class="panel-title">Para cortar</h3>
 									</div>
-									<div id="queuecroplist" class="list-group center-block noitems" style="overflow-y: auto; max-height: 450px">
+									<div id="queuecroplist" class="list-group center-block noitems" style="overflow-y: hidden; max-height: 450px">
 										<?php for ($i = 0; $i < 20; $i++) {
 											if ($i == 5) {
 												echo '<a class="list-group-item">Nenhum arquivo na fila!</a>';
@@ -355,7 +355,7 @@
 									<div class="panel-heading">
 										<h3 class="panel-title">Cortados</h3>
 									</div>
-									<div id="queuecroplistdone" class="list-group center-block noitems" style="overflow-y: auto; max-height: 450px">
+									<div id="queuecroplistdone" class="list-group center-block noitems" style="overflow-y: hidden; max-height: 450px">
 										<?php for ($i = 0; $i < 20; $i++) {
 											if ($i == 5) {
 												echo '<a class="list-group-item">Nenhum arquivo!</a>';
@@ -389,8 +389,6 @@
 
 				videoel.bind('contextmenu', function() { return false; });
 				videomel.bind('contextmenu', function() { return false; });
-
-				videosetctime(frompost);
 
 				// if (document.cookie.indexOf('videofile') != -1 ) {
 				// 	console.log('videofile exist @ cookie!');
@@ -452,6 +450,9 @@
 				// 	selectchannel(selformdate);
 				// 	getlistchannel(vsource, selformdate, channel, state, false);
 				// }
+
+				videosetctime(frompost);
+				getqueuecrop();
 			});
 		</script>
 	</body>
