@@ -348,7 +348,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					if (file == firstvideo) {
 						html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 											'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-												'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
+												'<img class="img-rounded" id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 											'</div>'+
 											'<div class="checkbox checkbox-warning">'+
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -359,7 +359,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					} else {
 						html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
 											'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-												'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
+												'<img class="img-rounded" id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 											'</div>'+
 											'<div class="checkbox checkbox-warning">'+
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -394,7 +394,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					if (file == lastvideo && filearr[2] != 'AVULSO') {
 						html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 											'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-												'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
+												'<img class="img-rounded" id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 											'</div>'+
 											'<div class="checkbox checkbox-warning">'+
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -405,7 +405,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					} else if (file == lastvarray && filearr[2] != 'AVULSO') {
 						html =	'<a id="vbtn'+index+'" class="list-group-item disabled" style="height: 105px;">'+
 											'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-												'<img id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" style="max-height:80px">'+
+												'<img class="img-rounded" id="vnttb'+index+'" src="<?php echo base_url("assets/imgs/colorbar.jpg")?>" style="max-height:80px">'+
 											'</div>'+
 											'<div class="checkbox checkbox-warning">'+
 												'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -418,7 +418,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 							cvideo = firstvideo;
 							html =	'<a id="vbtn'+index+'" class="list-group-item active" style="height: 105px;">'+
 												'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
+													'<img class="img-rounded" id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 												'</div>'+
 												'<div class="checkbox checkbox-warning">'+
 													'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -429,7 +429,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 						} else {
 							html =	'<a id="vbtn'+index+'" class="list-group-item" style="height: 105px;">'+
 												'<div class="pull-left vnextthumb" data-tbid="vnttb'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
-													'<img id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
+													'<img class="img-rounded" id="vnttb'+index+'" src="'+srcposter+'" style="max-height:80px">'+
 												'</div>'+
 												'<div class="checkbox checkbox-warning">'+
 													'<input id="chbx'+index+'" type="checkbox" data-aid="vbtn'+index+'" data-vsrc="'+vsource+'" data-vfile="'+file+'">'+
@@ -515,7 +515,7 @@ function refreshlist(rvsource, rdate, rchannel, rstate) {
 				$('#'+lastvplaylistid).css('cursor', 'pointer');
 				html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
 									'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
-										'<img id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
+										'<img class="img-rounded" id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
 									'</div>'+
 									'<div class="checkbox checkbox-warning">'+
 										'<input id="chbx'+lastvplaylistidn+'" type="checkbox" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+

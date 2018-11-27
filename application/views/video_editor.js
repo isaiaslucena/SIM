@@ -179,6 +179,7 @@ function queuecropdata(qdata) {
 		vcfilename = val.crop_filename;
 
 		vcurl = (window.location.hostname).replace('sim.', 'video.');
+		vsrc = 'http://'+vcurl+'/video/getvideo/'+vsource+'_'+vfilename;
 		vcsrc = 'http://'+vcurl+'/video/getcropvideo/'+vcfilename;
 		vcpostern = ("000"+Math.floor(vcropstart)).slice(-3);
 		vcposter = 'http://'+vcurl+'/video/getthumb/'+vsource+'_'+vfilename+'/'+vcpostern;
@@ -187,91 +188,92 @@ function queuecropdata(qdata) {
 		tsstarttime = epochtostring(vtsstart);
 		tsendtime = epochtostring(vtsend);
 
-		if (vidcuser == idcuser && vtsend == null) {
-			queuecount++;
-			html =	'<a class="list-group-item queuecropitem">'+
-								'<h4 class="list-group-item-heading">'+
-									queuecount+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'Inclusão: '+tsaddtime+'<br>'+
-									'Início do Corte: '+vcropstart+'<br>'+
-									'Fim do Corte: '+vcropend+
-								'</p>'+
-							'</a>';
-			$('#queuecroplist').append(html);
-		} else if (vidcuser == idcuser && vtsend != null) {
+		// if (vidcuser == idcuser && vtsend == null) {
+			// queuecount++;
+		// 	html =	'<a class="list-group-item queuecropitem">'+
+		// 						'<h4 class="list-group-item-heading">'+
+		// 							queuecount+' - '+val.filename+
+		// 						'</h4>'+
+		// 						'<p class="list-group-item-text">'+
+		// 							'Inclusão: '+tsaddtime+'<br>'+
+		// 							'Início do Corte: '+vcropstart+'<br>'+
+		// 							'Fim do Corte: '+vcropend+
+		// 						'</p>'+
+		// 					'</a>';
+		// 	$('#queuecroplist').append(html);
+		// } else if (vidcuser == idcuser && vtsend != null) {
 			queuedonecount++;
-			videohtml =	"<video id='video"+vid+"' src='"+vcsrc+"' height='140' "+
-									"poster='"+vcposter+"' preload='metadata'></video>";
-			html =	'<a tabindex="0" class="list-group-item queuecropditem" '+
-								'role="button" data-toggle="popover" data-trigger="focus" data-html="true" '+
-								'data-idvideo="video'+vid+'" style="height: 120px"'+
-								'title="Clique para ver o corte" data-content="'+videohtml+'">'+
-								'<h4 class="list-group-item-heading">'+
-									queuedonecount+' - '+val.filename+
-								'</h4>'+
-								'<p class="list-group-item-text">'+
-									'<image class="pull-left" src="'+vcposter+'" height="70"/>'+
-									'<span>Início do corte: '+tsstarttime+'</span><br>'+
-									'<span>Fim do corte: '+tsendtime+'</span><br>'+
-									'<div class="btn-group" role="group" aria-label="...">'+
-										'<button type="button" class="btn btn-default">Left</button>'+
-										'<button type="button" class="btn btn-default">Middle</button>'+
-										'<button type="button" class="btn btn-default">Right</button>'+
-									'</div>'+
-								'</p>'+
-							'</a>';
+			videohtml =	"<video id='video"+vid+"' src='"+vsrc+"' data-cstart='"+vcropstart+"' data-cend='"+vcropend+"' "+
+									"poster='"+vcposter+"' preload='metadata' height='120' class='media-object img-rounded vcpreview'></video>";
 
-			// <ul class="media-list">
-			//   <li class="media">
-			//     <div class="media-left">
-			//       <a href="#">
-			//         <img class="media-object" src="..." alt="...">
-			//       </a>
-			//     </div>
-			//     <div class="media-body">
-			//       <h4 class="media-heading">Media heading</h4>
-			//       ...
-			//     </div>
-			//   </li>
-			// </ul>
-
-
-			// html =		'<div class="media">'+
-			// 						'<div class="media-left">'+
-			// 							'<a href="#">'+
-			// 								'<img class="media-object" src="'+vcposter+'" height="70" alt="Img Thumb">'+
-			// 							'</a>'+
+			// html =	'<a tabindex="0" class="list-group-item queuecropditem" '+
+			// 					'role="button" data-toggle="popover" data-trigger="focus" data-html="true" '+
+			// 					'data-idvideo="video'+vid+'" style="height: 120px"'+
+			// 					'title="Clique para ver o corte" data-content="'+videohtml+'">'+
+			// 					'<h4 class="list-group-item-heading">'+
+			// 						queuedonecount+' - '+vfilename+
+			// 					'</h4>'+
+			// 					'<p class="list-group-item-text">'+
+			// 						'<image class="pull-left" src="'+vcposter+'" height="70"/>'+
+			// 						'<span>Início do corte: '+tsstarttime+'</span><br>'+
+			// 						'<span>Fim do corte: '+tsendtime+'</span><br>'+
+			// 						'<div class="btn-group" data-toggle="buttons">'+
+			// 							'<label class="btn btn-sm btn-success">'+
+			// 								'<input type="radio" name="options" id="option1" autocomplete="off"><i class="fa fa-check"></i>'+
+			// 							'</label>'+
+			// 							'<label class="btn btn-sm btn-danger">'+
+			// 								'<input type="radio" name="options" id="option2" autocomplete="off"><i class="fa fa-times"></i>'+
+			// 							'</label>'+
 			// 						'</div>'+
-			// 						'<div class="media-body">'+
-			// 							'<h4 class="media-heading">'+queuedonecount+' - '+val.filename+'</h4>'+
-			// 						'</div>'+
-			// 					'</div>';
+			// 					'</p>'+
+			// 				'</a>';
+
+			html =	'<li id="crop'+vid+'" class="media">'+
+								'<div class="media-left">'+
+									'<a href="#">'+
+										// '<img class="media-object img-rounded" src="'+vcposter+'" height="80" alt="Img Thumb">'+
+										videohtml+
+									'</a>'+
+								'</div>'+
+								'<div class="media-body">'+
+									'<h4 class="media-heading">'+vfilename+'</h4>'+
+									'<b>Adicionado:</b> '+tsaddtime+'<br>'+
+									'<b>Duração:</b> '+sectostring(vcropend - vcropstart)+'<br>'+
+									'<div class="btn-group" data-toggle="buttons">'+
+										'<label class="btn btn-sm btn-success" title="Aprovado">'+
+											'<input type="radio" name="options" id="option1" autocomplete="off"><i class="fa fa-check"></i>'+
+										'</label>'+
+										'<label class="btn btn-sm btn-danger" title="Descartar">'+
+											'<input type="radio" name="options" id="option2" autocomplete="off"><i class="fa fa-times"></i>'+
+										'</label>'+
+									'</div> '+
+									'<button class="btn btn-sm btn-default" title="Editar Corte"><i class="fa fa-pencil"></i></button>'+
+								'</div>'+
+							'</li>';
 
 			$('#queuecroplistdone').append(html);
-		}
+		// }
 	});
 
-	if (queuecount > 0) {
-		$('#queuecroplistq').text(queuecount);
-		$('#queuecroplistq').fadeIn('fast');
+	// if (queuecount > 0) {
+	// 	$('#queuecroplistq').text(queuecount);
+	// 	$('#queuecroplistq').fadeIn('fast');
 
-		$('#queuecroplist').css('overflow-y', 'auto');
-	} else {
-		$('#queuecroplistq').fadeOut('fast');
-		$('#queuecroplistq').text(queuecount);
+	// 	$('#queuecroplist').css('overflow-y', 'auto');
+	// } else {
+	// 	$('#queuecroplistq').fadeOut('fast');
+	// 	$('#queuecroplistq').text(queuecount);
 
-		for (i = 0; i < 20; i++) {
-			if (i == 5) {
-				fhtml = '<a class="list-group-item">Nenhum arquivo na fila!</a>';
-			} else {
-				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
-			}
-			$('#queuecroplist').append(fhtml);
-		}
-		$('#queuecroplist').css('overflow-y', 'hidden');
-	}
+	// 	for (i = 0; i < 20; i++) {
+	// 		if (i == 5) {
+	// 			fhtml = '<a class="list-group-item">Nenhum arquivo na fila!</a>';
+	// 		} else {
+	// 			fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
+	// 		}
+	// 		$('#queuecroplist').append(fhtml);
+	// 	}
+	// 	$('#queuecroplist').css('overflow-y', 'hidden');
+	// }
 
 	if (queuedonecount == 0) {
 		for (i = 0; i < 20; i++) {
@@ -282,9 +284,11 @@ function queuecropdata(qdata) {
 			}
 			$('#queuecroplistdone').append(fhtml);
 		}
-		$('#queuecroplistdone').css('overflow-y', 'hidden');
+		// $('#queuecroplistdone').css('overflow-y', 'hidden');
+		$('#queuecroplistdonep').css('overflow-y', 'hidden');
 	} else {
-		$('#queuecroplistdone').css('overflow-y', 'auto');
+		// $('#queuecroplistdone').css('overflow-y', 'auto');
+		$('#queuecroplistdonep').css('overflow-y', 'auto');
 	}
 };
 
@@ -806,19 +810,53 @@ socket.on('get_queue_crop', function(data) {
 		qcroplist = $('#queuecroplist').children();
 		qcroplistd = $('#queuecroplistdone').children();
 
+		// console.log(qcroplistd);
+
 		lastqueuelist = qcroplist[qcroplist.length - 1];
 		lastqueuelistd = qcroplistd[qcroplistd.length - 1];
 		lastdata = data.queue[data.queue.length - 1];
 
-		console.log(lastqueuelist.id);
-		console.log(lastqueuelistd.id);
-		console.log(lastdata.id);
+		lastqueuelistdid = parseInt($(lastqueuelistd).attr('id').replace(/[a-z]/g,''));
+		lastdataid = parseInt(lastdata.id);
+
+		// console.log(lastqueuelist);
+		// console.log(lastqueuelistdid);
+		// console.log(lastdataid);
+
+	 	if (lastqueuelistdid != lastdataid) {
+			queuecropdata(data.queue);
+		}
 	}
 });
 
-$("body").popover({
+$('body').popover({
 	'placement': 'auto',
 	'selector': '[data-toggle=popover]'
+});
+
+$(document).on('mouseover', '.vcpreview', function(event) {
+	vcpid = $(this).attr('id');
+	vcpstart = $(this).attr('data-cstart');
+	vcpend = $(this).attr('data-cend');
+
+	$(this)[0].currentTime = vcpstart;
+	$(this)[0].play();
+
+	$(this).on('timeupdate', function() {
+		vcpcurrtime = $(this)[0].currentTime;
+		if (vcpcurrtime >= vcpend) {
+			$(this)[0].pause();
+		}
+	});
+});
+
+$(document).on('mouseleave', '.vcpreview', function() {
+	vcpid = $(this).attr('id');
+	vcpstart = $(this).attr('data-cstart');
+	vcpend = $(this).attr('data-cend');
+
+	$(this)[0].pause();
+	$(this)[0].currentTime = vcpstart;
 });
 
 $(document).on('shown.bs.popover', '.queuecropditem', function () {

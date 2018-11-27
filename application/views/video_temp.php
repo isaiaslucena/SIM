@@ -325,7 +325,7 @@
 		</div>
 
 		<div class="modal fade queuecropmodal" tabindex="-1" role="dialog" aria-labelledby="queuecropmodal">
-			<div class="modal-dialog modal-lg-crop" role="document">
+			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<!-- <div class="modal-header text-center">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -333,7 +333,7 @@
 					</div> -->
 					<div class="modal-body center-block text-center">
 						<div class="row">
-							<div class="col-md-6">
+							<!-- <div class="col-md-6">
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h3 class="panel-title">Para cortar</h3>
@@ -344,26 +344,30 @@
 												echo '<a class="list-group-item">Nenhum arquivo na fila!</a>';
 											} else {
 												echo '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
-											} ?>
-										<?php } ?>
+											}
+										} ?>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="panel panel-default">
 									<div class="panel-heading">
-										<h3 class="panel-title">Cortados</h3>
+										<h3 class="panel-title">Cortes</h3>
 									</div>
-									<div id="queuecroplistdone" class="list-group center-block noitems" style="overflow-y: hidden; max-height: 450px">
-										<?php for ($i = 0; $i < 20; $i++) {
-											if ($i == 5) {
-												echo '<a class="list-group-item">Nenhum arquivo!</a>';
-											} else {
-												echo '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
-											} ?>
-										<?php } ?>
+									<!-- <div id="queuecroplistdone" class="list-group center-block noitems" style="overflow-y: hidden; max-height: 450px"> -->
+									<div id="queuecroplistdonep" class="panel-body" style="overflow-y: hidden; max-height: 450px">
+										<ul id="queuecroplistdone" class="media-list noitems">
+											<?php // for ($i = 0; $i < 20; $i++) {
+												// if ($i == 5) {
+													// echo '<a class="list-group-item">Nenhum arquivo!</a>';
+												// } else {
+													// echo '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
+												// }
+											// } ?>
+										</ul>
 									</div>
+										<!-- </div> -->
 								</div>
 							</div>
 						</div>
