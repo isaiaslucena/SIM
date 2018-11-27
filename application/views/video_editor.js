@@ -167,6 +167,7 @@ function queuecropdata(qdata) {
 	queuedonecount = 0;
 
 	$.each(qdata, function(index, val) {
+		vid = val.id;
 		vidcuser = val.id_user;
 		vsource = val.source;
 		vfilename = val.filename;
@@ -178,10 +179,9 @@ function queuecropdata(qdata) {
 		vcfilename = val.crop_filename;
 
 		vcurl = (window.location.hostname).replace('sim.', 'video.');
-		vcsrc = 'http://'+vcurl+'/video/getcropvideo/'+vsource+'_'+vcfilename;
+		vcsrc = 'http://'+vcurl+'/video/getcropvideo/'+vcfilename;
 		vcpostern = ("000"+Math.floor(vcropstart)).slice(-3);
 		vcposter = 'http://'+vcurl+'/video/getthumb/'+vsource+'_'+vfilename+'/'+vcpostern;
-		console.log(vcposter);
 
 		tsaddtime = epochtostring(vtsadd);
 		tsstarttime = epochtostring(vtsstart);
@@ -202,20 +202,53 @@ function queuecropdata(qdata) {
 			$('#queuecroplist').append(html);
 		} else if (vidcuser == idcuser && vtsend != null) {
 			queuedonecount++;
-			videohtml = "<video src='"+vcsrc+"' width='213.5' height='120' "+
-								"poster='"+vcposter+"' preload='metadata'></video>";
+			videohtml =	"<video id='video"+vid+"' src='"+vcsrc+"' height='140' "+
+									"poster='"+vcposter+"' preload='metadata'></video>";
 			html =	'<a tabindex="0" class="list-group-item queuecropditem" '+
 								'role="button" data-toggle="popover" data-trigger="focus" data-html="true" '+
+								'data-idvideo="video'+vid+'" style="height: 120px"'+
 								'title="Clique para ver o corte" data-content="'+videohtml+'">'+
 								'<h4 class="list-group-item-heading">'+
 									queuedonecount+' - '+val.filename+
 								'</h4>'+
-								// '<image src="'+vcposter+'" width="80" height="60"/>'+
 								'<p class="list-group-item-text">'+
-									'Início do corte: '+tsstarttime+'<br>'+
-									'Fim do corte: '+tsendtime+
+									'<image class="pull-left" src="'+vcposter+'" height="70"/>'+
+									'<span>Início do corte: '+tsstarttime+'</span><br>'+
+									'<span>Fim do corte: '+tsendtime+'</span><br>'+
+									'<div class="btn-group" role="group" aria-label="...">'+
+										'<button type="button" class="btn btn-default">Left</button>'+
+										'<button type="button" class="btn btn-default">Middle</button>'+
+										'<button type="button" class="btn btn-default">Right</button>'+
+									'</div>'+
 								'</p>'+
 							'</a>';
+
+			// <ul class="media-list">
+			//   <li class="media">
+			//     <div class="media-left">
+			//       <a href="#">
+			//         <img class="media-object" src="..." alt="...">
+			//       </a>
+			//     </div>
+			//     <div class="media-body">
+			//       <h4 class="media-heading">Media heading</h4>
+			//       ...
+			//     </div>
+			//   </li>
+			// </ul>
+
+
+			// html =		'<div class="media">'+
+			// 						'<div class="media-left">'+
+			// 							'<a href="#">'+
+			// 								'<img class="media-object" src="'+vcposter+'" height="70" alt="Img Thumb">'+
+			// 							'</a>'+
+			// 						'</div>'+
+			// 						'<div class="media-body">'+
+			// 							'<h4 class="media-heading">'+queuedonecount+' - '+val.filename+'</h4>'+
+			// 						'</div>'+
+			// 					'</div>';
+
 			$('#queuecroplistdone').append(html);
 		}
 	});
@@ -777,13 +810,25 @@ socket.on('get_queue_crop', function(data) {
 		lastqueuelistd = qcroplistd[qcroplistd.length - 1];
 		lastdata = data.queue[data.queue.length - 1];
 
-		console.log(lastqueuelist);
-		console.log(lastqueuelistd);
-		console.log(lastdata);
+		console.log(lastqueuelist.id);
+		console.log(lastqueuelistd.id);
+		console.log(lastdata.id);
 	}
 });
 
 $("body").popover({
-	'placement': 'left',
+	'placement': 'auto',
 	'selector': '[data-toggle=popover]'
 });
+
+$(document).on('shown.bs.popover', '.queuecropditem', function () {
+	// console.log('popover shown');
+	videoid = $(this)[0].dataset.idvideo;
+	$('#'+videoid)[0].play();
+})
+
+$(document).on('hide.bs.popover', '.queuecropditem', function () {
+	// console.log('popover hidden');
+	videoid = $(this)[0].dataset.idvideo;
+	$('#'+videoid)[0].pause();
+})
