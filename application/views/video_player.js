@@ -169,8 +169,7 @@ function channelname(name) {
 };
 
 function selecteddate(seldddate) {
-	$.post('proxy',
-		{address: '<?php echo str_replace('sim.','video.', base_url('video/getlist/'))?>' + vsource + '/' + seldddate + '/' + channel + '/' + state},
+	$.get('<?php echo str_replace("sim.","video.", base_url("video/getlist/"))?>'+vsource+'/'+seldddate+'/'+channel+'/'+state,
 		function(data, textStatus, xhr) {
 			lastvideo = data[0].replace(".mp4", "");
 			lastvarray = data[data.length-1].replace(".mp4","");
@@ -216,7 +215,7 @@ function selectchannel(date) {
 	tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 	tvch.selectpicker('refresh');
 
-	$.get('<?php echo str_replace('sim.','video.',base_url("video/getchannels/"))?>'+date,
+	$.get('<?php echo str_replace("sim.","video.",base_url("video/getchannels/"))?>'+date,
 		function(data, textStatus, xhr) {
 			tvch.html(null);
 			$.each(data, function(elo, indexo) {
@@ -301,7 +300,7 @@ function selectchannel(date) {
 };
 
 function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play) {
-	$.get('<?php echo str_replace('sim.','video.',base_url("video/getlist/"))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate,
+	$.get('<?php echo str_replace("sim.","video.",base_url("video/getlist/"))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate,
 		function(data, textStatus, xhr) {
 			if (data.length == 1) {
 				firstvideo = data[0].replace(".mp4", "");
@@ -497,7 +496,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 };
 
 function refreshlist(rvsource, rdate, rchannel, rstate) {
-	$.get('<?php echo str_replace('sim.','video.',base_url("video/getlist/"))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate,
+	$.get('<?php echo str_replace("sim.","video.",base_url("video/getlist/"))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate,
 		function(data, textStatus, xhr) {
 			playlistv = $('#vnext.list-group').children();
 			lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
@@ -623,8 +622,7 @@ function isTouchDevice() {
 
 function load_vihts() {
 	$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
-	$.post('proxy',
-		{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
+	$.get('<?php echo str_replace("sim.","video.", base_url("video/getvinhetas/""))?>',
 		function(data, textStatus, xhr) {
 			$('#selvinheta').html(null);
 			data.map(function(index, elem) {

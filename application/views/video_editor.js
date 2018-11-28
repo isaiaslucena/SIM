@@ -281,14 +281,14 @@ function queuecropdata(qdata) {
 	// }
 
 	if (queuedonecount == 0) {
-		for (i = 0; i < 20; i++) {
-			if (i == 5) {
-				fhtml = '<a class="list-group-item">Nenhum arquivo!</a>';
-			} else {
-				fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
-			}
-			$('#queuecroplistdone').append(fhtml);
-		}
+		// for (i = 0; i < 20; i++) {
+		// 	if (i == 5) {
+		// 		fhtml = '<a class="list-group-item">Nenhum arquivo!</a>';
+		// 	} else {
+		// 		fhtml = '<a class="list-group-item" style="color: white">Nenhum arquivo!</a>';
+		// 	}
+		// 	$('#queuecroplistdone').append(fhtml);
+		// }
 		// $('#queuecroplistdone').css('overflow-y', 'hidden');
 		$('#queuecroplistdonep').css('overflow-y', 'hidden');
 	} else {
@@ -815,19 +815,19 @@ socket.on('get_queue_crop', function(data) {
 		qcroplist = $('#queuecroplist').children();
 		qcroplistd = $('#queuecroplistdone').children();
 
-		// console.log(qcroplistd);
+		if (data.queue.length > 0) {
+			lastqueuelist = qcroplist[qcroplist.length - 1];
+			lastqueuelistd = qcroplistd[qcroplistd.length - 1];
+			lastdata = data.queue[data.queue.length - 1];
+			lastdataarr = [lastdata];
 
-		lastqueuelist = qcroplist[qcroplist.length - 1];
-		lastqueuelistd = qcroplistd[qcroplistd.length - 1];
-		lastdata = data.queue[data.queue.length - 1];
-		lastdataarr = [lastdata];
+			lastqueuelistdid = parseInt($(lastqueuelistd).attr('id').replace(/[a-z]/g,''));
+			lastdataid = parseInt(lastdata.id);
 
-		lastqueuelistdid = parseInt($(lastqueuelistd).attr('id').replace(/[a-z]/g,''));
-		lastdataid = parseInt(lastdata.id);
-
-	 	if (lastqueuelistdid != lastdataid) {
-	 		// console.log(lastdataarr);
-			queuecropdata(lastdataarr);
+		 	if (lastqueuelistdid != lastdataid) {
+		 		// console.log(lastdataarr);
+				queuecropdata(lastdataarr);
+			}
 		}
 	}
 });

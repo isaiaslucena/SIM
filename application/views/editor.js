@@ -5,9 +5,8 @@
 					if (joincropvideos) {
 						$('.jcropmodal').modal('show');
 
-						$.post('<?php echo base_url("pages/proxy")?>',
+						$.post('<?php echo str_replace("sim.","video.",base_url("video/joincropvideos"))?>',
 							{
-								address: '<?php echo str_replace("sim.","video.",base_url("video/joincropvideos"))?>',
 								vsource: vsource,
 								files: cropfilestojoin
 							},
@@ -17,8 +16,7 @@
 								filestotaltime = data.totaltime;
 								joinctimestart = new Date();
 								var rcjprogress = setInterval(function() {
-										$.post('<?php echo base_url("pages/proxy")?>',
-											{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
+										$.get('<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>'+fileid+'/'+filestotaltime,
 											function(dataj, textStatus, xhr) {
 												// console.log(dataj);
 												joinpercent = dataj.percent;
@@ -60,99 +58,110 @@
 						})
 
 						filesjoined = [];
-						$.post('<?php echo base_url("pages/proxy")?>',
-							{
-								address: '<?php echo str_replace("sim.","video.",base_url("video/joinvideos"))?>',
-								vsource: jvsource,
-								files: filestojoin
-							},
-							function(data, textStatus, xhr) {
-								console.log(data);
-								filesjoined = data.files;
-								fileid = data.id;
-								filestotaltime = data.totaltime;
-								jointimestart = new Date();
-								var rjprogress = setInterval(function() {
-										$.post('<?php echo base_url("pages/proxy")?>',
-											{address: '<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>' + fileid + '/' + filestotaltime},
-											function(dataj, textStatus, xhr) {
-												joinpercent = dataj.percent;
-												joinpcircle = joinpercent / 100;
-												progressjbar.animate(joinpcircle);
 
-												if (joinpercent >= 99) {
-													clearInterval(rjprogress);
-													$('.vbutton').css('display', 'none');
-													$('.vbutton').removeClass('paused');
+						$.ajax({
+							url: '<?php echo str_replace("sim.","video.",base_url("video/joinvideos"))?>',
+							type: 'POST',
+							dataType: 'json',
+							contentType: 'application/json; charset=utf-8',
+							data: JSON.stringify(
+								{
+									'vsource': jvsource,
+									'files': filestojoin
+								}
+							)
+						})
+						.done(function(data) {
+							// console.log(data);
+							filesjoined = data.files;
+							fileid = data.id;
+							filestotaltime = data.totaltime;
+							jointimestart = new Date();
+							var rjprogress = setInterval(function() {
+								$.get('<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>'+fileid+'/'+filestotaltime,
+									function(dataj, textStatus, xhr) {
+										joinpercent = dataj.percent;
+										joinpcircle = joinpercent / 100;
+										progressjbar.animate(joinpcircle);
 
-													videotitle.text(data.joinfilename);
-													vsrcarr = data.joinfilename.split('_');
-													videotitle.attr('data-vsrc', vsrcarr[0]);
-													videotitle.css('font-size', '18px');
+										if (joinpercent >= 99) {
+											clearInterval(rjprogress);
+											$('.vbutton').css('display', 'none');
+											$('.vbutton').removeClass('paused');
 
-													firstfile = filesjoined[0].file;
-													firstfilename = firstfile.replace(jvsource+'_', '');
-													videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/'+data.joinfilename;
+											videotitle.text(data.joinfilename);
+											vsrcarr = data.joinfilename.split('_');
+											videotitle.attr('data-vsrc', vsrcarr[0]);
+											videotitle.css('font-size', '18px');
 
-													var waitf = setTimeout(function() {
-														videoel.attr({
-															poster: srcposter,
-															src: videourlmjoin
-														});
+											firstfile = filesjoined[0].file;
+											firstfilename = firstfile.replace(jvsource+'_', '');
+											videourlmjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/'+data.joinfilename;
 
-														videoel[0].pause();
+											var waitf = setTimeout(function() {
+												videoel.attr({
+													poster: srcposter,
+													src: videourlmjoin
+												});
 
-														$('.joinmodal').modal('hide');
-														progressjbar.animate(0);
+												videoel[0].pause();
 
-														if (channel != 'AVULSO') {
-															if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
-																loadingthumbs();
-															} else {
-																videoel[0].play();
-															}
-														} else {
-															videoel[0].play();
-														}
-													}, 5000);
+												$('.joinmodal').modal('hide');
+												progressjbar.animate(0);
 
-													arr = firstfile.split('_');
-													channel = arr[3];
-
-													if (channel != 'AVULSO') {
-														if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
-															var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001';
-														} else {
-															var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-														}
+												if (channel != 'AVULSO') {
+													if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
+														loadingthumbs();
 													} else {
-														var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+														videoel[0].play();
 													}
-
-													$('input').prop("checked", false);
-													$('.list-group').children().removeClass('active');
-													$.each(filestojoin, function(index, val) {
-														var nval = val.replace('.mp4', '');
-														$('span:contains('+nval+')').parent().addClass('active');
-													});
-
-													jointimeend = new Date();
-													croptimedifference = ((jointimeend.getTime() - jointimestart.getTime()) / 1200).toFixed(3);
-													$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
-
-													$('#btnjoin').addClass('disabled');
-													$('#btnjoin').attr('disabled', true);
-
-													filestojoin = [];
-													vbtnjoin = [];
-													joinvideos = true;
-													joinvideosclk = true;
+												} else {
+													videoel[0].play();
 												}
+											}, 5000);
+
+											arr = firstfile.split('_');
+											channel = arr[3];
+
+											if (channel != 'AVULSO') {
+												if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
+													var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001';
+												} else {
+													var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+												}
+											} else {
+												var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 											}
-										);
-								}, 1000);
-							}
-						);
+
+											$('input').prop("checked", false);
+											$('.list-group').children().removeClass('active');
+											$.each(filestojoin, function(index, val) {
+												var nval = val.replace('.mp4', '');
+												$('span:contains('+nval+')').parent().addClass('active');
+											});
+
+											jointimeend = new Date();
+											croptimedifference = ((jointimeend.getTime() - jointimestart.getTime()) / 1200).toFixed(3);
+											$('#cropvideoload').text("Tempo do corte: "+ croptimedifference + "s");
+
+											$('#btnjoin').addClass('disabled');
+											$('#btnjoin').attr('disabled', true);
+
+											filestojoin = [];
+											vbtnjoin = [];
+											joinvideos = true;
+											joinvideosclk = true;
+										}
+									}
+								);
+							}, 1000);
+						})
+						.fail(function() {
+							console.log("error");
+						})
+						.always(function() {
+							console.log("complete");
+						});
 					}
 				});
 
@@ -297,16 +306,14 @@
 						load_vihts();
 
 						if (joinvideos) {
-							$.post('<?php echo base_url("pages/proxy")?>',
-								{address: '<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>' + cfile + '/' + cropstart + '/' + cropdurs},
+							$.get('<?php echo str_replace("sim.","video.",base_url("video/cropjoinvideos/"))?>'+cfile+'/'+cropstart+'/'+cropdurs,
 								function(data, textStatus, xhr) {
 									console.log(data);
 									fileid = data.id;
 									filecname = data.cropfilename;
 									croptimestart = new Date();
 									var rprogress = setInterval(function() {
-											$.post('<?php echo base_url("pages/proxy")?>',
-												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
+											$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>'+fileid+'/'+cropdurs,
 												function(datac, textStatus, xhr) {
 													// console.log(datac);
 													crpercent = datac.percent;
@@ -320,7 +327,7 @@
 
 														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/' + filecname;
 														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/' + filecname;
-														$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
+														$.get(videovurlmcrop, function(data, textStatus, xhr) {
 															if (data == "OK") {
 																videomel.attr({src: videourlmcrop});
 																// videomel[0].play();
@@ -351,16 +358,14 @@
 								}
 							);
 						} else {
-							$.post('<?php echo base_url("pages/proxy")?>',
-								{address: '<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>' + vsource + '_' + cfile + '/' + cropstart + '/' + cropdurs},
+							$.get('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
 								function(data, textStatus, xhr) {
 									console.log(data);
 									fileid = data.id;
 									filecname = data.cropfilename;
 									croptimestart = new Date();
 									var rprogress = setInterval(function() {
-											$.post('<?php echo base_url("pages/proxy")?>',
-												{address: '<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs},
+											$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>'+fileid+'/'+cropdurs,
 												function(datac, textStatus, xhr) {
 													// console.log(datac);
 													crpercent = datac.percent;
@@ -378,7 +383,7 @@
 
 														videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
 														videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
-														$.post('/pages/proxy', {address: videovurlmcrop}, function(data, textStatus, xhr) {
+														$.get(videovurlmcrop, function(data, textStatus, xhr) {
 															if (data == "OK") {
 																videomel.attr({src: videourlmcrop});
 																// videomel[0].play();

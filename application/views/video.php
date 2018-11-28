@@ -462,7 +462,7 @@
 				// }
 
 				function getchannels() {
-					$.post('/pages/proxy', {address: '<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>'},
+					$.get('<?php echo str_replace('sim.','video.', base_url('video/getstopchannels'))?>',
 						function(data, textStatus, xhr) {
 						radiocount = 0;
 						$('#alerttvlist').html(null);
@@ -597,8 +597,7 @@
 				};
 
 				function selecteddate(seldddate) {
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.', base_url('video/getlist/'))?>' + vsource + '/' + seldddate + '/' + channel + '/' + state},
+					$.get('<?php echo str_replace('sim.','video.', base_url('video/getlist/'))?>' + vsource + '/' + seldddate + '/' + channel + '/' + state,
 						function(data, textStatus, xhr) {
 							lastvideo = data[0].replace(".mp4", "");
 							lastvarray = data[data.length-1].replace(".mp4","");
@@ -644,8 +643,7 @@
 					tvch.selectpicker({title: 'Aguarde...'}).selectpicker('render');
 					tvch.selectpicker('refresh');
 
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date},
+					$.get('<?php echo str_replace('sim.','video.',base_url('video/getchannels/'))?>' + date,
 						function(data, textStatus, xhr) {
 							tvch.html(null);
 							$.each(data, function(elo, indexo) {
@@ -730,8 +728,7 @@
 				};
 
 				function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play) {
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate},
+					$.get('<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+selglvsource+'/'+selgldate+'/'+selglchannel+'/'+selglstate,
 						function(data, textStatus, xhr) {
 							if (data.length == 1) {
 								firstvideo = data[0].replace(".mp4", "");
@@ -916,8 +913,7 @@
 				};
 
 				function refreshlist(rvsource, rdate, rchannel, rstate) {
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate},
+					$.get('<?php echo str_replace('sim.','video.',base_url('video/getlist/'))?>'+rvsource+'/'+rdate+'/'+rchannel+'/'+rstate,
 						function(data, textStatus, xhr) {
 							playlistv = $('.list-group').children();
 							lastvplaylist = playlistv[playlistv.length-1].lastChild.innerText;
@@ -1037,8 +1033,7 @@
 
 				function load_vihts() {
 					$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
-					$.post('proxy',
-						{address: '<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>'},
+					$.get('<?php echo str_replace('sim.','video.', base_url('video/getvinhetas/'))?>',
 						function(data, textStatus, xhr) {
 							$('#selvinheta').html(null);
 							data.map(function(index, elem) {
