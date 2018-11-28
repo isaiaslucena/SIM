@@ -185,8 +185,13 @@ function queuecropdata(qdata) {
 		vcposter = 'http://'+vcurl+'/video/getthumb/'+vsource+'_'+vfilename+'/'+vcpostern;
 
 		tsaddtime = epochtostring(vtsadd);
-		tsstarttime = epochtostring(vtsstart);
-		tsendtime = epochtostring(vtsend);
+		if (vtsstart != null) {
+			tsstarttime = epochtostring(vtsstart);
+			tsendtime = epochtostring(vtsend);
+		} else {
+			tsstarttime = null;
+			tsendtime = null;
+		}
 
 		// if (vidcuser == idcuser && vtsend == null) {
 			// queuecount++;
@@ -815,16 +820,14 @@ socket.on('get_queue_crop', function(data) {
 		lastqueuelist = qcroplist[qcroplist.length - 1];
 		lastqueuelistd = qcroplistd[qcroplistd.length - 1];
 		lastdata = data.queue[data.queue.length - 1];
+		lastdataarr = [lastdata];
 
 		lastqueuelistdid = parseInt($(lastqueuelistd).attr('id').replace(/[a-z]/g,''));
 		lastdataid = parseInt(lastdata.id);
 
-		// console.log(lastqueuelist);
-		// console.log(lastqueuelistdid);
-		// console.log(lastdataid);
-
 	 	if (lastqueuelistdid != lastdataid) {
-			queuecropdata(data.queue);
+	 		// console.log(lastdataarr);
+			queuecropdata(lastdataarr);
 		}
 	}
 });

@@ -339,13 +339,13 @@
 										<h3 class="panel-title">Para cortar</h3>
 									</div>
 									<div id="queuecroplist" class="list-group center-block noitems" style="overflow-y: hidden; max-height: 450px">
-										<?php for ($i = 0; $i < 20; $i++) {
-											if ($i == 5) {
-												echo '<a class="list-group-item">Nenhum arquivo na fila!</a>';
-											} else {
-												echo '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
-											}
-										} ?>
+										<?php //for ($i = 0; $i < 20; $i++) {
+											//if ($i == 5) {
+												//echo '<a class="list-group-item">Nenhum arquivo na fila!</a>';
+											//} else {
+												//echo '<a class="list-group-item" style="color: white">Nenhum arquivo na fila!</a>';
+											//}
+										//} ?>
 									</div>
 								</div>
 							</div> -->
