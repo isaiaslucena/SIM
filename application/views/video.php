@@ -185,8 +185,9 @@
 							</div>
 
 							<select id="selchannels" class="selectpicker pull-left"
-							data-size="10" data-width="200" data-live-search="true"
-							data-windowPadding="top" title="Selecione uma data" disabled></select>
+							 data-size="10" data-width="200" data-live-search="true"
+							 data-windowPadding="top" title="Selecione uma data" disabled>
+							</select>
 
 							<div class="btn-group">
 								<div class="dropup">
@@ -723,6 +724,8 @@
 							tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
 							tvch.prop('disabled', false)
 							tvch.selectpicker('refresh');
+
+							document.querySelector('button[data-id="selchannels"]').click();
 						}
 					);
 				};

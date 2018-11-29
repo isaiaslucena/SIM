@@ -246,12 +246,15 @@ function queuecropdata(qdata) {
 									'<b>Duração:</b> '+sectostring(vcropend - vcropstart)+'<br>'+
 									'<div class="btn-group" data-toggle="buttons">'+
 										'<label class="btn btn-sm btn-success" title="Aprovado">'+
-											'<input type="radio" name="options" id="option1" autocomplete="off"><i class="fa fa-check"></i>'+
+											'<input type="radio" name="optsvds" autocomplete="off"><i class="fa fa-check"></i>'+
 										'</label>'+
 										'<label class="btn btn-sm btn-danger" title="Descartar">'+
-											'<input type="radio" name="options" id="option2" autocomplete="off"><i class="fa fa-times"></i>'+
+											'<input type="radio" name="optsvds" autocomplete="off"><i class="fa fa-times"></i>'+
 										'</label>'+
 									'</div> '+
+									'<button type="button" class="btn btn-sm btn-default joincrop" data-toggle="button" aria-pressed="false" data-idcrop="'+vid+'" autocomplete="off">'+
+										'Juntar'+
+									'</button> '+
 									'<button class="btn btn-sm btn-default" title="Editar Corte"><i class="fa fa-pencil"></i></button>'+
 								'</div>'+
 							'</li>';
@@ -839,11 +842,6 @@ socket.on('get_queue_crop', function(data) {
 	}
 });
 
-$('body').popover({
-	'placement': 'auto',
-	'selector': '[data-toggle=popover]'
-});
-
 $(document).on('mouseover', '.vcpreview', function(event) {
 	vcpid = $(this).attr('id');
 	vcpstart = $(this).attr('data-cstart');
@@ -867,6 +865,27 @@ $(document).on('mouseleave', '.vcpreview', function() {
 
 	$(this)[0].pause();
 	$(this)[0].currentTime = vcpstart;
+});
+
+$(document).on('click', '.joincrop', function() {
+	apressed = ($(this).attr('aria-pressed') === 'true');
+	aqpressed = $('.joincrop[aria-pressed="true"]').length;
+	cid = $(this).attr('data-idcrop');
+	cfilename = $(this).parent().children('h4.media-heading').text();
+
+	if (apressed) {
+		filestojoinqcrop.push(cid);
+	} else {
+		fileindex = filestojoinqcrop.indexOf(cid);
+		filestojoinqcrop.splice(fileindex, 1);
+	}
+
+	console.log(filestojoinqcrop);
+});
+
+$('body').popover({
+	'placement': 'auto',
+	'selector': '[data-toggle=popover]'
 });
 
 $(document).on('shown.bs.popover', '.queuecropditem', function () {

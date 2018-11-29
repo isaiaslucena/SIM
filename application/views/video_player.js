@@ -14,7 +14,7 @@ var frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;
 
 var cropstartss = null, cropendss = null;
 
-var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [];
+var filestojoin = [], filesjoined = [], cropfilestojoin = [], vbtnjoin = [], nimage = [], filestojoinqcrop = [];
 
 var fileseq = 0, queuecroplenth = 0, queuecroplentha = 0;
 
@@ -295,6 +295,8 @@ function selectchannel(date) {
 			tvch.selectpicker({title: 'Selecione um veículo'}).selectpicker('render');
 			tvch.prop('disabled', false)
 			tvch.selectpicker('refresh');
+
+			document.querySelector('button[data-id="selchannels"]').click();
 		}
 	);
 };
@@ -1493,6 +1495,7 @@ $('#vnext.list-group').click(function(event) {
 $('#checkjoincrop').change(function() {
 	joinchkbx = $('.list-group input:checked').length > 0;
 	cgcbjoincrop = $('#checkjoincrop').prop('checked');
+
 	if (joinchkbx) {
 		swal({
 			title: 'Escolha somente uma opção!',
@@ -1503,6 +1506,7 @@ $('#checkjoincrop').change(function() {
 				confirm: true,
 			}
 		});
+
 		$('#checkjoincrop').bootstrapToggle('off');
 		$('input').prop("checked", false);
 	} else if (!cgcbjoincrop) {
@@ -1549,7 +1553,7 @@ $('.input-group.date').datepicker({
 	autoclose: true
 });
 
-$('.input-group.date').on("changeDate", function() {
+$('.input-group.date').on('changeDate', function() {
 	selecteddate = $('.input-group.date').datepicker('getDate');
 	sday = selecteddate.getDate();
 	sday = ('0' + sday).slice(-2);
