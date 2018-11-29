@@ -489,11 +489,24 @@ class Api extends CI_Controller {
 
 	public function update_queue_crop($field, $value, $id_queue) {
 		$this->load->model('api_model');
-
 		$this->api_model->update_queue_crop($field, $value, $id_queue);
 
 		header('Content-Type: application/json');
 		header('200 OK');
+	}
+
+	public function add_queue_join() {
+		if ($this->input->method(TRUE) == 'POST') {
+			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
+
+			$this->load->model('api_model');
+			$this->api_model->add_queue_join($postdata['data_join'], $postdata['filenames']);
+
+			header('Content-Type: application/json');
+			print json_encode($resp);
+		} else {
+			header("HTTP/1.1 403 Forbidden");
+		}
 	}
 }
 ?>

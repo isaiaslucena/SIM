@@ -9,7 +9,7 @@ class Api_model extends CI_Model {
 			'filename' => $data['filename'],
 			'crop_start' => $data['crop_start'],
 			'crop_end' => $data['crop_end'],
-			'ts_add' => strtotime('now'),
+			'ts_add' => strtotime('now')
 		);
 		$this->db->insert('queue_crop', $data_insert);
 		return $this->db->insert_id();
@@ -44,5 +44,25 @@ class Api_model extends CI_Model {
 		$this->db->order_by('ts_end','asc');
 		return $this->db->get('queue_crop')->result_array();
 		// return $this->db->get_where('queue_crop', array('id_user' => $iduser))->result_array();
+	}
+
+	public function add_queue_join($data, $filenames) {
+		$data_insert = array(
+			'id_user' => $data['id_user'],
+			'source' => $data['source'],
+			'ts_add' => strtotime('now')
+		);
+		$this->db->insert('queue_join', $data_insert);
+		$id_queue_join = $this->db->insert_id();
+
+		$data_arr = array();
+		foreach ($filenames as $file) {
+			$data = array(
+				'id_queue_join' => $id_queue_join,
+				'filename' => $data['source']
+			);
+			array_push($data_arr, $data);
+		}
+		$this->db->insert('queue_join_files', $data_arr);
 	}
 }

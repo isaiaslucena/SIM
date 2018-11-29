@@ -622,7 +622,7 @@ function isTouchDevice() {
 
 function load_vihts() {
 	$('#selvinheta').selectpicker({title: 'Aguarde...'}).selectpicker('render');
-	$.get('<?php echo str_replace("sim.","video.", base_url("video/getvinhetas/""))?>',
+	$.get('<?php echo str_replace("sim.","video.", base_url("video/getvinhetas/"))?>',
 		function(data, textStatus, xhr) {
 			$('#selvinheta').html(null);
 			data.map(function(index, elem) {

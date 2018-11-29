@@ -5,51 +5,57 @@
 					if (joincropvideos) {
 						$('.jcropmodal').modal('show');
 
-						$.post('<?php echo str_replace("sim.","video.",base_url("video/joincropvideos"))?>',
-							{
-								vsource: vsource,
-								files: cropfilestojoin
-							},
-							function(data, textStatus, xhr) {
-								console.log(data);
-								fileid = data.id;
-								filestotaltime = data.totaltime;
-								joinctimestart = new Date();
-								var rcjprogress = setInterval(function() {
-										$.get('<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>'+fileid+'/'+filestotaltime,
-											function(dataj, textStatus, xhr) {
-												// console.log(dataj);
-												joinpercent = dataj.percent;
-												joinpcircle = joinpercent / 100;
-												progressjcbar.animate(joinpcircle);
+						$.ajax({
+							url: '<?php echo str_replace("sim.","video.",base_url("video/joincropvideos"))?>',
+							type: 'POST',
+							dataType: 'json',
+							contentType: 'application/json; charset=utf-8',
+							data: JSON.stringify(
+								{
+									'vsource': vsource,
+									'files': cropfilestojoin
+								}
+							)
+						})
+						.done(function(data) {
+							// console.log(data);
+							fileid = data.id;
+							filestotaltime = data.totaltime;
+							joinctimestart = new Date();
+							var rcjprogress = setInterval(function() {
+								$.get('<?php echo str_replace("sim.","video.",base_url("video/joinprogress/"))?>'+fileid+'/'+filestotaltime,
+									function(dataj, textStatus, xhr) {
+										// console.log(dataj);
+										joinpercent = dataj.percent;
+										joinpcircle = joinpercent / 100;
+										progressjcbar.animate(joinpcircle);
 
-												if (joinpercent >= 99) {
-													clearInterval(rcjprogress);
+										if (joinpercent >= 99) {
+											clearInterval(rcjprogress);
 
-													$('#progressjcrop').css('display', 'none');
-													$('#mcjdivvideo').css('display', 'block');
+											$('#progressjcrop').css('display', 'none');
+											$('#mcjdivvideo').css('display', 'block');
 
-													$('.vbutton').css('display', 'none');
-													$('.vbutton').removeClass('paused');
+											$('.vbutton').css('display', 'none');
+											$('.vbutton').removeClass('paused');
 
-													videourlmcjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
-													$('#mcjvvideo').attr({
-														poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
-														src: videourlmcjoin
-													});
+											videourlmcjoin = '<?php echo str_replace("sim.","video.",base_url())?>video/getjoinvideo/' + data.joinfilename;
+											$('#mcjvvideo').attr({
+												poster: '<?php echo base_url("assets/imgs/videoloading.gif")?>',
+												src: videourlmcjoin
+											});
 
-													$('#mbtnjcdown').attr('href', videourlmcjoin);
-													$('#checkjoincrop').bootstrapToggle('off');
-													joinctimeend = new Date();
-													joinctimedifference = ((joinctimeend.getTime() - joinctimestart.getTime()) / 1200).toFixed(3);
-													$('#joincropvideoload').text("Tempo da junção: "+ joinctimedifference + "s");
-													joinvideosclk = false;
-												}
-											}
-										);
-								}, 100);
-							}
-						);
+											$('#mbtnjcdown').attr('href', videourlmcjoin);
+											$('#checkjoincrop').bootstrapToggle('off');
+											joinctimeend = new Date();
+											joinctimedifference = ((joinctimeend.getTime() - joinctimestart.getTime()) / 1200).toFixed(3);
+											$('#joincropvideoload').text("Tempo da junção: "+ joinctimedifference + "s");
+											joinvideosclk = false;
+										}
+									}
+								);
+							}, 100);
+						});
 					} else {
 						$('.joinmodal').modal({
 							show: true,
@@ -155,12 +161,6 @@
 									}
 								);
 							}, 1000);
-						})
-						.fail(function() {
-							console.log("error");
-						})
-						.always(function() {
-							console.log("complete");
 						});
 					}
 				});
