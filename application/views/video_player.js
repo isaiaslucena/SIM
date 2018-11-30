@@ -1014,11 +1014,18 @@ function loadingthumbs() {
 	$('body').css('cursor', 'progress');
 
 	swal({
-		onOpen: () => {
-			swal.showLoading()
-		},
+		// onOpen: () => {
+		// 	swal.showLoading()
+		// },
 		title: "Carregando imagens...",
-		animation: true,
+		// animation: true,
+		html:
+			'<div class="progress">'+
+				'<div id="ltbdprogress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" '+
+				 'aria-valuemin="0" aria-valuemax="100" style="width:0%;">'+
+					'<span id="ltbsprogress" class="sr-only">0% Complete</span>'+
+				'</div>'+
+			'</div>',
 		allowEscapeKey: false,
 		allowOutsideClick: false,
 		showCancelButton: false,
@@ -1026,9 +1033,31 @@ function loadingthumbs() {
 	});
 };
 
+function lthumbprogress(currt) {
+	totalt = Math.floor(videoel[0].duration);
+	arrperc = String((currt * 100) / totalt).split('.');
+	currperc = arrperc[0];
+
+	if (currperc > 100) {
+		currperc = 100;
+	}
+	if (currperc < 0) {
+		currperc = 0;
+	}
+
+	// console.log(currt);
+	// console.log(currperc);
+
+	// $('#ltbdprogress').text(currperc+'%');
+	$('#ltbdprogress').attr('aria-valuenow', currperc);
+	$('#ltbdprogress').css('width', currperc+'%');
+	$('#ltbsprogress').text(currperc+'% Complete');
+};
+
 function closeloadingthumbs() {
 	$('body').css('cursor', 'default');
 
+	lthumbprogress(Math.floor(videoel[0].duration));
 	swal.close();
 
 	if (videotransc == false) {
@@ -1244,11 +1273,11 @@ videoel.on('loadedmetadata', function() {
 							urlload = urlload.replace('sim.', 'video.');
 							ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 							ldtmbn = parseInt(ldtmbnarr[1]);
+							lthumbprogress(ldtmbn);
 							if (ldtmbn === maxthumb) {
 								closeloadingthumbs();
 							}
 						};
-
 						nimage[thumbn].onerror = function(e) {
 							if (navigator.vendor == 'Google Inc.') {
 								loadedsrc = e.path[0].src;
@@ -1260,10 +1289,13 @@ videoel.on('loadedmetadata', function() {
 							urlload = urlload.replace('sim.', 'video.');
 							ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 							ldtmbn = parseInt(ldtmbnarr[1]);
+							lthumbprogress(ldtmbn);
 							if (ldtmbn === maxthumb) {
 								closeloadingthumbs();
 							}
 						};
+
+
 					}
 				}
 			// }

@@ -500,7 +500,7 @@ class Api extends CI_Controller {
 			$postdata = ($_POST = json_decode(file_get_contents("php://input"),true));
 
 			$this->load->model('api_model');
-			$this->api_model->add_queue_join($postdata['data_join'], $postdata['filenames']);
+			$resp['queue_join_id'] = $this->api_model->add_queue_join($postdata['ids_queue_crop']);
 
 			header('Content-Type: application/json');
 			print json_encode($resp);
