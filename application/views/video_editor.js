@@ -698,29 +698,29 @@ $('#btnjoin').click(function(event) {
 								$('.joinmodal').modal('hide');
 								progressjbar.animate(0);
 
-								if (channel != 'AVULSO') {
+								// if (channel != 'AVULSO') {
 									if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
 										loadingthumbs();
 									} else {
 										videoel[0].play();
 									}
-								} else {
-									videoel[0].play();
-								}
+								// } else {
+									// videoel[0].play();
+								// }
 							}, 5000);
 
 							arr = firstfile.split('_');
 							channel = arr[3];
 
-							if (channel != 'AVULSO') {
+							// if (channel != 'AVULSO') {
 								if (jvsource.replace(/[0-9]/g, '') != 'cagiva') {
 									var srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+jvsource+'_'+firstfilename+'/001';
 								} else {
 									var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 								}
-							} else {
-								var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-							}
+							// } else {
+								// var srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+							// }
 
 							$('input').prop("checked", false);
 							$('.list-group').children().removeClass('active');

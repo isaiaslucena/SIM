@@ -870,7 +870,7 @@
 								arr = lastvideo.split('_');
 								channel = arr[2];
 
-								if (channel != 'AVULSO') {
+								// if (channel != 'AVULSO') {
 									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 										var csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
@@ -883,9 +883,9 @@
 									} else {
 										csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 									}
-								} else {
-									csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-								}
+								// } else {
+									// csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+								// }
 
 								$('#vnext').scrollTo('a.active');
 
@@ -894,7 +894,7 @@
 									src: csrcvideo
 								});
 
-								if (channel != 'AVULSO') {
+								// if (channel != 'AVULSO') {
 									if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 										videoel[0].pause();
 
@@ -902,9 +902,9 @@
 									} else {
 										videoel[0].play();
 									}
-								} else {
-									videoel[0].play();
-								}
+								// } else {
+									// videoel[0].play();
+								// }
 							}
 
 							// getdocbymurl(vsource, cvideo);

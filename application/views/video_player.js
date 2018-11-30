@@ -452,7 +452,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 				arr = lastvideo.split('_');
 				channel = arr[2];
 
-				if (channel != 'AVULSO') {
+				// if (channel != 'AVULSO') {
 					if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 						var csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
 
@@ -465,9 +465,9 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					} else {
 						csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
 					}
-				} else {
-					csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-				}
+				// } else {
+					// csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+				// }
 
 				$('#vnext').scrollTo('a.active');
 
@@ -476,7 +476,7 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					src: csrcvideo
 				});
 
-				if (channel != 'AVULSO') {
+				// if (channel != 'AVULSO') {
 					if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
 						videoel[0].pause();
 
@@ -484,9 +484,9 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 					} else {
 						videoel[0].play();
 					}
-				} else {
-					videoel[0].play();
-				}
+				// } else {
+					// videoel[0].play();
+				// }
 			}
 
 			// getdocbymurl(vsource, cvideo);
@@ -514,7 +514,15 @@ function refreshlist(rvsource, rdate, rchannel, rstate) {
 				$('#'+lastvplaylistid).parent().removeClass('disabled');
 				$('#vnttb'+lastvplaylistidn).attr('src', lastsrcposter);
 				$('#'+lastvplaylistid).css('cursor', 'pointer');
-				html =	'<a id="vbtn'+lastvplaylistidn+'" class="list-group-item disabled" style="height: 105px;">'+
+
+				arr = lastvarraytm.split('_');
+				if (arr[2] == 'AVULSO') {
+					classstr = 'class="list-group-item"';
+				} else {
+					classstr = 'class="list-group-item disabled"';
+				}
+
+				html =	'<a id="vbtn'+lastvplaylistidn+'" '+classstr+' style="height: 105px;">'+
 									'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
 										'<img class="img-rounded" id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
 									'</div>'+
@@ -860,7 +868,7 @@ function videoselect(cfilename, cfilevsource) {
 
 	arr = lastvideo.split('_');
 	channel = arr[2];
-	if (channel != 'AVULSO') {
+	// if (channel != 'AVULSO') {
 		if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
 			videoel[0].pause();
 
@@ -868,9 +876,9 @@ function videoselect(cfilename, cfilevsource) {
 		} else {
 			videoel[0].play();
 		}
-	} else {
-		videoel[0].play();
-	}
+	// } else {
+		// videoel[0].play();
+	// }
 
 	videotitle.text(cfilename);
 	videotitle.attr('data-vsrc', cfilevsource);
@@ -1157,7 +1165,7 @@ videoel.on('loadedmetadata', function() {
 			srcarr = vdfilename.split("_");
 			srcfilename = srcarr[0];
 			channel = srcarr[6];
-			if (channel != 'AVULSO') {
+			// if (channel != 'AVULSO') {
 				if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 					fjoinedquant = filesjoined.length;
 					fjoinedcount = 0;
@@ -1211,12 +1219,12 @@ videoel.on('loadedmetadata', function() {
 						}
 					});
 				}
-			}
+			// }
 		} else {
 			vdfilename = videotitle.text();
 			arr = vdfilename.split('_');
 			channel = arr[2];
-			if (channel != 'AVULSO') {
+			// if (channel != 'AVULSO') {
 				srcfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
 				if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 					maxthumb = Math.floor(videoel[0].duration);
@@ -1258,7 +1266,7 @@ videoel.on('loadedmetadata', function() {
 						};
 					}
 				}
-			}
+			// }
 		}
 
 		setlocalstorage('joinvideosclk', joinvideosclk);

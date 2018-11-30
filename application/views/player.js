@@ -129,7 +129,7 @@
 							srcarr = vdfilename.split("_");
 							srcfilename = srcarr[0];
 							channel = srcarr[6];
-							if (channel != 'AVULSO') {
+							// if (channel != 'AVULSO') {
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									fjoinedquant = filesjoined.length;
 									fjoinedcount = 0;
@@ -183,12 +183,12 @@
 										}
 									});
 								}
-							}
+							// }
 						} else {
 							vdfilename = videotitle.text();
 							arr = vdfilename.split('_');
 							channel = arr[2];
-							if (channel != 'AVULSO') {
+							// if (channel != 'AVULSO') {
 								srcfilename = $("span:contains('"+vdfilename+"')").data('vsrc');
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
@@ -230,7 +230,7 @@
 										};
 									}
 								}
-							}
+							// }
 						}
 						setlocalstorage('joinvideosclk', joinvideosclk);
 						setlocalstorage('videofile', vdfilename);
@@ -638,7 +638,7 @@
 
 					arr = lastvideo.split('_');
 					channel = arr[2];
-					if (channel != 'AVULSO') {
+					// if (channel != 'AVULSO') {
 						if (cfilevsource.replace(/[0-9]/g, '') != 'cagiva') {
 							videoel[0].pause();
 
@@ -646,9 +646,9 @@
 						} else {
 							videoel[0].play();
 						}
-					} else {
-						videoel[0].play();
-					}
+					// } else {
+						// videoel[0].play();
+					// }
 
 					videotitle.text(cfilename);
 					videotitle.attr('data-vsrc', cfilevsource);
