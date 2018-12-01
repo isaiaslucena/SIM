@@ -46,23 +46,25 @@ class Api_model extends CI_Model {
 		// return $this->db->get_where('queue_crop', array('id_user' => $iduser))->result_array();
 	}
 
-	public function add_queue_join($idsqcrop) {
+	public function add_queue_join($data) {
 		$data_insert = array(
 			'id_user' => $data['id_user'],
-			'source' => $data['source'],
 			'ts_add' => strtotime('now')
 		);
 		$this->db->insert('queue_join', $data_insert);
 		$id_queue_join = $this->db->insert_id();
 
 		$data_arr = array();
-		foreach ($idsqcrop as $idqcrop) {
+		foreach ($data['ids_queue_crop'] as $idqcrop) {
 			$data = array(
 				'id_queue_join' => $id_queue_join,
 				'id_queue_crop' => $idqcrop
 			);
 			array_push($data_arr, $data);
 		}
-		$this->db->insert('queue_join_files', $data_arr);
+
+		// var_dump($data_arr);
+		$this->db->insert_batch('queue_join_files', $data_arr);
+		return $id_queue_join;
 	}
 }

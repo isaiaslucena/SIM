@@ -349,7 +349,10 @@
 												// }
 											// } ?>
 										</ul>
-										<button class="btn btn-danger" style="border-radius: 35px; padding: 10px 18px; float: right; position: relative; z-index: 999"><i class="fa fa-plus"></i></button>
+										<button id="btnqjoin" class="btn btn-danger" title="Juntar arquivos selecionados"
+										 style="display: none; border-radius: 35px; padding: 13px 18px; position: absolute; top: 430px; left: 510px; z-index: 999">
+										 <i class="fa fa-plus"></i>
+										</button>
 									</div>
 										<!-- </div> -->
 								</div>

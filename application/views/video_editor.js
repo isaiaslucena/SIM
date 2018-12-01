@@ -516,68 +516,7 @@ $('#btncrop').click(function(event) {
 				$('#btncstart').addClass('btn-default');
 
 				toastr.success('Inserido na fila de corte com ID '+data.queue_crop_id, cfile);
-			})
-			.fail(function() {
-				console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
 			});
-
-			// $.get('<?php echo str_replace("sim.","video.",base_url("video/cropvideo/"))?>'+vsource+'_'+cfile+'/'+cropstart+'/'+cropdurs,
-			// 	function(data, textStatus, xhr) {
-			// 		console.log(data);
-			// 		fileid = data.id;
-			// 		filecname = data.cropfilename;
-			// 		croptimestart = new Date();
-			// 		var rprogress = setInterval(function() {
-			// 				$.get('<?php echo str_replace("sim.","video.",base_url("video/cropprogress/"))?>' + fileid + '/' + cropdurs,
-			// 					function(datac, textStatus, xhr) {
-			// 						// console.log(datac);
-			// 						crpercent = datac.percent;
-			// 						crpcircle = crpercent / 100;
-			// 						progresscbar.animate(crpcircle);
-
-			// 						if (crpercent >= 99) {
-			// 							clearInterval(rprogress);
-			// 							// $('#progresscrop').css('display', 'none');
-			// 							// $('#mdivvideo').css('display', 'block');
-
-			// 							$('#progresscrop').fadeOut('fast', function() {
-			// 								$('#mdivvideo').fadeIn('fast');
-			// 							});
-
-			// 							videourlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/getcropvideo/'+filecname;
-			// 							videovurlmcrop = '<?php echo str_replace("sim.","video.",base_url())?>video/verifycropvideo/'+filecname;
-			// 							$.get(videovurlmcrop, function(data, textStatus, xhr) {
-			// 								if (data == "OK") {
-			// 									videomel.attr({src: videourlmcrop});
-			// 									// videomel[0].play();
-			// 								}
-			// 							});
-
-			// 							cbjoincrop = $('#checkjoincrop').prop('checked');
-			// 							if (cbjoincrop) {
-			// 								cropjoinfiles(filecname);
-			// 								joincropvideos = true;
-			// 								console.log(cropfilestojoin);
-			// 							}
-
-			// 							filenamearr = filecname.split("_");
-			// 							datearr = filenamearr[1].split("-");
-			// 							cropfmonth = datearr[1];
-			// 							cropfday = datearr[2];
-			// 							cropfch = filenamearr[3];
-			// 							cropfst = filenamearr[4];
-			// 							croptimeend = new Date();
-			// 							croptimedifference = ((croptimeend.getTime() - croptimestart.getTime()) / 1200).toFixed(3);
-			// 							$('#cropvideoload').text("ID: "+fileid+" | Tempo do corte: "+ croptimedifference + "s");
-			// 						}
-			// 					}
-			// 				);
-			// 		}, 1000);
-			// 	}
-			// );
 		}
 	}
 });
@@ -880,7 +819,35 @@ $(document).on('click', '.joincrop', function() {
 		filestojoinqcrop.splice(fileindex, 1);
 	}
 
+	if (filestojoinqcrop.length >= 2) {
+		$('#btnqjoin').fadeIn('fast');
+	} else {
+		$('#btnqjoin').fadeOut('fast');
+	}
+
 	console.log(filestojoinqcrop);
+});
+
+$('#btnqjoin').click(function(event) {
+	$.ajax({
+		url: window.location.origin+'/api/add_queue_join',
+		type: 'POST',
+		dataType: 'json',
+		contentType: 'application/json; charset=utf-8',
+		data: JSON.stringify(
+			{
+				'id_user': <?php echo $this->session->userdata('id_user');?>,
+				'ids_queue_crop': filestojoinqcrop
+			}
+		)
+	})
+	.done(function(data) {
+		console.log(data);
+
+		filestojoinqcrop = [];
+		$('.joincrop[aria-pressed="true"]').attr('aria-pressed', 'false');
+		$('#btnqjoin').fadeOut('fast');
+	});
 });
 
 $('body').popover({
