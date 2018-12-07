@@ -372,7 +372,12 @@ class Api extends CI_Controller {
 			$resultselect = json_decode(curl_exec($ch));
 
 			header('Content-Type: application/json');
-			$idfound = (int)$resultselect->response->numFound;
+			if (isset($resultselect->response->numFound)) {
+				$idfound = $resultselect->response->numFound;
+			} else {
+				$idfound = 0;
+			}
+
 			if ($idfound == 0) {
 				print json_encode($message["file_exist"] = 0);
 			} else {
