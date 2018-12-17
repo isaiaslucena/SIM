@@ -39,56 +39,38 @@
 							<tr>
 								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('id');?></th>
 								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('username');?></th>
-								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('logged_in');?></th>
-								<th class="sorting_desc text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('session');?></th>
 								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('email');?></th>
 								<th class="sorting text-center" tabindex="0" rowspan="1" colspan="1"><?php echo get_phrase('options');?></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
-								foreach ($users as $user) {
-									$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE \'%;logged_in|b:1;%\' AND data LIKE \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
-									$check_session = $this->db->query($sqlquery)->result_array();
-									if (empty($check_session) or is_null($check_session)) {
-										$sqlquery = 'SELECT * FROM ci_sessions WHERE data LIKE  \'%id_user|s:%:"'.$user['id_user'].'"%\' ORDER BY timestamp DESC LIMIT 1';
-										$session_user = $this->db->query($sqlquery)->result_array();
-										$logged_in = 0;
-									} else {
-										$session_user = $check_session;
-										$logged_in = 1;
-									} ?>
+								foreach ($users as $user) { ?>
 									<tr>
 										<td class="text-center"><?php echo $user['id_user']; ?></td>
 										<td class="text-center"><?php echo $user['username']; ?></td>
-										<td class="text-center">
-										<?php
-											if ($logged_in === 0) { ?>
-												<input type="checkbox" disabled>
-										<?php } else if ($logged_in === 1) { ?>
-												<input type="checkbox" disabled checked>
-										<?php }	?>
-										</td>
-										<td class="text-center">
-										<?php
-										if (!isset($session_user[0])) {
-											echo '-';
-										} else {
-											echo date('d/m/Y H:i:s',$session_user[0]['timestamp']);
-										}
-										?>
-										</td>
 										<td class="text-center"><?php echo $user['email']; ?></td>
 										<td class="text-center">
-											<button id="client_edit_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>" data-toggle="modal" data-target=".edit_modal">
+											<button id="client_session_button" type="button" class="btn btn-default btn-xs"
+											data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".session_modal">
+												<i class="fa fa-user"></i>
+												<?php echo get_phrase('session');?>
+											</button>
+											<button id="client_edit_button" type="button" class="btn btn-default btn-xs"
+											data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>"
+											data-useremail="<?php echo $user['email']; ?>" data-usergroup="<?php echo $user['id_group']; ?>"
+											data-toggle="modal" data-target=".edit_modal">
 												<i class="fa fa-edit"></i>
 												<?php echo get_phrase('edit');?>
 											</button>
-											<button id="client_passwd_button" type="button" class="btn btn-default btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>" data-toggle="modal" data-target=".passwd_modal">
+											<button id="client_passwd_button" type="button" class="btn btn-default btn-xs"
+											data-userid="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>"
+											data-toggle="modal" data-target=".passwd_modal">
 												<i class="fa fa-lock"></i>
 												<?php echo get_phrase('password');?>
 											</button>
-											<button type="button"  class="btn btn-danger btn-xs" data-userid="<?php echo $user['id_user']; ?>" data-toggle="modal" data-target=".delete_modal">
+											<button type="button"  class="btn btn-danger btn-xs" data-userid="<?php echo $user['id_user']; ?>"
+											data-toggle="modal" data-target=".delete_modal">
 												<i class="fa fa-times"></i>
 												<?php echo get_phrase('delete');?>
 											</button>
@@ -151,12 +133,42 @@
 				</div>
 			</div>
 
+			<div id="session_modal" class="modal fade session_modal" tabindex="-1" role="dialog" aria-labelledby="session_modal" aria-hidden="true" style="display: none;">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title"><?php echo get_phrase('add');?></h4>
+						</div>
+						<div class="modal-body">
+							<div class="list-group">
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">List group item heading</h4>
+									<p class="list-group-item-text">...</p>
+								</a>
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">List group item heading</h4>
+									<p class="list-group-item-text">...</p>
+								</a>
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">List group item heading</h4>
+									<p class="list-group-item-text">...</p>
+								</a>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo get_phrase('close');?></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div id="edit_modal" class="modal fade edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modal" aria-hidden="true" style="display: none;">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-							<h4 class="modal-title" id="edit_modal"><?php echo get_phrase('add');?></h4>
+							<h4 class="modal-title"><?php echo get_phrase('edit');?></h4>
 						</div>
 						<div class="modal-body">
 							<form id="edit_modal_form" class="form-horizontal" action="<?php echo base_url('pages/update_user')?>" method="POST">
@@ -268,18 +280,22 @@
 					$('#username_add_modal').focus()
 				});
 
+				$('#session_modal').on('shown.bs.modal', function (event) {
+					console.log('modal session')
+				});
+
 				$('#edit_modal').on('shown.bs.modal', function (event) {
-					var button = $(event.relatedTarget)
-					var userid = button.data('userid')
-					var username = button.data('username')
-					var useremail = button.data('useremail')
-					var usergroup = button.data('usergroup')
-					var modal = $(this)
-					modal.find('.modal-body [name="userid_edit_modal"]').val(userid)
-					modal.find('.modal-body [name="username_edit_modal"]').val(username)
-					modal.find('.modal-body [name="useremail_edit_modal"]').val(useremail)
-					modal.find('.modal-body [name="usergroup_edit_modal"]').val(usergroup)
-					$('#username_edit_modal').focus()
+					var button = $(event.relatedTarget);
+					var userid = button.data('userid');
+					var username = button.data('username');
+					var useremail = button.data('useremail');
+					var usergroup = button.data('usergroup');
+					var modal = $(this);
+					$('#userid_edit_modal').val(userid);
+					$('#username_edit_modal').val(username);
+					$('#useremail_edit_modal').val(useremail);
+					$('#usergroup_edit_modal').val(usergroup);
+					$('#username_edit_modal').focus();
 				});
 
 				$('#passwd_modal').on('shown.bs.modal', function (event) {

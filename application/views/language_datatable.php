@@ -27,8 +27,6 @@
 			"columns": [
 				{ "searchable": false },
 				null,
-				{ "searchable": false },
-				{ "searchable": false },
 				null,
 				{ "searchable": false }
 			],

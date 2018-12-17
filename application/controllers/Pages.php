@@ -2818,6 +2818,10 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function user_sessions($iduser) {
+		echo "teste";
+	}
+
 	public function create_user() {
 		if ($this->session->has_userdata('logged_in')) {
 			$data_post['username'] = $this->input->post('username_add_modal');
