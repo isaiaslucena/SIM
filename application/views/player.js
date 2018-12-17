@@ -115,6 +115,20 @@
 					vfullscreen('vvideo');
 				});
 
+				videoel.on('error', function(event) {
+					errcode = event.target.error.code;
+					if (errcode == 4) {
+						currentvideo = $('#vnext .active');
+						nextvideo = currentvideo.next().children('span');
+						nvfile = nextvideo.text();
+						nvsource = nextvideo.attr('data-vsrc');
+
+						videoselect(nvfile, nvsource);
+
+						currentvideo.addClass('list-group-item-danger');
+					}
+				});
+
 				videoel.on('loadedmetadata', function() {
 					vvideosrc = videoel[0].currentSrc;
 
@@ -155,6 +169,7 @@
 													urlload = urlload.replace('sim.', 'video.');
 													ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 													ldtmbn = parseInt(ldtmbnarr[1]);
+													lthumbprogress(ldtmbn);
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
@@ -173,6 +188,7 @@
 													urlload = urlload.replace('sim.', 'video.');
 													ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 													ldtmbn = parseInt(ldtmbnarr[1]);
+													lthumbprogress(ldtmbn);
 													if (ldtmbn === maxthumb) {
 														closeloadingthumbs();
 														videoel[0].play();
@@ -193,7 +209,12 @@
 								if (srcfilename.replace(/[0-9]/g, '') != 'cagiva') {
 									maxthumb = Math.floor(videoel[0].duration);
 									for (thumbn = 1 ; thumbn <= maxthumb; thumbn++) {
-										nthumbn = ("00" + thumbn).slice(-3);
+										if (thumbn > 999) {
+											nthumbn = thumbn;
+										} else {
+											nthumbn = ("00" + thumbn).slice(-3);
+										}
+
 										nimage[thumbn] = new Image();
 										imgsrc = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+srcfilename+'_'+vdfilename+'/'+nthumbn;
 										nimage[thumbn].src = imgsrc;
@@ -208,6 +229,7 @@
 											urlload = urlload.replace('sim.', 'video.');
 											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 											ldtmbn = parseInt(ldtmbnarr[1]);
+											lthumbprogress(ldtmbn);
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
 											}
@@ -224,6 +246,7 @@
 											urlload = urlload.replace('sim.', 'video.');
 											ldtmbnarr = loadedsrc.replace(urlload+'/video/getthumb/', '').split('/');
 											ldtmbn = parseInt(ldtmbnarr[1]);
+											lthumbprogress(ldtmbn);
 											if (ldtmbn === maxthumb) {
 												closeloadingthumbs();
 											}
@@ -348,7 +371,12 @@
 					videotime = (maxduration * percentage) / 100;
 					videotimesec = Math.floor(videotime);
 					videoel[0].currentTime = videotime.toFixed(3);
-					thumbnum = ('00' + videotimesec).slice(-3);
+					if (videotimesec > 999) {
+						thumbnum = videotimesec;
+					} else {
+						thumbnum = ('00' + videotimesec).slice(-3);
+					}
+
 					$('.timeBar').css('width', percentage+'%');
 
 					if (joinvideos) {
@@ -442,7 +470,7 @@
 				};
 
 				function uptadevThumb(utsfilename, utvdfilename, utthumbnum) {
-					videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/' + utsfilename +'_'+ utvdfilename + '/' + utthumbnum);
+					videoelth.attr('src', '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+utsfilename+'_'+utvdfilename+'/'+utthumbnum);
 				};
 
 				function updateTimetooltip(x) {
@@ -707,11 +735,14 @@
 					$('body').css('cursor', 'progress');
 
 					swal({
-						onOpen: () => {
-							swal.showLoading()
-						},
 						title: "Carregando imagens...",
-						animation: true,
+						html:
+							'<div class="progress">'+
+								'<div id="ltbdprogress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" '+
+								 'aria-valuemin="0" aria-valuemax="100" style="width:0%;">'+
+									'<span id="ltbsprogress" class="sr-only">0% Complete</span>'+
+								'</div>'+
+							'</div>',
 						allowEscapeKey: false,
 						allowOutsideClick: false,
 						showCancelButton: false,
@@ -722,11 +753,32 @@
 				function closeloadingthumbs() {
 					$('body').css('cursor', 'default');
 
+					lthumbprogress(Math.floor(videoel[0].duration));
 					swal.close();
 
 					if (videotransc == false) {
 						videoel[0].play();
 					}
+				};
+
+				function lthumbprogress(currt) {
+					totalt = Math.floor(videoel[0].duration);
+					arrperc = String((currt * 100) / totalt).split('.');
+					currperc = arrperc[0];
+
+					if (currperc > 100) {
+						currperc = 100;
+					}
+					if (currperc < 0) {
+						currperc = 0;
+					}
+
+					// console.log(currt);
+					// console.log(currperc);
+
+					$('#ltbdprogress').attr('aria-valuenow', currperc);
+					$('#ltbdprogress').css('width', currperc+'%');
+					$('#ltbsprogress').text(currperc+'% Complete');
 				};
 
 				$('#checkjoincrop').change(function() {

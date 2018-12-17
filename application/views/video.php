@@ -337,7 +337,7 @@
 				var lastvideo, lastvarray, lastvarraytm, vsource, channel, state, cropstarts, cropends,
 				selectedformdate, selformdate, cropstart, cropend, cropdurs, cropdur, jvsource,
 				cropfmonth, cropfday, cropfch, cropfst, cropfpr, cropfcl, videourlmcrop, vintfile,
-				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs;
+				cfilesource, cfiletimestampt, cfiletstamp, cfiletstampst, cfiletstampet, loadingthumbs, progressjcbar;
 				var ccrops = false, ccrope = false, joinvideos = false, joinvideosclk = false, selvinheta = false;
 				joincropvideos = false, nightmode = false, todaydatesel = false, videotransc = false;
 				frompost = <?php echo isset($ssource) ? 'true' : 'false';?>;

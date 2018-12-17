@@ -758,29 +758,6 @@ $('.jcropmodal').on('hide.bs.modal', function(event) {
 	joincropvideos = false;
 });
 
-//websocket listeners
-socket.on('get_queue_crop', function(data) {
-	if ($('#queuecroplist').hasClass('noitems') == false) {
-		qcroplist = $('#queuecroplist').children();
-		qcroplistd = $('#queuecroplistdone').children();
-
-		if (data.queue.length > 0) {
-			lastqueuelist = qcroplist[qcroplist.length - 1];
-			lastqueuelistd = qcroplistd[qcroplistd.length - 1];
-			lastdata = data.queue[data.queue.length - 1];
-			lastdataarr = [lastdata];
-
-			lastqueuelistdid = parseInt($(lastqueuelistd).attr('id').replace(/[a-z]/g,''));
-			lastdataid = parseInt(lastdata.id);
-
-		 	if (lastqueuelistdid != lastdataid) {
-		 		// console.log(lastdataarr);
-				queuecropdata(lastdataarr);
-			}
-		}
-	}
-});
-
 $(document).on('mouseover', '.vcpreview', function(event) {
 	vcpid = $(this).attr('id');
 	vcpstart = $(this).attr('data-cstart');
@@ -859,10 +836,10 @@ $(document).on('shown.bs.popover', '.queuecropditem', function () {
 	// console.log('popover shown');
 	videoid = $(this)[0].dataset.idvideo;
 	$('#'+videoid)[0].play();
-})
+});
 
 $(document).on('hide.bs.popover', '.queuecropditem', function () {
 	// console.log('popover hidden');
 	videoid = $(this)[0].dataset.idvideo;
 	$('#'+videoid)[0].pause();
-})
+});

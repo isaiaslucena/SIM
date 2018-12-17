@@ -43,6 +43,7 @@
 		<span class="tooltiptime"></span>
 
 		<div class="container-fluid center-block text-center">
+			<!-- Title, queue crop, queue transcription and autoplay -->
 			<div class="row">
 				<div class="col-md-8">
 					<h2 id="vtitle" class="center-block">Nenhuma Seleção</h2>
@@ -130,6 +131,7 @@
 				</div>
 			</div>
 
+			<!-- Editor controls, alerts, back and logout -->
 			<div class="row" style="margin-top: 10px">
 				<div id="controls" class="col-md-7">
 					<input id="autofocus-current-word" class="autofocus-current-word" type="checkbox" checked style="display: none;">
@@ -189,9 +191,10 @@
 									<i class="fa fa-bell"></i>
 								</button>
 								<ul id="alerttvlist" class="dropdown-menu dropdown-menu-right" style="max-height: 600px; width: 350px;overflow-y: auto;">
-									<li>
+									<li id="loadingalert">
 										<a class="text-center" href="#">
-											<strong>Nenhum alerta de tv!</strong>
+											<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+											<span class="sr-only">Loading...</span>
 										</a>
 									</li>
 								</ul>
@@ -389,6 +392,7 @@
 
 		<script type="text/javascript" src="<?php echo base_url('pages/video_player'); ?>"></script>
 		<script type="text/javascript" src="<?php echo base_url('pages/video_editor'); ?>"></script>
+		<script type="text/javascript" src="<?php echo base_url('pages/video_websocket'); ?>"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				// if (window.Worker) {

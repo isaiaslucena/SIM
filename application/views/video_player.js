@@ -32,57 +32,45 @@ var year = d.getFullYear();
 var todaydate = year+'-'+month+'-'+day;
 
 //Functions
-function getchannels() {
-	$.get('<?php echo str_replace("sim.","video.", base_url("video/getstopchannels"))?>',
-		function(data) {
-			radiocount = 0;
-			$('#alerttvlist').html(null);
-			datac = (data.length - 1);
+function stoppedchannels(data) {
+	radiocount = 0;
+	$('#alerttvlist').html(null);
+	datac = (data.length - 1);
 
-			$.each(data, function(index, val) {
-				radionamekey = Object.keys(val)[0];
-				radioname = radionamekey.replace("_", " - ");
-				ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
-				ffmpegpid = val[radionamekey].ffmpeg_PID
-				html = 	'<li>'+
-							'<a href="#">'+
-								'<div>'+
-									'<strong class="navnotstrg">'+radioname+'</strong>'+
-										'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
-									'</div>'+
-								'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+	$.each(data, function(index, val) {
+		radionamekey = Object.keys(val)[0];
+		radioname = radionamekey.replace("_", " - ");
+		ffmpeglastmsg = val[radionamekey].ffmpeg_last_log
+		ffmpegpid = val[radionamekey].ffmpeg_PID
+		html = 	'<li>'+
+					'<a href="#">'+
+						'<div>'+
+							'<strong class="navnotstrg">'+radioname+'</strong>'+
+								'<span class="pull-right text-muted"><em class="navnotem">'+ffmpegpid+'</em></span>'+
+							'</div>'+
+						'<div class="rruname">'+ffmpeglastmsg+'</div>'+
+					'</a>'+
+				'</li>';
+		$('#alerttvlist').append(html);
+		if (radiocount < datac) {
+			$('#alerttvlist').append('<li class="divider"></li>');
+		}
+		radiocount += 1;
+	});
+
+	if (radiocount > 0) {
+		$('#alerttvbnum').text(radiocount);
+		$('#alerttvbnum').fadeIn('fast');
+	} else {
+		$('#alerttvbnum').fadeOut('fast');
+		$('#alerttvbnum').text(radiocount);
+		fhtml = '<li>'+
+							'<a class="text-center" href="#">'+
+								'<strong>Nenhum alerta de tv!</strong>'+
 							'</a>'+
 						'</li>';
-				$('#alerttvlist').append(html);
-				if (radiocount < datac) {
-					$('#alerttvlist').append('<li class="divider"></li>');
-				}
-				radiocount += 1;
-			});
-
-			fhtml = '<li>'+
-								'<a class="text-center" href="#">'+
-									'<strong>Ver todos os alertas </strong>'+
-									'<i class="fa fa-angle-right"></i>'+
-								'</a>'+
-							'</li>';
-			// $('#alerttvlist').append(fhtml);
-
-			if (radiocount > 0) {
-				$('#alerttvbnum').text(radiocount);
-				$('#alerttvbnum').fadeIn('fast');
-			} else {
-				$('#alerttvbnum').fadeOut('fast');
-				$('#alerttvbnum').text(radiocount);
-				fhtml = '<li>'+
-									'<a class="text-center" href="#">'+
-										'<strong>Nenhum alerta de tv! </strong>'+
-									'</a>'+
-								'</li>';
-				$('#alerttvlist').append(fhtml);
-			}
-		}
-	);
+		$('#alerttvlist').append(fhtml);
+	}
 };
 
 function channelname(name) {
@@ -445,51 +433,8 @@ function getlistchannel(selglvsource, selgldate, selglchannel, selglstate, play)
 			}
 
 			if (play) {
-				// console.log('play is true!!!!');
-
-				csrcvideo = '<?php echo str_replace("sim.","video.",base_url())?>video/getvideo/'+vsource+'_'+cvideo
-
-				arr = lastvideo.split('_');
-				channel = arr[2];
-
-				// if (channel != 'AVULSO') {
-					if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-						var csrcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+vsource+'_'+cvideo+'/001';
-
-						var testeimg = new Image();
-						testeimg.src = csrcposter;
-
-						testeimg.onerror = function() {
-							csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-						};
-					} else {
-						csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-					}
-				// } else {
-					// csrcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
-				// }
-
-				$('#vnext').scrollTo('a.active');
-
-				videoel.attr({
-					poster: csrcposter,
-					src: csrcvideo
-				});
-
-				// if (channel != 'AVULSO') {
-					if (vsource.replace(/[0-9]/g, '') != 'cagiva') {
-						videoel[0].pause();
-
-						loadingthumbs();
-					} else {
-						videoel[0].play();
-					}
-				// } else {
-					// videoel[0].play();
-				// }
+				videoselect(cvideo, vsource);
 			}
-
-			// getdocbymurl(vsource, cvideo);
 
 			enablebtns();
 			mobileconf();
@@ -523,11 +468,11 @@ function refreshlist(rvsource, rdate, rchannel, rstate) {
 				}
 
 				html =	'<a id="vbtn'+lastvplaylistidn+'" '+classstr+' style="height: 105px;">'+
-									'<div class="pull-left vnextthumb" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
+									'<div class="pull-left vnextthumb" style="cursor: not-allowed" data-tbid="vnttb'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
 										'<img class="img-rounded" id="vnttb'+lastvplaylistidn+'" src="'+srcposter+'" style="max-height:80px">'+
 									'</div>'+
 									'<div class="checkbox checkbox-warning">'+
-										'<input id="chbx'+lastvplaylistidn+'" type="checkbox" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'">'+
+										'<input id="chbx'+lastvplaylistidn+'" class="disabled" type="checkbox" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" data-vfile="'+lastvarraytm+'" disabled>'+
 										'<label for="chbx'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'">Juntar</label>'+
 									'</div>'+
 									'<span id="vspan'+lastvplaylistidn+'" data-aid="vbtn'+lastvplaylistidn+'" data-vsrc="'+rvsource+'" style="cursor: pointer;">'+lastvarraytm+'</span>'+
@@ -861,8 +806,17 @@ function videoselect(cfilename, cfilevsource) {
 	$('.vbutton').css('display', 'none');
 	$('.vbutton').removeClass('paused');
 
+	srcposter = '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+cfilevsource+'_'+cfilename+'/001';
+	var testeimg = new Image();
+	testeimg.src = srcposter;
+
+	testeimg.onerror = function(e) {
+		srcposter = '<?php echo base_url("assets/imgs/colorbar.jpg")?>';
+		videoel.attr({poster: srcposter});
+	};
+
 	videoel.attr({
-		poster: '<?php echo str_replace("sim.","video.",base_url())?>video/getthumb/'+cfilevsource+'_'+cfilename+'/001',
+		poster: srcposter,
 		src: '<?php echo str_replace("sim.", "video.", base_url())?>video/getvideo/' + cfilevsource + '_' + cfilename
 	});
 
@@ -887,6 +841,8 @@ function videoselect(cfilename, cfilevsource) {
 
 	$('.list-group').children().removeClass('active');
 	$('span:contains('+cfilename+')').parent().addClass('active');
+
+	$('#vnext').scrollTo('a.active');
 
 	// getdocbymurl(cfilevsource, cfilename);
 };
@@ -1822,8 +1778,10 @@ $(document).on('mouseleave', '.vnextthumb', function() {
 });
 
 $(document).on('click', '.vnextthumb', function() {
-	timgid = $(this).attr('data-tbid');
-	tsrc = $(this).attr('data-vsrc');
-	tfile = $(this).attr('data-vfile');
-	videoselect(tfile, tsrc);
+	if ($(this).parent().hasClass('disabled') == false) {
+		timgid = $(this).attr('data-tbid');
+		tsrc = $(this).attr('data-vsrc');
+		tfile = $(this).attr('data-vfile');
+		videoselect(tfile, tsrc);
+	}
 });

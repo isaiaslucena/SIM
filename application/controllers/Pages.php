@@ -3039,6 +3039,19 @@ class Pages extends CI_Controller {
 		}
 	}
 
+	public function video_websocket() {
+		if ($this->session->has_userdata('logged_in')) {
+			$sessiondata = array(
+				'view' => 'video',
+				'last_page' => base_url('pages/video_temp')
+			);
+			// $this->session->set_userdata($sessiondata);
+			$this->load->view('video_websocket.js');
+		} else {
+			redirect('login?rdt='.urlencode('pages/video_temp'),'refresh');
+		}
+	}
+
 	public function audio() {
 		if ($this->session->has_userdata('logged_in')) {
 			$sessiondata = array(
