@@ -2807,9 +2807,9 @@ class Pages extends CI_Controller {
 				else if (!empty($success_msg)){
 					redirect('pages/users','refresh');
 				}
-				$this->load->view('users',$data);
-				$this->load->view('language_datatable',$data);
-				$this->load->view('footer',$data_navbar);
+				$this->load->view('users', $data);
+				$this->load->view('language_datatable', $data);
+				$this->load->view('footer', $data_navbar);
 			} else {
 				redirect(base_url(),'refresh');
 			}
