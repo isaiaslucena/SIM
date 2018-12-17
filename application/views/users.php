@@ -148,11 +148,11 @@
 								</a>
 								<a href="#" class="list-group-item">
 									<h4 class="list-group-item-heading">List group item heading</h4>
-									<p class="list-group-item-text">...</p>
+									<p class="list-group-item-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer risus lacus, congue a turpis vel, euismod bibendum metus. Nam placerat felis in tellus interdum porttitor. Pellentesque at maximus mauris. Pellentesque imperdiet neque in facilisis ornare. Maecenas ac laoreet erat, molestie mollis ex. Nulla varius odio sed ante interdum faucibus. Sed maximus erat dolor, ut porta sem laoreet et. Integer quis lectus non nibh vestibulum aliquet.</p>
 								</a>
 								<a href="#" class="list-group-item">
 									<h4 class="list-group-item-heading">List group item heading</h4>
-									<p class="list-group-item-text">...</p>
+									<p class="list-group-item-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer risus lacus, congue a turpis vel, euismod bibendum metus. Nam placerat felis in tellus interdum porttitor. Pellentesque at maximus mauris. Pellentesque imperdiet neque in facilisis ornare. Maecenas ac laoreet erat, molestie mollis ex. Nulla varius odio sed ante interdum faucibus. Sed maximus erat dolor, ut porta sem laoreet et. Integer quis lectus non nibh vestibulum aliquet.</p>
 								</a>
 							</div>
 						</div>
