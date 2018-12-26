@@ -89,7 +89,7 @@
 					<div class="panel-body">
 						<div class="col-lg-12">
 							<p class="paudio"><audio id="<?php echo 'paudio'.$divcount;?>" class="pfaudio" style="width: 100%" src="<?php echo $smediaurl; ?>" controls preload="metadata"></audio></p>
-							<p id="<?php echo 'ptext'.$divcount;?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+							<p id="<?php echo 'ptext'.$divcount;?>" data-mediaid="<?php echo 'paudio'.$divcount;?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
 								<?php
 								if (isset($found->times_t)) {
 									foreach ($stimes as $stime) {

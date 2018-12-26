@@ -2149,13 +2149,13 @@ class Pages_model extends CI_Model {
 		$datadoc['content_t'] = null;
 		$countf = 0;
 		$countfarr = count($idsdocs);
-		$docinfo = $this->radiol_text_byid_solr($idsdocs[0]);
+		$docinfo = $this->radio_text_byid_solr($idsdocs[0]);
 		$datadoc['source_s'] = $docinfo->response->docs[0]->source_s;
 		$datadoc['starttime_dt'] = $docinfo->response->docs[0]->starttime_dt;
 		foreach ($idsdocs as $iddoc) {
 			$countf++;
 
-			$docinfo = $this->radiol_text_byid_solr($iddoc);
+			$docinfo = $this->radio_text_byid_solr($iddoc);
 			$datadoc['content_t'] .= $docinfo->response->docs[0]->content_t[0];
 
 			$dfilename = "jdownload_".strtotime("now")."-".$countf.".mp3";

@@ -284,7 +284,6 @@ $(document).on('click', '.desativado', function() {
 $(document).on('click', 'span[data-dur]', function(){
 	ptextid = $(this).parent('.ptext').attr('id');
 	pmediaid = $(this).parent('.ptext').attr('data-mediaid');
-
 	spantime = $(this).attr('data-begin');
 
 	startread(pmediaid, ptextid, spantime, true);
