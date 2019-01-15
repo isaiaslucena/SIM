@@ -248,9 +248,9 @@
 
 				var rowNode = dttable.row.add([rstate,rname,rurl,btns]).draw().node();
 
-				$( rowNode ).find('td').eq(0).addClass('rrntable text-center');
-				$( rowNode ).find('td').eq(1).addClass('rrutable');
-				$( rowNode ).find('td').eq(2).addClass('text-center');
+				$(rowNode).find('td').eq(0).addClass('rrntable text-center');
+				$(rowNode).find('td').eq(1).addClass('rrutable');
+				$(rowNode).find('td').eq(2).addClass('text-center');
 
 				$('#add_modal').modal('hide');
 				$('#btnschanges').fadeIn('slow');
