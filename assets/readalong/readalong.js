@@ -121,10 +121,11 @@ var ReadAlong = {
 	addEventListeners: function () {
 		var that = this;
 
-		// that.audio_element.addEventListener('play', function (e) {
-		// 	that.selectCurrentWord();
-		// 	that.text_element.classList.add('speaking');
-		// }, false);
+		that.audio_element.addEventListener('play', function (e) {
+			that.selectCurrentWord();
+			that.text_element.classList.add('speaking');
+			// console.log('event listening from readalong');
+		}, false);
 
 		that.audio_element.addEventListener('pause', function (e) {
 			that.selectCurrentWord();
@@ -185,5 +186,10 @@ var ReadAlong = {
 		that.audio_element.addEventListener('ratechange', function (e) {
 			that.selectCurrentWord();
 		}, false);
+	},
+
+	playaudio: function() {
+		var that = this;
+		that.audio_element.play();
 	}
 };

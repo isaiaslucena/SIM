@@ -231,8 +231,9 @@ function startread(idpmedia, idptext, starttime = 0, mediatime = false) {
 	var args = {
 		text_element: document.getElementById(idptext),
 		audio_element: document.getElementById(idpmedia),
-		autofocus_current_word: document.getElementById('autofocus-current-word').checked
+		autofocus_current_word: true
 	};
 
 	ReadAlong.init(args);
+	ReadAlong.playaudio(args);
 };

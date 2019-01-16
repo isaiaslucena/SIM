@@ -68,7 +68,7 @@ $(document).ready(function() {
 
 loadedmedia();
 
-$(document).on('click', 'audio, video', function() {
+$(document).on('play', 'audio, video', function() {
 	idpmedia = $(this).attr('id');
 	ptextid = 'ptext'+idpmedia.replace(/[a-zA-Z]/g, '');
 	ptextspans = $('#'+ptextid).children('span.fkword');
@@ -287,7 +287,6 @@ $(document).on('click', 'span[data-dur]', function(){
 	spantime = $(this).attr('data-begin');
 
 	startread(pmediaid, ptextid, spantime, true);
-	$('#'+pmediaid)[0].play();
 });
 
 $(document).on('mouseover', '.ptext', function() {

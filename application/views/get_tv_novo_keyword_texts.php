@@ -98,7 +98,7 @@
 								<a class="btn btn-default btn-sm" target="_blank" href="<?php echo $smediaurl; ?>" download="<?php echo str_replace(' ','_', $ssource).'_'.$dstartdate.'_'.$denddate.'.mp4'; ?>"><i class="fa fa-download"></i> Baixar</a>
 							</div>
 							<div class="col-lg-7 pbody" id="<?php echo 'pbody'.$divcount;?>">
-								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" style="height: 300px; overflow-y: hidden">
+								<p id="<?php echo 'ptext'.$divcount; ?>" class="text-justify ptext noscrolled" data-mediaid="<?php echo 'pvideo'.$divcount;?>" style="height: 300px; overflow-y: hidden">
 									<?php
 									// echo (string)$stext;
 
