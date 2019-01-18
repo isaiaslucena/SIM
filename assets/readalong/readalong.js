@@ -13,6 +13,7 @@ var ReadAlong = {
 		this.generateWordList();
 		this.addEventListeners();
 		this.selectCurrentWord();
+		this.playaudio();
 	},
 
 	generateWordList: function () {
