@@ -138,6 +138,7 @@ function loadpn(flow, clbtn, nsc, ntype) {
 			divclone.children('.panel-heading').children('label.pull-left').children('.cbjoinfiles').prop("checked", false);
 
 			if (ntype == 'audio') {
+				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').removeAttr('data-fkwtime');
 				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('src', dmediaurl);
 				divclone.children('.panel-body').children('.col-lg-12').children('.paudio').children('audio').attr('id', iddiv.replace('div', 'paudio')+'-'+newdivid);
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').addClass('noscrolled');
@@ -145,6 +146,7 @@ function loadpn(flow, clbtn, nsc, ntype) {
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').attr('data-mediaid', iddiv.replace('div', 'paudio')+'-'+newdivid);
 				divclone.children('.panel-body').children('.col-lg-12').children('.ptext').html(null);
 			} else if (ntype == 'video') {
+				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').removeAttr('data-fkwtime');
 				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('src', dmediaurl);
 				divclone.children('.panel-body').children('.row').children('.col-lg-5').children('video').attr('id', iddiv.replace('div', 'pvideo')+'-'+newdivid);
 				divclone.children('.panel-body').children('.row').children('.col-lg-7').children('.ptext').addClass('noscrolled');
