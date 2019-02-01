@@ -7,3 +7,4 @@ git add --verbose .
 git commit -m "committed at $now"
 git push -u gogs master
 git push -u github master
+git push -u bitbucket master
