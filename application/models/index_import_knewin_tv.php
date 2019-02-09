@@ -17,10 +17,10 @@ $ttime = $ttime[1] + $ttime[0];
 $tstart = $ttime;
 
 //DB Connection
-$servername='mysql';
-$username='sim';
-$password='sim';
-$dbname='sim';
+$servername = 'mysql';
+$username = 'sim';
+$password = 'sim';
+$dbname = 'sim';
 
 $dbcon = new mysqli($servername, $username, $password, $dbname);
 if (!$dbcon) {
@@ -31,14 +31,14 @@ if (!$dbcon) {
 }
 
 //Local Solr Connection
-$protocol='http';
-$port='8983';
-$host='172.17.0.3';
+$protocol = 'http';
+$port = '8983';
+$host = '172.17.0.4';
 
 //Get start and endtime
-$sstart = strtotime('2019-02-09 00:00:00');
+// $sstart = strtotime('2019-02-09 00:00:00');
 // $send = strtotime('2018-10-23 02:59:59');
-// $sstart = strtotime("-10 minutes");
+$sstart = strtotime("-10 minutes");
 $send = strtotime("now");
 $start = date('Y-m-d\TH:i:s', $sstart);
 $end = date('Y-m-d\TH:i:s', $send);

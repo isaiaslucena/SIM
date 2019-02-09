@@ -520,7 +520,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/text/query?rows=500&wt=json&sort=id_text_i+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -573,7 +573,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_radio($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/radio/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -649,7 +649,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_radio_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/radio/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -725,7 +725,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_radio_novo($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_radio/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -801,7 +801,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_radio_novo_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_radio/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -877,7 +877,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_tv($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/tv/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -953,7 +953,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_tv_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/tv/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1029,7 +1029,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_tv_novo($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_tv/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1105,7 +1105,7 @@ class Pages_model extends CI_Model {
 	public function docs_byid_tv_novo_page($ids_doc, $ids_cdoc, $keyword, $startdate, $enddate, $start, $rows) {
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_tv/query?start='.$start.'&rows='.$rows.'&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1182,7 +1182,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/text/query?rows=500&wt=json&sort=id_text_i+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1210,7 +1210,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/mmstv_story/query?rows=1&wt=json&sort=startdate_l+asc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1264,7 +1264,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/mmstv_story/query?rows=500&wt=json&sort=startdate_l+asc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1295,7 +1295,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/tv/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1323,7 +1323,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_tv/query?rows=1&wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1351,7 +1351,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/radio/query?wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1379,7 +1379,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_radio/query?wt=json&sort=starttime_dt+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1407,7 +1407,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/radio/query?wt=json';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1434,7 +1434,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_radio/query?wt=json';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1461,7 +1461,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/tv/query?wt=json';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1488,7 +1488,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/tv/query?wt=json';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1515,7 +1515,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/knewin_tv/query?wt=json';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1542,7 +1542,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol = 'http';
 		$port = '8983';
-		$host = '172.17.0.3';
+		$host = '172.17.0.4';
 		$path = '/solr/knewin_tv/query?rows=1&wt=json&sort=startdate_l+asc';
 		$url = $protocol."://".$host.":".$port.$path;
 
@@ -1585,7 +1585,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol = 'http';
 		$port = '8983';
-		$host = '172.17.0.3';
+		$host = '172.17.0.4';
 		if ($position == 'previous') {
 			$path='/solr/radio/query?wt=json&rows=1&sort=starttime_dt+desc';
 			$data = array(
@@ -1621,7 +1621,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol = 'http';
 		$port = '8983';
-		$host = '172.17.0.3';
+		$host = '172.17.0.4';
 		if ($position == 'previous') {
 			$path='/solr/knewin_radio/query?wt=json&rows=1&sort=starttime_dt+desc';
 			$data = array(
@@ -1657,7 +1657,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol = 'http';
 		$port = '8983';
-		$host = '172.17.0.3';
+		$host = '172.17.0.4';
 		if ($position == 'previous') {
 			$path='/solr/knewin_tv/query?wt=json&rows=1&sort=starttime_dt+desc';
 			$data = array(
@@ -1693,7 +1693,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/text/query?rows=1000&wt=json&sort=id_text_i+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1735,7 +1735,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/text/query?rows=1000&wt=json&sort=id_text_i+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -1777,7 +1777,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path='/solr/text/query?rows=1000&wt=json&sort=id_text_i+desc';
 		$url=$protocol."://".$host.":".$port.$path;
 
@@ -2247,7 +2247,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 
 		if (is_array($datasearch)) {
 			// $sdatearr = explode("/", $datasearch['startdate']);
@@ -2533,7 +2533,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		#$qrows = 100;
 
 		if (is_array($searchdata)) {
@@ -2608,7 +2608,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path = '/solr/mmstv_words/query?wt=json&rows=100&sort=starttime_l+asc';
 		$url = $protocol."://".$host.":".$port.$path;
 
@@ -2644,7 +2644,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path = '/solr/mmstv_segments/query?wt=json';
 		$url = $protocol."://".$host.":".$port.$path;
 
@@ -2671,7 +2671,7 @@ class Pages_model extends CI_Model {
 		//Solr Connection
 		$protocol='http';
 		$port='8983';
-		$host='172.17.0.3';
+		$host='172.17.0.4';
 		$path = '/solr/mmstv_story/query?wt=json&sort=startdate_l+asc';
 		$url = $protocol."://".$host.":".$port.$path;
 

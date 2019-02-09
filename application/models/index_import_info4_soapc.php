@@ -23,7 +23,7 @@ if (!$dbcon) {
 //Solr Connection
 $protocol='http';
 $port='8983';
-$host='172.17.0.3';
+$host='172.17.0.4';
 
 // soap
 $addr01 = '189.3.21.194';
