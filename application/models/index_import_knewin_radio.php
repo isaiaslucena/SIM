@@ -36,9 +36,9 @@ $port = '8983';
 $host = '172.17.0.3';
 
 //Get start and endtime
-// $sstart = strtotime('2019-02-02 00:00:00');
+$sstart = strtotime('2019-02-09 00:00:00');
 // $send = strtotime('2018-10-23 02:59:59');
-$sstart = strtotime("-10 minutes");
+// $sstart = strtotime("-10 minutes");
 $send = strtotime("now");
 $start = date('Y-m-d\TH:i:s', $sstart);
 $end = date('Y-m-d\TH:i:s', $send);
