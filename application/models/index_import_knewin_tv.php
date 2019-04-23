@@ -33,7 +33,7 @@ if (!$dbcon) {
 //Local Solr Connection
 $protocol = 'http';
 $port = '8983';
-$host = '172.17.0.4';
+$host = 'solr';
 
 //Get start and endtime
 // $sstart = strtotime('2019-03-18 00:00:00');
