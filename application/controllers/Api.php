@@ -172,7 +172,7 @@ class Api extends CI_Controller {
 
 			$protocol = 'http';
 			$port = '8983';
-			$host = '172.17.0.4';
+			$host = '192.168.0.13';
 			if ($postdata['type'] == 'radio') {
 				$path = '/solr/radio';
 			} else {
@@ -345,7 +345,7 @@ class Api extends CI_Controller {
 
 			$protocol = 'http';
 			$port = '8983';
-			$host = '172.17.0.4';
+			$host = '192.168.0.13';
 			if ($postdata['type'] == 'radio') {
 				$path = '/solr/radio';
 			} else {
